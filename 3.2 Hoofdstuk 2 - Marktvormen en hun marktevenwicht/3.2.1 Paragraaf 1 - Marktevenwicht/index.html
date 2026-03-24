@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.1 Marktevenwicht – Lesmateriaal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --domain: #1A5276;
+    --domain-lt: #EBF5FB;
+    --domain-dk: #154360;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --cream: #F9F6F1;
+    --white: #FFFFFF;
+    --amber: #E67E22;
+    --step-bg: #FFF8E1;
+    --step-border: #F9A825;
+    --sidebar-w: 260px;
+  }
+
+  /* ── Layout ── */
+  .page-layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+
+  .nav-module {
+    display: block; padding: 0.5rem 1rem 0.7rem; font-size: 0.8rem; font-weight: bold;
+    color: var(--navy); border-bottom: 1px solid var(--border-gray); margin-bottom: 0.5rem;
+  }
+  .nav-module:hover { color: var(--domain); }
+  .nav-module.active { color: var(--navy); background: var(--light-gray); }
+
+  .nav-chapter { margin-bottom: 0.15rem; }
+  .nav-ch-title {
+    display: flex; align-items: center; gap: 0.45rem;
+    padding: 0.4rem 1rem; font-size: 0.78rem; font-weight: bold; color: var(--dark);
+    cursor: pointer; border-left: 3px solid transparent;
+  }
+  .nav-ch-title:hover { background: #F7FAFC; }
+  .nav-ch-title.active { border-left-color: var(--ch-color); background: var(--light-gray); }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    background: var(--ch-color);
+  }
+  .nav-ch-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.2s;
+  }
+  .nav-chapter.expanded .nav-arrow { transform: rotate(180deg); }
+
+  .nav-items { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-chapter.expanded .nav-items { display: block; }
+  .nav-item {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem;
+    font-size: 0.72rem; color: var(--gray); border-left: 3px solid transparent;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .nav-item:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-item.active { color: var(--dark); font-weight: bold; border-left-color: var(--ch-color); background: var(--light-gray); }
+
+  /* ── Content area ── */
+  .content { flex: 1; min-width: 0; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 2rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: var(--domain);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.35rem; }
+  .hero-sub { font-size: 0.95rem; color: var(--gray); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 2.2rem; }
+  .section-header { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.9rem; }
+  .step-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--domain); color: var(--white);
+    font-size: 0.85rem; font-weight: bold; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 1.2rem; color: var(--domain-dk); }
+  .section-hint {
+    font-size: 0.85rem; color: var(--gray);
+    margin: -0.5rem 0 0.9rem 2.9rem; font-style: italic;
+  }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.85rem;
+  }
+  .card {
+    background: var(--white); border-radius: 8px;
+    border-left: 4px solid var(--domain);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    padding: 1rem 1.15rem;
+    display: flex; gap: 0.85rem; align-items: flex-start;
+    transition: transform 0.15s ease, box-shadow 0.15s ease; cursor: pointer;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .card-icon {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px;
+    background: var(--domain-lt);
+    display: flex; align-items: center; justify-content: center; color: var(--domain);
+  }
+  .card-icon svg {
+    width: 20px; height: 20px; fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .card-body h3 { font-size: 0.95rem; font-weight: bold; color: var(--dark); margin-bottom: 0.15rem; }
+  .card-body p { font-size: 0.8rem; color: var(--gray); line-height: 1.4; }
+  .card-body .file-type {
+    display: inline-block; font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--gray);
+    background: var(--light-gray); border: 1px solid var(--border-gray);
+    padding: 0.1rem 0.4rem; border-radius: 3px; margin-top: 0.35rem;
+  }
+  .card-exercise { grid-column: 1 / -1; border-left-color: var(--step-border); }
+  .card-exercise .card-icon { background: var(--step-bg); color: var(--amber); }
+  .card-exercise-normal { border-left-color: var(--domain); }
+  .card-exercise-normal .card-icon { background: var(--domain-lt); color: var(--domain); }
+  .sub-links { display: flex; gap: 0.5rem; margin-top: 0.55rem; flex-wrap: wrap; }
+  .sub-link {
+    display: inline-block; font-size: 0.75rem;
+    padding: 0.3rem 0.7rem; border: 1px solid var(--border-gray);
+    border-radius: 5px; color: var(--domain); background: var(--white);
+    transition: background 0.12s, border-color 0.12s; cursor: pointer;
+  }
+  .sub-link:hover { background: var(--domain-lt); border-color: var(--domain); }
+  .card-guide { border-left-color: var(--border-gray); background: var(--cream); }
+  .card-guide .card-icon { background: rgba(0,0,0,0.04); color: var(--gray); }
+
+  /* ── Chapter card (module page) ── */
+  .chapter-card {
+    display: block; background: var(--white); border-radius: 10px;
+    border-left: 5px solid var(--ch-color, var(--domain));
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07); padding: 1.5rem 1.8rem;
+    margin-bottom: 1.2rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .chapter-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .chapter-card h3 { font-size: 1.15rem; font-weight: bold; color: var(--dark); margin-bottom: 0.75rem; }
+  .chapter-card h3 .ch-num { color: var(--ch-color, var(--domain)); margin-right: 0.3rem; }
+  .chapter-card-count { font-size: 0.8rem; color: var(--gray); margin-bottom: 0.75rem; }
+  .chapter-card-items { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .chapter-card-item {
+    font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 5px;
+    background: var(--light-gray); color: var(--dark);
+    border: 1px solid var(--border-gray);
+  }
+
+  /* ── Paragraaf card (chapter page) ── */
+  .para-card {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--white); border-radius: 10px;
+    border-left: 5px solid var(--ch-color, var(--domain));
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07); padding: 1.2rem 1.5rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .para-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .para-num {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px;
+    background: var(--ch-color, var(--domain)); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: bold;
+  }
+  .para-info h3 { font-size: 1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.15rem; }
+  .para-info p { font-size: 0.8rem; color: var(--gray); }
+
+  footer {
+    text-align: center; padding: 1.5rem 2rem; font-size: 0.75rem;
+    color: var(--gray); border-top: 1px solid var(--border-gray);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; width: 280px;
+      transition: left 0.25s ease; box-shadow: none; z-index: 100;
+    }
+    .sidebar.open { left: 0; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+    .sidebar-toggle { display: flex; }
+    .content { width: 100%; }
+    .hero { padding-left: 3.5rem; }
+  }</style>
+</head>
+<body>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="sidebar-content">
+    <a class="nav-module" href="../../index.html">Module 3: Markt en overheid</a>
+    <div class="nav-chapter">
+      <a class="nav-ch-title" href="../../3.1%20Hoofdstuk%201%20-%20Markten/index.html" style="--ch-color: #17A2B8">
+        <span class="nav-dot"></span>
+        <span class="nav-ch-label">H1 Markten</span>
+        <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="nav-items">
+        <a class="nav-item" href="../../3.1%20Hoofdstuk%201%20-%20Markten/3.1.1%20Paragraaf%201%20-%20Markt%20en%20marktstructuur/index.html" style="--ch-color: #17A2B8">3.1.1 Markt en marktstructuur</a>
+        <a class="nav-item" href="../../3.1%20Hoofdstuk%201%20-%20Markten/3.1.2%20Paragraaf%202%20-%20Marktvormen/index.html" style="--ch-color: #17A2B8">3.1.2 Marktvormen</a>
+        <a class="nav-item" href="../../3.1%20Hoofdstuk%201%20-%20Markten/3.1.3%20Paragraaf%203%20-%20Toepassen/index.html" style="--ch-color: #17A2B8">3.1.3 Toepassen</a>
+      </div>
+    </div>
+    <div class="nav-chapter expanded">
+      <a class="nav-ch-title" href="../index.html" style="--ch-color: #1A5276">
+        <span class="nav-dot"></span>
+        <span class="nav-ch-label">H2 Marktvormen en hun marktevenwicht</span>
+        <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="nav-items">
+        <a class="nav-item active" href="../3.2.1%20Paragraaf%201%20-%20Marktevenwicht/index.html" style="--ch-color: #1A5276">3.2.1 Marktevenwicht</a>
+        <a class="nav-item" href="../3.2.2%20Paragraaf%202%20-%20Volkomen%20concurrentie/index.html" style="--ch-color: #1A5276">3.2.2 Volkomen concurrentie</a>
+        <a class="nav-item" href="../3.2.3%20Paragraaf%203%20-%20Monopolie/index.html" style="--ch-color: #1A5276">3.2.3 Monopolie</a>
+        <a class="nav-item" href="../3.2.4%20Paragraaf%204%20-%20Oligopolie/index.html" style="--ch-color: #1A5276">3.2.4 Oligopolie</a>
+        <a class="nav-item" href="../3.2.5%20Paragraaf%205%20-%20Monopolistische%20concurrentie/index.html" style="--ch-color: #1A5276">3.2.5 Monopolistische concurrentie</a>
+        <a class="nav-item" href="../3.2.6%20Paragraaf%206%20-%20Marktvormen%20en%20hun%20economische%20doelmatigheid/index.html" style="--ch-color: #1A5276">3.2.6 Marktvormen en hun economische doelmatigheid</a>
+        <a class="nav-item" href="../3.2.7%20Paragraaf%207%20-%20Toepassen/index.html" style="--ch-color: #1A5276">3.2.7 Toepassen</a>
+      </div>
+    </div>
+    <div class="nav-chapter">
+      <a class="nav-ch-title" href="../../3.3%20Hoofdstuk%203%20-%20Overheid/index.html" style="--ch-color: #E67E22">
+        <span class="nav-dot"></span>
+        <span class="nav-ch-label">H3 Overheid</span>
+        <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="nav-items">
+        <a class="nav-item" href="../../3.3%20Hoofdstuk%203%20-%20Overheid/3.3.1%20Paragraaf%201%20-%20De%20rol%20van%20de%20overheid/index.html" style="--ch-color: #E67E22">3.3.1 De rol van de overheid</a>
+        <a class="nav-item" href="../../3.3%20Hoofdstuk%203%20-%20Overheid/3.3.2%20Paragraaf%202%20-%20Overheidsbeleid/index.html" style="--ch-color: #E67E22">3.3.2 Overheidsbeleid</a>
+        <a class="nav-item" href="../../3.3%20Hoofdstuk%203%20-%20Overheid/3.3.3%20Paragraaf%203%20-%20Collectieve%20goederen/index.html" style="--ch-color: #E67E22">3.3.3 Collectieve goederen</a>
+        <a class="nav-item" href="../../3.3%20Hoofdstuk%203%20-%20Overheid/3.3.4%20Paragraaf%204%20-%20Toepassen/index.html" style="--ch-color: #E67E22">3.3.4 Toepassen</a>
+      </div>
+    </div>
+    <div class="nav-chapter">
+      <a class="nav-ch-title" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/index.html" style="--ch-color: #1E8449">
+        <span class="nav-dot"></span>
+        <span class="nav-ch-label">H4 Internationale markten</span>
+        <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="nav-items">
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.1%20Paragraaf%201%20-%20Internationale%20handel/index.html" style="--ch-color: #1E8449">3.4.1 Internationale handel</a>
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.2%20Paragraaf%202%20-%20Inter-industriele%20handel/index.html" style="--ch-color: #1E8449">3.4.2 Inter-industriele handel</a>
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.3%20Paragraaf%203%20-%20Intra-industriele%20handel/index.html" style="--ch-color: #1E8449">3.4.3 Intra-industriele handel</a>
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.4%20Paragraaf%204%20-%20Internationale%20productieketens/index.html" style="--ch-color: #1E8449">3.4.4 Internationale productieketens</a>
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.5%20Paragraaf%205%20-%20Internationaal%20handelsbeleid/index.html" style="--ch-color: #1E8449">3.4.5 Internationaal handelsbeleid</a>
+        <a class="nav-item" href="../../3.4%20Hoofdstuk%204%20-%20Internationale%20markten/3.4.6%20Paragraaf%206%20-%20Toepassen/index.html" style="--ch-color: #1E8449">3.4.6 Toepassen</a>
+      </div>
+    </div>
+
+    </div>
+  </nav>
+  <div class="content">
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">Paragraaf 3.2.1</span>
+    <h1>Marktevenwicht</h1>
+    <p class="hero-sub">Hoofdstuk 2 – Marktvormen en hun marktevenwicht</p>
+  </div>
+</header>
+<main>
+  <div class="section">
+    <div class="section-header"><span class="step-number">1</span><h2>Voorbereiden</h2></div>
+    <p class="section-hint">Check wat je al weet en wat je nog nodig hebt</p>
+    <div class="card-grid">
+      <a class="card " href="1.%20Voorbereiden/3.2.1%20Marktevenwicht%20%E2%80%93%20instapquiz.html">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/></svg></div>
+        <div class="card-body"><h3>Instapquiz</h3><p>Test wat je al weet over deze stof</p><span class="file-type">html</span></div>
+      </a>
+
+      <a class="card " href="1.%20Voorbereiden/3.2.1%20Marktevenwicht%20%E2%80%93%20uitleg%20voorkennis.docx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="card-body"><h3>Voorkennis</h3><p>Herhaal wat je nodig hebt voor deze les</p><span class="file-type">docx</span></div>
+      </a>
+
+      <a class="card card-guide" href="1.%20Voorbereiden/Lees%20dit%20als%20je%20niet%20weet%20hoe%20je%20moet%20beginnen%20met%20deze%20les.docx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+        <div class="card-body"><h3>Hoe begin ik?</h3><p>Wegwijzer als je niet weet waar je moet starten</p><span class="file-type">docx</span></div>
+      </a></div>
+  </div>
+  <div class="section">
+    <div class="section-header"><span class="step-number">2</span><h2>Leren</h2></div>
+    <p class="section-hint">De les doorwerken: presentatie, uitleg en video’s</p>
+    <div class="card-grid">
+      <a class="card " href="2.%20Leren/3.2.1%20Marktevenwicht%20%E2%80%93%20presentatie.pptx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="card-body"><h3>Presentatie</h3><p>De les-presentatie met kernpunten</p><span class="file-type">pptx</span></div>
+      </a>
+
+      <a class="card " href="2.%20Leren/3.2.1%20Marktevenwicht%20%E2%80%93%20uitleg%20vaardigheden.docx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="card-body"><h3>Uitleg vaardigheden</h3><p>Stap-voor-stap uitleg van de lesstof</p><span class="file-type">docx</span></div>
+      </a>
+
+      <a class="card " href="2.%20Leren/3.2.1%20Marktevenwicht%20%E2%80%93%20youtube-videos.html">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <div class="card-body"><h3>YouTube-video’s</h3><p>Video-uitleg bij de stof</p><span class="file-type">html</span></div>
+      </a>
+
+      <a class="card " href="2.%20Leren/3.2.1%20Marktevenwicht%20%E2%80%93%20nieuws%20met%20visual.docx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2V9"/><line x1="10" y1="8" x2="18" y2="8"/><line x1="10" y1="12" x2="18" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/></svg></div>
+        <div class="card-body"><h3>Nieuws</h3><p>Actueel artikel met verwerkingsvragen</p><span class="file-type">docx</span></div>
+      </a>
+
+      <a class="card " href="2.%20Leren/3.2.1%20Marktevenwicht%20%E2%80%93%20samenvatting.docx">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="card-body"><h3>Samenvatting</h3><p>Overzicht van deze paragraaf</p><span class="file-type">docx</span></div>
+      </a></div>
+  </div>
+  <div class="section">
+    <div class="section-header"><span class="step-number">3</span><h2>Oefenen</h2></div>
+    <p class="section-hint">Kies het niveau dat bij je past</p>
+    <div class="card-grid">
+      <div class="card card-exercise">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="card-body"><h3>Begeleide inoefening</h3><p>Oefenen met denkstappen en hints</p>
+          <div class="sub-links">
+            <a class="sub-link" href="3.%20Oefenen/begeleide%20inoefening/3.2.1%20Marktevenwicht%20%E2%80%93%20begeleide%20inoefening%20%E2%80%93%20vragen.docx">Vragen</a>
+            <a class="sub-link" href="3.%20Oefenen/begeleide%20inoefening/3.2.1%20Marktevenwicht%20%E2%80%93%20begeleide%20inoefening%20%E2%80%93%20antwoorden.docx">Antwoorden</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-exercise-normal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none"/></svg></div>
+        <div class="card-body"><h3>Basisopgaven</h3><p>Standaard opgaven</p>
+          <div class="sub-links">
+            <a class="sub-link" href="3.%20Oefenen/basisopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20basis%20%E2%80%93%20vragen.docx">Vragen</a>
+            <a class="sub-link" href="3.%20Oefenen/basisopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20basis%20%E2%80%93%20antwoorden.docx">Antwoorden</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-exercise-normal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none"/><polygon points="12 5 13.85 9.26 18.5 9.85 15.25 12.93 16.05 17.55 12 15.36 7.95 17.55 8.75 12.93 5.5 9.85 10.15 9.26 12 5" fill="currentColor" stroke="none"/></svg></div>
+        <div class="card-body"><h3>Middenopgaven</h3><p>Kortere set, meer zelfstandig</p>
+          <div class="sub-links">
+            <a class="sub-link" href="3.%20Oefenen/middenopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20midden%20%E2%80%93%20vragen.docx">Vragen</a>
+            <a class="sub-link" href="3.%20Oefenen/middenopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20midden%20%E2%80%93%20antwoorden.docx">Antwoorden</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-exercise-normal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg></div>
+        <div class="card-body"><h3>Verrijkingsopgaven</h3><p>Extra uitdaging</p>
+          <div class="sub-links">
+            <a class="sub-link" href="3.%20Oefenen/verrijkingsopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20verrijking%20%E2%80%93%20vragen.docx">Vragen</a>
+            <a class="sub-link" href="3.%20Oefenen/verrijkingsopgaven/3.2.1%20Marktevenwicht%20%E2%80%93%20verrijking%20%E2%80%93%20antwoorden.docx">Antwoorden</a>
+          </div>
+        </div>
+      </div></div>
+  </div>
+</main>
+<footer>Economie VWO 4 &middot; Module 3: Markt en overheid</footer>
+  </div>
+</div>
+<script>
+// Toggle chapter expand/collapse
+document.querySelectorAll('.nav-ch-title').forEach(el => {
+  el.addEventListener('click', function(e) {
+    if (e.ctrlKey || e.metaKey) return; // allow ctrl+click to open link
+    e.preventDefault();
+    this.parentElement.classList.toggle('expanded');
+  });
+});
+// Double-click navigates to chapter page
+document.querySelectorAll('.nav-ch-title').forEach(el => {
+  el.addEventListener('dblclick', function() { window.location = this.href; });
+});
+</script>
+</body>
+</html>
