@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markt en marktstructuur - Instapquiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #e2e8f0; font-family: 'Lato', sans-serif; color: #334155; display: flex; justify-content: center; align-items: stretch; min-height: 100vh; padding: 10px; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0f172a; }
+        .app-container { background-color: #ffffff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 1360px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 20px); min-height: 0; }
+        .header { background-color: #2563eb; color: white; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
+        .header h1 { color: white; font-size: 22px; margin: 0; }
+        .stats-bar { display: flex; gap: 16px; font-size: 14px; font-weight: bold; }
+        .content-layout { display: flex; flex-direction: column; flex-grow: 1; min-height: 0; }
+        @media(min-width: 850px) { .content-layout { flex-direction: row; } .main-area { flex: 1.8; border-right: 1px solid #cbd5e1; } .sidebar-area { flex: 1; background-color: #f8fafc; box-shadow: inset 5px 0 15px rgba(0,0,0,0.02); } }
+        @media(max-width: 849px) { .sidebar-area { border-top: 2px solid #cbd5e1; background-color: #f8fafc; } }
+        .main-area { display: flex; flex-direction: column; min-height: 0; }
+        .screen { display: none; padding: 24px 28px; flex-grow: 1; flex-direction: column; min-height: 0; }
+        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
+        .sidebar-area { display: none; padding: 22px 20px; flex-direction: column; min-height: 0; overflow: auto; }
+        .sidebar-title { font-size: 18px; margin-bottom: 25px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        #start-screen { text-align: center; justify-content: center; align-items: center; }
+        #start-screen h2 { font-size: 32px; margin-bottom: 14px; }
+        #start-screen p { font-size: 17px; margin-bottom: 22px; max-width: 760px; line-height: 1.5; color: #475569; }
+        .category-badge { display: inline-block; background-color: #e0e7ff; color: #3730a3; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+        .question-text { font-size: 20px; font-weight: 600; margin-bottom: 18px; line-height: 1.35; }
+        .options-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+        .option-btn { background-color: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-family: 'Lato', sans-serif; color: #334155; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: flex-start; line-height: 1.3; box-shadow: 0 2px 5px rgba(0,0,0,0.02); min-height: 72px; }
+        .option-btn:hover { border-color: #cbd5e1; background-color: #f1f5f9; transform: translateY(-1px); }
+        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
+        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .option-btn:disabled { cursor: default; transform: none; }
+        .feedback-box { display: none; padding: 16px; border-radius: 12px; margin-bottom: 14px; animation: fadeIn 0.3s ease; }
+        .feedback-box.show { display: block; }
+        .feedback-box.success { background-color: #dcfce7; border-left: 5px solid #22c55e; color: #166534; }
+        .feedback-box.error { background-color: #fee2e2; border-left: 5px solid #ef4444; color: #991b1b; }
+        .feedback-title { font-weight: bold; margin-bottom: 6px; font-size: 17px; }
+        .btn { background-color: #2563eb; color: white; border: none; border-radius: 8px; padding: 12px 22px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; font-family: 'Poppins', sans-serif; align-self: flex-end; margin-top: auto; }
+        .btn:hover { background-color: #1d4ed8; }
+        .btn-large { padding: 16px 34px; font-size: 18px; align-self: center; }
+        .mastery-container { width: 100%; }
+        .mastery-item { margin-bottom: 16px; }
+        .mastery-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-weight: bold; font-size: 13px; }
+        .mastery-bar-bg { background-color: #e2e8f0; border-radius: 10px; height: 12px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .mastery-bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.6s; }
+        .math { font-family: 'Courier New', Courier, monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0f172a; border: 1px solid #e2e8f0; }
+        @media(max-width: 980px) { .options-grid { grid-template-columns: 1fr; } }
+        @media(max-width: 849px) { body { padding: 0; } .app-container { height: 100vh; border-radius: 0; } .screen { padding: 20px; } .header { padding: 12px 16px; } .header h1 { font-size: 18px; } .stats-bar { font-size: 12px; gap: 10px; } .question-text { font-size: 18px; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <h1><i class="fa-solid fa-graduation-cap"></i> VWO Economie - Module 3</h1>
+        <div class="stats-bar" id="game-stats" style="display: none;">
+            <div><i class="fa-solid fa-star"></i> Score: <span id="score-display">0</span></div>
+            <div><i class="fa-solid fa-list-ol"></i> Vraag: <span id="question-count">0/10</span></div>
+        </div>
+    </div>
+    <div class="content-layout">
+        <div class="main-area">
+            <div id="start-screen" class="screen active">
+                <h2>Markt en marktstructuur</h2>
+                <p>Test je kennis van basis marktconcepten, marktstructuren en toetredingsdrempels. Deze instapquiz helpt je voorbereiding op de oefeningen.</p>
+                <div style="text-align: left; background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                    <h3 style="margin-bottom: 15px; font-size: 18px;"><i class="fa-solid fa-bullseye" style="color:#2563eb;"></i> Wat we gaan toetsen:</h3>
+                    <ul style="list-style-position: inside; color: #475569; line-height: 1.8;">
+                        <li>Concrete en abstracte marktbegrippen</li>
+                        <li>Homogeen vs heterogeen product</li>
+                        <li>Marktstructuur en classificatie</li>
+                        <li>Toetredingsdrempels en marktbarrières</li>
+                        <li>Netwerksectoren en marktomvang</li>
+                        <li>Berekeningen met marktgegevens</li>
+                    </ul>
+                </div>
+                <button class="btn btn-large" onclick="startGame()">Start de Training</button>
+            </div>
+            <div id="game-screen" class="screen">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="category-display" class="category-badge">Categorie</div>
+                    <div id="difficulty-stars" style="color: #fbbf24; margin-bottom: 20px; font-size: 18px;"></div>
+                </div>
+                <div id="question-text" class="question-text">Vraag...</div>
+                <div id="options-container" class="options-grid"></div>
+                <div id="feedback-container" class="feedback-box">
+                    <div id="feedback-title" class="feedback-title">Feedback</div>
+                    <div id="feedback-text">Uitleg...</div>
+                </div>
+                <button id="next-btn" class="btn" style="display: none;" onclick="nextQuestion()">Volgende Vraag <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <div id="end-screen" class="screen">
+                <h2>Sessie Voltooid! <i class="fa-solid fa-trophy" style="color: #fbbf24;"></i></h2>
+                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: #2563eb;"></span> vragen goed beantwoord.</p>
+                <div style="background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 10px; font-size: 18px;">Hoe nu verder?</h3>
+                    <p style="color: #475569; line-height: 1.6;">Bekijk je actuele voortgang in de zijbalk (of hieronder op mobiel). Bouw per onderwerp een <strong>reeks van 3</strong> op om deze definitief af te sluiten en de balk groen te maken. Maak je een fout? Dan reset de reeks naar nul.</p>
+                </div>
+                <button class="btn btn-large" onclick="restartSession()">Start Volgende Sessie <i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+        </div>
+        <div class="sidebar-area" id="sidebar">
+            <h3 class="sidebar-title"><i class="fa-solid fa-chart-pie"></i> Jouw Voortgang</h3>
+            <div id="mastery-dashboard" class="mastery-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    const questionBank = [
+        {"category": "marktbegrippen", "difficulty": 1, "q": "Wat is het verschil tussen een concrete markt en een abstracte markt?", "options": ["Een concrete markt is op één plaats, een abstracte markt is verspreidt over meer locaties", "Een concrete markt verkoopt fysieke goederen, een abstracte markt niet", "Er is geen verschil", "Een abstracte markt is groter dan een concrete markt"], "answer": 0, "rationale": "Een concrete markt vindt op één bepaalde plaats plaats (bijv. een vismarkt), terwijl een abstracte markt geografisch verspreidt kan zijn zonder vaste locatie."},
+        {"category": "marktbegrippen", "difficulty": 1, "q": "Welke van de volgende is een voorbeeld van een abstracte markt?", "options": ["De aandelenmarkt (beurs)", "Een supermarkt", "Een openluchtmarkt", "Een galeriewinkel"], "answer": 0, "rationale": "De aandelenmarkt is geografisch verspreidt en heeft geen centrale fysieke locatie. Kopers en verkopers kunnen overal ter wereld zijn."},
+        {"category": "marktbegrippen", "difficulty": 1, "q": "Wat betekent het als een markt uit homogene producten bestaat?", "options": ["De producten zijn identiek en onderling vervangbaar", "De producten zijn van hoge kwaliteit", "De producten zijn goedkoop", "De producten stammen van één fabrikant"], "answer": 0, "rationale": "Homogene producten zijn identiek en kunnen zonder verlies voor elkaar gebruikt worden. Het merk maakt niet uit, zoals bij benzine of melk."},
+        {"category": "marktbegrippen", "difficulty": 2, "q": "Welke stellingen over heterogene producten zijn juist? (1) Merknaam speelt een rol (2) Klanten hebben voorkeuren (3) Ze zijn perfect vervangbaar", "options": ["(1) en (2) zijn juist", "(1) en (3) zijn juist", "Alle drie zijn juist", "Alleen (2) is juist"], "answer": 0, "rationale": "Bij heterogene producten spelen merknaam en voorkeur van klanten een rol. Ze zijn NIET perfect vervangbaar. Een Nike-schoen is niet zomaar vervangbaar door Adidas."},
+        {"category": "marktbegrippen", "difficulty": 2, "q": "Een bakkerij bakt brood dat qua smaak iets anders is dan dat van concurrent bakkerijen. Welk soort product is dit?", "options": ["Heterogeen product", "Homogeen product", "Dienst", "Niet-materiele goed"], "answer": 0, "rationale": "Omdat het brood qua kenmerken verschilt van concurrenten (smaak), is het een heterogeen product. Consumenten hebben voorkeur voor het ene boven het ander."},
+        {"category": "marktbegrippen", "difficulty": 3, "q": "Op de markt voor elektriciteit zijn alleen enkele grote producenten actief die dezelfde kwaliteit leveren. Waarom worden consumenten toch niet geacht op een homogene markt te opereren?", "options": ["Omdat consumenten kunnen kiezen welke leverancier ze gebruiken en dit hun nutsvoorziening is", "Omdat elektriciteit onzichtbaar is", "Omdat de markt niet op één plaats is", "Omdat het wettelijke monopolie is"], "answer": 0, "rationale": "Hoewel elektriciteit qua product homogeen is, is de marktstructuur oligopolistisch en kunnen consumenten van leverancier kiezen, wat het gedrag bepaalt."},
+        {"category": "marktstructuur", "difficulty": 1, "q": "Hoe worden markten ingedeeld op basis van aanbodkant?", "options": ["Naar het aantal aanbieders en hun marktmacht", "Naar de grootte van de bedrijven", "Naar de soort producten", "Naar de winstgevendheid"], "answer": 0, "rationale": "Markten worden ingedeeld in monopolie, oligopolie, monopolistische concurrentie, en volkomen concurrentie - allemaal gebaseerd op aantal aanbieders en marktmacht."},
+        {"category": "marktstructuur", "difficulty": 1, "q": "Wat is de kernkenmerken van volkomen concurrentie?", "options": ["Veel aanbieders, homogeen product, vrije toetreding", "Weinig aanbieders, heterogeen product", "Één aanbieder", "Hoge winsten voor alle bedrijven"], "answer": 0, "rationale": "Volkomen concurrentie wordt gekarakteriseerd door veel kleine aanbieders, identieke producten en lage toetredingsdrempels."},
+        {"category": "marktstructuur", "difficulty": 1, "q": "Welke marktvormen hebben vrij lage toetredingsdrempels?", "options": ["Volkomen concurrentie en monopolistische concurrentie", "Oligopolie en monopolie", "Alleen monopolie", "Alleen monopolistische concurrentie"], "answer": 0, "rationale": "In volkomen concurrentie en monopolistische concurrentie kunnen nieuwe bedrijven betrekkelijk gemakkelijk toetreden. Bij oligopolie en monopolie zijn drempels veel hoger."},
+        {"category": "marktstructuur", "difficulty": 2, "q": "Een restaurant in een winkelcentrum maakt ander eten dan de concurrenten. Hoeveel aanbieders zijn er in deze markt ongeveer?", "options": ["Veel aanbieders (meer dan 10)", "Enkele aanbieders (3-5)", "Twee aanbieders", "Één aanbieder"], "answer": 0, "rationale": "In een winkelcentrum zijn normaal veel restaurants aanwezig met heterogene producten. Dit is monopolistische concurrentie met veel aanbieders."},
+        {"category": "marktstructuur", "difficulty": 2, "q": "Welke twee marktvormen hebben veel aanbieders?", "options": ["Volkomen concurrentie en monopolistische concurrentie", "Oligopolie en monopolie", "Volkomen concurrentie en monopolie", "Monopolistische concurrentie en oligopolie"], "answer": 0, "rationale": "Zowel volkomen concurrentie als monopolistische concurrentie hebben veel aanbieders. Ze verschillen in product-homogeniteit."},
+        {"category": "marktstructuur", "difficulty": 3, "q": "Een markt heeft 8 aanbieders met elk ongeveer 12% marktaandeel. Ze leveren iets verschillende producten. Wat is deze marktvormen?", "options": ["Monopolistische concurrentie of heterogene oligopolie", "Volkomen concurrentie", "Monopolie", "Homogene oligopolie"], "answer": 0, "rationale": "Met 8 aanbieders, gelijk marktaandeel en heterogene producten is dit monopolistische concurrentie of een heterogene oligopolie."},
+        {"category": "toetredingsdrempels", "difficulty": 1, "q": "Wat is een toetredingsdrempel?", "options": ["Een barrière die nieuwe bedrijven belemmert in te treden op een markt", "De prijs van het meest goedkope product", "De minimale omzet voor bedrijven", "De afstand tot de markt"], "answer": 0, "rationale": "Toetredingsdrempels zijn obstakels (kapitaal, technologie, licenties) die voorkomen dat nieuwe bedrijven makkelijk toetreden."},
+        {"category": "toetredingsdrempels", "difficulty": 1, "q": "Welke van de volgende is GEEN toetredingsdrempel?", "options": ["Het aantal bestaande klanten", "Hoge investeringskosten", "Schaalvoordelen", "Merkentrouw"], "answer": 0, "rationale": "Het aantal bestaande klanten is niet per se een drempel. Toetredingsdrempels zijn fysieke/economische belemmeringen zoals kapitaalbehoefte, patenten of netwerk-effecten."},
+        {"category": "toetredingsdrempels", "difficulty": 1, "q": "In de luchtvaart zijn miljarden geïnvesteerd om vliegtuigen aan te schaffen. Dit is een voorbeeld van:", "options": ["Hoge investeringskosten als toetredingsdrempel", "Schaal voordeel", "Technologische barrière", "Merkentrouw"], "answer": 0, "rationale": "De enorme kapitaalbehoefte in de luchtvaart vormt een grote toetredingsdrempel voor nieuwe bedrijven."},
+        {"category": "toetredingsdrempels", "difficulty": 2, "q": "Netwerksectoren (zoals telecommunicatie) hebben schaalvoordelen. Waarom vormt dit een toetredingsdrempel?", "options": ["Omdat een nieuw bedrijf moet groeien tot dezelfde schaal om rendabel te zijn", "Omdat het verboden is", "Omdat consumenten niets willen veranderen", "Omdat de technologie te ingewikkeld is"], "answer": 0, "rationale": "Schaalvoordelen betekenen dat grotere bedrijven lagere gemiddelde kosten hebben. Een nieuw klein bedrijf kan niet concurreren op prijs."},
+        {"category": "toetredingsdrempels", "difficulty": 2, "q": "Merkentrouw van consumenten werkt als toetredingsdrempel omdat:", "options": ["Nieuwe bedrijven moeten meer investeren in marketing om consumentenvoorkeur te veranderen", "Het verboden is met dezelfde merknaam te werken", "Merken per wet beschermd zijn", "Consumenten kunnen niet van mening veranderen"], "answer": 0, "rationale": "Sterke merkentrouw betekent dat nieuwe aanbieders moeten investeren in advertenties en merk-bouw - een kostbare drempel."},
+        {"category": "toetredingsdrempels", "difficulty": 3, "q": "Pharmaceutische bedrijven hebben patenten op medicijnen (10+ jaar monopolie). Dit is een toetredingsdrempel omdat:", "options": ["Generieke fabrikanten niet kunnen toetreden totdat het patent verloopt", "De medicijn te duur is", "Consumenten ziek worden", "De regering het verbiedt"], "answer": 0, "rationale": "Patenten vormen wettelijke toetredingsdrempels. Concurrenten kunnen niet dezelfde molecule gebruiken tot het patent verlopen is."},
+        {"category": "homogeen_heterogeen", "difficulty": 1, "q": "Welk product is het beste voorbeeld van homogeen?", "options": ["Benzine van een tankstation", "Een merk lippenstift", "Een merk laptop", "Een kledingstuk van Zara"], "answer": 0, "rationale": "Benzine is vrijwel identiek ongeacht het merk of station. Er zijn minimale verschillen en volledige substitueerbaarheid."},
+        {"category": "homogeen_heterogeen", "difficulty": 1, "q": "Waarom zijn hotels heterogene producten?", "options": ["Elk hotel biedt andere faciliteiten, locatie, comfort en services", "Hotels zijn allemaal hetzelfde", "Hotels zijn goedkoper dan woningen", "Hotels hebben geen concurrentie"], "answer": 0, "rationale": "Hotels verschillen in sterren, ligging, voorzieningen en service. Consumenten hebben voorkeuren en hotels zijn niet direct vervangbaar."},
+        {"category": "homogeen_heterogeen", "difficulty": 2, "q": "Aardappelen op de markt zijn over het algemeen homogeen, maar biologische aardappelen zijn heterogeen. Waarom?", "options": ["Biologische aardappelen hebben een merk en consumenten betalen extra voor duurzaamheid", "Biologische aardappelen zijn groter", "Biologische aardappelen smaken beter", "Normale aardappelen zijn illegaal"], "answer": 0, "rationale": "Biologische aardappelen worden onderscheiden door certificering en marketing. Consumenten zien ze als ander product en betalen meer, dus heterogeen."},
+        {"category": "homogeen_heterogeen", "difficulty": 2, "q": "Op de markt voor autobandenproduceren alle fabrikanten banden voor dezelfde wielgrootte. Zijn dit homogene of heterogene producten?", "options": ["Heterogeen - diverse merken met verschillende duurzaamheid, grip en prijs", "Homogeen - allemaal dezelfde maat", "Homogeen - dezelfde functie", "Heterogeen - verschillende kleuren"], "answer": 0, "rationale": "Hoewel alle banden dezelfde maat hebben, verschillen ze in kwaliteit, prestatie en prijs. Consumenten kiezen op basis van merk en eigenschappen."},
+        {"category": "homogeen_heterogeen", "difficulty": 3, "q": "Melk van verschillende boerderijen zou homogeen moeten zijn, maar consumenten kiezen steeds meer voor biologische melk. Dit maakt melk:", "options": ["Steeds meer heterogeen door branding en consumentenvoorkeur", "Meer homogeen omdat het allemaal melk is", "Niet relevant voor marktstructuur", "Waardelozer"], "answer": 0, "rationale": "Door differentiatie en branding verschuift melk van homogeen naar heterogeen product. Consumentenperceptie maakt het verschil."},
+        {"category": "rekenen", "difficulty": 1, "q": "Een markt heeft 100 aanbieders. Elk aandeel is 1% van de markt. Wat is de marktconcentratie?", "options": ["Laag - veel kleine aanbieders", "Hoog - één aanbieder domineert", "Gemiddeld - gelijk verdeeld", "Te laag om te meten"], "answer": 0, "rationale": "Met 100 aanbieders elk 1% is de markt zeer verdeeld. Dit is lage concentratie, typisch voor volkomen concurrentie."},
+        {"category": "rekenen", "difficulty": 1, "q": "In een markt heeft bedrijf A 60% marktaandeel, bedrijf B 30%, en bedrijf C 10%. Hoeveel aanbieders zijn er?", "options": ["3 aanbieders", "30 aanbieders", "60 aanbieders", "90 aanbieders"], "answer": 0, "rationale": "Op basis van de gegeven informatie zijn er 3 aanbieders. De aandelen tellen op tot 100%."},
+        {"category": "rekenen", "difficulty": 1, "q": "De Herfindahl-index is 1.500. Wat duidt dit aan?", "options": ["Een monopolistische markt of oligopolie (hoge concentratie)", "Een volkomen competitieve markt", "Een eerlijke marktdeling", "Geen informatie"], "answer": 0, "rationale": "HHI van 1.500 is boven 1.500, wat hoge concentratie aangeeft. Dit wijst op oligopolie of monopolie."},
+        {"category": "rekenen", "difficulty": 2, "q": "Bedrijf A heeft 25% marktaandeel. Hoeveel bedrijven van gelijke grootte zouden dit marktaandeel delen?", "options": ["4 bedrijven", "25 bedrijven", "100 bedrijven", "2 bedrijven"], "answer": 0, "rationale": "Als één bedrijf 25% heeft en alle bedrijven gelijk zijn: 100% / 25% = 4 bedrijven van gelijke grootte."},
+        {"category": "rekenen", "difficulty": 2, "q": "In markt 1 zijn 5 aanbieders met elk 20% aandeel. In markt 2 zijn 10 aanbieders met elk 10% aandeel. Welke markt is meer geconcentreerd?", "options": ["Markt 1 - minder aanbieders betekent hogere concentratie", "Markt 2 - meer aanbieders", "Beide hetzelfde", "Dit kan niet bepaald worden"], "answer": 0, "rationale": "Markt 1 met 5 aanbieders is geconcentreerder dan markt 2 met 10 aanbieders, zelfs met gelijk aandeel."},
+        {"category": "rekenen", "difficulty": 3, "q": "Een markt heeft 3 bedrijven: bedrijf A 50%, B 35%, C 15%. Bereken de Herfindahl-index (HHI = som van aandelen²).", "options": ["HHI = 3.350 (monopole/oligopol)", "HHI = 100", "HHI = 50", "HHI = 99"], "answer": 0, "rationale": "HHI = 50² + 35² + 15² = 2.500 + 1.225 + 225 = 3.950. Dit wijst op zeer hoge concentratie (monopole markt)."},
+        {"category": "marktbegrippen", "difficulty": 3, "q": "Waarom onderscheiden economen concrete en abstracte markten?", "options": ["Om het gedrag van kopers en verkopers beter te begrijpen gezien geografische ligging en informatieverspreiding", "Omdat één type altijd beter is", "Door tradities", "Er is geen echt verschil"], "answer": 0, "rationale": "De onderscheiding helpt inzicht te geven in transportkosten, informatiebeschikbaarheid en substitutiemogelijkheden."},
+        {"category": "marktstructuur", "difficulty": 3, "q": "Waarom is volkomen concurrentie een theoretisch ideaal maar zelden perfect in de praktijk?", "options": ["Producten hebben altijd kleine verschillen, informatie is onvolledig, toetreding kost geld", "Consumenten houden van monopolies", "Volkomen concurrentie is onmogelijk", "De regering forceert monopolies"], "answer": 0, "rationale": "Real-world markten hebben altijd fricties: productdifferentiatie, informatieasymmetrie, toetredingskosten."},
+        {"category": "toetredingsdrempels", "difficulty": 3, "q": "Netwerksectoren (waar consumenten aan hetzelfde netwerk willen) hebben veel sterke toetredingsdrempels. Waarom?", "options": ["Omdat consumenten willen dat iedereen dezelfde provider gebruikt (netwerkeffect) - dus nieuwe spelers kunnen niet groeien", "Omdat het duur is", "Omdat de regering het verbiedt", "Dit is niet waar"], "answer": 0, "rationale": "Netwerkeffecten maken het voor concurrenten moeilijk omdat consumenten zich willen aansluiten waar anderen zijn."},
+        {"category": "homogeen_heterogeen", "difficulty": 3, "q": "Wat bepaalt of consumenten een product als homogeen of heterogeen beschouwen?", "options": ["Consumentenperceptie en voorkeuren, niet alleen fysieke kenmerken", "Alleen de fysieke eigenschappen", "De fabrikant bepaalt dit", "De regering bepaalt dit"], "answer": 0, "rationale": "Twee fysiek identieke producten kunnen heterogeen zijn als consumentenperceptie verschilt (bijv. door merk of verpakking)."},
+        {"category": "rekenen", "difficulty": 3, "q": "4 bedrijven hebben ieder 20% marktaandeel, en 6 bedrijven ieder 3,33% aandeel. Bereken HHI ongeveer.", "options": ["Ongeveer 1.600 (oligopolie met enige spreiding)", "100", "3.200", "400"], "answer": 0, "rationale": "HHI = 4×(20²) + 6×(3,33²) = 4×400 + 6×11,1 ≈ 1.600 + 67 ≈ 1.667. Oligopolie."},
+        {"category": "marktomvang", "difficulty": 1, "q": "Wat betekent 'marktomvang'?", "options": ["De totale waarde of hoeveelheid van alle verkopen op een markt", "De grootte van het grootste bedrijf", "Het aantal bedrijven", "De geografische grootte"], "answer": 0, "rationale": "Marktomvang = totale marktwaarde in geld of volume (bijv. miljarden euro's of miljoen stuks)."},
+        {"category": "marktomvang", "difficulty": 1, "q": "Als een markt 1 miljard euro groot is en één bedrijf heeft 10% aandeel, hoeveel is dat bedrijf waard?", "options": ["100 miljoen euro", "10 miljoen euro", "900 miljoen euro", "Dit kan niet berekend worden"], "answer": 0, "rationale": "Bedrijfswaarde op die markt = 10% × 1 miljard = 100 miljoen euro."},
+        {"category": "marktomvang", "difficulty": 2, "q": "Een markt groeit van 500 miljoen naar 600 miljoen euro. Wat is de groei?", "options": ["20% groei ((600-500)/500 × 100)", "100 miljoen absolute groei", "200% groei", "Geen groei"], "answer": 0, "rationale": "Groei % = (nieuw - oud) / oud × 100 = 100 / 500 × 100 = 20%."},
+        {"category": "marktomvang", "difficulty": 2, "q": "In kleine markten zijn daar meer aanbieders relatief klein. Waarom?", "options": ["Kleine marktomvang kan niet veel bedrijven ondersteunen - ook grotere bedrijven worden klein", "Kleine markten hebben minder concurrentie", "Kleine markten bestaan niet", "Dit hangt niet af van marktomvang"], "answer": 0, "rationale": "Marktomvang bepaalt hoe groot bedrijven kunnen worden - kleine markt = kleine bedrijven gemiddeld."},
+        {"category": "marktomvang", "difficulty": 3, "q": "Waarom kunnen Amerikaanse multinationals grotere schaalvoordelen bereiken dan Nederlandse bedrijven in dezelfde sector?", "options": ["USA markt (330M mensen) is veel groter dan Nederland (17M) - dus grotere marktomvang = grotere bedrijven kunnen groeien", "Amerikaanse bedrijven zijn slimmer", "Technologie is beter", "Dit is niet waar"], "answer": 0, "rationale": "Grote marktomvang stimuleert schaalgroei - efficiëntie op veel grotere volumes."},
+        {"category": "marktbegrippen", "difficulty": 3, "q": "Waarom is onderscheid tussen concrete/abstracte markt nuttig voor economische analyse?", "options": ["Het helpt begrijpen hoe informatie verspreidt, transportkosten en toetreding werken", "Het is puur historisch", "Het maakt niet uit voor analyse", "Dit begrijpen economen niet"], "answer": 0, "rationale": "Geografische ligging en informatieflux bepalen marktdynamiek - belangrijk voor marktanalyse."},
+        {"category": "toetredingsdrempels", "difficulty": 3, "q": "Waarom zijn synergiën en schaalvoordelen in netwerksectoren sterker dan in andere industrie?", "options": ["Omdat meer gebruikers het netwerk waardevoller maakt (netwerkeffect) - exponentiale groei", "Omdat ze goedkoper zijn", "Omdat de regering het reguleert", "Dit is niet waar"], "answer": 0, "rationale": "Netwerkeffecten: iedere nieuwe gebruiker maakt netwerk waardevoller voor alles - sterke concentratie."},
+        {"category": "homogeen_heterogeen", "difficulty": 3, "q": "Hoe kunnen we bepalen of consumenten een product als homogeen of heterogeen zien?", "options": ["Door kruiselasticiteit te meten - lage elasticiteit = heterogeen (weinig substitute)", "Door prijs te kijken", "Door de fabrikant te vragen", "Dit kunnen we niet bepalen"], "answer": 0, "rationale": "Kruiselasticiteit (hoe veel vraag verandert als concurrent prijs verandert) toont substituubaarheid."},
+        {"category": "rekenen", "difficulty": 3, "q": "Twee markten: A heeft HHI=1.800, B heeft HHI=800. Welke is meer geconcentreerd?", "options": ["Markt A (hogere HHI = hogere concentratie)", "Markt B", "Beide even geconcentreerd", "HHI zegt niets"], "answer": 0, "rationale": "HHI: >1.500 = high concentration. >2.500 = very high. Markt A is oligopolie, B is meer competitief."},
+        {"category": "marktstructuur", "difficulty": 3, "q": "Waarom kunnen volkomen concurrentiebedrijven niet adverteren (effect zou nul zijn)?", "options": ["Omdat product homogeen is - klanten kopen op prijs, niet merk", "Omdat het verboden is", "Omdat het duur is", "Dit is niet waar - zij adverteren wel"], "answer": 0, "rationale": "In volkomen concurrentie: alle producten identiek. Advertentie helpt niet omdat niemand zich onderscheidt."},
+        {"category": "marktomvang", "difficulty": 3, "q": "Een markt van 100 M bedrijven in land A en 200M bedrijven in land B (beide homogeen). Waar concentratie hoger?", "options": ["Land B - twee keer groter, maar meer bedrijven kunnen toetreden - dus potentieel meer concurrentie", "Land A", "Beide hetzelfde", "Dit hangt af van iets anders"], "answer": 0, "rationale": "Grotere markten trekken meer bedrijven aan - concentratie hangt af van toetreding en schaalvoordelen."},
+        {"category": "marktbegrippen", "difficulty": 2, "q": "Concrete markten hebben hogere transportkosten. Wat is gevolg voor 'marktafbakening'?", "options": ["Concrete markt is kleiner geografisch; abstracte markt kan veel groter zijn", "Concrete markt is groter", "Transportkosten zijn irrelevant", "Dit hangt af van prijzen"], "answer": 0, "rationale": "Hoge transportkosten beperken bereik van concrete markt tot lokale regio."},
+        {"category": "toetredingsdrempels", "difficulty": 2, "q": "Dankzij het internet zijn toetredi ngskost en voor veel diensten (ontwerp, advies) gedaald. Gevolg?", "options": ["Marktstructuur verschuift van monopolie/oligopolie naar monopolistische concurrentie/volkomen concurrentie", "Marktstructuur blijft hetzelfde", "Toetreding wordt duurder", "Internet speelt geen rol"], "answer": 0, "rationale": "Lagere toetreding = meer aanbieders = minder concentratie = meer competitieve markt."},
+        {"category": "homogeen_heterogeen", "difficulty": 2, "q": "Waarom is het moeilijker om heterogene producten te kopiëren dan homogene?", "options": ["Omdat merk, design, reputatie moeilijker na te doen zijn dan standaard functies", "Heterogene producten zijn niet beter", "Homogene producten zijn niet kopieerbaar", "Dit begrijpen we niet"], "answer": 0, "rationale": "Heterogeniteit schept barrière tegen kopieën - moeilijk om merk/kwaliteit na te bootsen."},
+        {"category": "rekenen", "difficulty": 2, "q": "In een markt zijn bedrijven A,B,C,D,E met aandelen 30%, 25%, 20%, 15%, 10%. Gini-coëfficiënt zit tussen 0 (gelijk) en 1 (ongelijk). Deze markt is:", "options": ["Ongelijk verdeeld, dicht bij oligopolie concentratie", "Gelijk verdeeld, volkomen concurrentie", "Volledig gelijk", "Dit hangt af van prijzen"], "answer": 0, "rationale": "Aandelen variëren veel (30% vs 10%) - ongelijk verdeelde markt, concentratie aanwezig."},
+        {"category": "marktstructuur", "difficulty": 2, "q": "In welke marktvormen spreekt men van 'free entry and exit'?", "options": ["Volkomen concurrentie en monopolistische concurrentie (lage toetredingsdrempels)", "Monopolie en oligopolie", "Alleen volkomen concurrentie", "Geen van allen"], "answer": 0, "rationale": "Vrije toetreding is kenmerk van compet itieve vormen, niet van monopolie/oligopolie."},
+        {"category": "marktbegrippen", "difficulty": 1, "q": "Waarom maken economen onderscheid tussen 'markt' en 'bedrijfstak'?", "options": ["Markt = waar kopers en verkopers handelen; bedrijfstak = alle bedrijven in sector (breder)", "Ze betekenen hetzelfde", "Markt is groter", "Dit is verouderd"], "answer": 0, "rationale": "Bedrijfstak (sector) omvat alle spelers; markt kan nauwer afgebakend (bijv. lokaal) voor analyse."},
+        {"category": "rekenen", "difficulty": 1, "q": "Als een markt 5 bedrijven heeft met aandelen 40%, 30%, 20%, 5%, 5%, wat is het aandeel van de top 3?", "options": ["90% (40+30+20)", "75%", "95%", "80%"], "answer": 0, "rationale": "Top 3 aandelen = 40 + 30 + 20 = 90% van markt."},
+        {"category": "toetredingsdrempels", "difficulty": 1, "q": "Een nieuwe bank wil toetreden maar moet miljarden in systemen investeren. Dit is:", "options": ["Hoge investeringskosten als toetredingsdrempel", "Laag", "Niet relevant", "Dit is voordeel"], "answer": 0, "rationale": "Miljarden investeringsverplichting = grote financiële barrière voor nieuwe banken."},
+        {"category": "marktomvang", "difficulty": 1, "q": "Hoe beïnvloedt marktomvang het aantal bedrijven?", "options": ["Grote markt kan veel bedrijven ondersteunen; kleine markt slechts weinigen", "Marktomvang maakt niet uit", "Kleine markt meer bedrijven", "Dit hangt af van voorkeur"], "answer": 0, "rationale": "Marktgrootte bepaalt hoeveel bedrijven kunnen overleven en groeien - volume = draagkracht."}
+    ];
+
+    let userProgress = {
+        "marktbegrippen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
+        "marktstructuur": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
+        "toetredingsdrempels": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
+        "homogeen_heterogeen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
+        "rekenen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
+        "marktomvang": { level: 1, correctCount: 0, passedLevel3: false, closed: false }
+    };
+
+    const catNames = {
+        "marktbegrippen": "Marktbegrippen",
+        "marktstructuur": "Marktstructuur",
+        "toetredingsdrempels": "Toetredingsdrempels",
+        "homogeen_heterogeen": "Homogeen/Heterogeen",
+        "rekenen": "Berekeningen",
+        "marktomvang": "Marktomvang"
+    };
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQuestionData = null;
+    let askedQuestionsThisSession = [];
+    const maxQuestions = 10;
+
+    function renderMasteryDashboard() {
+        const dash = document.getElementById('mastery-dashboard');
+        dash.innerHTML = '';
+        for (const [cat, p] of Object.entries(userProgress)) {
+            let steps = p.closed ? 3 : Math.min(p.correctCount, 3);
+            let percentage = Math.round((steps / 3) * 100);
+            let statusText = p.closed ? "Afgesloten <i class='fa-solid fa-check-circle'></i>" : `Reeks: ${steps}/3`;
+            let barColor = (percentage === 100) ? '#10b981' : '#3b82f6';
+            let textColor = (percentage === 100) ? '#10b981' : '#64748b';
+            const itemHTML = `<div class="mastery-item"><div class="mastery-label"><span>${catNames[cat]}</span><span style="color: ${textColor}">${statusText}</span></div><div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: ${percentage}%; background-color: ${barColor}"></div></div></div>`;
+            dash.innerHTML += itemHTML;
+        }
+    }
+
+    function startGame() {
+        document.getElementById('start-screen').classList.remove('active');
+        document.getElementById('game-screen').classList.add('active');
+        document.getElementById('sidebar').style.display = 'flex';
+        document.getElementById('game-stats').style.display = 'flex';
+        renderMasteryDashboard();
+        nextQuestion();
+    }
+
+    function restartSession() {
+        const allClosed = Object.values(userProgress).every(p => p.closed);
+        if (allClosed) {
+            alert("Geniaal! Je hebt de gehele stof van dit onderdeel volledig afgesloten. Tijd voor een nieuwe uitdaging (voortgang wordt gereset).");
+            for (let cat in userProgress) {
+                userProgress[cat] = { level: 1, correctCount: 0, passedLevel3: false, closed: false };
+            }
+        }
+        currentQuestionIndex = 0;
+        score = 0;
+        askedQuestionsThisSession = [];
+        document.getElementById('end-screen').classList.remove('active');
+        document.getElementById('game-screen').classList.add('active');
+        document.getElementById('score-display').innerText = "0";
+        document.getElementById('question-count').innerText = "0/10";
+        renderMasteryDashboard();
+        nextQuestion();
+    }
+
+    function getNextQuestion() {
+        let availableCategories = Object.keys(userProgress).filter(cat => !userProgress[cat].closed);
+        if (availableCategories.length === 0) return null;
+        availableCategories.sort(() => Math.random() - 0.5);
+        for (let targetCategory of availableCategories) {
+            let p = userProgress[targetCategory];
+            let targetDifficulty = p.level;
+            if (p.correctCount >= 2) targetDifficulty = 3;
+            let possibleQuestions = questionBank.filter(q => q.category === targetCategory && q.difficulty === targetDifficulty && !askedQuestionsThisSession.includes(q));
+            if (possibleQuestions.length === 0) {
+                possibleQuestions = questionBank.filter(q => q.category === targetCategory && !askedQuestionsThisSession.includes(q));
+            }
+            if (possibleQuestions.length > 0) {
+                const selected = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
+                askedQuestionsThisSession.push(selected);
+                return selected;
+            }
+        }
+        let absoluteFallback = questionBank.filter(q => !askedQuestionsThisSession.includes(q));
+        if (absoluteFallback.length > 0) {
+            const selected = absoluteFallback[Math.floor(Math.random() * absoluteFallback.length)];
+            askedQuestionsThisSession.push(selected);
+            return selected;
+        }
+        return null;
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex > maxQuestions) { endGame(); return; }
+        document.getElementById('question-count').innerText = `${currentQuestionIndex}/${maxQuestions}`;
+        document.getElementById('feedback-container').classList.remove('show', 'success', 'error');
+        document.getElementById('next-btn').style.display = 'none';
+        currentQuestionData = getNextQuestion();
+        if (!currentQuestionData) { endGame(); return; }
+        document.getElementById('category-display').innerText = `${catNames[currentQuestionData.category]} - Niveau ${currentQuestionData.difficulty}`;
+        let stars = '';
+        for(let i=0; i < currentQuestionData.difficulty; i++) stars += '<i class="fa-solid fa-star"></i>';
+        document.getElementById('difficulty-stars').innerHTML = stars;
+        document.getElementById('question-text').innerHTML = currentQuestionData.q;
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        currentQuestionData.options.forEach((optText, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span>${optText}</span>`;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(btn => btn.disabled = true);
+        const isCorrect = (selectedIndex === currentQuestionData.answer);
+        const feedbackBox = document.getElementById('feedback-container');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const cat = currentQuestionData.category;
+        const diff = currentQuestionData.difficulty;
+        if (isCorrect) {
+            btnElement.classList.add('correct');
+            feedbackBox.className = 'feedback-box show success';
+            feedbackTitle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Dat is correct!';
+            score++;
+            document.getElementById('score-display').innerText = score;
+            userProgress[cat].correctCount++;
+            if (diff === 3) userProgress[cat].passedLevel3 = true;
+            if (userProgress[cat].correctCount >= 3 && userProgress[cat].passedLevel3) { userProgress[cat].closed = true; }
+            if (userProgress[cat].level < 3) userProgress[cat].level++;
+        } else {
+            btnElement.classList.add('wrong');
+            allBtns[currentQuestionData.answer].classList.add('correct');
+            feedbackBox.className = 'feedback-box show error';
+            feedbackTitle.innerHTML = '<i class="fa-solid fa-times-circle"></i> Dat is helaas onjuist.';
+            if (userProgress[cat].level > 1) userProgress[cat].level--;
+            userProgress[cat].correctCount = 0;
+            userProgress[cat].passedLevel3 = false;
+        }
+        renderMasteryDashboard();
+        feedbackText.innerHTML = currentQuestionData.rationale;
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function endGame() {
+        document.getElementById('game-screen').classList.remove('active');
+        document.getElementById('end-screen').classList.add('active');
+        let questionsPlayed = currentQuestionIndex > maxQuestions ? maxQuestions : currentQuestionIndex - 1;
+        document.getElementById('final-score').innerText = `${score} van de ${questionsPlayed}`;
+        renderMasteryDashboard();
+    }
+
+    document.addEventListener('keydown', function(event) {
+        const nextBtn = document.getElementById('next-btn');
+        const activeElement = document.activeElement;
+        const isTypingInField = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.isContentEditable);
+        if (isTypingInField) return;
+        const nextVisible = nextBtn && nextBtn.style.display !== 'none';
+        if (!nextVisible) return;
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); nextQuestion(); }
+    });
+</script>
+</body>
+</html>

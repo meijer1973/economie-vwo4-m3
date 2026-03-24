@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Bash",
+      "Write",
+      "Edit",
+      "Read",
+      "WebSearch",
+      "WebFetch",
+      "Agent",
+      "Skill",
+      "Glob",
+      "Grep",
+      "TodoWrite"
+    ]
+  }
+}
