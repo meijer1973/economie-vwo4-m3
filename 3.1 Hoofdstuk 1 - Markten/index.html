@@ -216,6 +216,31 @@
     color: var(--gray); border-top: 1px solid var(--border-gray);
   }
 
+  /* ── Document Viewer ── */
+  .viewer-panel {
+    display: none; flex-direction: column;
+    width: 100%; height: 100vh; position: sticky; top: 0;
+  }
+  .viewer-panel.active { display: flex; }
+  .content.hidden { display: none; }
+  .viewer-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.5rem 1rem; background: var(--navy); color: #fff;
+    font-size: 0.85rem; min-height: 2.5rem; flex-shrink: 0;
+  }
+  .viewer-title { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-download {
+    color: #fff; background: var(--domain); padding: 0.3rem 0.8rem;
+    border-radius: 4px; font-size: 0.8rem; text-decoration: none;
+  }
+  .viewer-download:hover { opacity: 0.9; }
+  .viewer-close {
+    background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff;
+    padding: 0.3rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+  }
+  .viewer-close:hover { background: rgba(255,255,255,0.1); }
+  .viewer-frame { flex: 1; border: none; width: 100%; background: #fff; }
+
   /* ── Responsive ── */
   @media (max-width: 768px) {
     .sidebar {
@@ -295,7 +320,7 @@
 
     </div>
   </nav>
-  <div class="content">
+  <div class="content" id="content">
 
 <header class="hero">
   <div class="hero-inner">
@@ -329,20 +354,60 @@
 </main>
 <footer>Economie VWO 4 &middot; Module 3: Markt en overheid</footer>
   </div>
+  <div class="viewer-panel" id="viewerPanel">
+    <div class="viewer-bar">
+      <span class="viewer-title" id="viewerTitle"></span>
+      <a class="viewer-download" id="viewerDownload" href="#" download>Download</a>
+      <button class="viewer-close" onclick="closeViewer()">Sluiten &times;</button>
+    </div>
+    <iframe id="viewerFrame" class="viewer-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+  </div>
 </div>
 <script>
 // Toggle chapter expand/collapse
 document.querySelectorAll('.nav-ch-title').forEach(el => {
   el.addEventListener('click', function(e) {
-    if (e.ctrlKey || e.metaKey) return; // allow ctrl+click to open link
+    if (e.ctrlKey || e.metaKey) return;
     e.preventDefault();
     this.parentElement.classList.toggle('expanded');
   });
 });
-// Double-click navigates to chapter page
 document.querySelectorAll('.nav-ch-title').forEach(el => {
   el.addEventListener('dblclick', function() { window.location = this.href; });
 });
+
+// Office Online viewer for .docx and .pptx on desktop
+var BASE_URL = "https://meijer1973.github.io/economie-vwo4-m3/";
+
+function openViewer(href, title) {
+  var abs = new URL(href, window.location.href).href;
+  var viewerURL = "https://view.officeapps.live.com/op/embed.aspx?src=" + encodeURIComponent(abs);
+  document.getElementById("viewerTitle").textContent = title;
+  document.getElementById("viewerDownload").href = href;
+  document.getElementById("viewerFrame").src = viewerURL;
+  document.getElementById("viewerPanel").classList.add("active");
+  document.getElementById("content").classList.add("hidden");
+}
+function closeViewer() {
+  document.getElementById("viewerPanel").classList.remove("active");
+  document.getElementById("content").classList.remove("hidden");
+  document.getElementById("viewerFrame").src = "about:blank";
+}
+
+if (window.innerWidth > 768) {
+  document.addEventListener("click", function(e) {
+    var link = e.target.closest("a[href]");
+    if (!link) return;
+    var href = link.getAttribute("href");
+    if (!href) return;
+    var lower = href.toLowerCase();
+    if (lower.endsWith(".docx") || lower.endsWith(".pptx")) {
+      e.preventDefault();
+      var name = decodeURIComponent(href.split("/").pop()).replace(/\.[^.]+$/, "");
+      openViewer(href, name);
+    }
+  });
+}
 </script>
 </body>
 </html>
