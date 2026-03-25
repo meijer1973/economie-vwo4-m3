@@ -1,0 +1,289 @@
+# Projectinstructies — Economie Lesmateriaal VWO 4
+
+## Projectoverzicht
+
+Dit project bevat het complete lesmateriaal voor **Praktische Economie VWO 4, Module 3: Markt en overheid**. Het materiaal is bedoeld voor leerlingen van circa 15-16 jaar en wordt door een docent in de klas gebruikt.
+
+### Mapstructuur
+```
+3. Module 3 - Markt en overheid/
+├── 3.1 Hoofdstuk 1 - Markten (3 paragrafen)
+├── 3.2 Hoofdstuk 2 - Marktvormen en hun marktevenwicht (7 paragrafen)
+├── 3.3 Hoofdstuk 3 - Overheid (4 paragrafen)
+├── 3.4 Hoofdstuk 4 - Internationale markten (6 paragrafen)
+└── Gecombineerde opgavensets/
+```
+
+Elke paragraaf volgt dezelfde vaste opbouw:
+
+| Bestand | Doel |
+|---------|------|
+| `3.X.Y [Naam] – presentatie.pptx` | Klas-klare PowerPoint-presentatie |
+| `3.X.Y [Naam] – uitleg voorkennis.docx` | Voorkennis die leerlingen nodig hebben |
+| `3.X.Y [Naam] – uitleg vaardigheden.docx` | Uitleg van de vaardigheden in de paragraaf |
+| `3.X.Y [Naam] – nieuws met visual.docx` | Actueel nieuwsbericht met verwerkingsopgaven |
+| `3.X.Y [Naam] – instapquiz.html` | Interactieve instapquiz (HTML) |
+| `3.X.Y [Naam] – youtube-videos.html` | Verzameling relevante YouTube-video's |
+| `3.X.Y [Naam] – samenvatting.docx` | Visuele samenvatting van de paragraaf |
+| `Lees dit als je niet weet hoe je moet beginnen met deze les.docx` | Handleiding voor leerlingen (geen paragraafnummer) |
+| `basisopgaven/` | Standaard opgavenset |
+| `middenopgaven/` | Kortere set voor gevorderden |
+| `verrijkingsopgaven/` | Moeilijkere set voor extra uitdaging |
+| `begeleide inoefening/` | Begeleid oefenmateriaal (niet in alle paragrafen) |
+
+Elke opgavenmap (`basisopgaven/`, `middenopgaven/`, `verrijkingsopgaven/`) bevat:
+- `3.X.Y [Naam] – [niveau] – vragen.docx` — de opgaven
+- `3.X.Y [Naam] – [niveau] – antwoorden.docx` — het antwoordmodel
+
+Waarbij `[niveau]` = `basis`, `midden` of `verrijking`.
+
+De map `begeleide inoefening/` bevat:
+- `3.X.Y [Naam] – begeleide inoefening – vragen.docx`
+- `3.X.Y [Naam] – begeleide inoefening – antwoorden.docx`
+
+Op hoofdstukniveau:
+- `3.X [Naam] – samenvatting.docx` — Samenvatting van het hele hoofdstuk
+
+In de map `Gecombineerde opgavensets/`:
+- `3.X.Y [Naam] – [niveau].docx` — Gecombineerde vragen en antwoorden per niveau
+
+Aanvullend (op moduleniveau):
+- `masterprompt taken.docx` — Instructie voor het sequentieel uitvoeren van taken
+- `Praktische Economie 2020 antwoorden VWO M3 gestructureerd.docx` — Bronantwoorden
+
+### Naamconventies
+
+**Universeel patroon:** `3.X.Y [Naam] – [bestandstype].ext`
+
+- Elk bestand begint met het paragraafnummer (`3.X.Y`)
+- Gevolgd door de paragraafnaam (zoals in de mapnaam)
+- Gevolgd door een en-dash `–` (U+2013) als scheidingsteken
+- Gevolgd door het bestandstype in kleine letters
+- `[Naam]` komt altijd overeen met de naam uit de mapnaam (bijv. map `3.1.1 Paragraaf 1 - Markt en marktstructuur` → naam = `Markt en marktstructuur`)
+- Paragrafen met de naam **"Toepassen"** zijn samenvattend (zie Presentatie-eisen → "Toepassen"-paragrafen)
+- Uitzondering: `Lees dit als je niet weet hoe je moet beginnen met deze les.docx` volgt dit patroon niet (algemeen instructiebestand)
+
+---
+
+## Modelgebruik
+
+| Taak | Model | Toelichting |
+|------|-------|-------------|
+| Opzet en ontwerp presentaties | **Opus 4.6** | Creatieve kwaliteit en visueel ontwerp |
+| Economische grafieken en visuals | **Opus 4.6** | Precisie en vakinhoudelijke correctheid |
+| Subtaken (research, berekeningen) | **Sonnet 4.6 of Opus 4.6** | Bij twijfel Opus |
+| Eindcontroles en QA | **Opus 4.6** | Kritische feedback essentieel |
+| **Nooit gebruiken** | ~~Haiku~~ | Niet geschikt voor presentaties en creatief werk |
+
+**Kwaliteitseis**: De kwaliteit van batch-presentaties (bijv. 10 stuks in één sessie) moet gelijkwaardig zijn aan de kwaliteit van een enkele presentatie die individueel wordt gemaakt.
+
+---
+
+## Skills — Automatische trigger-regels
+
+Skills zijn beschikbaar als project commands in `.claude/commands/`. Ze worden **automatisch** geladen op basis van de taak. Je hoeft ze niet handmatig aan te roepen — de regels hieronder zijn verplicht.
+
+### Verplichte laadregels
+
+**Bij elke PowerPoint-presentatie** → lees eerst `.claude/commands/econ-pptx-templates.md`
+- Triggert bij: presentatie, slides, les, PowerPoint, lesslides
+
+**Bij elk Word-document** → lees eerst `.claude/commands/econ-word-templates.md`
+- Triggert bij: uitleg vaardigheden, uitleg voorkennis, nieuwsopdracht, begeleide inoefening, opgaven, samenvatting, elk .docx bestand
+
+**Bij uitleg voorkennis of uitleg vaardigheden** → lees ook `.claude/commands/econ-explainer-docs.md`
+- Triggert bij: uitleg voorkennis, uitleg vaardigheden, explainer document
+- Gebruik altijd samen met econ-word-templates
+
+**Bij elke grafiek of visual** → lees eerst `.claude/commands/economic-graph.md`
+- Triggert bij: grafiek, diagram, visual, V/A-grafiek, MO/MK, stroomdiagram, flowchart, staafdiagram
+
+**Bij pedagogische keuzes** → lees eerst `.claude/commands/econ-didactiek.md`
+- Triggert bij: didactiek, scaffolding, differentiatie, begeleide inoefening, verdieping, Bloom-niveaus, vraagontwerp, lesopbouw
+
+**Bij nieuws met visual opdrachten** → lees eerst `.claude/commands/econ-nieuws-exercise.md`
+- Triggert bij: nieuws met visual, nieuwsopdracht, instap-opdracht
+
+**Bij hoofdstuksamenvattingen** → lees eerst `.claude/commands/aanpak-samenvattingen.md`
+- Triggert bij: samenvatting hoofdstuk, hoofdstuksamenvatting, toetsvoorbereiding, samenvatting.docx op hoofdstukniveau
+- Gebruik altijd samen met econ-word-templates
+
+### Combinatieregels
+
+| Taak | Laad deze skills (in volgorde) |
+|------|-------------------------------|
+| Presentatie maken | `econ-pptx-templates` + `economic-graph` + `econ-didactiek` |
+| Uitleg voorkennis maken | `econ-explainer-docs` + `econ-word-templates` + `economic-graph` |
+| Uitleg vaardigheden maken | `econ-explainer-docs` + `econ-word-templates` + `economic-graph` |
+| Nieuws met visual maken | `econ-nieuws-exercise` + `econ-word-templates` + `economic-graph` |
+| Begeleide inoefening maken | `econ-word-templates` + `econ-didactiek` |
+| Opgaven/antwoorden maken | `econ-word-templates` + `econ-didactiek` |
+| Hoofdstuksamenvatting maken | `aanpak-samenvattingen` + `econ-word-templates` + `economic-graph` |
+
+### Handmatig aanroepen
+
+Je kunt skills ook expliciet aanroepen: `/project:econ-pptx-templates`, `/project:economic-graph`, etc.
+
+**Belangrijk:** alle skills delen hetzelfde kleurenpalet (blauw/amber/groen domein-systeem) en dezelfde typografie (Arial + Consolas). De bronbestanden staan ook nog in `skills/` als referentie.
+
+---
+
+## Build Scripts — Herbruikbare bouwscripts
+
+De map `build-scripts/` bevat kant-en-klare Node.js-scripts voor het genereren van lesmateriaal. Elk script implementeert een template uit de `skills/`-map en kan worden aangepast voor elke nieuwe paragraaf door alleen de inhoudssectie te wijzigen.
+
+### Beschikbare scripts
+
+| Script | Template | Genereert |
+|--------|----------|-----------|
+| `template-B_voorkennis.js` | econ-word-templates Template B | `X.X.X [Naam] – uitleg voorkennis.docx` |
+| `pptx-template_presentatie.js` | econ-pptx-templates | `X.X.X [Naam] – presentatie.pptx` |
+
+### Werkwijze
+
+1. **Kopieer** het relevante script
+2. **Pas de inhoudssectie aan** (zoek naar `════` scheidingslijnen) — hier staat de paragraaf-specifieke tekst
+3. **Wijzig het outputpad** naar de juiste paragraafmap
+4. **Voer uit** met: `NODE_PATH="$(npm root -g)" node <script>.js`
+
+### Beleid: scripts bewaren
+
+Wanneer een taak een script produceert dat herbruikbaar is voor soortgelijke toekomstige taken, sla dit op in `build-scripts/` met een duidelijke naam en een `HOW TO ADAPT`-header. Dit voorkomt dat we bij elke nieuwe paragraaf de volledige template-infrastructuur opnieuw moeten opbouwen. Zie `build-scripts/README.md` voor naamconventies en details.
+
+---
+
+## Presentatie-eisen (kernregels)
+
+Deze presentaties zijn bedoeld voor klassikaal gebruik. De docent geeft mondelinge uitleg; de dia's ondersteunen alleen.
+
+### Didactisch
+
+- Start met leerdoelen: wat moeten leerlingen kunnen?
+- Groepeer per vaardigheid of deeldomein
+- Leg de denkroute uit (wat lees je eerst? welke formule? welke grafiek?)
+- Besteed kort aandacht aan veelgemaakte fouten
+- Sluit af met samenvatting
+
+### Visueel
+
+- **Minimaal 18pt** lettergrootte, liever 20-24pt
+- **Eén hoofdidee per dia** — geen cognitieve overbelasting
+- Veel witruimte, rustige compositie
+- Grafieken op witte achtergrond
+- Gebruik stroomdiagrammen voor redeneringen
+- Varieer lay-outs per dia (niet steeds dezelfde opbouw)
+- Elk hoofdstuk krijgt een **eigen kleurenpalet** (zie `econ-pptx-templates` skill)
+
+### Tekstregels
+
+- Alleen kernwoorden, signaalzinnen, compacte bullets
+- Geen lange alinea's of volzinnen
+- Vuistregel: als een dia zonder mondelinge toelichting volledig te begrijpen is, staat er te veel tekst
+
+### Grafieken
+
+Volg de `economic-graph` skill voor alle technische specificaties. Kernprincipe: economisch correct, geometrisch exact, visueel rustig.
+
+### "Toepassen"-paragrafen
+
+Paragrafen met de naam "Toepassen" zijn samenvattend. De presentatie moet:
+- Alle eerder behandelde stof overzichtelijk samenvatten
+- Rekenroutes als compacte stroomdiagrammen tonen
+- Een vergelijkingstabel van marktvormen/concepten bevatten
+- Focus op herkenning en toepassing, niet op nieuwe theorie
+
+---
+
+## Technische omgeving
+
+### Node.js (voor pptxgenjs)
+
+Beschikbare modules: `pptxgenjs`, `sharp`, `docx`, `pdf-lib`, `marked`, `graphviz`
+
+> **Let op:** stel `NODE_PATH` in als de modules globaal zijn geïnstalleerd. Zie de `econ-pptx-templates` skill voor de exacte setup.
+
+### Python (voor docx, analyse)
+
+Module `python-docx` voor het lezen van bestaande Word-bestanden.
+
+### Conversie en QA
+
+Gebruik LibreOffice (headless) voor PPTX → PDF conversie, en een PDF-naar-afbeeldingen tool voor visuele inspectie. De exacte commando's zijn omgevingsafhankelijk — zie de skill-bestanden voor de actuele paden.
+
+---
+
+## Werkwijze bij taken
+
+### Nieuw materiaal maken
+
+1. **Lees eerst** de bronbestanden in de paragraafmap (`uitleg voorkennis.docx`, `uitleg vaardigheden.docx`)
+2. **Lees de relevante skills** (econ-pptx-templates, econ-word-templates, economic-graph, econ-didactiek) voordat je begint
+3. **Analyseer leerdoelen** en benodigde vaardigheden
+4. **Maak het materiaal** met de juiste skill-pipeline
+5. **QA**: visuele inspectie via PDF → afbeeldingen → subagent review
+6. **Sla op** in de juiste paragraafmap
+
+### Batch-presentaties (meerdere paragrafen)
+
+- Lees eerst ALLE bronbestanden voor het hele hoofdstuk
+- Gebruik subagenten (Opus) voor individuele presentaties — dit borgt kwaliteit
+- Elke presentatie krijgt een eigen kleurenpalet
+- Doe eindcontrole: bestaan alle bestanden, juiste mappen, juiste bestandsgrootte
+
+### Bestaand materiaal bewerken
+
+- Lees het bestaande bestand eerst (via markitdown of python-docx)
+- Maak een thumbnail/screenshot voor visuele referentie
+- Pas aan en verifieer
+
+---
+
+## Kwaliteitsstandaard
+
+Een presentatie is pas af als een docent deze **direct in de les kan gebruiken**, zonder:
+- tekst in te korten
+- lettertypes te vergroten
+- lay-outs te herstellen
+- grafieken op te schonen
+- achtergronden te corrigeren
+- visuele drukte te verwijderen
+
+**Bij twijfel over kwaliteit: gebruik Opus 4.6 en doe een extra QA-ronde.**
+
+# Temporary Files & Workspace Cleanup
+
+## MANDATORY: Clean up after every task
+
+You MUST treat temporary/intermediate files as your responsibility. The user only wants the final deliverables — never leave behind working mess.
+
+### Rules
+
+1. **Track every file you create.** Before starting work, mentally note which files are deliverables (requested output) and which are temporary (intermediate steps, checks, debugging aids).
+
+2. **Delete all temporary files when the task is complete.** This includes but is not limited to:
+   - Screenshot/image files created for visual checks or verification
+   - Intermediate build artifacts, test outputs, or debug logs
+   - Temporary scripts written only to assist the current task
+   - Backup copies, `.tmp` files, diff files, or scratch files
+   - Any file the user did not explicitly ask for
+   - **Uitzondering:** scripts die herbruikbaar zijn voor toekomstige taken worden opgeslagen in `build-scripts/` (zie sectie "Build Scripts" hierboven)
+
+3. **Visual verification images must always be deleted.** When you render pages, take screenshots, or generate images to visually inspect your work, delete every one of those image files after you have confirmed the result. No exceptions.
+
+4. **Use a dedicated temp directory when possible.** If a task requires multiple intermediate files, create a `/tmp/claude-work/` directory (or similar), do your work there, copy only the final deliverables to the project, then `rm -rf` the temp directory.
+
+5. **Final check before reporting done.** Before telling the user the task is complete, run a final cleanup pass:
+   - List any files you created during this session
+   - Confirm each one is either a requested deliverable or has been deleted
+   - If in doubt whether a file is needed, ask — don't leave it
+
+6. **Never litter the project root.** Do not leave stray files in the project root or working directory. The project should look the same (or cleaner) after your work as it did before, plus only the requested output files.
+
+### Examples of files you MUST delete
+- `screenshot.png`, `check.png`, `verify.png`, `temp_render.png` — visual checks
+- `test_output.html`, `debug.log`, `temp.py` — debugging artifacts  
+- `backup_*.ext`, `*.bak`, `old_*.*` — backup copies
+- Any file in `/tmp/` you created
+
+### The principle
+> Work like a professional contractor: build what was asked, then clean the site before you leave. The client should only see the finished product.
