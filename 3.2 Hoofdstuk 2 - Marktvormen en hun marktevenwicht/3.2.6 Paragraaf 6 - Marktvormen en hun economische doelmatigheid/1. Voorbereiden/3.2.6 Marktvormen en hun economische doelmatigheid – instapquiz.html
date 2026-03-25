@@ -173,6 +173,7 @@
     let currentQuestionIndex = 0;
     let score = 0;
     let currentQuestionData = null;
+    let shuffledCorrectIndex = 0;
     let askedQuestionsThisSession = [];
     function renderMasteryDashboard(){const dash=document.getElementById('mastery-dashboard');dash.innerHTML='';for(const[cat,p]of Object.entries(userProgress)){let steps=p.closed?3:Math.min(p.correctCount,3);let percentage=Math.round((steps/3)*100);let statusText=p.closed?"Afgesloten <i class='fa-solid fa-check-circle'></i>":`Reeks: ${steps}/3`;let barColor=(percentage===100)?'#10b981':'#3b82f6';let textColor=(percentage===100)?'#10b981':'#64748b';const itemHTML=`<div class="mastery-item"><div class="mastery-label"><span>${catNames[cat]}</span><span style="color:${textColor}">${statusText}</span></div><div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width:${percentage}%;background-color:${barColor}"></div></div></div>`;dash.innerHTML+=itemHTML;}}
     function startGame(){document.getElementById('start-screen').classList.remove('active');document.getElementById('game-screen').classList.add('active');document.getElementById('sidebar').style.display='flex';document.getElementById('game-stats').style.display='flex';renderMasteryDashboard();nextQuestion();}
