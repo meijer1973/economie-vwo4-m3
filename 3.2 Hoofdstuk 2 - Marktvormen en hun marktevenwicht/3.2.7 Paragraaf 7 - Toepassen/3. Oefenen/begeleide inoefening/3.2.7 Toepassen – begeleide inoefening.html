@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.7 Toepassen – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #1A5276; --accent-lt: #EBF5FB; --accent-dk: #154360;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.7 Toepassen</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; Mozart en marktmacht</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q1a" data-q="q1a">1a · Welke markt?</a>
+        <a class="nav-q" href="#q1b" data-q="q1b">1b · Marktmacht herkennen</a>
+        <a class="nav-q" href="#q1c" data-q="q1c">1c · Verklaring marktmacht</a>
+        <a class="nav-q" href="#q1d" data-q="q1d">1d · Toepassing marktmacht</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Kernbegrippen herhalen</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#qvraag2invuloefe" data-q="qvraag2invuloefe">2 · Invuloefening marktvormen</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Duopolie: reactielijnen en eve</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a · Reactielijn afleiden</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b · Evenwichtshoeveelheden</a>
+        <a class="nav-q" href="#q3c" data-q="q3c">3c · Evenwichtsprijs</a>
+        <a class="nav-q" href="#q3d" data-q="q3d">3d · Winst</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; Van monopolie naar volkomen co</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a · Maximale omzet monopolist</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b · Maximale winst monopolist</a>
+        <a class="nav-q" href="#q4c" data-q="q4c">4c · CS en PS arceren</a>
+        <a class="nav-q" href="#q4d" data-q="q4d">4d · CS en PS berekenen</a>
+        <a class="nav-q" href="#q4e" data-q="q4e">4e · Individuele aanbodfunctie</a>
+        <a class="nav-q" href="#q4f" data-q="q4f">4f · Lange termijn volkomen concurrentie</a>
+        <a class="nav-q" href="#q4g" data-q="q4g">4g · CS en PS bij volkomen concurrentie</a>
+        <a class="nav-q" href="#q4h" data-q="q4h">4h · Harbergerdriehoek arceren</a>
+        <a class="nav-q" href="#q4i" data-q="q4i">4i · Harbergerdriehoek berekenen</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Internationale handel: tarwema</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a · Evenwicht bij gesloten grenzen</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b · Prijsdaling bij open grenzen</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c · Afname binnenlands aanbod</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Fly Direct: omzet en prijsdisc</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · Collectieve vraaglijn tekenen</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · TO-formule afleiden</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c · TO tekenen</a>
+        <a class="nav-q" href="#q6d" data-q="q6d">6d · Omzetmaximaliserende hoeveelheid</a>
+        <a class="nav-q" href="#q6e" data-q="q6e">6e · Omzetmaximaliserende prijs</a>
+        <a class="nav-q" href="#q6f" data-q="q6f">6f · Maximale omzet</a>
+        <a class="nav-q" href="#q6g" data-q="q6g">6g · Maximale omzet tekenen</a>
+        <a class="nav-q" href="#q6h" data-q="q6h">6h · Reizigers bij p = 400</a>
+        <a class="nav-q" href="#q6i" data-q="q6i">6i · Omzet bij p = 400 tekenen</a>
+        <a class="nav-q" href="#q6j" data-q="q6j">6j · Type klanten</a>
+        <a class="nav-q" href="#q6k" data-q="q6k">6k · Prijselasticiteit</a>
+        <a class="nav-q" href="#q6l" data-q="q6l">6l · Waarom niet 800 reizigers voor €...</a>
+        <a class="nav-q" href="#q6m" data-q="q6m">6m · Omzet p = 200 tekenen</a>
+        <a class="nav-q" href="#q6n" data-q="q6n">6n · Totale omzet bij prijsdiscriminatie</a>
+        <a class="nav-q" href="#q6o" data-q="q6o">6o · Klantenscheiding</a>
+        <a class="nav-q" href="#q6p" data-q="q6p">6p · Maximale theoretische omzet</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-7">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">7 &middot; Capaciteitsvergroting en verde</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q7a" data-q="q7a">7a · Capaciteitsvergroting aflezen</a>
+        <a class="nav-q" href="#q7b" data-q="q7b">7b · Verandering totaal surplus</a>
+        <a class="nav-q" href="#q7c" data-q="q7c">7c · CS-stijging zonder berekening</a>
+        <a class="nav-q" href="#q7d" data-q="q7d">7d · CS en PS verandering berekenen</a>
+        <a class="nav-q" href="#q7e" data-q="q7e">7e · Lagere toetredingsdrempel</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-8">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">8 &middot; Onderneming Pion: prijszetting</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q8a" data-q="q8a">8a · MK afleiden uit grafiek</a>
+        <a class="nav-q" href="#q8b" data-q="q8b">8b · GTK bij strategie A</a>
+        <a class="nav-q" href="#q8c" data-q="q8c">8c · Vergelijking strategie A en B</a>
+        <a class="nav-q" href="#q8d" data-q="q8d">8d · Productdifferentiatie als toetre...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-9">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">9 &middot; Van monopolie via oligopolie n</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q9a" data-q="q9a">9a · MK en GTK afleiden</a>
+        <a class="nav-q" href="#q9b" data-q="q9b">9b · Vraaglijn tekenen</a>
+        <a class="nav-q" href="#q9c" data-q="q9c">9c · MO-lijn afleiden</a>
+        <a class="nav-q" href="#q9d" data-q="q9d">9d · Monopolie-evenwicht</a>
+        <a class="nav-q" href="#q9e" data-q="q9e">9e · CS, PS, TS bij monopolie</a>
+        <a class="nav-q" href="#q9f" data-q="q9f">9f · Individuele aanbodfunctie</a>
+        <a class="nav-q" href="#q9g" data-q="q9g">9g · Collectieve aanbodlijn (5 aanbie...</a>
+        <a class="nav-q" href="#q9h" data-q="q9h">9h · Evenwicht bij 5 aanbieders</a>
+        <a class="nav-q" href="#q9i" data-q="q9i">9i · Individuele productie en winst</a>
+        <a class="nav-q" href="#q9j" data-q="q9j">9j · CS, PS, TS bij 5 aanbieders</a>
+        <a class="nav-q" href="#q9k" data-q="q9k">9k · Aanbodlijn bij 23 aanbieders</a>
+        <a class="nav-q" href="#q9l" data-q="q9l">9l · Evenwicht bij 23 aanbieders</a>
+        <a class="nav-q" href="#q9m" data-q="q9m">9m · Individuele productie en winst (...</a>
+        <a class="nav-q" href="#q9n" data-q="q9n">9n · CS, PS, TS bij vrije toetreding</a>
+        <a class="nav-q" href="#q9o" data-q="q9o">9o · Vergelijking en Pareto-efficiëntie</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.7 &middot; Begeleide inoefening</span>
+        <h1>Toepassen &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">Mozart en marktmacht</div>
+            <div class="hero-card-count">4 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Kernbegrippen herhalen</div>
+            <div class="hero-card-count">1 deelvraag</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Duopolie: reactielijnen en evenwich</div>
+            <div class="hero-card-count">4 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">Van monopolie naar volkomen concurr</div>
+            <div class="hero-card-count">9 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Internationale handel: tarwemarkt B</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Fly Direct: omzet en prijsdiscrimin</div>
+            <div class="hero-card-count">16 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-7">
+            <div class="hero-card-num">Opgave 7</div>
+            <div class="hero-card-title">Capaciteitsvergroting en verdeling </div>
+            <div class="hero-card-count">5 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-8">
+            <div class="hero-card-num">Opgave 8</div>
+            <div class="hero-card-title">Onderneming Pion: prijszetting en p</div>
+            <div class="hero-card-count">4 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-9">
+            <div class="hero-card-num">Opgave 9</div>
+            <div class="hero-card-title">Van monopolie via oligopolie naar v</div>
+            <div class="hero-card-count">15 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Mozart en marktmacht</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees nog eens de introductie van het hoofdstuk over Mozarts brief aan zijn vader.</p>
+
+        <div class="question-card" id="q1a">
+          <div class="question-header">
+            <div class="question-label">Vraag 1a — Welke markt?</div>
+            <div class="question-text">Over welke markt schrijft Mozart aan zijn vader?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Lees de brief: wat biedt Mozart aan?<br>2. Identificeer het product en de markt</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Mozart heeft een vaardigheid die hij kan verkopen als dienst.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De markt voor muziekles geven.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Mozart biedt muziekles aan als dienst. Dit is een markt met vragers (leerlingen) en een aanbieder (Mozart).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1b">
+          <div class="question-header">
+            <div class="question-label">Vraag 1b — Marktmacht herkennen</div>
+            <div class="question-text">Waaruit blijkt dat Mozart over marktmacht beschikt?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Zoek in de tekst naar aanwijzingen dat Mozart de markt kan beïnvloeden<br>2. Denk aan: kan hij zijn prijs zelf bepalen? Heeft hij meer vraag dan aanbod?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Marktmacht = het vermogen om de prijs boven het concurrentieniveau te zetten.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Hij kan zoveel leerlingen krijgen als hij wil.<br>Er is meer vraag naar zijn lessen dan hij kan aanbieden → hij heeft marktmacht.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als de vraag het aanbod overtreft, heeft de aanbieder marktmacht. Hij kan kiezen aan wie hij verkoopt en tegen welke prijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1c">
+          <div class="question-header">
+            <div class="question-label">Vraag 1c — Verklaring marktmacht</div>
+            <div class="question-text">Geef een verklaring voor de marktmacht van Mozart.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Waarom zouden mensen speciaal bij Mozart les willen?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Hij was een beroemde componist waar iedereen graag muziekles van kreeg.<br>Zijn unieke talent en reputatie vormen een toetredingsbarrière: niemand anders kan hetzelfde bieden.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Mozarts talent maakt zijn product uniek (heterogeen). Er zijn geen goede substituten, waardoor hij een monopoliepositie heeft op 'muziekles van Mozart'.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1d">
+          <div class="question-header">
+            <div class="question-label">Vraag 1d — Toepassing marktmacht</div>
+            <div class="question-text">Waaruit blijkt dat Mozart begrijpt wat je met marktmacht kunt doen?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Hij wil de prijs van muziekles verhogen zodat hij minder leerlingen krijgt, maar de leerlingen die hij krijgt betalen meer.<br>Dit is exact wat een monopolist doet: prijs verhogen, hoeveelheid verlagen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Mozart past instinctief het principe van winstmaximalisatie toe: door de prijs te verhogen daalt de hoeveelheid, maar stijgt de opbrengst per les. Dit is het kerngedrag van een aanbieder met marktmacht.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Kernbegrippen herhalen</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 1. Welke woorden zijn weggelaten op de plaats A tot en met F?</p>
+
+        <div class="question-card" id="qvraag2invuloefe">
+          <div class="question-header">
+            <div class="question-label">Vraag 2 — Invuloefening marktvormen</div>
+            <div class="question-text">Vul de juiste woorden in op plaats A tot en met F.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Lees de tekst zorgvuldig en bepaal per gat welk begrip past<br>2. Denk aan de vier marktvormen en hun kenmerken<br>3. Controleer of de ingevulde woorden logisch samenhangen</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De tekst gaat over de kenmerken van verschillende marktvormen. Denk aan: type product, aantal aanbieders, toetredingsdrempels, prijszetting.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = –0,5p + 600  →  p = –2Q + 1.200<br>GTK = 3q + 10.800/q<br>TK = GTK × q = 3q² + 10.800<br>MK = TK' = 6q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Deze invuloefening test of je de kernbegrippen van alle marktvormen uit hoofdstuk 2 beheerst. Het is een goede zelfevaluatie.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Duopolie: reactielijnen en evenwicht</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = –0,5p + 600  →  p = –2Q + 1.200<br>GTK = 3q + 10.800/q<br>TK = GTK × q = 3q² + 10.800<br>MK = TK' = 6q</div>
+        <p class="opgave-intro">Op een markt is sprake van een duopolie. Qv = –0,5p + 600. Elke aanbieder heeft GTK = 3q + 10.800/q. Aanbieders concurreren op hoeveelheid.</p>
+
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a — Reactielijn afleiden</div>
+            <div class="question-text">Toon met een berekening aan dat de formule voor de reactielijn van aanbieder 1 q₁ = 120 – 0,2q₂ luidt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Volg het stappenplan: residuele vraag → TO → MO → MO = MK → los op naar q₁.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Residuele vraag: q₁ = –0,5p + 600 – q₂<br>Omschrijven naar p: p = 1.200 – 2q₁ – 2q₂<br>MO = afgeleide van TO naar q₁<br>MK = 6q₁</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = 1.200 – 2q₁ – 2q₂<br>TO₁ = p × q₁ = 1.200q₁ – 2q₁² – 2q₂q₁<br>MO₁ = 1.200 – 4q₁ – 2q₂<br>TK = 3q₁² + 10.800 → MK₁ = 6q₁<br>MO = MK: 1.200 – 4q₁ – 2q₂ = 6q₁<br>10q₁ = 1.200 – 2q₂<br>q₁ = 120 – 0,2q₂ ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door het Cournot-model systematisch toe te passen: residuele vraag → TO → MO → MO=MK, leid je de reactielijn af. De coëfficiënt –0,2 geeft aan hoeveel aanbieder 1 zijn productie verlaagt per extra eenheid van aanbieder 2.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b — Evenwichtshoeveelheden</div>
+            <div class="question-text">Toon met een berekening aan dat zowel aanbieder 1 als aanbieder 2 100 stuks zal aanbieden.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vul de reactielijn van aanbieder 2 (q₂ = 120 – 0,2q₁) in de reactielijn van aanbieder 1 in.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q₁ = 120 – 0,2(120 – 0,2q₁)<br>q₁ = 120 – 24 + 0,04q₁<br>0,96q₁ = 96<br>q₁ = 100<br>q₂ = 120 – 0,2 × 100 = 100 ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door de symmetrische kosten produceren beide aanbieders evenveel. Het stelsel van twee vergelijkingen (de reactielijnen) levert het Cournot-Nash-evenwicht op.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3c">
+          <div class="question-header">
+            <div class="question-label">Vraag 3c — Evenwichtsprijs</div>
+            <div class="question-text">Bereken de prijs bij marktevenwicht.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = 1.200 – 2q₁ – 2q₂ = 1.200 – 200 – 200<br>p = € 800</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De evenwichtsprijs bij het duopolie (€ 800) ligt tussen de monopolieprijs en de prijs bij volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3d">
+          <div class="question-header">
+            <div class="question-label">Vraag 3d — Winst</div>
+            <div class="question-text">Bereken de winst van beide aanbieders.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = –0,25p + 180  →  p = –4Q + 720<br>TK = 2Q² + 450<br>MK = TK' = 4Q<br>GTK = 2Q + 450/Q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Beide aanbieders maken positieve winst. Dit is kenmerkend voor een oligopolie: de prijs ligt boven de GTK, maar toetreding wordt verhinderd door de marktstructuur.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Van monopolie naar volkomen concurrentie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = –0,25p + 180  →  p = –4Q + 720<br>TK = 2Q² + 450<br>MK = TK' = 4Q<br>GTK = 2Q + 450/Q</div>
+        <p class="opgave-intro">Een monopolist heeft Qv = –0,25p + 180, TK = 2Q² + 450. Stel dat de marktvorm verandert naar volkomen concurrentie met TK = 2q² + 450 per aanbieder.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a — Maximale omzet monopolist</div>
+            <div class="question-text">Bereken de maximaal haalbare omzet voor de monopolist.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Maximale omzet: stel MO = 0 (niet MO = MK!). Dat geeft de omzetmaximaliserende hoeveelheid.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">TO = p × Q = (–4Q + 720) × Q = –4Q² + 720Q<br>MO = TO' = –8Q + 720<br>Maximale omzet: MO = 0</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: MO = 0 voor maximale omzet, MO = MK voor maximale winst. Verwar deze niet!</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = –4Q² + 720Q<br>MO = –8Q + 720<br>MO = 0: –8Q + 720 = 0 → Q = 90<br>Maximale TO = –4(90)² + 720(90) = € 32.400</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Let op het verschil: maximale omzet (MO = 0) versus maximale winst (MO = MK). Bij maximale omzet produceert de monopolist méér dan bij maximale winst.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b — Maximale winst monopolist</div>
+            <div class="question-text">Bereken de maximaal haalbare winst voor de monopolist.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Nu geldt MO = MK. Bereken Q, dan p, dan TO, dan TK, dan winst.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: –8Q + 720 = 4Q → 12Q = 720 → Q = 60<br>p = –4(60) + 720 = € 480<br>TO = 480 × 60 = € 28.800<br>TK = 2(60)² + 450 = € 7.650<br>Winst = € 28.800 – € 7.650 = € 21.150</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij winstmaximalisatie produceert de monopolist minder (60 vs. 90) tegen een hogere prijs (€ 480 vs. € 360) dan bij omzetmaximalisatie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4c">
+          <div class="question-header">
+            <div class="question-label">Vraag 4c — CS en PS arceren</div>
+            <div class="question-text">Arceer het consumenten- en producentensurplus van de monopolist in de grafiek.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">CS: driehoek boven p = 480 tot aan de vraaglijn. PS: oppervlak tussen p = 480 en MK-lijn bij Q = 60.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS: driehoek met hoekpunten (0, 720), (0, 480), (60, 480)<br>PS: oppervlak tussen p = 480 en MK = 4Q, van Q = 0 tot Q = 60</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het PS van de monopolist is groter dan bij volkomen concurrentie (hogere prijs), terwijl het CS kleiner is.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4d">
+          <div class="question-header">
+            <div class="question-label">Vraag 4d — CS en PS berekenen</div>
+            <div class="question-text">Bereken het consumenten- en producentensurplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (720 – 480) × 60 × 0,5 = € 7.200<br>PS = (480 – 240) × 60 + (240 – 0) × 60 × 0,5<br>PS = 14.400 + 7.200 = € 21.600</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het PS (€ 21.600) is veel groter dan het CS (€ 7.200). De monopolist eigent zich een groot deel van het surplus toe door de hoge prijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4e">
+          <div class="question-header">
+            <div class="question-label">Vraag 4e — Individuele aanbodfunctie</div>
+            <div class="question-text">Bepaal de individuele aanbodfunctie bij volkomen concurrentie.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij volkomen concurrentie: p = MO = MK<br>p = 4q → q = 0,25p<br>Individuele aanbodfunctie: q = 0,25p (geldig voor p ≥ 0)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is de individuele aanbodlijn gelijk aan de MK-lijn (boven het minimum van de GVK). Elke aanbieder is een prijsnemer.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4f">
+          <div class="question-header">
+            <div class="question-label">Vraag 4f — Lange termijn volkomen concurrentie</div>
+            <div class="question-text">Bereken het marktevenwicht op de lange termijn. Hoeveel aanbieders treden toe?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Lange termijn: MK = GTK<br>4q = 2q + 450/q → 2q = 450/q → q² = 225 → q = 15<br>GTK = 2(15) + 450/15 = € 60 → p = € 60<br>Q = –0,25(60) + 180 = 165<br>Aantal aanbieders = 165 / 15 = 11</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op de lange termijn bij volkomen concurrentie is de winst nul (p = GTK_min). Het aantal aanbieders wordt bepaald door de marktomvang gedeeld door de efficiënte schaal.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4g">
+          <div class="question-header">
+            <div class="question-label">Vraag 4g — CS en PS bij volkomen concurrentie</div>
+            <div class="question-text">Bereken het bijbehorende consumenten- en producentensurplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (720 – 60) × 165 × 0,5 = € 54.450<br>PS = (60 – 0) × 165 × 0,5 = € 4.950</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is het CS veel groter (€ 54.450 vs. € 7.200) en het PS veel kleiner (€ 4.950 vs. € 21.600) dan bij monopolie. Het totale surplus is echter groter.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4h">
+          <div class="question-header">
+            <div class="question-label">Vraag 4h — Harbergerdriehoek arceren</div>
+            <div class="question-text">Arceer de oppervlakte van de Harbergerdriehoek in de grafiek.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De Harbergerdriehoek is het verschil in totaal surplus tussen volkomen concurrentie en monopolie.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De Harbergerdriehoek is het gebied tussen de vraaglijn en de MK-lijn, van Q = 60 (monopolie) tot Q = 165 (volkomen concurrentie).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit gebied representeert het welvaartsverlies door marktmacht: transacties die bij volkomen concurrentie wél zouden plaatsvinden, maar door de hogere monopolieprijs niet tot stand komen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4i">
+          <div class="question-header">
+            <div class="question-label">Vraag 4i — Harbergerdriehoek berekenen</div>
+            <div class="question-text">Bereken de waarde van de Harbergerdriehoek.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa = 100.000p – 50.000<br>Qv = –200.000p + 1.000.000<br>Wereldmarktprijs = € 2,50</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het welvaartsverlies van € 30.600 is het verschil in totaal surplus. Dit is meer dan het totale surplus bij monopolie — een enorm efficiëntieverlies door marktmacht.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Internationale handel: tarwemarkt Bolanië</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qa = 100.000p – 50.000<br>Qv = –200.000p + 1.000.000<br>Wereldmarktprijs = € 2,50</div>
+        <p class="opgave-intro">In Bolanië gelden: aanbod Qa = 100.000p – 50.000, vraag Qv = –200.000p + 1.000.000. De wereldmarktprijs voor tarwe is € 2,50.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a — Evenwicht bij gesloten grenzen</div>
+            <div class="question-text">Toon met een berekening aan dat de evenwichtshoeveelheid bij gesloten grenzen 300.000 eenheden tarwe is.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Stel Qa = Qv en los op naar p, vul dan p terug in.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">100.000p – 50.000 = –200.000p + 1.000.000<br>300.000p = 1.050.000<br>p = € 3,50<br>Qa = 100.000 × 3,50 – 50.000 = 300.000 ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij gesloten grenzen geldt het binnenlandse evenwicht. De evenwichtsprijs (€ 3,50) is hoger dan de wereldmarktprijs (€ 2,50) — er is dus een prikkel om grenzen te openen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b — Prijsdaling bij open grenzen</div>
+            <div class="question-text">Leg uit waarom de evenwichtsprijs daalt tot € 2,50 bij open grenzen. Gebruik drie stappen.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Redeneer via het effect op vragers OF op aanbieders. Beschrijf het aanpassingsproces.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Stap 1: Vragers kopen liever in het buitenland tarwe voor € 2,50.<br>Stap 2: De binnenlandse vraaglijn verschuift naar links → evenwichtsprijs daalt.<br>Stap 3: Dit gaat door totdat de binnenlandse prijs ook € 2,50 is.<br><br>Alternatieve redenering:<br>Stap 1: Buitenlandse aanbieders treden toe op de Bolanische markt.<br>Stap 2: De aanbodlijn verschuift naar rechts.<br>Stap 3: Toetreding gaat door tot de prijs gelijk is aan de wereldmarktprijs.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij open grenzen convergeert de binnenlandse prijs naar de wereldmarktprijs. Dit is het kernmechanisme van internationale handel: arbitrage elimineert prijsverschillen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c — Afname binnenlands aanbod</div>
+            <div class="question-text">Welke variant in bron 4 geeft de afname van het binnenlandse aanbod correct weer?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = –2p + 1.200  →  p = –0,5Q + 600<br>TO = –0,5Q² + 600Q<br>MO = –Q + 600</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De prijsdaling zorgt ervoor dat binnenlandse producenten minder produceren (langs de aanbodlijn omlaag). Het verschil wordt opgevuld door import.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Fly Direct: omzet en prijsdiscriminatie</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = –2p + 1.200  →  p = –0,5Q + 600<br>TO = –0,5Q² + 600Q<br>MO = –Q + 600</div>
+        <p class="opgave-intro">Fly Direct heeft vraaglijn: Qv = –2p + 1.200. Fly Direct past prijsdiscriminatie toe.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — Collectieve vraaglijn tekenen</div>
+            <div class="question-text">Teken de collectieve vraaglijn in de middelste en rechtergrafiek van bron 5.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De vraaglijn snijdt de p-as bij 600 en de Q-as bij 1.200.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraaglijn: p = –0,5Q + 600<br>Snijpunt p-as: Q = 0 → p = 600<br>Snijpunt Q-as: p = 0 → Q = 1.200</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De vraaglijn is een dalende rechte lijn van (0, 600) naar (1.200, 0).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — TO-formule afleiden</div>
+            <div class="question-text">Laat zien dat uit de vraagvergelijking TO = –0,5Q² + 600Q volgt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">TO = p × Q. Vul p = –0,5Q + 600 in.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = –2p + 1.200 → p = –0,5Q + 600<br>TO = p × Q = (–0,5Q + 600) × Q = –0,5Q² + 600Q ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De TO-functie is een bergparabool (coëfficiënt van Q² is negatief) met een maximum bij MO = 0.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c — TO tekenen</div>
+            <div class="question-text">Teken de TO in de linkergrafiek van bron 5.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = –0,5Q² + 600Q is een bergparabool.<br>Maximum bij Q = 600, TO = € 180.000.<br>Snijpunten Q-as: Q = 0 en Q = 1.200.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De TO-curve stijgt eerst (MO > 0), bereikt een maximum (MO = 0), en daalt daarna (MO < 0).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6d">
+          <div class="question-header">
+            <div class="question-label">Vraag 6d — Omzetmaximaliserende hoeveelheid</div>
+            <div class="question-text">Bepaal bij welke hoeveelheid de omzet maximaal is.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = 0: –Q + 600 = 0<br>Q = 600</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij MO = 0 is de marginale bijdrage van een extra verkocht product aan de omzet nul. Daarna wordt MO negatief.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6e">
+          <div class="question-header">
+            <div class="question-label">Vraag 6e — Omzetmaximaliserende prijs</div>
+            <div class="question-text">Bij welke prijs is de omzet maximaal?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = –0,5(600) + 600<br>p = € 300</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een lineaire vraaglijn ligt de omzetmaximaliserende prijs altijd precies halverwege de maximale betalingsbereidheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6f">
+          <div class="question-header">
+            <div class="question-label">Vraag 6f — Maximale omzet</div>
+            <div class="question-text">Hoe groot is de maximale omzet zonder prijsdiscriminatie?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = 300 × 600 = € 180.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is de maximale omzet bij één uniforme prijs. Met prijsdiscriminatie kan de omzet hoger worden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6g">
+          <div class="question-header">
+            <div class="question-label">Vraag 6g — Maximale omzet tekenen</div>
+            <div class="question-text">Teken de maximale omzet als oppervlakte in de middelste grafiek.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Rechthoek met breedte Q = 600 en hoogte p = 300.<br>Oppervlakte = 600 × 300 = € 180.000.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De omzet is visueel de oppervlakte van de rechthoek onder de prijs en links van de hoeveelheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6h">
+          <div class="question-header">
+            <div class="question-label">Vraag 6h — Reizigers bij p = 400</div>
+            <div class="question-text">Hoeveel reizigers zijn bereid om € 400 voor een ticket te betalen?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = –2(400) + 1.200<br>Q = 400 reizigers</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit zijn de reizigers met een hoge betalingsbereidheid — de groep die Fly Direct een hogere prijs kan vragen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6i">
+          <div class="question-header">
+            <div class="question-label">Vraag 6i — Omzet bij p = 400 tekenen</div>
+            <div class="question-text">Teken de behaalde omzet bij p = 400 als oppervlakte in de rechtergrafiek.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Rechthoek: breedte 400, hoogte € 400.<br>Oppervlakte = 400 × 400 = € 160.000.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Deze rechthoek toont de omzet van alleen de duurdere tickets.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6j">
+          <div class="question-header">
+            <div class="question-label">Vraag 6j — Type klanten</div>
+            <div class="question-text">Aan wat voor soort klanten kun je denken bij de groep die € 400 betaalt?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Mensen met een hoger inkomen.<br>Zakenmensen die per se naar Rome moeten (noodzakelijke reis).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Deze klanten hebben een lage prijselasticiteit: ze haken niet snel af bij een prijsstijging.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6k">
+          <div class="question-header">
+            <div class="question-label">Vraag 6k — Prijselasticiteit</div>
+            <div class="question-text">Welke prijselasticiteit van de vraag past bij deze groep klanten?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Een lage prijselasticiteit (inelastische vraag).<br>Zij haken niet af als de prijs van € 200 naar € 400 stijgt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Prijsdiscriminatie werkt alleen als je groepen met verschillende prijselasticiteiten kunt scheiden. De groep met lage elasticiteit betaalt meer.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6l">
+          <div class="question-header">
+            <div class="question-label">Vraag 6l — Waarom niet 800 reizigers voor € 200?</div>
+            <div class="question-text">Bij p = 200 willen 800 reizigers vliegen. Waarom reizen er niet 800 voor € 200?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Onder die 800 reizigers bevinden zich ook de 400 reizigers die bereid zijn € 400 te betalen.<br>Die groep betaalt nu € 400.<br>Het restant (800 – 400 = 400 reizigers) reist voor € 200.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij prijsdiscriminatie wordt het consumentensurplus van de groep met hoge betalingsbereidheid afgeroomd. Zij betalen meer dan de uniforme prijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6m">
+          <div class="question-header">
+            <div class="question-label">Vraag 6m — Omzet p = 200 tekenen</div>
+            <div class="question-text">Teken de behaalde omzet bij p = 200 als oppervlakte in de rechtergrafiek.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Rechthoek: breedte 400 (van Q = 400 tot Q = 800), hoogte € 200.<br>Oppervlakte = 400 × 200 = € 80.000.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is de omzet van de goedkopere tickets, naast de al getekende omzet van de duurdere tickets.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6n">
+          <div class="question-header">
+            <div class="question-label">Vraag 6n — Totale omzet bij prijsdiscriminatie</div>
+            <div class="question-text">Bereken de totaal behaalde omzet bij prijsdiscriminatie.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = (€ 400 × 400) + (€ 200 × 400)<br>TO = € 160.000 + € 80.000<br>TO = € 240.000<br>Dit is € 60.000 meer dan zonder prijsdiscriminatie (€ 180.000).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door prijsdiscriminatie stijgt de omzet met 33%. De monopolist roomt een deel van het voormalige consumentensurplus af.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6o">
+          <div class="question-header">
+            <div class="question-label">Vraag 6o — Klantenscheiding</div>
+            <div class="question-text">Bedenk twee manieren om de verschillende groepen klanten te scheiden.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">1. Weekendtarieven vs. doordeweekse tarieven (zakenmensen vliegen doordeweeks).<br>2. Verschil in leeftijd (studenten vs. werkenden).<br>3. Vroeg boeken vs. laat boeken (last-minute is duurder).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Prijsdiscriminatie vereist dat groepen gescheiden kunnen worden. Als klanten makkelijk naar het goedkopere tarief kunnen switchen, werkt het niet.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6p">
+          <div class="question-header">
+            <div class="question-label">Vraag 6p — Maximale theoretische omzet</div>
+            <div class="question-text">Welke omzet is wiskundig maximaal mogelijk als Fly Direct de prijsdiscriminatie tot in het oneindige doorvoert?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij perfecte prijsdiscriminatie betaalt elke reiziger exact zijn betalingsbereidheid.<br>De maximale omzet is de oppervlakte onder de gehele vraaglijn:<br>TO_max = (€ 600 × 1.200) × 0,5 = € 360.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij perfecte (1ste-graads) prijsdiscriminatie wordt het volledige consumentensurplus afgeroomd. Het CS wordt nul, het PS is maximaal. De hoeveelheid is hetzelfde als bij volkomen concurrentie, maar alle welvaart gaat naar de producent.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-7">
+        <div class="opgave-header">
+          <span class="opgave-num">7</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Capaciteitsvergroting en verdeling surplus</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">In bron 7 staat een markt waarop aanbieders de capaciteit van Q = 600 vergroten naar een nieuw evenwicht bij Q = 800.</p>
+
+        <div class="question-card" id="q7a">
+          <div class="question-header">
+            <div class="question-label">Vraag 7a — Capaciteitsvergroting aflezen</div>
+            <div class="question-text">Hoe kun je uit de grafiek afleiden dat de capaciteit met meer dan 200 vergroot is?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De aanbodlijn loopt bij Q = 800 niet verticaal.<br>De aanbodlijn loopt bij grotere aantallen nog door, dus de maximale capaciteit is groter dan 800.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een verticale aanbodlijn duidt op maximale capaciteit. Als de lijn doorloopt, is er nog ruimte om meer te produceren.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7b">
+          <div class="question-header">
+            <div class="question-label">Vraag 7b — Verandering totaal surplus</div>
+            <div class="question-text">Welke oppervlaktes geven de verandering van het totale surplus aan?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Oppervlaktes D en E</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> D en E zijn de gebieden die door de capaciteitsvergroting bij het totale surplus worden opgeteld. Het surplus stijgt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7c">
+          <div class="question-header">
+            <div class="question-label">Vraag 7c — CS-stijging zonder berekening</div>
+            <div class="question-text">Hoe kun je zonder berekening afleiden dat de capaciteitsvergroting een groter CS oplevert?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De evenwichtshoeveelheid stijgt en de evenwichtsprijs daalt.<br>Het verschil tussen betalingsbereidheid en prijs is groter bij meer verkochte stuks.<br>Dit leidt altijd tot een groter consumentensurplus.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Zowel een lagere prijs als een hogere hoeveelheid vergroten het CS. Het is een dubbel positief effect voor consumenten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7d">
+          <div class="question-header">
+            <div class="question-label">Vraag 7d — CS en PS verandering berekenen</div>
+            <div class="question-text">Bereken de verandering van het CS en PS in euro&#x27;s.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">PS verlies (oppervlakte B): € 600.000<br>PS winst (oppervlakte E): € 100.000<br>PS daalt per saldo met € 500.000<br>CS stijgt met € 700.000 (oppervlaktes B + D)<br>Netto welvaartsstijging: € 700.000 – € 500.000 = € 200.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De capaciteitsvergroting herverdelt surplus van producenten naar consumenten. Maar het totale surplus stijgt ook: er is een netto welvaartswinst van € 200.000.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7e">
+          <div class="question-header">
+            <div class="question-label">Vraag 7e — Lagere toetredingsdrempel</div>
+            <div class="question-text">Welk gevolg heeft een verlaging van de toetredingsdrempel voor de verdeling van het surplus?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Stap 1: Een lagere drempel verhoogt het aantal aanbieders.<br>Stap 2: De evenwichtsprijs wordt lager bij een grotere evenwichtshoeveelheid.<br>Stap 3: Dit verhoogt het CS ten koste van het PS.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Lagere toetredingsbarrières versterken de concurrentie. Dit is gunstig voor consumenten maar ongunstig voor bestaande producenten — een belangrijk argument voor mededingingsbeleid.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-8">
+        <div class="opgave-header">
+          <span class="opgave-num">8</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Onderneming Pion: prijszetting en productdifferentiatie</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees en bekijk bron 8. Pion heeft de prijsafzetfunctie GO = –2q + 300.</p>
+
+        <div class="question-card" id="q8a">
+          <div class="question-header">
+            <div class="question-label">Vraag 8a — MK afleiden uit grafiek</div>
+            <div class="question-text">Leg uit hoe uit bron 8 kan worden afgeleid dat in de uitgangssituatie MK = 80.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Maximale winst bij p = € 190 → MO = MK bij die hoeveelheid.<br>GO = –2q + 300, bij p = 190: q = 55<br>MO = –4q + 300 = –4(55) + 300 = 80<br>Dus MK = 80 (want MO = MK bij winstmaximum)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij winstmaximalisatie geldt MO = MK. Door de winstmaximaliserende prijs te gebruiken, kun je de bijbehorende hoeveelheid en daarmee de MK terugrekenen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8b">
+          <div class="question-header">
+            <div class="question-label">Vraag 8b — GTK bij strategie A</div>
+            <div class="question-text">Toon aan dat de GTK € 150 zullen zijn bij uitvoering van strategie A.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK = GVK = € 80<br>GCK = € 4,9 miljard / 70 miljoen = € 70<br>GTK = GVK + GCK = € 80 + € 70 = € 150<br><br>Alternatief: bij q = 70: p = –2(70) + 300 = 160<br>TO = 160 × 70 mln = € 11,2 mld<br>W = € 0,7 mld → TK = € 10,5 mld<br>GTK = € 10,5 mld / 70 mln = € 150 ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De GTK bestaan uit variabele kosten (GVK = MK bij constante MK) en constante kosten per eenheid (GCK). Beide methoden geven hetzelfde antwoord.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8c">
+          <div class="question-header">
+            <div class="question-label">Vraag 8c — Vergelijking strategie A en B</div>
+            <div class="question-text">Toon met een berekening aan dat de maximale winst bij strategie B lager is dan bij strategie A.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Markt 1: MO = MK: –8q + 300 = 100 → q = 25, p = 200<br>Markt 2: MO = MK: –2q + 150 = 40 → q = 55, p = 95<br>TO = (200 × 25 mln) + (95 × 55 mln) = € 10,225 mld<br>TK = (25 × 100 mln) + (55 × 40 mln) + € 4,92 mld = € 9,62 mld<br>Winst B = € 0,605 mld < Winst A = € 0,7 mld</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Hoewel strategie B twee markten bedient en prijsdiscriminatie toepast, is de totale winst lager door de hogere kosten van het tweede product.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8d">
+          <div class="question-header">
+            <div class="question-label">Vraag 8d — Productdifferentiatie als toetredingsbarrière</div>
+            <div class="question-text">Leg uit hoe een onderneming door productdifferentiatie de toetreding van concurrenten moeilijker kan maken.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = 100 – p  →  p = 100 – Q<br>TK = 8 + 4q + ½q²<br>GTK = 8/q + 4 + ½q<br>MK = 4 + q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Productdifferentiatie verhoogt de toetredingsdrempel omdat concurrenten niet alleen moeten produceren, maar ook moeten innoveren of differentiëren. Dit vergt extra investeringen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-9">
+        <div class="opgave-header">
+          <span class="opgave-num">9</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Van monopolie via oligopolie naar vrije toetreding</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = 100 – p  →  p = 100 – Q<br>TK = 8 + 4q + ½q²<br>GTK = 8/q + 4 + ½q<br>MK = 4 + q</div>
+        <p class="opgave-intro">Vraaglijn: Qv = 100 – p. Kostenformule: TK = 8 + 4q + ½q². Eerst één aanbieder (monopolie), dan toetreding van 4 (5 totaal, volkomen conc.), dan vrije toetreding (23 aanbieders).</p>
+
+        <div class="question-card" id="q9a">
+          <div class="question-header">
+            <div class="question-label">Vraag 9a — MK en GTK afleiden</div>
+            <div class="question-text">Leid de formule af voor de MK-lijn en GTK-lijn. Teken deze lijnen.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">GTK = TK/q = 8/q + 4 + ½q<br>MK = TK' = 4 + q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De MK-lijn is een stijgende rechte lijn (begint bij 4). De GTK-lijn is een dalende-stijgende curve (door de constante kosten 8/q).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9b">
+          <div class="question-header">
+            <div class="question-label">Vraag 9b — Vraaglijn tekenen</div>
+            <div class="question-text">Teken de vraaglijn in een nieuw assenstelsel.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = 100 – Q<br>Snijpunt p-as: (0, 100). Snijpunt Q-as: (100, 0).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De vraaglijn is een dalende rechte lijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9c">
+          <div class="question-header">
+            <div class="question-label">Vraag 9c — MO-lijn afleiden</div>
+            <div class="question-text">Leid de formule van de MO-lijn voor de monopolist af.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = p × Q = (100 – Q) × Q = 100Q – Q²<br>MO = TO' = 100 – 2Q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De MO-lijn heeft dezelfde intercept als de vraaglijn maar een dubbel zo steile helling. Dit geldt altijd bij een lineaire vraaglijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9d">
+          <div class="question-header">
+            <div class="question-label">Vraag 9d — Monopolie-evenwicht</div>
+            <div class="question-text">Bereken het marktevenwicht van het monopolie: prijs en hoeveelheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: 100 – 2Q = 4 + Q → 3Q = 96<br>Q_M = 32, p_M = 100 – 32 = € 68</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De monopolist produceert minder en rekent een hogere prijs dan bij volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9e">
+          <div class="question-header">
+            <div class="question-label">Vraag 9e — CS, PS, TS bij monopolie</div>
+            <div class="question-text">Bereken het bijbehorende CS, PS en totale surplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (100 – 68) × 32 × 0,5 = € 512<br>PS: oppervlak tussen p = 68 en MK-lijn (4 + Q) van 0 tot 32<br>PS = (68 – 4) × 32 – ½ × 32 × 32 × ½ = ...<br>(Bereken het exacte PS via de oppervlakte tussen prijs en MK-lijn)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij monopolie is het CS relatief klein en het PS relatief groot vergeleken met volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9f">
+          <div class="question-header">
+            <div class="question-label">Vraag 9f — Individuele aanbodfunctie</div>
+            <div class="question-text">Leid de individuele aanbodfunctie af. Bij welke productieomvang is deze geldig?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij volkomen concurrentie: p = MK<br>p = 4 + q → q = p – 4<br>Geldig voor q ≥ 0, dus p ≥ 4<br>Bij een lagere prijs wordt er niks aangeboden.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De individuele aanbodlijn is gelijk aan de MK-lijn boven het break-even punt. Onder p = 4 maakt de aanbieder verlies op elke eenheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9g">
+          <div class="question-header">
+            <div class="question-label">Vraag 9g — Collectieve aanbodlijn (5 aanbieders)</div>
+            <div class="question-text">Leid de formule af van de aanbodlijn bij 5 aanbieders.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa = 5 × q = 5(p – 4) = 5p – 20<br>Qa = 5p – 20  (ofwel: p = 4 + Qa/5)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De collectieve aanbodlijn is de horizontale sommatie van de individuele aanbodlijnen. Met 5 aanbieders is het aanbod 5× zo groot bij elke prijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9h">
+          <div class="question-header">
+            <div class="question-label">Vraag 9h — Evenwicht bij 5 aanbieders</div>
+            <div class="question-text">Bereken het marktevenwicht: prijs en hoeveelheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = Qa: 100 – p = 5p – 20<br>6p = 120<br>p* = € 20, Q* = 80</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Met 5 aanbieders is de prijs al aanzienlijk lager dan bij monopolie (€ 20 vs. € 68) en de hoeveelheid hoger (80 vs. 32).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9i">
+          <div class="question-header">
+            <div class="question-label">Vraag 9i — Individuele productie en winst</div>
+            <div class="question-text">Hoeveel produceert een individuele aanbieder? Bereken de winst.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q = Q*/5 = 80/5 = 16<br>Winst = TO – TK = 20 × 16 – (8 + 4 × 16 + ½ × 16²)<br>= 320 – (8 + 64 + 128) = 320 – 200<br>Winst = € 120 per aanbieder</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Er is nog positieve winst, wat nieuwe aanbieders aantrekt. Op de lange termijn zal er toetreding plaatsvinden totdat de winst nul is.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9j">
+          <div class="question-header">
+            <div class="question-label">Vraag 9j — CS, PS, TS bij 5 aanbieders</div>
+            <div class="question-text">Bereken CS, PS en totaal surplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (100 – 20) × 80 × 0,5 = € 3.200<br>PS = (20 – 4) × 80 × 0,5 = € 640<br>TS = € 3.200 + € 640 = € 3.840</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het CS is hier veel groter dan bij monopolie (€ 3.200 vs. € 512). Concurrentie is gunstig voor consumenten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9k">
+          <div class="question-header">
+            <div class="question-label">Vraag 9k — Aanbodlijn bij 23 aanbieders</div>
+            <div class="question-text">Leid de formule af van de aanbodlijn bij 23 aanbieders.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa = 23(p – 4) = 23p – 92<br>Qa = 23p – 92  (ofwel: p = 4 + Qa/23)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Met meer aanbieders wordt de collectieve aanbodlijn vlakker: het aanbod reageert sterker op prijsveranderingen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9l">
+          <div class="question-header">
+            <div class="question-label">Vraag 9l — Evenwicht bij 23 aanbieders</div>
+            <div class="question-text">Bereken het marktevenwicht.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = Qa: 100 – p = 23p – 92<br>24p = 192<br>p* = € 8, Q* = 92</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De prijs is nog verder gedaald (€ 8) en de hoeveelheid gestegen (92). De markt benadert volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9m">
+          <div class="question-header">
+            <div class="question-label">Vraag 9m — Individuele productie en winst (23 aanbieders)</div>
+            <div class="question-text">Hoeveel produceert een individuele aanbieder? Bereken de winst.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q = 92/23 = 4<br>Winst = 8 × 4 – (8 + 4 × 4 + ½ × 4²)<br>= 32 – (8 + 16 + 8) = 32 – 32<br>Winst = € 0</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij vrije toetreding is de winst nul. Dit is het lange-termijnevenwicht bij volkomen concurrentie: geen prikkel meer voor toe- of uittreding.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9n">
+          <div class="question-header">
+            <div class="question-label">Vraag 9n — CS, PS, TS bij vrije toetreding</div>
+            <div class="question-text">Bereken CS, PS en totaal surplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (100 – 8) × 92 × 0,5 = € 4.232<br>PS = (8 – 4) × 92 × 0,5 = € 184<br>TS = € 4.232 + € 184 = € 4.416</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het totale surplus is maximaal bij vrije toetreding. Het CS is dominant, het PS is klein.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9o">
+          <div class="question-header">
+            <div class="question-label">Vraag 9o — Vergelijking en Pareto-efficiëntie</div>
+            <div class="question-text">Vergelijk je antwoorden bij vraag e, j en n. Wanneer is er maximale doelmatigheid? Wanneer Pareto-efficiëntie?</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TS monopolie (vraag e): laagst<br>TS 5 aanbieders (vraag j): € 3.840<br>TS vrije toetreding (vraag n): € 4.416 (hoogst)<br>Maximale economische doelmatigheid bij vrije toetreding: TS is het hoogst.<br>Een hogere prijs verhoogt PS maar verlaagt CS meer → TS daalt.<br>Een lagere prijs leidt tot verlies voor aanbieders.<br>Het evenwicht bij vrije toetreding is Pareto-efficiënt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is de kern van de welvaartseconomie: volkomen concurrentie met vrije toetreding leidt tot de Pareto-efficiënte uitkomst. Elke andere marktvorm genereert een lager totaal surplus (Harbergerdriehoek).</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>p = MK, winst = 0 op LT, maximaal TS, Pareto-efficiënt</td></tr>
+            <tr><td>Monopolie</td><td>MO = MK, hoge p, lage Q, Harbergerdriehoek, positieve winst</td></tr>
+            <tr><td>Oligopolie (Cournot)</td><td>Hoeveelheidsconcurrentie, reactielijnen, Nash-evenwicht, p tussen monopolie en vol. conc.</td></tr>
+            <tr><td>Oligopolie (Bertrand)</td><td>Prijsconcurrentie, p → MK (bij homogeen product), Bertrand-paradox</td></tr>
+            <tr><td>Monopol. concurrentie</td><td>Heterogeen product, nulwinst op LT, overcapaciteit, productdifferentiatie</td></tr>
+            <tr><td>Prijsdiscriminatie</td><td>Verschillende prijzen voor verschillende groepen, verhoogt TO ten koste van CS</td></tr>
+            <tr><td>Consumentensurplus</td><td>Betalingsbereidheid – prijs, driehoek boven evenwichtsprijs</td></tr>
+            <tr><td>Producentensurplus</td><td>Prijs – MK, oppervlak tussen prijs en MK-lijn</td></tr>
+            <tr><td>Harbergerdriehoek</td><td>TS_vol.conc. – TS_marktvorm = welvaartsverlies door marktmacht</td></tr>
+            <tr><td>Pareto-efficiëntie</td><td>Geen verbetering mogelijk zonder iemand slechter af te maken</td></tr>
+            <tr><td>Reactielijn</td><td>q_i = f(q_j): optimale productie als functie van concurrent</td></tr>
+            <tr><td>Lange termijn</td><td>Vrije toetreding → winst = 0 → p = GTK_min</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

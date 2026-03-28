@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.7 Toepassen – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 50%, var(--bedrijf-primary) 50% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.7 Toepassen</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktvormen herkennen en vergelijken</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Winstmaximalisatie: MO = MK</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Surplusberekening: CS, PS en TS</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Harbergerdriehoek berekenen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Prijsdiscriminatie toepassen</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Cournot-duopolie oplossen</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-7" data-section="sectie-7">
+      <span class="nav-number">7</span>
+      <span class="nav-text">
+        <span class="nav-title">Internationale handel analyseren</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.7 &middot; Vaardigheden</span>
+        <h1>Toepassen &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Marktvormen herkennen en vergelijken</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Winstmaximalisatie: MO = MK</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Surplusberekening: CS, PS en TS</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Harbergerdriehoek berekenen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Prijsdiscriminatie toepassen</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Cournot-duopolie oplossen</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-7">
+            <div class="hero-card-num">07</div>
+            <div class="hero-card-title">Internationale handel analyseren</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktvormen herkennen en vergelijken</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Om economische markten te begrijpen moet je eerst de marktvorm kunnen herkennen. De marktvorm bepaalt hoeveel marktmacht een aanbieder heeft, en dus hoe de prijs tot stand komt.</p>
+        <h3 class="sub-heading">De vier marktvormen</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>Veel aanbieders, homogeen product, vrije toe-/uittreding</td></tr>
+            <tr><td>Monopolistische concurrentie</td><td>Veel aanbieders, heterogeen product, vrije toe-/uittreding</td></tr>
+            <tr><td>Oligopolie</td><td>Weinig aanbieders, onderlinge afhankelijkheid</td></tr>
+            <tr><td>Monopolie</td><td>Eén aanbieder, geen substituten, geblokkeerde toetreding</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Hoe herken je de marktvorm?</h3>
+        <div class="formula-box">
+            Stap 1: Tel het aantal aanbieders (veel / weinig / één)<br>
+            Stap 2: Bepaal het producttype (homogeen / heterogeen)<br>
+            Stap 3: Beoordeel de toetredingsdrempels (vrij / beperkt / geblokkeerd)<br>
+            Stap 4: Combineer → marktvorm
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Mozart geeft muziekles. Hij is beroemd en heeft veel leerlingen die speciaal bij hem willen. Er zijn weinig alternatieven van dezelfde kwaliteit.</p>
+        <p class="intro-text">Analyse: één aanbieder met een uniek product, geblokkeerde toetreding, maximale marktmacht. Marktvorm: monopolie.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Minder concurrentie = meer marktmacht = hogere prijzen. Dit is de rode draad door alle marktvormen.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Bij oligopolie reageren aanbieders op elkaars gedrag. Dit maakt oligopolie de lastigste marktvorm om te analyseren.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Monopolistische concurrentie is NIET hetzelfde als monopolie! Bij MC zijn er veel aanbieders, bij monopolie slechts één.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een beschrijving van een markt de marktvorm bepalen op basis van de kenmerken?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Vier marktvormen op basis van aanbieders, product en drempels</td></tr>
+            <tr><td>Hoofdregel</td><td>Minder concurrentie = meer marktmacht = hogere prijzen</td></tr>
+            <tr><td>Stappenplan</td><td>Aanbieders → product → drempels → marktvorm</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO = MK) en 4 (Harberger)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Winstmaximalisatie: MO = MK</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Elke aanbieder maximaliseert zijn winst door te produceren tot het punt waar MO = MK. Produceer je meer, dan kost de extra eenheid meer dan hij opbrengt. Produceer je minder, dan laat je winst liggen.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Schrijf de vraagfunctie om naar p = f(Q)<br>
+            Stap 2: Bereken TO = p × Q<br>
+            Stap 3: Neem de afgeleide: MO = TO’<br>
+            Stap 4: Neem de afgeleide: MK = TK’<br>
+            Stap 5: Stel MO = MK en los op voor Q*<br>
+            Stap 6: Vul Q* in de vraagfunctie voor p*<br>
+            Stap 7: Winst = (p* − GTK) × Q*
+        </div>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <p class="intro-text">Gegeven: Qv = −0,25p + 180 en TK = 2Q² + 450</p>
+        <div class="formula-box">
+            p = −4Q + 720<br>
+            TO = p × Q = −4Q² + 720Q<br>
+            MO = −8Q + 720<br>
+            MK = 4Q<br>
+            MO = MK: −8Q + 720 = 4Q → Q* = 60<br>
+            p* = −4(60) + 720 = €480<br>
+            Winst = TO − TK = 28.800 − 7.650 = €21.150
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> MO = MK geeft de winstmaximaliserende hoeveelheid. Lees p* altijd af op de vraaglijn, niet op de MK-lijn.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij volkomen concurrentie geldt MO = p (de prijs is gegeven). Bij alle andere marktvormen moet je MO apart berekenen!
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de winstmaximaliserende Q* en p* berekenen via MO = MK?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>MO = MK geeft de winstmaximaliserende hoeveelheid</td></tr>
+            <tr><td>Formule</td><td>p* aflezen op vraaglijn bij Q*, winst = (p* − GTK) × Q*</td></tr>
+            <tr><td>VC-uitzondering</td><td>Bij VC geldt MO = p (prijs is gegeven)</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (surplus) en 4 (Harberger)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Surplusberekening: CS, PS en TS</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Het surplus meet de welvaart op een markt. CS is het verschil tussen betalingsbereidheid en prijs. PS is het verschil tussen ontvangen prijs en minimale verkoopprijs. Samen vormen ze het TS.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Bepaal het evenwicht (Q*, p*)<br>
+            Stap 2: CS = ½ × Q* × (p_max − p*)<br>
+            Stap 3: PS = ½ × Q* × (p* − p_min)<br>
+            Stap 4: TS = CS + PS
+        </div>
+        <h3 class="sub-heading">Voorbeeld: surplus bij VC</h3>
+        <p class="intro-text">Bij VC: p* = €60, Q* = 165, p_max = €720</p>
+        <div class="formula-box">
+            CS = ½ × 165 × (720 − 60) = ½ × 165 × 660 = €54.450<br>
+            PS = ½ × 165 × (60 − 0) = €4.950<br>
+            TS = 54.450 + 4.950 = €59.400
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> CS is altijd de driehoek BOVEN de prijslijn, PS is de driehoek ONDER de prijslijn (tot aan de aanbodlijn).
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij een monopolist is het PS geen simpele driehoek! Het PS bestaat uit een rechthoek + driehoek. Teken het altijd eerst.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je CS, PS en TS berekenen als oppervlakten in een grafiek?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>CS</td><td>Betalingsbereidheid − prijs (driehoek boven prijslijn)</td></tr>
+            <tr><td>PS</td><td>Prijs − minimale verkoopprijs (driehoek/rechthoek onder prijslijn)</td></tr>
+            <tr><td>TS</td><td>CS + PS</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (Harberger = verschil in TS)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Harbergerdriehoek berekenen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De Harbergerdriehoek meet het welvaartsverlies door monopoliemacht. Een monopolist produceert minder en vraagt een hogere prijs dan bij VC. Het verloren surplus verdwijnt volledig.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Bereken TS bij het monopolie-evenwicht<br>
+            Stap 2: Bereken TS bij volkomen concurrentie<br>
+            Stap 3: Harbergerdriehoek = TS(VC) − TS(monopolie)
+        </div>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <div class="formula-box">
+            TS(monopolie) = CS + PS = 7.200 + 21.600 = €28.800<br>
+            TS(VC) = CS + PS = 54.450 + 4.950 = €59.400<br>
+            Harberger = 59.400 − 28.800 = €30.600
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> De Harbergerdriehoek = TS(VC) − TS(monopolie). Het is altijd een positief getal (welvaartsverlies).
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> De Harbergerdriehoek is altijd positief. Is jouw antwoord negatief? Dan heb je VC en monopolie verwisseld.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Het welvaartsverlies verdwijnt volledig — het gaat niet naar de monopolist. Het is surplus dat niemand meer krijgt.
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Welvaartsverlies (deadweight loss) door marktmacht</td></tr>
+            <tr><td>Formule</td><td>Harberger = TS(VC) − TS(monopolie)</td></tr>
+            <tr><td>Altijd</td><td>Positief getal — negatief = fout</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO = MK) en 3 (surplus)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Prijsdiscriminatie toepassen</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij prijsdiscriminatie vraagt een aanbieder verschillende prijzen aan verschillende groepen klanten voor hetzelfde product. Hierdoor kan de aanbieder CS omzetten in extra omzet en winst.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Bepaal de betalingsbereidheid per groep<br>
+            Stap 2: Stel de optimale prijs per groep vast<br>
+            Stap 3: Bereken de omzet per groep<br>
+            Stap 4: Vergelijk met de omzet zonder discriminatie
+        </div>
+        <h3 class="sub-heading">Voorbeeld: vliegtuigmaatschappij</h3>
+        <p class="intro-text">Fly Direct: Qv = −2p + 1.200</p>
+        <p class="intro-text">Zonder discriminatie: één prijs voor iedereen. Met discriminatie: zakelijke reizigers betalen meer, toeristen minder.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Meer prijzen = hogere omzet. CS wordt omgezet in PS (producentensurplus).
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> De groepen moeten gescheiden kunnen worden. Als klanten makkelijk van groep kunnen wisselen, werkt prijsdiscriminatie niet.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Prijsdiscriminatie is NIET hetzelfde als een prijsverschil door kostenverschillen. Bij discriminatie zijn de kosten gelijk maar de prijzen niet.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de omzet berekenen met en zonder prijsdiscriminatie en het verschil verklaren?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Verschillende prijzen voor hetzelfde product</td></tr>
+            <tr><td>Hoofdregel</td><td>Meer prijzen = hogere omzet (CS wordt PS)</td></tr>
+            <tr><td>Voorwaarde</td><td>Groepen moeten gescheiden kunnen worden</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO = MK) en 3 (surplus)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Cournot-duopolie oplossen</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij een duopolie houdt elke aanbieder rekening met de hoeveelheid van de ander. De reactielijn beschrijft hoeveel een aanbieder produceert als functie van de productie van de concurrent.</p>
+        <p class="intro-text">Het Nash-evenwicht is het punt waar geen van beide aanbieders een reden heeft om af te wijken.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Schrijf p als functie van q₁ en q₂ (via Q = q₁ + q₂)<br>
+            Stap 2: Bereken TO₁ = p × q₁<br>
+            Stap 3: Bereken MO₁ (afgeleide naar q₁)<br>
+            Stap 4: Stel MO₁ = MK₁ → reactielijn 1<br>
+            Stap 5: Herhaal voor aanbieder 2 → reactielijn 2<br>
+            Stap 6: Los het stelsel op (substitutie)
+        </div>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <p class="intro-text">Qv = −0,5p + 600, GTK = 3q + 10.800/q</p>
+        <div class="formula-box">
+            p = 1.200 − 2(q₁ + q₂)<br>
+            TO₁ = [1.200 − 2(q₁ + q₂)] × q₁<br>
+            TO₁ = 1.200q₁ − 2q₁² − 2q₁q₂<br>
+            MO₁ = 1.200 − 4q₁ − 2q₂<br>
+            MK = 6q (via TK’, want TK = 3q² + 10.800)<br>
+            Reactielijn: q₁ = 120 − 0,2q₂
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> De reactielijnen zijn altijd dalend: als je concurrent meer produceert, produceer jij minder.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Bij symmetrische aanbieders (dezelfde kostenfunctie) geldt q₁ = q₂. Je kunt dan direct invullen in één reactielijn.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet dat Q = q₁ + q₂ bij het berekenen van de marktprijs. Vul de totale Q in, niet één individuele q.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je reactielijnen opstellen en het Nash-evenwicht berekenen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Reactielijn: q₁ als functie van q₂ via MO = MK</td></tr>
+            <tr><td>Nash-evenwicht</td><td>Snijpunt van beide reactielijnen</td></tr>
+            <tr><td>Symmetrisch</td><td>q₁ = q₂ bij gelijke kosten</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO = MK) en 1 (marktvorm)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-7">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">7</span>
+          <div class="section-title-group">
+            <div class="section-title">Internationale handel analyseren</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Als grenzen opengaan en de wereldmarktprijs lager is dan de binnenlandse prijs, zullen vragers goedkoper buitenlands aanbod verkiezen. Dit drijft de binnenlandse prijs omlaag naar de wereldmarktprijs.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <div class="formula-box">
+            Stap 1: Bereken het binnenlandse evenwicht (gesloten economie)<br>
+            Stap 2: Vergelijk binnenlandse prijs met wereldmarktprijs<br>
+            Stap 3: Bij p_wereld < p_binnenland → import<br>
+            Stap 4: Import = Qv(p_wereld) − Qa(p_wereld)<br>
+            Stap 5: Bereken het nieuwe CS, PS en TS
+        </div>
+        <h3 class="sub-heading">Voorbeeld: Bolanië</h3>
+        <p class="intro-text">Bolanië: Qa = 100.000p − 50.000, Qv = −200.000p + 400.000</p>
+        <p class="intro-text">Binnenlands evenwicht: p = €1,50. Wereldmarktprijs: €0,80.</p>
+        <div class="formula-box">
+            Bij p_wereld = €0,80:<br>
+            Qa = 100.000(0,80) − 50.000 = 30.000<br>
+            Qv = −200.000(0,80) + 400.000 = 240.000<br>
+            Import = 240.000 − 30.000 = 210.000 stuks
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij open grenzen geldt de wereldmarktprijs. Binnenlandse aanbieders moeten concurreren met de wereldprijs.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> De binnenlandse prijs kan niet onder de wereldmarktprijs zakken. Binnenlandse aanbieders die niet tegen die prijs kunnen produceren, vallen af.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij internationale handel: vergeet niet de verschuiving van surplus te berekenen. CS stijgt, PS daalt, en het TS kan veranderen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de import berekenen en het effect op CS, PS en TS analyseren?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Wereldmarktprijs bepaalt binnenlandse prijs bij open grenzen</td></tr>
+            <tr><td>Import</td><td>Qv − Qa als wereldmarktprijs &lt; binnenlandse prijs</td></tr>
+            <tr><td>Export</td><td>Qa − Qv als wereldmarktprijs &gt; binnenlandse prijs</td></tr>
+            <tr><td>Surplus</td><td>CS stijgt bij lagere prijs, PS daalt</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (surplus) en 1 (marktvorm)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij monopolie is MO ≠ p. Lees de prijs altijd af op de vraaglijn bij Q*, niet op de MO- of MK-lijn.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> GTK is NIET de afgeleide van TK, maar TK gedeeld door Q. Dit is een van de meest gemaakte fouten.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij internationale handel: vergeet niet de verschuiving van surplus te berekenen. CS stijgt, PS daalt — het netto-effect op TS is niet altijd positief.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Bij het Cournot-model: Q = q₁ + q₂. Vul altijd de totale Q in de prijsfunctie in, niet één individuele q.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Prijsdiscriminatie vereist gescheiden markten. Als klanten kunnen switchen tussen groepen, werkt het niet.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Marktvormen herkennen op basis van kenmerken</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Winstmaximalisatie via MO = MK berekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">CS, PS en TS berekenen als oppervlakten</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Harbergerdriehoek berekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Prijsdiscriminatie toepassen en omzet vergelijken</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Cournot-duopolie oplossen met reactielijnen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check7">
+          <label for="check7">Internationale handel analyseren met wereldmarktprijs</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

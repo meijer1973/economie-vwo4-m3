@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg vaardigheden</title>
+<title>3.2.6 Marktvormen en hun economische doelmatigheid – Uitleg vaardigheden</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -23,9 +23,9 @@
     --border-gray: #CBD5E0;
     --white: #FFFFFF;
     --sidebar-w: 260px;
-    --bedrijf-primary: #E67E22;
-    --bedrijf-light: #FEF5E7;
-    --bedrijf-dark: #BA6A1C;
+    --grafisch-primary: #1E8449;
+    --grafisch-light: #E8F8F0;
+    --grafisch-dark: #186A3B;
     --markt-primary: #1A5276;
     --markt-light: #EBF5FB;
     --markt-dark: #154360;
@@ -55,15 +55,15 @@
   }
   .nav-item:hover { background: #F7FAFC; }
   .nav-item.active { background: var(--light-gray); font-weight: bold; }
-  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
-  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
-  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
-  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
-  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-grafisch { border-left-color: var(--grafisch-primary); }
+  .domain-grafisch .nav-number { background: var(--grafisch-primary); }
+  .domain-grafisch .nav-badge { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .section-header.border-grafisch { border-bottom: 3px solid var(--grafisch-primary); }
+  .section-num.bg-grafisch { background: var(--grafisch-primary); }
+  .badge-grafisch { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .samenvatting-table caption.caption-grafisch { background: var(--grafisch-primary); }
+  .hero-card.card-grafisch { border-top-color: var(--grafisch-primary); }
+  .card-grafisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--grafisch-light); }
   .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
   .domain-markt .nav-number { background: var(--markt-primary); }
   .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
@@ -106,7 +106,7 @@
   }
   .hero::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 5px; background: linear-gradient(90deg, var(--bedrijf-primary) 0% 50%, var(--markt-primary) 50% 100%);
+    height: 5px; background: linear-gradient(90deg, var(--grafisch-primary) 0% 50%, var(--markt-primary) 50% 100%);
   }
   .hero-inner { max-width: 860px; margin: 0 auto; }
   .hero-badge {
@@ -253,34 +253,48 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.2.6 Marktvormen en hun economische doelmatigheid</h2>
       <p>Uitleg vaardigheden</p>
     </div>
-    <a class="nav-item domain-bedrijf" href="#sectie-1" data-section="sectie-1">
+    <a class="nav-item domain-grafisch" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Residuele vraaglijn afleiden</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">CS herkennen en arceren</span>
+        <span class="nav-badge">Grafisch</span>
       </span>
     </a>
-    <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
+    <a class="nav-item domain-grafisch" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Reactielijn berekenen</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">PS herkennen en arceren</span>
+        <span class="nav-badge">Grafisch</span>
       </span>
     </a>
-    <a class="nav-item domain-bedrijf" href="#sectie-3" data-section="sectie-3">
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Cournot-evenwicht bepalen</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">Harbergerdriehoek herkennen</span>
+        <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
     <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
       <span class="nav-number">4</span>
       <span class="nav-text">
-        <span class="nav-title">Prijs- vs. hoeveelheidsconcurrentie</span>
+        <span class="nav-title">Totaal surplus vergelijken</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Efficiëntie beoordelen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Pareto-efficiëntie toepassen</span>
         <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
@@ -290,28 +304,38 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Vaardigheden</span>
-        <h1>Oligopolie &mdash; Vaardigheden</h1>
+        <span class="hero-badge">3.2.6 &middot; Vaardigheden</span>
+        <h1>Marktvormen en hun economische doelmatigheid &mdash; Vaardigheden</h1>
         <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
         <div class="hero-cards">
-          <div class="hero-card card-bedrijf" data-target="sectie-1">
+          <div class="hero-card card-grafisch" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Residuele vraaglijn afleiden</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">CS herkennen en arceren</div>
+            <span class="hero-card-domain">Grafisch</span>
           </div>
-          <div class="hero-card card-bedrijf" data-target="sectie-2">
+          <div class="hero-card card-grafisch" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Reactielijn berekenen</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">PS herkennen en arceren</div>
+            <span class="hero-card-domain">Grafisch</span>
           </div>
-          <div class="hero-card card-bedrijf" data-target="sectie-3">
+          <div class="hero-card card-markt" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Cournot-evenwicht bepalen</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">Harbergerdriehoek herkennen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
           </div>
           <div class="hero-card card-markt" data-target="sectie-4">
             <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="hero-card-title">Totaal surplus vergelijken</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Efficiëntie beoordelen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Pareto-efficiëntie toepassen</div>
             <span class="hero-card-domain">Marktanalyse</span>
           </div>
 
@@ -322,188 +346,138 @@
     <main>
 
       <section class="section" id="sectie-1">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">1</span>
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">1</span>
           <div class="section-title-group">
-            <div class="section-title">Residuele vraaglijn afleiden</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">CS herkennen en arceren</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij een oligopolie hangt jouw vraag af van wat de concurrent doet. De residuele vraag is het deel van de collectieve vraag dat voor jou overblijft.</p>
-        <h3 class="sub-heading">Wat is de residuele vraag?</h3>
-        <p class="intro-text">De residuele vraaglijn is de collectieve vraaglijn minus de productie van de concurrent. Je trekt q₂ af van Q om jouw individuele vraaglijn te krijgen.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Collectieve vraag</td><td>De totale marktvraag: Q = f(p)</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag: q₁ = Q − q₂</td></tr>
-            <tr><td>Omschrijven</td><td>Herschrijf naar p = f(q₁) voor de volgende stap</td></tr>
-          </tbody>
-        </table>
+        <p class="intro-text">Het consumentensurplus (CS) laat zien hoeveel voordeel consumenten hebben doordat ze minder betalen dan ze bereid waren te betalen.</p>
+        <p class="intro-text">Door het CS te arceren in een grafiek kun je het verschil tussen marktvormen zichtbaar maken.</p>
         <h3 class="sub-heading">Stappenplan</h3>
         <div class="formula-box">
-            Stap 1: Collectieve vraag: Q = ...<br>
-            Stap 2: Jouw vraag: q₁ = Q − q₂<br>
-            Stap 3: Schrijf om naar p = f(q₁)<br>
-            Stap 4: Bereken TO = p × q₁<br>
-            Stap 5: Bereken MO = afgeleide van TO
+            Stap 1: Zoek de evenwichtsprijs (P*) in de grafiek<br>
+            Stap 2: Zoek het snijpunt van V met de y-as (= max. betalingsbereidheid)<br>
+            Stap 3: CS = driehoek tussen V-lijn, P*-lijn en y-as<br>
+            Stap 4: CS = ½ × Q* × (P_max − P*)
         </div>
         <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: Q = −0,1p + 100, concurrent produceert q₂ = 20.</p>
+        <p class="intro-text">Bij volkomen concurrentie: V: P = −Q + 60, A: P = Q. Evenwicht: Q* = 30, P* = 30.</p>
         <div class="formula-box">
-            q₁ = −0,1p + 100 − 20 = −0,1p + 80<br>
-            p = −10q₁ + 800<br>
-            TO = (−10q₁ + 800) × q₁ = −10q₁² + 800q₁<br>
-            MO = −20q₁ + 800
+            CS = ½ × 30 × (60 − 30) = ½ × 30 × 30 = 450
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Meer q₂ betekent minder vraag voor jou.
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je verder rekent.
+          <strong>Kernregel:</strong> Het CS is altijd een driehoek bóven de prijs en onder de vraaglijn. Hoe lager de prijs, hoe groter het CS.
         </div>
         <div class="callout callout-tip">
           <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Oefen met verschillende waarden van q₂.
+          <strong>Tip:</strong> Hoe lager de prijs, hoe groter het CS. Bij volkomen concurrentie is het CS daarom groter dan bij monopolie.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de residuele vraaglijn afleiden als je de collectieve vraag en q₂ kent?
+          <strong>Controle:</strong> Kun je het CS arceren in een grafiek en de oppervlakte berekenen?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag − concurrent</td></tr>
-            <tr><td>Methode</td><td>Q − q₂, dan omschrijven naar p = f(q₁)</td></tr>
-            <tr><td>TO en MO</td><td>TO = p × q₁, MO = afgeleide van TO</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 2: reactielijn berekenen</td></tr>
+            <tr><td>CS</td><td>Driehoek boven P* en onder vraaglijn V</td></tr>
+            <tr><td>Formule</td><td>½ × Q* × (P_max − P*)</td></tr>
+            <tr><td>Verband</td><td>Hoe lager de prijs, hoe groter het CS</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-2">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">2</span>
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">2</span>
           <div class="section-title-group">
-            <div class="section-title">Reactielijn berekenen</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">PS herkennen en arceren</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">De reactielijn geeft aan hoeveel jij produceert bij elke mogelijke productie van je concurrent. Het is jouw ‘beste antwoord’ op elke strategie van de ander.</p>
-        <h3 class="sub-heading">Wat is een reactielijn?</h3>
-        <p class="intro-text">Een reactielijn is een vergelijking die jouw winstmaximaliserende hoeveelheid uitdrukt als functie van q van de concurrent. Je vindt deze door MO gelijk te stellen aan MK.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>MO</td><td>Marginale opbrengst: afgeleide van TO (bevat q₂ als parameter)</td></tr>
-            <tr><td>MK</td><td>Marginale kosten: vaak een constante bij oligopolie-opgaven</td></tr>
-          </tbody>
-        </table>
+        <p class="intro-text">Het producentensurplus (PS) is het voordeel voor producenten: het verschil tussen de ontvangen prijs en de minimale prijs waarvoor ze willen produceren (= de MK-lijn).</p>
+        <p class="intro-text">Samen met het CS vormt het PS het totaal surplus.</p>
         <h3 class="sub-heading">Stappenplan</h3>
         <div class="formula-box">
-            Stap 1: Leid MO af uit de residuele vraag (met q₂ als variabele)<br>
-            Stap 2: Stel MO = MK<br>
-            Stap 3: Los op naar q₁ → dit is de reactielijn van bedrijf 1<br>
-            Stap 4: Herhaal voor bedrijf 2 (met q₁ als variabele)
+            Stap 1: Zoek de evenwichtsprijs P* en hoeveelheid Q*<br>
+            Stap 2: PS = gebied tussen P*-lijn en MK-lijn (van Q=0 tot Q*)<br>
+            Stap 3: Bij lineaire MK door oorsprong: PS = ½ × Q* × P*
         </div>
         <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: MK = 100, collectieve vraag Q = −0,1p + 100.</p>
+        <p class="intro-text">Bij volkomen concurrentie: MK = Q, Q* = 30, P* = 30.</p>
         <div class="formula-box">
-            Residuele vraag: q₁ = −0,1p + 100 − q₂<br>
-            Omschrijven: p = −10q₁ − 10q₂ + 1000<br>
-            TO = p × q₁ = −10q₁² − 10q₁q₂ + 1000q₁<br>
-            MO = −20q₁ − 10q₂ + 1000<br>
-            MO = MK: −20q₁ − 10q₂ + 1000 = 100<br>
-            q₁ = 45 − 0,5q₂  (reactielijn bedrijf 1)
+            PS = ½ × 30 × 30 = 450
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De reactielijn is altijd dalend: hoe meer de concurrent produceert, hoe minder jij wilt produceren.
+          <strong>Kernregel:</strong> Bij volkomen concurrentie is PS = driehoek ónder de prijs en boven de MK-lijn. Bij monopolie verandert de vorm.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Beide aanbieders hebben een reactielijn. Het evenwicht is waar de twee lijnen elkaar snijden — dat is vaardigheid 3.
+          <strong>Let op:</strong> Bij monopolie is het PS een trapezium, niet een driehoek! De prijs ligt hoger dan bij VC, waardoor de vorm verandert.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de reactielijn van bedrijf 1 opstellen als je MK en de collectieve vraag kent?
+          <strong>Controle:</strong> Kun je het PS arceren in een grafiek bij zowel VC als monopolie?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>Methode</td><td>Leid MO af met q₂ als parameter, stel MO = MK</td></tr>
-            <tr><td>Verband</td><td>→ Vaardigheid 3: reactielijnen samen oplossen</td></tr>
+            <tr><td>PS</td><td>Gebied onder P* en boven MK-lijn</td></tr>
+            <tr><td>VC</td><td>PS = driehoek ½ × Q* × P*</td></tr>
+            <tr><td>Monopolie</td><td>PS wordt een trapezium</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-3">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">3</span>
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
           <div class="section-title-group">
-            <div class="section-title">Cournot-evenwicht bepalen</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">Harbergerdriehoek herkennen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">In het Cournot-evenwicht kiest elke aanbieder de hoeveelheid die zijn winst maximaliseert, gegeven de productie van de ander. Geen van beide wil dan nog veranderen.</p>
-        <h3 class="sub-heading">Wat is het Cournot-evenwicht?</h3>
-        <p class="intro-text">Het Cournot-evenwicht is het snijpunt van de twee reactielijnen. Op dat punt is de hoeveelheid van beide bedrijven optimaal, gegeven wat de ander doet.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Het punt waar beide reactielijnen elkaar snijden</td></tr>
-            <tr><td>Nash-evenwicht</td><td>Geen van beide spelers wil eenzijdig afwijken</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂ in het evenwicht</td></tr>
-          </tbody>
-        </table>
+        <p class="intro-text">De Harbergerdriehoek (deadweight loss / welvaartsverlies) is het stuk surplus dat verloren gaat bij een monopolie vergeleken met volkomen concurrentie.</p>
+        <p class="intro-text">Dit surplus verdwijnt volledig — niemand krijgt het meer.</p>
         <h3 class="sub-heading">Stappenplan</h3>
         <div class="formula-box">
-            Stap 1: Schrijf beide reactielijnen op<br>
-            Stap 2: Vul de ene in de andere in (substitutie)<br>
-            Stap 3: Los op naar de eerste onbekende<br>
-            Stap 4: Vul terug in de andere reactielijn
+            Stap 1: Teken het evenwicht bij VC (punt B)<br>
+            Stap 2: Teken het monopolie-evenwicht: MO = MK (punt A), prijs op V (punt C)<br>
+            Stap 3: De Harbergerdriehoek = driehoek C-B-A<br>
+            Stap 4: Oppervlakte = ½ × (Q_vc − Q_m) × (P_m − MK_m)
         </div>
         <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: beide bedrijven met MK = GTK = 100, collectieve vraag Q = −0,1p + 100.</p>
+        <p class="intro-text">VC: Q_vc = 30, P_vc = 30. Monopolie: Q_m = 20, P_m = 40, MK_m = 20.</p>
         <div class="formula-box">
-            Beide reactielijnen: q = 35 − 0,5q_ander<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
-        </div>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Gebruik dit als controle!
+            Harbergerdriehoek = ½ × (30 − 20) × (40 − 20)<br>
+                              = ½ × 10 × 20 = 100
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf!
+          <strong>Let op:</strong> De Harbergerdriehoek is NIET het verschil in CS. Het is het netto verlies aan totaal surplus. Een deel van het CS verschuift naar de producent (wordt PS), maar de driehoek verdwijnt volledig.
         </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Dat scheelt rekentijd bij controle.
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> De Harbergerdriehoek meet het welvaartsverlies: surplus dat niemand meer krijgt door monopoliemacht.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het Cournot-evenwicht berekenen door de twee reactielijnen op te lossen?
+          <strong>Controle:</strong> Kun je de Harbergerdriehoek aanwijzen in een grafiek en de oppervlakte berekenen?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van beide reactielijnen</td></tr>
-            <tr><td>Methode</td><td>Substitutie: vul reactielijn 2 in reactielijn 1</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 4: vergelijking met Bertrand</td></tr>
+            <tr><td>Harbergerdriehoek</td><td>Welvaartsverlies door monopoliemacht</td></tr>
+            <tr><td>Formule</td><td>½ × (Q_vc − Q_m) × (P_m − MK_m)</td></tr>
+            <tr><td>Betekenis</td><td>Surplus dat niemand meer krijgt</td></tr>
           </tbody>
         </table>
 
@@ -513,53 +487,150 @@
         <div class="section-header border-markt">
           <span class="section-num bg-markt">4</span>
           <div class="section-title-group">
-            <div class="section-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="section-title">Totaal surplus vergelijken</div>
             <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij prijsconcurrentie (Bertrand) daalt de prijs tot MK en verdwijnt de winst. Bij hoeveelheidsconcurrentie (Cournot) blijft er winst over. Het type concurrentie bepaalt de uitkomst.</p>
-        <h3 class="sub-heading">Cournot: hoeveelheidsconcurrentie</h3>
-        <p class="intro-text">Bij Cournot kiezen bedrijven tegelijkertijd hun hoeveelheid. Doordat ze de productie beperken, blijft de prijs boven MK en is er winst.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Twee aanbieders gedragen zich alsof er volledige mededinging is</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Bertrand: prijsconcurrentie</h3>
-        <p class="intro-text">Bij Bertrand kiezen bedrijven tegelijkertijd hun prijs. Ze onderbieden elkaar totdat p = MK. Dit heet de Bertrand-paradox: slechts twee bedrijven maar toch het resultaat van volledige mededinging.</p>
+        <p class="intro-text">Door het totaal surplus (TS = CS + PS) te vergelijken bij verschillende marktvormen kun je beoordelen welke marktvorm efficiënter is.</p>
+        <p class="intro-text">Een hogere TS betekent meer totale welvaart.</p>
+        <h3 class="sub-heading">Stappenplan</h3>
         <div class="formula-box">
-            Hoeveelheidsconcurrentie (Cournot): p > MK  →  winst > 0<br>
-            Prijsconcurrentie (Bertrand):       p = MK  →  winst = 0
+            Stap 1: Bereken CS en PS bij volkomen concurrentie<br>
+            Stap 2: Bereken CS en PS bij monopolie<br>
+            Stap 3: Vergelijk: TS_vc − TS_m = Harbergerdriehoek
         </div>
-        <h3 class="sub-heading">Gevolgen voor consumentensurplus (CS)</h3>
-        <p class="intro-text">Bij Bertrand is de prijs lager dan bij Cournot. Consumenten hebben daarom de voorkeur voor prijsconcurrentie: het levert hen meer surplus op.</p>
+        <h3 class="sub-heading">Voorbeeld</h3>
         <div class="formula-box">
-            Bertrand: lagere prijs → hoger CS voor consumenten<br>
-            Cournot:  hogere prijs → lager CS maar winst voor bedrijven
+            Volkomen concurrentie: CS = 450, PS = 450, TS = 900<br>
+            Monopolie: CS = 200, PS = 600, TS = 800<br>
+            Verschil: 900 − 800 = 100 (= Harbergerdriehoek)
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Benoem bij examenvragen altijd welk type concurrentie (Cournot of Bertrand) én het gevolg voor prijs, winst en CS.
+          <strong>Kernregel:</strong> TS bij volkomen concurrentie is altijd groter dan of gelijk aan TS bij monopolie. Het verschil is de Harbergerdriehoek.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst. Vergeet niet te vermelden dat dit een paradox is (twee bedrijven, toch p = MK).
+          <strong>Let op:</strong> Als je een groter TS vindt bij monopolie dan bij VC, heb je een rekenfout gemaakt. Controleer je berekening!
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je uitleggen waarom consumenten de voorkeur hebben voor prijsconcurrentie boven hoeveelheidsconcurrentie?
+          <strong>Controle:</strong> Kun je het TS berekenen bij beide marktvormen en het verschil verklaren?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>CS</td><td>Hoger bij Bertrand (lagere prijs voor consument)</td></tr>
-            <tr><td>Examentip</td><td>Benoem altijd welk type concurrentie én het gevolg</td></tr>
+            <tr><td>TS</td><td>CS + PS = totale welvaart</td></tr>
+            <tr><td>VC</td><td>TS is maximaal (geen welvaartsverlies)</td></tr>
+            <tr><td>Monopolie</td><td>TS is lager door Harbergerdriehoek</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Efficiëntie beoordelen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">In de economie beoordeel je of een markt efficiënt is door te kijken of het totaal surplus maximaal is.</p>
+        <p class="intro-text">Dit helpt bij het analyseren van beleidsmaatregelen en marktstructuren.</p>
+        <h3 class="sub-heading">Wanneer is een markt efficiënt?</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>P = MK</td><td>Prijs is gelijk aan marginale kosten</td></tr>
+            <tr><td>TS maximaal</td><td>Geen welvaartsverlies</td></tr>
+            <tr><td>Harberger = 0</td><td>Geen deadweight loss</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Wanneer is een markt inefficiënt?</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>P &gt; MK</td><td>Monopolist rekent hogere prijs dan MK</td></tr>
+            <tr><td>TS niet maximaal</td><td>Er is welvaartsverlies</td></tr>
+            <tr><td>Harberger &gt; 0</td><td>Er is deadweight loss</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Het elektriciteitsduopolie in Groot-Brittannië: de prijs ligt 25% boven de GTK. Omdat P &gt; MK is het TS niet maximaal. De markt is dus inefficiënt.</p>
+        <p class="intro-text">Toetreding vindt niet plaats omdat de drempels hoog zijn.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> P = MK is het criterium voor efficiëntie. Als P &gt; MK, is er welvaartsverlies en is de markt inefficiënt.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Toetredingsdrempels zijn de sleutel: als nieuwe aanbieders niet kunnen toetreden, blijft de marktmacht — en daarmee de inefficiëntie — bestaan.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je beoordelen of een markt efficiënt is aan de hand van P, MK en TS?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Efficiënt</td><td>P = MK, TS maximaal, Harberger = 0</td></tr>
+            <tr><td>Inefficiënt</td><td>P &gt; MK, TS niet maximaal, Harberger &gt; 0</td></tr>
+            <tr><td>Sleutel</td><td>Toetredingsdrempels houden inefficiëntie in stand</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Pareto-efficiëntie toepassen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Pareto-efficiëntie is een andere manier om naar efficiëntie te kijken: niet via surplus, maar via individuele voor- en nadelen.</p>
+        <h3 class="sub-heading">De begrippen</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Pareto-verbetering</td><td>Minstens één persoon gaat erop vooruit, niemand gaat erop achteruit</td></tr>
+            <tr><td>Pareto-efficiënt</td><td>Er is géén Pareto-verbetering meer mogelijk</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">De test</h3>
+        <div class="formula-box">
+            Vraag: Kan iemand erop vooruitgaan zonder dat<br>
+                   iemand anders erop achteruitgaat?<br>
+            <br>
+            Ja  → NIET Pareto-efficiënt (verbetering is mogelijk)<br>
+            Nee → Wél Pareto-efficiënt (geen verbetering mogelijk)
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Esther zit vooraan, Mieke achteraan. Mieke wil graag vooraan zitten, Esther maakt het niet uit.</p>
+        <p class="intro-text">Als ze ruilen: Mieke gaat erop vooruit, Esther gaat er niet op achteruit. Dit is een Pareto-verbetering.</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Pareto-efficiënt betekent NIET dat de situatie eerlijk is. Een verdeling waarbij één persoon alles heeft kan Pareto-efficiënt zijn, zolang je niemand kunt verbeteren zonder de ander te verslechteren.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Pareto zegt niets over eerlijkheid, alleen over de vraag of er verbeteringen mogelijk zijn.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een gegeven situatie bepalen of er een Pareto-verbetering mogelijk is?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Pareto-verbetering</td><td>Iemand gaat erop vooruit, niemand erop achteruit</td></tr>
+            <tr><td>Pareto-efficiënt</td><td>Geen Pareto-verbetering meer mogelijk</td></tr>
+            <tr><td>Eerlijkheid</td><td>Pareto zegt niets over eerlijkheid</td></tr>
           </tbody>
         </table>
 
@@ -571,15 +642,15 @@
         <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je TO en MO berekent.
+          <strong>Let op:</strong> &quot;De Harbergerdriehoek = het verschil in CS&quot; → Onjuist! De driehoek is het netto verlies aan TOTAAL surplus. Een deel van het CS wordt PS.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf.
+          <strong>Let op:</strong> &quot;Pareto-efficiënt = eerlijk&quot; → Onjuist! Pareto zegt niets over verdeling, alleen over de vraag of er verbeteringen mogelijk zijn.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst — ook al zijn er maar twee aanbieders.
+          <strong>Let op:</strong> &quot;Meer concurrentie is altijd beter&quot; → Genuanceerd! In de economie betekent concurrentie prijsdaling door veel aanbieders. Soms kan een monopolist door schaalvoordelen lagere kosten bereiken.
         </div>
 
       </div>
@@ -590,23 +661,27 @@
         <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Residuele vraaglijn afleiden uit collectieve vraag</label>
+          <label for="check1">CS herkennen en arceren in een grafiek</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Reactielijn berekenen via MO = MK</label>
+          <label for="check2">PS herkennen en arceren in een grafiek</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Cournot-evenwicht bepalen door substitutie</label>
+          <label for="check3">Harbergerdriehoek herkennen en berekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Verschil tussen Cournot en Bertrand uitleggen</label>
+          <label for="check4">Totaal surplus vergelijken bij VC en monopolie</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">CS vergelijken bij prijs- vs. hoeveelheidsconcurrentie</label>
+          <label for="check5">Beoordelen of een markt efficiënt is</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Pareto-efficiëntie toepassen op een voorbeeld</label>
         </div>
 
       </div>

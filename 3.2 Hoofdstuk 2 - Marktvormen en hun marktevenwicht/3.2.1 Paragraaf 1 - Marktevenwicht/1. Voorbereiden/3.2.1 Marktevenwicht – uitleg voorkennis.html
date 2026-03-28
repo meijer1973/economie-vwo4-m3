@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg voorkennis</title>
+<title>3.2.1 Marktevenwicht – Uitleg voorkennis</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -23,15 +23,15 @@
     --border-gray: #CBD5E0;
     --white: #FFFFFF;
     --sidebar-w: 260px;
+    --grafisch-primary: #1E8449;
+    --grafisch-light: #E8F8F0;
+    --grafisch-dark: #186A3B;
     --wiskunde-primary: #1A5276;
     --wiskunde-light: #EBF5FB;
     --wiskunde-dark: #154360;
     --economisch-primary: #E67E22;
     --economisch-light: #FEF5E7;
     --economisch-dark: #BA6A1C;
-    --grafisch-primary: #1E8449;
-    --grafisch-light: #E8F8F0;
-    --grafisch-dark: #186A3B;
   }
 
   .page-layout { display: flex; min-height: 100vh; }
@@ -58,6 +58,15 @@
   }
   .nav-item:hover { background: #F7FAFC; }
   .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-grafisch { border-left-color: var(--grafisch-primary); }
+  .domain-grafisch .nav-number { background: var(--grafisch-primary); }
+  .domain-grafisch .nav-badge { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .section-header.border-grafisch { border-bottom: 3px solid var(--grafisch-primary); }
+  .section-num.bg-grafisch { background: var(--grafisch-primary); }
+  .badge-grafisch { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .samenvatting-table caption.caption-grafisch { background: var(--grafisch-primary); }
+  .hero-card.card-grafisch { border-top-color: var(--grafisch-primary); }
+  .card-grafisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--grafisch-light); }
   .nav-item.active.domain-wiskunde { border-left-color: var(--wiskunde-primary); }
   .domain-wiskunde .nav-number { background: var(--wiskunde-primary); }
   .domain-wiskunde .nav-badge { background: var(--wiskunde-light); color: var(--wiskunde-primary); }
@@ -76,15 +85,6 @@
   .samenvatting-table caption.caption-economisch { background: var(--economisch-primary); }
   .hero-card.card-economisch { border-top-color: var(--economisch-primary); }
   .card-economisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--economisch-light); }
-  .nav-item.active.domain-grafisch { border-left-color: var(--grafisch-primary); }
-  .domain-grafisch .nav-number { background: var(--grafisch-primary); }
-  .domain-grafisch .nav-badge { background: var(--grafisch-light); color: var(--grafisch-primary); }
-  .section-header.border-grafisch { border-bottom: 3px solid var(--grafisch-primary); }
-  .section-num.bg-grafisch { background: var(--grafisch-primary); }
-  .badge-grafisch { background: var(--grafisch-light); color: var(--grafisch-primary); }
-  .samenvatting-table caption.caption-grafisch { background: var(--grafisch-primary); }
-  .hero-card.card-grafisch { border-top-color: var(--grafisch-primary); }
-  .card-grafisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--grafisch-light); }
 
   .nav-number {
     display: inline-flex; align-items: center; justify-content: center;
@@ -118,7 +118,7 @@
   }
   .hero::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 5px; background: linear-gradient(90deg, var(--wiskunde-primary) 0% 33%, var(--economisch-primary) 33% 67%, var(--grafisch-primary) 67% 100%);
+    height: 5px; background: linear-gradient(90deg, var(--grafisch-primary) 0% 33%, var(--wiskunde-primary) 33% 67%, var(--economisch-primary) 67% 100%);
   }
   .hero-inner { max-width: 860px; margin: 0 auto; }
   .hero-badge {
@@ -130,7 +130,7 @@
   .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
   .hero-cards {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem;
     margin-top: 1.5rem;
   }
   .hero-card {
@@ -265,35 +265,42 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.2.1 Marktevenwicht</h2>
       <p>Uitleg voorkennis</p>
     </div>
-    <a class="nav-item domain-wiskunde" href="#sectie-1" data-section="sectie-1">
+    <a class="nav-item domain-grafisch" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Vergelijkingen met twee onbekenden</span>
-        <span class="nav-badge">Wiskundig</span>
+        <span class="nav-title">Vraag- en aanbodlijnen lezen</span>
+        <span class="nav-badge">Grafisch</span>
       </span>
     </a>
     <a class="nav-item domain-wiskunde" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Afleiden en MO berekenen</span>
+        <span class="nav-title">Snijpunten aflezen en berekenen</span>
         <span class="nav-badge">Wiskundig</span>
       </span>
     </a>
     <a class="nav-item domain-economisch" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Economische begrippen bij oligopolie</span>
+        <span class="nav-title">Economische basisbegrippen</span>
         <span class="nav-badge">Economisch</span>
       </span>
     </a>
     <a class="nav-item domain-grafisch" href="#sectie-4" data-section="sectie-4">
       <span class="nav-number">4</span>
       <span class="nav-text">
-        <span class="nav-title">Grafieken met reactielijnen</span>
+        <span class="nav-title">Grafieken lezen: verschuivingen</span>
         <span class="nav-badge">Grafisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Soorten werkloosheid</span>
+        <span class="nav-badge">Economisch</span>
       </span>
     </a>
 
@@ -302,29 +309,34 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Voorkennis</span>
-        <h1>Oligopolie &mdash; Voorkennis</h1>
+        <span class="hero-badge">3.2.1 &middot; Voorkennis</span>
+        <h1>Marktevenwicht &mdash; Voorkennis</h1>
         <p class="hero-sub">Wat moet je al weten voordat je aan deze paragraaf begint?</p>
         <div class="hero-cards">
-          <div class="hero-card card-wiskunde" data-target="sectie-1">
+          <div class="hero-card card-grafisch" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Vergelijkingen met twee onbekenden</div>
-            <span class="hero-card-domain">Wiskundig</span>
+            <div class="hero-card-title">Vraag- en aanbodlijnen lezen</div>
+            <span class="hero-card-domain">Grafisch</span>
           </div>
           <div class="hero-card card-wiskunde" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Afleiden en MO berekenen</div>
+            <div class="hero-card-title">Snijpunten aflezen en berekenen</div>
             <span class="hero-card-domain">Wiskundig</span>
           </div>
           <div class="hero-card card-economisch" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Economische begrippen bij oligopolie</div>
+            <div class="hero-card-title">Economische basisbegrippen</div>
             <span class="hero-card-domain">Economisch</span>
           </div>
           <div class="hero-card card-grafisch" data-target="sectie-4">
             <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Grafieken met reactielijnen</div>
+            <div class="hero-card-title">Grafieken lezen: verschuivingen</div>
             <span class="hero-card-domain">Grafisch</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Soorten werkloosheid</div>
+            <span class="hero-card-domain">Economisch</span>
           </div>
 
         </div>
@@ -334,59 +346,60 @@
     <main>
 
       <section class="section" id="sectie-1">
-        <div class="section-header border-wiskunde">
-          <span class="section-num bg-wiskunde">1</span>
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">1</span>
           <div class="section-title-group">
-            <div class="section-title">Vergelijkingen met twee onbekenden</div>
-            <span class="section-badge badge-wiskunde">Wiskundig</span>
+            <div class="section-title">Vraag- en aanbodlijnen lezen</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Waarom heb je dit nodig?</h3>
-        <p class="intro-text">Bij oligopolie werk je met twee reactielijnen: twee vergelijkingen met twee onbekenden. Om het evenwicht te vinden, moet je deze vergelijkingen tegelijk oplossen.</p>
-        <h3 class="sub-heading">Wat is substitutie?</h3>
-        <p class="intro-text">Substitutie betekent dat je de ene vergelijking in de andere invult. Zo breng je twee onbekenden terug tot één onbekende.</p>
+        <h3 class="sub-heading">Wat is een vraaglijn?</h3>
+        <p class="intro-text">Een vraaglijn toont hoeveel consumenten willen kopen bij elke prijs. De lijn loopt dalend: hoe hoger de prijs, hoe minder er gevraagd wordt.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Substitutie</td><td>Eén vergelijking invullen in de andere om één onbekende weg te werken</td></tr>
-            <tr><td>Stelsel</td><td>Twee (of meer) vergelijkingen die tegelijk gelden</td></tr>
-            <tr><td>Reactielijn</td><td>Vergelijking die jouw optimale q geeft als functie van q van de concurrent</td></tr>
+            <tr><td>Vraaglijn</td><td>Grafisch verband tussen prijs en gevraagde hoeveelheid</td></tr>
+            <tr><td>Dalend verloop</td><td>Hogere prijs → minder vraag</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan substitutie</h3>
+        <h3 class="sub-heading">Wat is een aanbodlijn?</h3>
+        <p class="intro-text">Een aanbodlijn toont hoeveel producenten willen verkopen bij elke prijs. De lijn loopt stijgend: hoe hoger de prijs, hoe meer er aangeboden wordt.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Aanbodlijn</td><td>Grafisch verband tussen prijs en aangeboden hoeveelheid</td></tr>
+            <tr><td>Stijgend verloop</td><td>Hogere prijs → meer aanbod</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Snijpunten met de assen aflezen</h3>
+        <p class="intro-text">Elk snijpunt met een as heeft een economische betekenis. Het snijpunt met de y-as is de maximumprijs (vraag) of de minimumprijs (aanbod).</p>
         <div class="formula-box">
-            Stap 1: Schrijf beide vergelijkingen op<br>
-            Stap 2: Kies één vergelijking en vul deze in de andere in<br>
-            Stap 3: Los op naar de overgebleven onbekende<br>
-            Stap 4: Vul de uitkomst terug in de andere vergelijking
+            Snijpunt y-as: vul Q = 0 in → je vindt de maximumprijs<br>
+            Snijpunt x-as: vul p = 0 in → je vindt de maximale hoeveelheid
         </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: q₁ = 35 − 0,5q₂ en q₂ = 35 − 0,5q₁</p>
-        <div class="formula-box">
-            q₁ = 35 − 0,5q₂<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
-        </div>
+        <h3 class="sub-heading">Voorbeeld: lijnen aflezen</h3>
+        <p class="intro-text">Vraaglijn: p = −Q/200 + 50. Bij Q = 0: p = 50 (snijpunt y-as). Bij p = 0: Q = 10.000 (snijpunt x-as).</p>
+        <p class="intro-text">Aanbodlijn: p = Q/200. Bij Q = 0: p = 0. Bij Q = 5.000: p = 25.</p>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) geldt altijd q₁ = q₂ in het evenwicht. Dat is een handige controle!
+          <strong>Kernregel:</strong> De vraaglijn daalt altijd, de aanbodlijn stijgt altijd. Onthoud: hoe duurder, hoe minder vraag en hoe meer aanbod.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Vergeet niet om na het oplossen van q₁ de waarde terug te vullen in de andere vergelijking om q₂ te vinden.
+          <strong>Let op:</strong> Verwar de assen niet! In de economie staat de prijs (p) op de verticale as en de hoeveelheid (Q) op de horizontale as.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Los op: x = 10 − 0,5y en y = 10 − 0,5x. (antwoord: x = y = 6⅔)
+          <strong>Controle:</strong> Kun je bij een vraaglijn het snijpunt met de y-as en de x-as bepalen?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Methode</td><td>Substitutie: vul vergelijking 2 in vergelijking 1 in</td></tr>
-            <tr><td>Doel</td><td>Twee onbekenden terugbrengen tot één onbekende</td></tr>
-            <tr><td>Toepassing</td><td>Reactielijnen bij oligopolie / Cournot-evenwicht</td></tr>
+            <tr><td>Vraaglijn</td><td>Dalend: hogere prijs = minder vraag</td></tr>
+            <tr><td>Aanbodlijn</td><td>Stijgend: hogere prijs = meer aanbod</td></tr>
+            <tr><td>Snijpunt y-as</td><td>Vul Q = 0 in de functie in</td></tr>
+            <tr><td>Snijpunt x-as</td><td>Vul p = 0 in en los op naar Q</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 2 (snijpunten berekenen)</td></tr>
           </tbody>
         </table>
 
@@ -396,51 +409,56 @@
         <div class="section-header border-wiskunde">
           <span class="section-num bg-wiskunde">2</span>
           <div class="section-title-group">
-            <div class="section-title">Afleiden en MO berekenen</div>
+            <div class="section-title">Snijpunten aflezen en berekenen</div>
             <span class="section-badge badge-wiskunde">Wiskundig</span>
           </div>
         </div>
-        <h3 class="sub-heading">Van residuele vraag naar TO</h3>
-        <p class="intro-text">Je moet de totale opbrengst (TO) kunnen berekenen uit de residuele vraaglijn. Dat doe je door p te vermenigvuldigen met q.</p>
+        <h3 class="sub-heading">Waarom snijpunten berekenen?</h3>
+        <p class="intro-text">Het snijpunt van de vraag- en aanbodlijn geeft het marktevenwicht: de prijs en hoeveelheid waarbij vraag en aanbod gelijk zijn.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Residuele vraag</td><td>De vraaglijn die overblijft na aftrek van de productie van de concurrent</td></tr>
-            <tr><td>TO (totale opbrengst)</td><td>TO = p × q (vul de vraaglijn in voor p)</td></tr>
-            <tr><td>MO (marginale opbrengst)</td><td>De afgeleide van TO naar q</td></tr>
+            <tr><td>Marktevenwicht</td><td>Het punt waar vraaglijn en aanbodlijn elkaar snijden</td></tr>
+            <tr><td>Evenwichtsprijs</td><td>De prijs in het marktevenwicht (Qv = Qa)</td></tr>
+            <tr><td>Evenwichtshoeveelheid</td><td>De hoeveelheid in het marktevenwicht</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">De vuistregel voor MO</h3>
-        <p class="intro-text">Bij een lineaire vraaglijn (p = aq + b) heeft de MO-lijn altijd een dubbele helling. Dit is een handig ezelsbruggetje.</p>
+        <h3 class="sub-heading">Hoe bereken je het snijpunt?</h3>
+        <p class="intro-text">Stel de twee functies aan elkaar gelijk. Los op naar de onbekende. Vul het resultaat terug in om de andere variabele te vinden.</p>
         <div class="formula-box">
-            Vraaglijn:  p = aq + b<br>
-            TO = p × q = aq² + bq<br>
-            MO = 2aq + b  (dubbele helling!)
+            Stap 1: Stel Qv = Qa (of de twee p-functies gelijk)<br>
+            Stap 2: Breng onbekende naar één kant<br>
+            Stap 3: Deel door coëfficiënt<br>
+            Stap 4: Vul p terug in om Q te vinden
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">Gegeven: Qv = −10p + 500 en Qa = 10p.</p>
+        <div class="formula-box">
+            Qv = Qa<br>
+            −10p + 500 = 10p<br>
+            500 = 20p<br>
+            p = 25<br>
+            Q = 10 × 25 = 250
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij een lineaire vraaglijn geldt: MO heeft dezelfde constante als p, maar een dubbele helling.
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: p = −10q + 800</p>
-        <div class="formula-box">
-            TO = p × q = (−10q + 800) × q = −10q² + 800q<br>
-            MO = −20q + 800
+          <strong>Kernregel:</strong> Controleer altijd je antwoord: vul p terug in béide functies. Je moet dezelfde Q krijgen.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Schrijf de vraaglijn altijd eerst om naar p = f(q) voordat je TO berekent. Doe je dat niet, dan gaat de vermenigvuldiging mis.
+          <strong>Let op:</strong> Vergeet de controle niet! Als je twee verschillende Q-waarden krijgt bij het terugvullen, heb je een rekenfout gemaakt.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Leid MO af uit p = −5q + 200. (antwoord: MO = −10q + 200)
+          <strong>Controle:</strong> Kun je twee lineaire functies aan elkaar gelijkstellen en oplossen?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>TO</td><td>TO = p × Q (schrijf p eerst om naar p = f(Q))</td></tr>
-            <tr><td>MO</td><td>MO = afgeleide van TO naar Q</td></tr>
-            <tr><td>Vuistregel</td><td>Bij lineaire vraaglijn: MO heeft dubbele helling</td></tr>
+            <tr><td>Methode</td><td>Stel Qv = Qa (of de twee p-functies gelijk)</td></tr>
+            <tr><td>Oplossen</td><td>Breng onbekende naar één kant, deel door coëfficiënt</td></tr>
+            <tr><td>Controle</td><td>Vul p terug in beide functies — je moet dezelfde Q krijgen</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 1 (V/A lezen) en 3 (economische begrippen)</td></tr>
           </tbody>
         </table>
 
@@ -450,54 +468,51 @@
         <div class="section-header border-economisch">
           <span class="section-num bg-economisch">3</span>
           <div class="section-title-group">
-            <div class="section-title">Economische begrippen bij oligopolie</div>
+            <div class="section-title">Economische basisbegrippen</div>
             <span class="section-badge badge-economisch">Economisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Wat is een oligopolie?</h3>
-        <p class="intro-text">Een oligopolie is een marktvorm met slechts een paar grote aanbieders. Omdat er zo weinig spelers zijn, houdt iedereen rekening met het gedrag van de concurrent.</p>
+        <h3 class="sub-heading">Marginale opbrengst (MO)</h3>
+        <p class="intro-text">De marginale opbrengst is de extra opbrengst die een bedrijf ontvangt als het één product meer verkoopt.</p>
+        <h3 class="sub-heading">Marginale kosten (MK)</h3>
+        <p class="intro-text">De marginale kosten zijn de extra kosten die een bedrijf maakt als het één product meer produceert.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders die elkaars gedrag beïnvloeden</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus de productie van de concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale hoeveelheid als functie van de hoeveelheid van de concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van de reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK en winst = 0</td></tr>
+            <tr><td>MO</td><td>Marginale opbrengst: de extra opbrengst van één extra product</td></tr>
+            <tr><td>MK</td><td>Marginale kosten: de extra kosten van één extra product</td></tr>
+            <tr><td>Evenwichtsprijs</td><td>De prijs waarbij Qv = Qa</td></tr>
+            <tr><td>Prijsnemer</td><td>Aanbieder die de marktprijs niet kan beïnvloeden</td></tr>
+            <tr><td>Prijszetter</td><td>Aanbieder die zelf zijn prijs kan bepalen (monopolist)</td></tr>
+            <tr><td>Omzet / TO</td><td>Totale opbrengst: prijs × hoeveelheid</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Cournot versus Bertrand</h3>
-        <p class="intro-text">Het verschil zit in het type concurrentie. Bij Cournot concurreren bedrijven op hoeveelheid, bij Bertrand op prijs.</p>
+        <h3 class="sub-heading">Prijsnemer vs. prijszetter</h3>
+        <p class="intro-text">Een prijsnemer accepteert de marktprijs. Zijn MO is gelijk aan de prijs. Een prijszetter bepaalt zelf de prijs, maar moet de prijs verlagen om meer te verkopen. Zijn MO is láger dan de prijs.</p>
         <div class="formula-box">
-            Cournot (hoeveelheid)  →  p > MK  →  winst > 0<br>
-            Bertrand (prijs)       →  p = MK  →  winst = 0
+            Prijsnemer (volkomen concurrentie): MO = p<br>
+            Prijszetter (monopolist):          MO < p
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij Cournot blijft er winst over doordat bedrijven de hoeveelheid beperken. Bij Bertrand onderbieden ze elkaar tot p = MK.
+          <strong>Kernregel:</strong> MO = MK geldt altijd voor winstmaximalisatie. Maar MO = p geldt ALLÉÉN bij volkomen concurrentie!
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwar residuele vraag niet met collectieve vraag. De residuele vraag is altijd kleiner: het is wat er voor jou overblijft na aftrek van de concurrent.
-        </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij Cournot concurreren bedrijven op hoeveelheid (er blijft winst over). Bij Bertrand concurreren ze op prijs (winst verdwijnt).
+          <strong>Let op:</strong> Verwar MO en TO niet! MO is de extra opbrengst van één extra product. TO is de totale opbrengst van alle producten samen (TO = p × Q).
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het verschil uitleggen tussen Cournot en Bertrand?
+          <strong>Controle:</strong> Kun je het verschil uitleggen tussen MO en MK, en tussen prijsnemer en prijszetter?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-economisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale q als functie van q_concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK, winst = 0</td></tr>
+            <tr><td>MO vs MK</td><td>MO = extra opbrengst, MK = extra kosten per eenheid</td></tr>
+            <tr><td>Evenwicht</td><td>De prijs waarbij Qv = Qa</td></tr>
+            <tr><td>Prijsnemer</td><td>Kan marktprijs niet beïnvloeden (MO = p)</td></tr>
+            <tr><td>Prijszetter</td><td>Bepaalt zelf de prijs (monopolist, MO &lt; p)</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 4 (verschuivingen) en 5 (werkloosheid)</td></tr>
           </tbody>
         </table>
 
@@ -507,51 +522,100 @@
         <div class="section-header border-grafisch">
           <span class="section-num bg-grafisch">4</span>
           <div class="section-title-group">
-            <div class="section-title">Grafieken met reactielijnen</div>
+            <div class="section-title">Grafieken lezen: verschuivingen</div>
             <span class="section-badge badge-grafisch">Grafisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Hoe teken je reactielijnen?</h3>
-        <p class="intro-text">Reactielijnen teken je in een assenstelsel met q₁ op de x-as en q₂ op de y-as. Elke lijn laat zien hoeveel de ene aanbieder produceert bij elke hoeveelheid van de ander.</p>
+        <h3 class="sub-heading">Wat is een verschuiving?</h3>
+        <p class="intro-text">Een verschuiving van een lijn betekent dat de hele lijn naar links of rechts beweegt. Dit gebeurt als een externe factor verandert.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>x-as</td><td>q₁ (hoeveelheid van aanbieder 1)</td></tr>
-            <tr><td>y-as</td><td>q₂ (hoeveelheid van aanbieder 2)</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
+            <tr><td>Verschuiving</td><td>Hele lijn beweegt door een externe factor</td></tr>
+            <tr><td>Beweging</td><td>Ander punt op dezelfde lijn door een prijsverandering</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappen voor het tekenen</h3>
-        <p class="intro-text">Bepaal van elke reactielijn twee punten door de ander op 0 en op het maximum te zetten. Verbind deze punten met een rechte lijn.</p>
+        <h3 class="sub-heading">Het cruciale verschil</h3>
+        <p class="intro-text">Bij een prijsverandering beweeg je lángs de lijn. Bij een verandering in iets anders (technologie, voorkeuren, kosten) verschuift de héle lijn.</p>
         <div class="formula-box">
-            Reactielijn 1: q₁ = 35 − 0,5q₂<br>
-              bij q₂ = 0:  q₁ = 35<br>
-              bij q₂ = 70: q₁ = 0<br>
+            Verandering IN de prijs     → Beweging lángs de lijn<br>
+            Verandering in iets ANDERS  → Verschuiving ván de lijn<br>
             <br>
-            Reactielijn 2: q₂ = 35 − 0,5q₁<br>
-              bij q₁ = 0:  q₂ = 35<br>
-              bij q₁ = 70: q₂ = 0
-        </div>
-        <h3 class="sub-heading">Wat zegt het snijpunt?</h3>
-        <p class="intro-text">Het snijpunt van de twee reactielijnen is het Cournot-evenwicht. Op dat punt produceert geen van beide bedrijven te veel of te weinig, gegeven wat de ander doet.</p>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Reactielijnen zijn altijd dalend: als de concurrent meer produceert, produceer jij minder. Het snijpunt is het Nash-evenwicht.
+            Vraag verschuift door:  voorkeur, inkomen, substituten<br>
+            Aanbod verschuift door: technologie, kosten, toetreding
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwissel de assen niet! Bij reactielijnen staat q₁ altijd op de x-as en q₂ op de y-as. Dit is anders dan bij een standaard V/A-grafiek.
+          <strong>Let op:</strong> Een verschuiving is NIET hetzelfde als een beweging langs de lijn. Bij een verschuiving verandert de hele lijn van positie. Bij een beweging schuif je over de bestaande lijn.
+        </div>
+        <h3 class="sub-heading">Voorbeeld: robots op de arbeidsmarkt</h3>
+        <p class="intro-text">Als bedrijven robots inzetten, vragen ze bij elk loon minder werknemers. De vraaglijn naar arbeid verschuift naar links.</p>
+        <p class="intro-text">Dit is géén beweging langs de lijn (het loon verandert niet als oorzaak), maar een verschuiving door een externe factor (technologie).</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Stel altijd de vraag: verandert de prijs zélf, of verandert er iets anders? Alleen bij dat laatste verschuift de lijn.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je twee reactielijnen tekenen en het snijpunt (Cournot-evenwicht) aanwijzen?
+          <strong>Controle:</strong> Kun je in een grafiek aanwijzen wat een verschuiving is (vs. een beweging langs de lijn)?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-grafisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Assen</td><td>q₁ op de x-as, q₂ op de y-as</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
-            <tr><td>Dalend</td><td>Reactielijnen zijn altijd dalend: meer q₂ → minder q₁</td></tr>
+            <tr><td>Verschuiving</td><td>Hele lijn beweegt door externe factor</td></tr>
+            <tr><td>Beweging</td><td>Ander punt op dezelfde lijn door prijsverandering</td></tr>
+            <tr><td>Voorbeeld</td><td>Robots → vraaglijn arbeid verschuift naar links</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 5 (soorten werkloosheid)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Soorten werkloosheid</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Drie hoofdtypen werkloosheid</h3>
+        <p class="intro-text">Er zijn drie hoofdtypen werkloosheid. Het verschil zit in de oorzaak: is het tijdelijk (conjunctuur), blijvend (structuur) of kortdurend (frictie)?</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Conjunctureel</td><td>Door een recessie — tijdelijk, verdwijnt bij economisch herstel</td></tr>
+            <tr><td>Structureel</td><td>Door blijvende verandering (technologie, globalisering) — permanent</td></tr>
+            <tr><td>Frictie</td><td>Door zoektijd tussen twee banen — kort en normaal</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Hoe herken je het type?</h3>
+        <p class="intro-text">Stel twee vragen: (1) Is de oorzaak tijdelijk of blijvend? (2) Heeft het te maken met de conjunctuur of met structurele verandering?</p>
+        <div class="formula-box">
+            Recessie → tijdelijk → conjuncturele werkloosheid<br>
+            Robots/technologie → blijvend → structurele werkloosheid<br>
+            Zoektijd tussen banen → kort → frictiewerkloosheid
+        </div>
+        <h3 class="sub-heading">Voorbeelden per type</h3>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Structurele werkloosheid verdwijnt NIET vanzelf bij economisch herstel. Dat is het kernverschil met conjuncturele werkloosheid.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Verwar structureel niet met conjunctureel. Robotisering is een structurele verandering — het verdwijnt niet als de economie weer groeit.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een voorbeeld van werkloosheid bepalen welk type het is?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Conjunctureel</td><td>Door recessie — tijdelijk, verdwijnt bij herstel</td></tr>
+            <tr><td>Structureel</td><td>Door blijvende verandering (technologie) — permanent</td></tr>
+            <tr><td>Frictie</td><td>Door zoektijd — kort en normaal</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 4 (verschuivingen in V/A op arbeidsmarkt)</td></tr>
           </tbody>
         </table>
 
@@ -563,27 +627,27 @@
         <p class="checklist-sub">Controleer of je de volgende zaken beheerst voordat je aan de paragraaf begint:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Ik kan de residuele vraaglijn afleiden</label>
+          <label for="check1">Ik kan een vraag- en aanbodlijn lezen en tekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Ik kan MO berekenen uit de residuele vraag</label>
+          <label for="check2">Ik kan het snijpunt van twee lijnen berekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Ik kan een reactielijn opstellen (MO = MK met twee variabelen)</label>
+          <label for="check3">Ik weet wat MO, MK, TO en evenwichtsprijs betekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Ik kan het Cournot-evenwicht berekenen door substitutie</label>
+          <label for="check4">Ik ken het verschil tussen prijsnemer en prijszetter</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">Ik ken het verschil tussen hoeveelheids- en prijsconcurrentie</label>
+          <label for="check5">Ik kan het verschil tussen een verschuiving en een beweging uitleggen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check6">
-          <label for="check6">Ik kan CS berekenen bij een oligopolie</label>
+          <label for="check6">Ik kan de drie soorten werkloosheid benoemen en herkennen</label>
         </div>
 
       </div>

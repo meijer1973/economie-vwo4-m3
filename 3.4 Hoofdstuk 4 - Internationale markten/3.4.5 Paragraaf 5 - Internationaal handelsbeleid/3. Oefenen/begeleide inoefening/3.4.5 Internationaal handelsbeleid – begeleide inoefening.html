@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.4.5 Internationaal handelsbeleid – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #1A5276; --accent-lt: #EBF5FB; --accent-dk: #154360;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.4.5 Internationaal handelsbeleid</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; Verbanden in handelsbeleid</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#qvraag1verbanden" data-q="qvraag1verbanden">1 · Verbanden in het schema</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Handelsoorlog VS en China</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a · Werkgelegenheid wasmachine-indus...</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b · Werkgelegenheid totale economie</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Cournotduopolie met invoerrech</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a · Reactielijnen afleiden</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b · Marktevenwicht</a>
+        <a class="nav-q" href="#q3c" data-q="q3c">3c · Surplus berekenen</a>
+        <a class="nav-q" href="#q3d" data-q="q3d">3d · Nieuwe reactielijnen na invoerre...</a>
+        <a class="nav-q" href="#q3e" data-q="q3e">3e · Nieuw evenwicht na invoerrechten</a>
+        <a class="nav-q" href="#q3f" data-q="q3f">3f · Surplus na invoerrechten</a>
+        <a class="nav-q" href="#q3g" data-q="q3g">3g · Economische doelmatigheid</a>
+        <a class="nav-q" href="#q3h" data-q="q3h">3h · Vóór- en nadelen invoerrechten</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; CETA: handelsverdrag EU-Canada</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a · Stijging export berekenen</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b · Arbeidsmobiliteit</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Wisselkoersen VS en Japan</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a · Lage dollarkoers gewenst</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b · Koers berekenen</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c · Effect op handel</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Euro-dollarkoers: vraag en aan</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · Bedrag verhandeld</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · Koersdaling berekenen</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c · Elasticiteit en koersverandering</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-7">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">7 &middot; Wisselkoersmanipulatie en Cour</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q7a" data-q="q7a">7a · Wisselkoersmanipulatie en kosten</a>
+        <a class="nav-q" href="#q7b" data-q="q7b">7b · Oneerlijke concurrentie</a>
+        <a class="nav-q" href="#q7c" data-q="q7c">7c · Voordeel voor consumenten</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.4.5 &middot; Begeleide inoefening</span>
+        <h1>Internationaal handelsbeleid &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">Verbanden in handelsbeleid</div>
+            <div class="hero-card-count">1 deelvraag</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Handelsoorlog VS en China</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Cournotduopolie met invoerrechten</div>
+            <div class="hero-card-count">8 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">CETA: handelsverdrag EU-Canada</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Wisselkoersen VS en Japan</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Euro-dollarkoers: vraag en aanbod</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-7">
+            <div class="hero-card-num">Opgave 7</div>
+            <div class="hero-card-title">Wisselkoersmanipulatie en Cournotdu</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Verbanden in handelsbeleid</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Handelsbeleid beïnvloedt de markt via invoerrechten, quota en handelsverdragen. Geef bij elke pijl in het schema aan of er een positief (+) of negatief (–) verband is.</p>
+
+        <div class="question-card" id="qvraag1verbanden">
+          <div class="question-header">
+            <div class="question-label">Vraag 1 — Verbanden in het schema</div>
+            <div class="question-text">Geef in het schema bij elke pijl aan of er een positief (+) of negatief (–) verband is.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Denk per pijl na: als de ene variabele stijgt, wat gebeurt er dan met de andere?<br>2. Invoerrechten verhogen de prijs van import — is dat positief of negatief voor de import?<br>3. Minder import betekent minder concurrentie — is dat positief of negatief voor de binnenlandse productie?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Invoerrechten → hogere importprijzen (– voor import) → minder concurrentie (+) → hogere binnenlandse prijzen (– voor consumenten).</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Invoerrechten → hogere importprijs (+): de prijs van geïmporteerde goederen stijgt.<br>Hogere importprijs → minder import (–): duurdere import wordt minder gevraagd.<br>Minder import → minder concurrentie (–): binnenlandse producenten hebben minder concurrentie.<br>Minder concurrentie → hogere binnenlandse prijs (+): producenten kunnen hogere prijzen vragen.<br>Hogere prijs → lager consumentensurplus (–).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Invoerrechten beschermen binnenlandse producenten maar gaan ten koste van consumenten. De prijs stijgt, de hoeveelheid daalt en het consumentensurplus neemt af.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Handelsoorlog VS en China</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees Uit de wetenschap &#x27;De kosten van de handelsoorlog tussen China en de VS&#x27;. De VS hebben invoerheffingen opgelegd op Chinese goederen.</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a — Werkgelegenheid wasmachine-industrie</div>
+            <div class="question-text">Wat zal het gevolg van de heffingen zijn geweest voor de Amerikaanse werkgelegenheid in de Amerikaanse wasmachine-industrie? Verklaar je antwoord.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Door invoerheffingen stijgt de prijs van Chinese wasmachines in de VS.<br>2. Wat betekent minder concurrentie van Chinese wasmachines voor Amerikaanse producenten?<br>3. Als de productie bij Amerikaanse bedrijven stijgt, wat gebeurt er dan met de werkgelegenheid?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Minder concurrentie → hogere prijzen → meer productie bij binnenlandse bedrijven → meer werkgelegenheid in die specifieke sector.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De werkgelegenheid in de wasmachine-industrie zal stijgen.<br>Doordat de concurrentie in Amerika is afgenomen en de prijzen zijn gestegen, stijgt de productie bij Amerikaanse wasmachineproducenten (General Electric, Whirlpool).<br>Meer productie betekent meer werkgelegenheid in deze sector.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Invoerheffingen beschermen de binnenlandse industrie: de buitenlandse concurrentie neemt af, waardoor de binnenlandse productie en werkgelegenheid in die specifieke sector toenemen. Dit is het beoogde effect van protectionisme.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b — Werkgelegenheid totale economie</div>
+            <div class="question-text">Wat zal het gevolg van de heffingen zijn geweest voor de Amerikaanse werkgelegenheid in de Amerikaanse economie als geheel? Verklaar je antwoord.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Denk breder dan alleen de wasmachine-industrie.<br>2. Wat gebeurt er met de koopkracht van consumenten als prijzen stijgen?<br>3. Hoe reageert China op de Amerikaanse heffingen? Denk aan vergeldingsmaatregelen.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Hogere prijzen → lagere koopkracht → minder consumentenbestedingen. Vergeldingsmaatregelen van China → lagere Amerikaanse export. Beide effecten verlagen de totale werkgelegenheid.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De werkgelegenheid in de totale economie zal per saldo dalen.<br>De koopkracht van Amerikaanse consumenten daalt door hogere prijzen, waardoor consumentenbestedingen dalen.<br>Daarnaast daalt de export door vergeldingsmaatregelen van China.<br>Minder vraag naar Amerikaanse producten → lagere productie → minder werkgelegenheid.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het partiele effect (meer werkgelegenheid in beschermde sector) wordt overtroffen door het totale effect: hogere prijzen drukken de koopkracht en vergeldingsmaatregelen verlagen de export. Per saldo verliest de economie werkgelegenheid.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Cournotduopolie met invoerrechten</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Op een markt in de VS zijn twee aanbieders: aanbieder 1 uit de VS en aanbieder 2 uit China. De vraaglijn is Q = 200 – p. Beide aanbieders hebben: TK = 100 + ½q². Na invoerrechten wordt TK van China: TK = 100 + 32q + ½q².</p>
+
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a — Reactielijnen afleiden</div>
+            <div class="question-text">Leid de formules van de reactielijnen af voor aanbieder 1 en voor aanbieder 2.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Schrijf de residuele vraag op: q_VS = Q – q_China = 200 – p – q_China.<br>2. Herleid naar p: p = 200 – q_VS – q_China.<br>3. Bereken TO = p × q_VS en leidt MO af.<br>4. Stel MO = MK en los op naar q_VS (dat geeft de reactielijn).</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Residuele vraag: p = 200 – q_i – q_j<br>TO = p × q_i<br>MO = TO’ (afgeleide naar q_i)<br>MK = TK’ = q_i<br>Winstmax: MO = MK → reactielijn</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Reactielijn aanbieder 1 (VS): q_VS = 66⅔ – ⅓q_China<br>Reactielijn aanbieder 2 (China): q_China = 66⅔ – ⅓q_VS<br>Afleiding: MO = 200 – 2q_VS – q_China, MK = q_VS.<br>MO = MK → 200 – 2q_VS – q_China = q_VS → 3q_VS = 200 – q_China.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De reactielijn geeft aan hoeveel een aanbieder wil produceren, gegeven de productie van de concurrent. Bij een symmetrisch duopolie hebben beide aanbieders dezelfde reactielijn (maar gespiegeld).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b — Marktevenwicht</div>
+            <div class="question-text">Bereken de prijs en de aangeboden hoeveelheid in het marktevenwicht.</div>
+          </div>
+          <div class="fill-in">q_VS = 66⅔ – ⅓(66⅔ – ⅓q_VS) = ...<br>q_VS = ............<br>q_China = ............<br>Q = q_VS + q_China = ............<br>p = 200 – Q = ............</div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Vul de ene reactielijn in de andere in.<br>Los op naar q_VS, bereken daarna q_China.<br>Q = q_VS + q_China, p = 200 – Q.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q_VS = 66⅔ – ⅓(66⅔ – ⅓q_VS) = 44,4 + ⅙q_VS → q_VS = 50.<br>q_China = 66⅔ – ⅓ × 50 = 50.<br>Q = 50 + 50 = 100.<br>p = 200 – 100 = 100.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> In het symmetrische Cournotevenwicht produceren beide aanbieders evenveel. De prijs (100) ligt tussen de monopolieprijs en de prijs bij volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3c">
+          <div class="question-header">
+            <div class="question-label">Vraag 3c — Surplus berekenen</div>
+            <div class="question-text">Bereken het consumentensurplus, het producentensurplus en het totale surplus.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">CS = ½ × (max. prijs – marktprijs) × Q<br>Winst = TO – TK = p × q – 100 – ½q²<br>PS = winst1 + VK1 + winst2 + VK2</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (200 – 100) × 100 × 0,5 = € 5.000.<br>Winst per aanbieder: 100 × 50 – 100 – ½ × 50² = € 3.650.<br>PS = 3.650 + 100 + 3.650 + 100 = € 7.500.<br>TS = CS + PS = 5.000 + 7.500 = € 12.500.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het totale surplus (€ 12.500) geeft de economische doelmatigheid van de markt weer. Bij invoerrechten zal dit surplus dalen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3d">
+          <div class="question-header">
+            <div class="question-label">Vraag 3d — Nieuwe reactielijnen na invoerrechten</div>
+            <div class="question-text">Leid opnieuw de reactielijnen af na de invoerrechten van € 32 per stuk op Chinese import.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De reactielijn van de VS verandert niet. De MK van China worden: MK = 32 + q_China.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Reactielijn VS blijft: q_VS = 66⅔ – ⅓q_China.<br>MK_China = 32 + q_China. MO = MK → 200 – 2q_China – q_VS = 32 + q_China.<br>Reactielijn China: q_China = 56 – ⅓q_VS.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De invoerrechten verhogen de marginale kosten van de Chinese aanbieder. Dit verschuift zijn reactielijn naar binnen: hij produceert minder bij elk productieniveau van de concurrent.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3e">
+          <div class="question-header">
+            <div class="question-label">Vraag 3e — Nieuw evenwicht na invoerrechten</div>
+            <div class="question-text">Bereken het nieuwe marktevenwicht. Hoeveel belasting haalt de Amerikaanse regering op?</div>
+          </div>
+          <div class="fill-in">q_VS = 66⅔ – ⅓(56 – ⅓q_VS) = ...<br>q_VS = ............, q_China = ............<br>Q = ............, p = ............<br>Belastingopbrengst = € 32 × q_China = ............</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q_VS = 66⅔ – ⅓(56 – ⅓q_VS) = 48 + ⅙q_VS → q_VS = 54.<br>q_China = 56 – ⅓ × 54 = 38.<br>Q = 54 + 38 = 92, p = 200 – 92 = 108.<br>Belastingopbrengst = 32 × 38 = € 1.216.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Na invoerrechten produceert de VS meer en China minder. De totale productie daalt, de prijs stijgt. De overheid ontvangt belasting op elke Chinese eenheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3f">
+          <div class="question-header">
+            <div class="question-label">Vraag 3f — Surplus na invoerrechten</div>
+            <div class="question-text">Bereken het consumentensurplus, het producentensurplus en het totale surplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (200 – 108) × 92 × 0,5 = € 4.232.<br>Winst VS: 108 × 54 – 100 – ½ × 54² = € 4.274.<br>Winst China: 108 × 38 – 100 – 32 × 38 – ½ × 38² = € 2.066.<br>PS = 4.274 + 2.066 + 2 × 100 = € 6.540.<br>TS = 4.232 + 6.540 = € 10.772.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het totale surplus is gedaald van € 12.500 naar € 10.772, een verlies van € 1.728. Dit is het welvaartsverlies door de invoerrechten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3g">
+          <div class="question-header">
+            <div class="question-label">Vraag 3g — Economische doelmatigheid</div>
+            <div class="question-text">Vergelijk je antwoord bij vraag c met dat bij vraag f. Betrek daarbij de belastingopbrengst. Bespreek de invloed van de invoerrechten op de economische doelmatigheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Surplus was € 12.500, na invoerrechten € 10.772: een daling van € 1.728.<br>De belastingopbrengst is € 1.216.<br>Het totale surplus daalt sterker dan de belastingopbrengst, dus de economische doelmatigheid is afgenomen.<br>Er is een netto welvaartsverlies (deadweight loss) van € 1.728 – € 1.216 = € 512.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Invoerrechten leiden tot een welvaartsverlies (deadweight loss): de daling van het surplus is groter dan de belastingopbrengst. Een deel van de welvaart gaat verloren door de verstoring van de markt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3h">
+          <div class="question-header">
+            <div class="question-label">Vraag 3h — Vóór- en nadelen invoerrechten</div>
+            <div class="question-text">Geef een reden vóór en een reden tegen invoerrechten.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vóór: het marktaandeel en de winst van de Amerikaanse aanbieder zijn gestegen.<br>Tegen: het consumentensurplus is gedaald en de economische doelmatigheid is afgenomen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Invoerrechten hebben winnaars (binnenlandse producenten) en verliezers (consumenten). Per saldo is het welvaartsverlies groter dan de winst: protectionisme verlaagt de totale economische doelmatigheid.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CETA: handelsverdrag EU-Canada</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees In context &#x27;CETA: het handelsverdrag tussen de EU en Canada&#x27;.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a — Stijging export berekenen</div>
+            <div class="question-text">Bereken de totale stijging van de Nederlandse export naar Canada in miljarden euro’s. Rond af op één decimaal.</div>
+          </div>
+          <div class="fill-in">€ ... mld / ... × ... + € ... mld / ... × ... = € ... miljard</div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Exportstijging = (bedrag / indexcijfer) × punten stijging<br>Tel de stijgingen van beide periodes bij elkaar op.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">€ 3,4 miljard / 112 × 12 + € 2,3 miljard / 123 × 23 = € 0,8 miljard.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De berekening gebruikt indexcijfers om de absolute stijging te bepalen. Je deelt het huidige bedrag door het indexcijfer en vermenigvuldigt met het aantal punten stijging.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b — Arbeidsmobiliteit</div>
+            <div class="question-text">Citeer de zin waaruit blijkt dat de arbeidsmobiliteit tussen Canada en Nederland is gestegen.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">'Het is ook eenvoudiger geworden om met een Nederlands diploma in Canada te solliciteren en om er een tijdelijke verblijfsvergunning te krijgen.'</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> CETA vergemakkelijkt niet alleen goederenhandel, maar ook de arbeidsmobiliteit. Dit is een kenmerk van brede handelsverdragen die verder gaan dan alleen tarieven.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Wisselkoersen VS en Japan</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 2. Op moment 2 moest 0,004 dollar per yen worden betaald.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a — Lage dollarkoers gewenst</div>
+            <div class="question-text">Verklaar dat Amerikaanse producenten wilden dat de koers van de dollar omlaag ging.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Een sterke dollar maakt Amerikaanse producten duur voor buitenlanders én maakt Japanse producten goedkoop voor Amerikanen.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Door de lage koers van de yen ten opzichte van de dollar waren Amerikaanse producten relatief duur.<br>Amerikaanse producenten hadden last van sterke Japanse concurrentie.<br>Als de koers van de dollar daalt (en de yen stijgt), worden Amerikaanse producten concurrerender.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een sterke munt maakt export duur en import goedkoop. Binnenlandse producenten worden benadeeld. Daarom wilden Amerikaanse producenten een lagere dollarkoers.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b — Koers berekenen</div>
+            <div class="question-text">Bereken de koers op moment 3. Rond af op vier decimalen.</div>
+          </div>
+          <div class="fill-in">Koers moment 1: ... / ... = ... dollar per yen<br>Verdubbeling: ... × ... = ............ dollar per yen</div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Verdubbeling koers ten opzichte van moment 1.<br>Koers moment 1: gebruik de gegevens uit bron 2.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Koers moment 1 afgeleid uit de gegevens.<br>Verdubbeling: 0,004 / 110 × 200 = 0,0073 dollar per yen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De koersberekening gebruikt de wisselkoersformule. Een verdubbeling van de koers betekent dat de yen twee keer zo veel dollar waard wordt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c — Effect op handel</div>
+            <div class="question-text">Had de verlaging van de koers van de dollar veel effect op de inter-industriële handel tussen de VS en Japan? Verklaar op twee manieren.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Nee, het effect was beperkt.<br>1. De Japanse producten bleven gewild, dus de Japanse export naar de VS veranderde weinig.<br>2. De Amerikaanse export naar Japan was al laag door importbeperkingen. Deze bleven van kracht, dus kon de export niet sterk groeien.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Wisselkoersveranderingen hebben niet altijd het beoogde effect. Als producten sterk gedifferentieerd zijn (consumentenvoorkeur) of als er non-tarifaire barrières bestaan, reageert de handel nauwelijks.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Euro-dollarkoers: vraag en aanbod</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">De vraag naar euro’s is Qv = –50p + 86 en het aanbod Qa = 25p + 17 (in miljarden euro’s). Na overname van Amerikaanse bedrijven komt er € 3 miljard extra aanbod bij: Qa = 25p + 20.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — Bedrag verhandeld</div>
+            <div class="question-text">Bereken voor welk bedrag in dollars er euro’s worden verhandeld op deze markt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Evenwicht: Qv = Qa<br>TO = p × Q (in dollars)</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">–50p + 86 = 25p + 17 → p = 0,92 dollar per euro.<br>Q = –50 × 0,92 + 86 = 40 miljard euro.<br>TO = 0,92 × 40 = 36,8 miljard dollar.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De wisselkoersmarkt werkt als elke markt: prijs (koers) volgt uit het snijpunt van vraag en aanbod.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — Koersdaling berekenen</div>
+            <div class="question-text">Bereken met hoeveel procent de koers van de euro in dollars zal dalen door het extra aanbod.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">–50p + 86 = 25p + 20 → p = 0,88 dollar per euro.<br>Van 0,92 naar 0,88: (0,88 – 0,92) / 0,92 × 100% = –4,3%.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Extra aanbod van euro’s drukt de koers. De procentuele verandering bereken je ten opzichte van de oorspronkelijke koers.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c — Elasticiteit en koersverandering</div>
+            <div class="question-text">Was bij een minder elastische vraag naar euro’s de koersverandering groter of kleiner geweest?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Groter, want de prijs daalt door het extra aanbod.<br>Als de vraag minder reageert (minder elastisch), wordt de prijsdaling minder afgeremd door de vraag.<br>De koers zou dus sterker dalen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een inelastische vraag leidt een aanbodverandering tot een grotere prijsverandering, omdat de vraaghoeveelheid nauwelijks reageert op de prijsverandering.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-7">
+        <div class="opgave-header">
+          <span class="opgave-num">7</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Wisselkoersmanipulatie en Cournotduopolie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees In context &#x27;Een internationaal Cournotduopolie met wisselkoersmanipulatie&#x27;.</p>
+
+        <div class="question-card" id="q7a">
+          <div class="question-header">
+            <div class="question-label">Vraag 7a — Wisselkoersmanipulatie en kosten</div>
+            <div class="question-text">Leg uit dat de Chinese aanbieder dankzij de wisselkoersmanipulatie zijn kosten in renminbi niet hoeft te verlagen om meer winst in euro’s te maken.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Door de wisselkoersverandering dalen de kosten in euro’s (zonder dat de kosten in renminbi veranderen).<br>De opbrengsten stijgen: de afzet stijgt relatief meer dan de prijs daalt.<br>Daardoor stijgt de winst zonder dat de Chinese aanbieder efficiënter hoeft te produceren.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Wisselkoersmanipulatie verlaagt de effectieve kosten van de exporteur zonder dat hij zelf efficiënter hoeft te worden. De wisselkoers doet het werk dat normaal door kostenbesparingen gedaan zou worden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7b">
+          <div class="question-header">
+            <div class="question-label">Vraag 7b — Oneerlijke concurrentie</div>
+            <div class="question-text">Geef een argument waarmee tegenstanders van wisselkoersmanipulatie kunnen stellen dat er sprake is van oneerlijke concurrentie.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De Chinese aanbieder hoeft zelf geen extra inspanning te leveren (zoals efficiënter produceren) om meer winst te maken.<br>De Nederlandse aanbieder moet wel een extra inspanning leveren om zijn marktaandeel te behouden.<br>Het voordeel van de Chinese aanbieder komt niet door eigen verdienste maar door overheidsbeleid.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij eerlijke concurrentie wint het meest efficiënte bedrijf. Bij wisselkoersmanipulatie wint het bedrijf met de meest gunstige wisselkoers, ongeacht efficiëntie. Dit wordt als oneerlijk beschouwd.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7c">
+          <div class="question-header">
+            <div class="question-label">Vraag 7c — Voordeel voor consumenten</div>
+            <div class="question-text">Leg uit dat de Nederlandse consument op twee manieren profiteert van de wisselkoersmanipulatie.</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">1. De prijs daalt: consumenten betalen minder per product.<br>2. De evenwichtshoeveelheid stijgt: meer consumenten kunnen het product kopen.<br>Beide effecten vergroten het consumentensurplus.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Voor consumenten is wisselkoersmanipulatie voordelig: het werkt als een onzichtbare subsidie die de prijzen verlaagt. Het consumentensurplus stijgt doordat zowel de prijs daalt als de hoeveelheid toeneemt.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Invoerrechten</td><td>Verhogen de importprijs, beschermen binnenlandse producenten, maar verlagen het consumentensurplus en de economische doelmatigheid.</td></tr>
+            <tr><td>Deadweight loss</td><td>Het welvaartsverlies dat ontstaat doordat invoerrechten de markt verstoren: het surplusverlies is groter dan de belastingopbrengst.</td></tr>
+            <tr><td>Handelsverdragen</td><td>Verlagen wederzijdse tarieven en stimuleren handel en arbeidsmobiliteit (bijv. CETA).</td></tr>
+            <tr><td>Wisselkoerseffect</td><td>Een sterke munt maakt export duurder en import goedkoper; een zwakke munt doet het omgekeerde.</td></tr>
+            <tr><td>Wisselkoersmanipulatie</td><td>Geeft de exporteur een kostenvoordeel zonder eigen efficiëntieverbetering. Voordeel voor consumenten, nadeel voor concurrenten.</td></tr>
+            <tr><td>Cournotduopolie</td><td>Reactielijnen beschrijven hoeveel elk bedrijf produceert gegeven de concurrent. Evenwicht door invullen van de ene in de andere reactielijn.</td></tr>
+            <tr><td>Protectionisme vs. vrijhandel</td><td>Protectionisme beschermt sectoren maar verlaagt totale welvaart. Vrijhandel verhoogt de economische doelmatigheid.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

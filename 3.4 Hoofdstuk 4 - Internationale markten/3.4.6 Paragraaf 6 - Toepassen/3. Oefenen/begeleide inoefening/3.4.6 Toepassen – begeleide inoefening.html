@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.4.6 Toepassen – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #1A5276; --accent-lt: #EBF5FB; --accent-dk: #154360;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.4.6 Toepassen</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; De Rotterdamse haven en handel</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q1a" data-q="q1a">1a · Handelsoorlog VS-China</a>
+        <a class="nav-q" href="#q1b" data-q="q1b">1b · Brexit</a>
+        <a class="nav-q" href="#q1c" data-q="q1c">1c · CETA</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Export- en importcijfers Moera</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a · Oorzaak daling exportwaarde</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b · Oorzaak daling importwaarde</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Export en werkgelegenheid</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#qvraag3variabele" data-q="qvraag3variabele">3 · Variabele voor werkgelegenheid</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; Innovatie, handel en arbeidsma</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a · Innovatie en arbeidskwaliteit</a>
+        <a class="nav-q" href="#q4c" data-q="q4c">4c · Stijging arbeidsinkomen hoogopge...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Wereldhandel en schuld</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a · Tabel kleiner dan wereldhandel</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b · Amerika’s handelstekort</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c · Voldoende buitenlands geld?</a>
+        <a class="nav-q" href="#q5d" data-q="q5d">5d · Schuldopbouw</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Philips, handelsoorlog en medi</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · Inter- of intra-industriële handel</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · Productie in China vs. VS</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c · Invoertarieven en prijzen</a>
+        <a class="nav-q" href="#q6d" data-q="q6d">6d · Zorgverzekeringspremies</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-7">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">7 &middot; Wisselkoersrisico voor exporte</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q7a" data-q="q7a">7a · Koersstijging of -daling</a>
+        <a class="nav-q" href="#q7b" data-q="q7b">7b · Grootste risico</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-8">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">8 &middot; Brexit en de Britse auto-indus</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q8a" data-q="q8a">8a · Buitenlandse auto’s duurder</a>
+        <a class="nav-q" href="#q8b" data-q="q8b">8b · Voordeel Britse auto-industrie</a>
+        <a class="nav-q" href="#q8c" data-q="q8c">8c · Nadeel lagere koers</a>
+        <a class="nav-q" href="#q8d" data-q="q8d">8d · Import ondanks eigen productie</a>
+        <a class="nav-q" href="#q8e" data-q="q8e">8e · Transactiekosten na Brexit</a>
+        <a class="nav-q" href="#q8f" data-q="q8f">8f · BMW en de Mini</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-9">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">9 &middot; Heineken, ASML en wisselkoerse</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q9a" data-q="q9a">9a · Heineken en euro-dollarkoers</a>
+        <a class="nav-q" href="#q9b" data-q="q9b">9b · Inelastische vraag</a>
+        <a class="nav-q" href="#q9c" data-q="q9c">9c · Wisselkoersrisico verzekeren</a>
+        <a class="nav-q" href="#q9d" data-q="q9d">9d · ASML en de euro-dollarkoers</a>
+        <a class="nav-q" href="#q9e" data-q="q9e">9e · Omzet Randstad berekenen</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-10">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">10 &middot; Monopolie, concurrentie en bel</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q10a" data-q="q10a">10a · MO- en MK-lijn afleiden</a>
+        <a class="nav-q" href="#q10b" data-q="q10b">10b · Marktevenwicht monopolie</a>
+        <a class="nav-q" href="#q10c" data-q="q10c">10c · Surplus monopolie met producent...</a>
+        <a class="nav-q" href="#q10d" data-q="q10d">10d · Consumentenbelasting: nieuwe li...</a>
+        <a class="nav-q" href="#q10e" data-q="q10e">10e · Nieuw evenwicht</a>
+        <a class="nav-q" href="#q10f" data-q="q10f">10f · Vergelijking producenten- vs. c...</a>
+        <a class="nav-q" href="#q10g" data-q="q10g">10g · Volkomen concurrentie met consu...</a>
+        <a class="nav-q" href="#q10h" data-q="q10h">10h · Surplus volkomen concurrentie m...</a>
+        <a class="nav-q" href="#q10i" data-q="q10i">10i · Volkomen concurrentie met produ...</a>
+        <a class="nav-q" href="#q10j" data-q="q10j">10j · Vergelijking</a>
+        <a class="nav-q" href="#q10k" data-q="q10k">10k · Zonder belasting</a>
+        <a class="nav-q" href="#q10l" data-q="q10l">10l · Eindvergelijking</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.4.6 &middot; Begeleide inoefening</span>
+        <h1>Toepassen &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">De Rotterdamse haven en handelsbele</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Export- en importcijfers Moeranië</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Export en werkgelegenheid</div>
+            <div class="hero-card-count">1 deelvraag</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">Innovatie, handel en arbeidsmarkt</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Wereldhandel en schuld</div>
+            <div class="hero-card-count">4 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Philips, handelsoorlog en medische </div>
+            <div class="hero-card-count">4 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-7">
+            <div class="hero-card-num">Opgave 7</div>
+            <div class="hero-card-title">Wisselkoersrisico voor exporteurs</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-8">
+            <div class="hero-card-num">Opgave 8</div>
+            <div class="hero-card-title">Brexit en de Britse auto-industrie</div>
+            <div class="hero-card-count">6 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-9">
+            <div class="hero-card-num">Opgave 9</div>
+            <div class="hero-card-title">Heineken, ASML en wisselkoersen</div>
+            <div class="hero-card-count">5 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-10">
+            <div class="hero-card-num">Opgave 10</div>
+            <div class="hero-card-title">Monopolie, concurrentie en belastin</div>
+            <div class="hero-card-count">12 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">De Rotterdamse haven en handelsbeleid</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees nog eens de introductie van het hoofdstuk. De Rotterdamse haven wordt beïnvloed door internationaal handelsbeleid.</p>
+
+        <div class="question-card" id="q1a">
+          <div class="question-header">
+            <div class="question-label">Vraag 1a — Handelsoorlog VS-China</div>
+            <div class="question-text">Beschrijf een gevolg van de handelsoorlog tussen de VS en China voor de Rotterdamse haven.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bedenk: welke goederen worden via Rotterdam vervoerd tussen China en de VS?<br>2. Wat gebeurt er met die goederenstroom als er invoerrechten worden geheven?<br>3. Formuleer het gevolg voor de haven (overslag, omzet).</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Invoerrechten verminderen de handel. Minder handel betekent minder goederen die door de haven worden overgeslagen.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De export van goederen van China naar de VS daalt door de invoerrechten.<br>Hierdoor worden er minder goederen vanuit China overgeslagen in Rotterdam voor export naar de VS.<br>De omzet van de Rotterdamse haven daalt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De Rotterdamse haven is een knooppunt in internationale handelsstromen. Als de handel tussen grote handelspartners afneemt (door invoerrechten), daalt de overslag en dus de omzet van de haven.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1b">
+          <div class="question-header">
+            <div class="question-label">Vraag 1b — Brexit</div>
+            <div class="question-text">Beschrijf een gevolg van Brexit voor de Rotterdamse haven.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Wat verandert er voor de handel tussen de EU en het VK na Brexit?<br>2. Welke gevolgen heeft dat voor goederen die via Rotterdam naar het VK gaan?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Brexit betekent het einde van het vrije verkeer van goederen tussen de EU en het VK.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Exporteren naar het VK wordt duurder na Brexit, omdat er geen vrij verkeer meer bestaat van goederen tussen de EU en het VK.<br>De handel tussen de EU en het VK neemt af.<br>Vanuit Rotterdam worden minder goederen verscheept naar het VK en er worden minder goederen vanuit het VK ingeklaard.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Brexit creëert handelsbarrières (invoerrechten, douanecontroles) die de handel duurder en trager maken. Dit raakt de Rotterdamse haven direct als belangrijkste doorvoerhaven naar het VK.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1c">
+          <div class="question-header">
+            <div class="question-label">Vraag 1c — CETA</div>
+            <div class="question-text">Beschrijf een gevolg van het niet ratificeren van CETA door Nederland voor de Rotterdamse haven.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Wat regelt CETA? Denk aan verlaging van invoerheffingen.<br>2. Als CETA niet doorgaat, wat gebeurt er dan met de handel EU-Canada?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De verlaging van de wederzijdse invoerheffingen tussen de EU en Canada gaat niet door.<br>De handel tussen de EU en Canada zal niet toenemen.<br>De handel via de Rotterdamse haven stijgt niet.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Handelsverdragen zoals CETA verlagen invoerheffingen en stimuleren handel. Als zo’n verdrag niet wordt geratificeerd, blijven de barrières bestaan en profiteert de haven niet van extra handelsstromen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Export- en importcijfers Moeranië</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 1. In december 2017 daalde zowel de exportwaarde als de importwaarde.</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a — Oorzaak daling exportwaarde</div>
+            <div class="question-text">Werd de daling van de waarde van de goederenuitvoer in december 2017 veroorzaakt door een daling van het aantal stuks, een daling van het exportprijspeil of door beide?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Waarde = volume × prijs. Als de waarde met 8% daalt en het volume met 10%, wat zegt dat over de prijs?<br>2. Als het volume sterker daalt dan de waarde, moeten de prijzen zijn gestegen.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De waarde daalde met 8%, het volume met 10%. Omdat het volume sterker daalde dan de waarde, zijn de prijzen juist gestegen.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Waarde = volume × prijs<br>Indexwaarde = indexvolume × indexprijs / 100</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Het volume veroorzaakte de daling van de exportwaarde.<br>Het volume daalde met 10%, de waarde slechts met 8%.<br>Dus de prijzen zijn juist licht gestegen (anders zou de waarde even hard of harder gedaald zijn dan het volume).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als het volume sterker daalt dan de waarde, móét de prijs gestegen zijn om het verschil te verklaren. Waarde = volume × prijs: een volumedaling van 10% met een waardedaling van slechts 8% impliceert een prijsstijging.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b — Oorzaak daling importwaarde</div>
+            <div class="question-text">Werd de daling van de waarde van de goedereninvoer in december 2017 veroorzaakt door een daling van het aantal stuks, een daling van het importprijspeil of door beide?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vergelijk de procentuele daling van de importwaarde (6%) met de volumedaling (5%).</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De importwaarde daalde met 6%, het volume met 5%.<br>Omdat de waarde sterker daalde dan het volume, zijn de prijzen ook enigszins gedaald.<br>Beide factoren hebben bijgedragen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als de waarde sterker daalt dan het volume, moeten de prijzen ook gedaald zijn. Hier daalden zowel het volume (5%) als de prijzen (circa 1%), wat samen de waardedaling van 6% verklaart.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Export en werkgelegenheid</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">De invloed van export op de werkgelegenheid kan op verschillende manieren worden gemeten.</p>
+
+        <div class="question-card" id="qvraag3variabele">
+          <div class="question-header">
+            <div class="question-label">Vraag 3 — Variabele voor werkgelegenheid</div>
+            <div class="question-text">Welke variabele geeft voor een inschatting van de invloed van de export op de werkgelegenheid het beste beeld? Verklaar je antwoord.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Denk aan het verschil tussen waarde en volume van de export.<br>2. Welke maatstaf is het meest direct gerelateerd aan de hoeveelheid werk (arbeid) die nodig is?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Het exportvolume geeft het beste beeld.<br>Het volume geeft aan hoeveel goederen daadwerkelijk geproduceerd en verscheept worden.<br>De hoeveelheid arbeid die nodig is, hangt samen met het volume, niet met de prijs.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De werkgelegenheid hangt af van hoeveel er geproduceerd wordt (volume), niet van de prijs. Een prijsstijging verhoogt de exportwaarde, maar niet per se de werkgelegenheid.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Innovatie, handel en arbeidsmarkt</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 2. Innovatie en liberalisering van de wereldhandel beïnvloeden de arbeidsmarkt.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a — Innovatie en arbeidskwaliteit</div>
+            <div class="question-text">Leg uit hoe voortdurende innovatie steeds hogere eisen kan stellen aan de kwaliteit van de productiefactor arbeid.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Denk aan de vaardigheden die nodig zijn om met steeds geavanceerdere machines en technologie te werken.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Het vraagt steeds meer scholing om met geavanceerde kapitaalgoederen om te kunnen gaan.<br>Innovatie leidt tot complexere productieprocessen die hoger opgeleide werknemers vereisen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Technologische innovatie verhoogt de vraag naar hoogopgeleide arbeid. Werknemers moeten continu bijscholen om met nieuwe technologieën te kunnen werken.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4c">
+          <div class="question-header">
+            <div class="question-label">Vraag 4c — Stijging arbeidsinkomen hoogopgeleiden</div>
+            <div class="question-text">Geef de verklaring voor de verwachte sterke stijging van het arbeidsinkomen van hoogopgeleiden. Gebruik zowel de vraagkant als de aanbodkant van de arbeidsmarkt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Denk aan beperkt arbeidsaanbod (bevolking groeit nauwelijks) en stijgende vraag naar kwaliteit.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Aanbodkant: de bevolking groeit nauwelijks, dus het arbeidsaanbod is beperkt.<br>Vraagkant: de kwaliteit van de gevraagde arbeid stijgt door innovatie.<br>Werkgevers moeten hogere lonen bieden om de schaarse, hoogopgeleide werknemers aan te trekken.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De combinatie van beperkt aanbod (demografie) en stijgende vraag (innovatie) drijft de lonen van hoogopgeleiden op. Dit is het bekende mechanisme van vraag en aanbod op de arbeidsmarkt.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Wereldhandel en schuld</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 3. Amerika verdient buitenlands geld met export en heeft buitenlands geld nodig voor import.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a — Tabel kleiner dan wereldhandel</div>
+            <div class="question-text">Verklaar het feit dat het totaal in de tabel ($ 3.000 miljard) kleiner is dan het totaal van de wereldhandel ($ 8.000 miljard).</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De tabel geeft alleen de handel túnssen de drie werelddelen.<br>De wereldhandel omvat ook de handel tussen de afzonderlijke landen bínnen een werelddeel.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De tabel toont alleen intercontinentale handel. De handel tussen landen op hetzelfde continent (bijv. Duitsland-Frankrijk) is niet meegeteld maar maakt wel deel uit van de wereldhandel.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b — Amerika’s handelstekort</div>
+            <div class="question-text">Geef voor de bewering van de economen een verklaring met behulp van de tabel in bron 3.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De export van Amerika bedraagt $ 1.000 miljard, de import $ 1.200 miljard.<br>Amerika importeert dus meer dan het exporteert: er is een handelstekort.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een handelstekort (import > export) betekent dat een land meer buitenlands geld uitgeeft dan het verdient. Dit kan leiden tot schuldopbouw.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c — Voldoende buitenlands geld?</div>
+            <div class="question-text">Verdient Amerika met de export voldoende buitenlands geld om de import te kunnen betalen?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Nee, want de export ($ 1.000 miljard) is kleiner dan de import ($ 1.200 miljard).<br>Amerika verdient $ 200 miljard te weinig buitenlands geld.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het verschil tussen export en import is het handelssaldo. Een negatief saldo (tekort) betekent dat het land niet genoeg verdient om zijn import te betalen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5d">
+          <div class="question-header">
+            <div class="question-label">Vraag 5d — Schuldopbouw</div>
+            <div class="question-text">Leg uit hoe Amerika schuld kan opbouwen bij de gegeven handelsstromen.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Amerika verdient niet genoeg buitenlands geld met de export van goederen en diensten.<br>Het ontbrekende geld leent Amerika bij andere landen.<br>Zo bouwt Amerika schuld op bij het buitenland.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een structureel handelstekort moet gefinancierd worden: het land leent geld van buitenlandse investeerders of verkoopt binnenlandse bezittingen. Op lange termijn leidt dit tot schuldopbouw.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Philips, handelsoorlog en medische apparatuur</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 4. Philips produceert medische apparatuur in zowel China als de VS.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — Inter- of intra-industriële handel</div>
+            <div class="question-text">Leg uit of hier sprake is van inter-industriële of van intra-industriële handel.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Intra-industriële handel, want dezelfde (soort) producten — medische apparatuur — worden zowel geïmporteerd als geëxporteerd.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als een land hetzelfde type product zowel importeert als exporteert, is dat intra-industriële handel. Het gaat om verschillende varianten van medische apparatuur.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — Productie in China vs. VS</div>
+            <div class="question-text">Verklaar waarom Philips bepaalde medische producten voor de Amerikaanse markt in China laat maken en andersom.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">In China is relatief veel goedkope arbeid voorhanden. Arbeidsintensieve productie vindt daarom in China plaats.<br>De meer kapitaalintensieve productie vindt in de VS plaats, waar meer geavanceerde technologie beschikbaar is.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Philips optimaliseert zijn internationale productieketen: arbeidsintensieve stappen in landen met goedkope arbeid, kapitaalintensieve stappen in landen met geavanceerde technologie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c — Invoertarieven en prijzen</div>
+            <div class="question-text">Leg uit dat de invoertarieven ervoor zorgen dat medische apparatuur in de VS duurder wordt. Geef twee oorzaken.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Oorzaak 1: door de tarieven hebben importeurs van Chinese producten hogere kosten, die worden doorberekend in de verkoopprijs.<br>Oorzaak 2: door de importtarieven kan Philips besluiten minder te exporteren naar de VS, waardoor het aanbod daalt en de prijs stijgt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Invoertarieven werken via twee kanalen: directe kostenstijging (hogere importkosten) en indirecte prijsstijging (minder aanbod door lagere import).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6d">
+          <div class="question-header">
+            <div class="question-label">Vraag 6d — Zorgverzekeringspremies</div>
+            <div class="question-text">Leg uit dat de premies voor zorgverzekeringen in de VS als gevolg van de handelsoorlog kunnen stijgen.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Als ziekenhuizen hogere prijzen betalen voor medische producten, berekenen zij dit door in de kosten van behandelingen.<br>Verzekeraars vergoeden deze kosten. Als die kosten stijgen, moeten verzekeraars de premies verhogen om winst te kunnen blijven maken.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De doorwerking gaat via de keten: hogere importkosten → duurdere medische apparatuur → duurdere behandelingen → hogere kosten voor verzekeraars → hogere premies voor consumenten.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-7">
+        <div class="opgave-header">
+          <span class="opgave-num">7</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Wisselkoersrisico voor exporteurs</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Twee buitenlandse exporteurs handelen met Nederland. Zij worden betaald in euro’s. Exporteur A verwacht een koersverandering tussen –5% en +25%, exporteur B tussen –35% en +5%.</p>
+
+        <div class="question-card" id="q7a">
+          <div class="question-header">
+            <div class="question-label">Vraag 7a — Koersstijging of -daling</div>
+            <div class="question-text">Wat is nadeliger voor deze exporteurs: een koersstijging of een koersdaling van de eigen munt?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Een koersstijging van de eigen munt is nadeliger.<br>Elke euro levert dan minder eigen valuta op, waardoor de omzet in eigen munt daalt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Exporteurs die in euro’s betaald worden, wisselen die euro’s om in eigen munt. Als hun eigen munt in waarde stijgt, krijgen ze minder eigen munt per euro.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7b">
+          <div class="question-header">
+            <div class="question-label">Vraag 7b — Grootste risico</div>
+            <div class="question-text">Welke exporteur loopt volgens de eigen inschatting het grootste risico?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Exporteur A, omdat hij de kans op een koersstijging groter inschat dan exporteur B.<br>Exporteur A verwacht maximaal +25% stijging, terwijl exporteur B maximaal +5% verwacht.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het wisselkoersrisico is groter naarmate de verwachte koersstijging van de eigen munt groter is. Exporteur A verwacht een mogelijk veel sterkere stijging en loopt dus meer risico.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-8">
+        <div class="opgave-header">
+          <span class="opgave-num">8</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Brexit en de Britse auto-industrie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 5. De wisselkoersdaling van het Britse pond en Brexit hebben gevolgen voor de auto-industrie.</p>
+
+        <div class="question-card" id="q8a">
+          <div class="question-header">
+            <div class="question-label">Vraag 8a — Buitenlandse auto’s duurder</div>
+            <div class="question-text">Leg uit dat buitenlandse auto’s door de wisselkoersdaling van het Britse pond voor de Britten duurder worden.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De Britten betalen voor elke euro (of dollar) meer ponden na de koersdaling.<br>BMW’s uit Duitsland worden in euro’s betaald. Na de koersdaling kosten deze BMW’s meer ponden.<br>Dit geldt voor alle buitenlandse auto’s als de koers van het pond daalt ten opzichte van buitenlandse valuta’s.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een zwakker pond maakt buitenlandse producten duurder voor Britten: ze moeten meer ponden betalen per eenheid buitenlandse valuta.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8b">
+          <div class="question-header">
+            <div class="question-label">Vraag 8b — Voordeel Britse auto-industrie</div>
+            <div class="question-text">Waarom zou de lagere koers van het pond de Britse auto-industrie bevoordelen?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Britse producten worden goedkoper voor buitenlanders.<br>Het marktaandeel en de concurrentiepositie van de Britse auto-industrie verbetert.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een zwakker pond maakt Britse export goedkoper. Dit is het spiegelbeeld van het effect op import: buitenlandse kopers betalen minder eigen valuta per pond.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8c">
+          <div class="question-header">
+            <div class="question-label">Vraag 8c — Nadeel lagere koers</div>
+            <div class="question-text">Bedenk een nadeel dat een onderzoeker kan bedoelen van de lagere koers van het pond voor de Britse auto-industrie.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Onderdelen die geïmporteerd worden uit het buitenland worden duurder.<br>Hierdoor stijgen de productiekosten.<br>Britse auto’s in Groot-Brittannië worden dus ook duurder.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Omdat auto’s in internationale productieketens worden gemaakt, importeert de Britse auto-industrie veel onderdelen. Een zwakker pond maakt die onderdelen duurder, wat de kostenstijging deels tenietdoet.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8d">
+          <div class="question-header">
+            <div class="question-label">Vraag 8d — Import ondanks eigen productie</div>
+            <div class="question-text">Verklaar dat Groot-Brittannië auto’s importeert uit Duitsland en Frankrijk, terwijl het land ook zelf auto’s produceert en exporteert.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Auto’s zijn gedifferentieerde producten. Consumenten hebben voorkeuren voor verschillende merken en typen.<br>Er is sprake van intra-industriële handel.<br>Daarnaast zijn er grote schaalvoordelen, waardoor autobedrijven in verschillende landen verkopen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is een klassiek voorbeeld van intra-industriële handel: hetzelfde type product (auto’s) wordt zowel geïmporteerd als geëxporteerd, gedreven door productdifferentiatie en schaalvoordelen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8e">
+          <div class="question-header">
+            <div class="question-label">Vraag 8e — Transactiekosten na Brexit</div>
+            <div class="question-text">Citeer de zin die aangeeft dat de transactiekosten stijgen na een harde Brexit.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">'Kopers gaan ook een stuk meer betalen voor hun wagen, omdat de afhandelingskosten stevig oplopen.'</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Afhandelingskosten (douane, administratie) zijn transactiekosten die de handel duurder maken. Dit is een direct gevolg van het verlaten van de EU-interne markt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8f">
+          <div class="question-header">
+            <div class="question-label">Vraag 8f — BMW en de Mini</div>
+            <div class="question-text">Waar zal BMW de meeste Mini’s verkopen: in het VK of in de EU? Verklaar je antwoord.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">In de EU, omdat BMW de fabriek verplaatst om de handelsbelemmeringen te omzeilen.<br>BMW zal in de EU willen produceren omdat dat de grootste markt is waar de meeste Mini’s worden afgezet.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bedrijven verplaatsen productie naar de markt waar ze het meest verkopen om handelsbarrières te vermijden. De EU is een grotere markt dan het VK alleen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-9">
+        <div class="opgave-header">
+          <span class="opgave-num">9</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Heineken, ASML en wisselkoersen</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 6. Nederlandse exportbedrijven ondervinden gevolgen van wisselkoersveranderingen.</p>
+
+        <div class="question-card" id="q9a">
+          <div class="question-header">
+            <div class="question-label">Vraag 9a — Heineken en euro-dollarkoers</div>
+            <div class="question-text">Verklaar dat Heineken kan besluiten minder te exporteren naar de VS als de euro-dollarkoers stijgt.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Door de koersstijging wordt Heinekenbier in de VS duurder.<br>De afzet en het marktaandeel van Heineken in de VS zullen dalen.<br>Heineken ontvangt ook minder euro’s per dollar omzet in de VS.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een stijgende euro maakt Europese export duurder in dollars. Heineken wordt geconfronteerd met zowel lagere afzet als een lagere omzet per eenheid in euro’s.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9b">
+          <div class="question-header">
+            <div class="question-label">Vraag 9b — Inelastische vraag</div>
+            <div class="question-text">Verklaar dat dit besluit anders kan uitvallen als de vraag naar Heinekenbier in de VS inelastisch reageert op een prijsverhoging.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Als de afzet nauwelijks daalt bij een prijsstijging (inelastisch), kan Heineken besluiten de export op peil te houden.<br>Het bedrijf ontvangt dan wel minder euro’s per dollar, maar de hoeveelheid blijft vrijwel gelijk.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij inelastische vraag zijn consumenten trouw aan het merk en stappen ze niet over bij een prijsverhoging. De omzetdaling in euro’s wordt dan beperkt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9c">
+          <div class="question-header">
+            <div class="question-label">Vraag 9c — Wisselkoersrisico verzekeren</div>
+            <div class="question-text">Waarom zijn wisselkoersrisico’s alleen op korte termijn te verzekeren?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Op lange termijn is de kans dat koersen veranderen groter dan op korte termijn.<br>Het verzekeren van deze koersveranderingen is alleen op korte termijn betaalbaar.<br>De kosten van de verzekering worden steeds groter naarmate het risico toeneemt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Verzekeringen zijn duurder naarmate het risico groter is. Op lange termijn is de onzekerheid over wisselkoersen zo groot dat de premie onbetaalbaar wordt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9d">
+          <div class="question-header">
+            <div class="question-label">Vraag 9d — ASML en de euro-dollarkoers</div>
+            <div class="question-text">Leg uit dat ASML ondanks zijn &#x27;ijzersterke positie&#x27; toch last kan hebben van een stijging van de euro-dollarkoers.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De afnemers van ASML betalen in euro’s. De prijs in dollars van ASML-producten stijgt bij een koersstijging van de euro.<br>Afnemers kunnen dan besluiten minder te kopen, waardoor de afzet daalt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Zelfs bij een sterke marktpositie kan een hoge eurokoers de afzet drukken. De buitenlandse klanten van ASML betalen in euro’s, wat bij een stijgende euro meer dollars kost.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9e">
+          <div class="question-header">
+            <div class="question-label">Vraag 9e — Omzet Randstad berekenen</div>
+            <div class="question-text">Bereken met behulp van de tabel in bron 6 de totale omzet van Randstad in euro’s.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Omzet VS in dollars: $ 6,08 miljard.<br>Euro-dollarkoers: € 0,90 per dollar.<br>Omzet VS als percentage van totaal: 23%.<br>Totale omzet: 6,08 × 0,9 / 0,23 = € 23,79 miljard.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De berekening gaat in twee stappen: eerst de Amerikaanse omzet omrekenen naar euro’s, dan terugrekenen naar de totale omzet via het percentageaandeel.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-10">
+        <div class="opgave-header">
+          <span class="opgave-num">10</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Monopolie, concurrentie en belastingheffing</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Op een markt geldt Qvraag = 100 – p. TK = 18 + 10q + ½q². Er is één aanbieder (monopolie) met een vaste heffing van € 30 per stuk.</p>
+
+        <div class="question-card" id="q10a">
+          <div class="question-header">
+            <div class="question-label">Vraag 10a — MO- en MK-lijn afleiden</div>
+            <div class="question-text">Leid de formule af van de MO-lijn en van de MK-lijn.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = 100 – Q<br>TO = p × Q = (100 – Q) × Q = 100Q – Q²<br>MO = TO’ = 100 – 2Q<br>TK = 18 + 40Q + ½Q² (inclusief heffing van € 30)<br>MK = TK’ = 40 + Q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een monopolie is MO de afgeleide van TO. De heffing van € 30 per stuk wordt bij de variabele kosten opgeteld: MK = 10 + Q + 30 = 40 + Q.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10b">
+          <div class="question-header">
+            <div class="question-label">Vraag 10b — Marktevenwicht monopolie</div>
+            <div class="question-text">Bereken het marktevenwicht: prijs en hoeveelheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK → 100 – 2Q = 40 + Q → 3Q = 60 → Q = 20.<br>p = 100 – 20 = 80.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij winstmaximalisatie produceert de monopolist waar MO = MK. De prijs lees je af op de vraaglijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10c">
+          <div class="question-header">
+            <div class="question-label">Vraag 10c — Surplus monopolie met producentenbelasting</div>
+            <div class="question-text">Bereken het consumentensurplus, het producentensurplus en de belastingopbrengst.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (€ 100 – € 80) × 20 × 0,5 = € 200.<br>MO bij Q = 20: 100 – 40 = 60.<br>PS = (€ 80 – € 60) × 20 + (€ 60 – € 40) × 20 × 0,5 = € 600.<br>Belastingopbrengst = 20 × € 30 = € 600.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het consumentensurplus is het driehoekje boven de prijs, het producentensurplus het vlak tussen prijs en MK-lijn (exclusief de heffing).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10d">
+          <div class="question-header">
+            <div class="question-label">Vraag 10d — Consumentenbelasting: nieuwe lijnen</div>
+            <div class="question-text">Leid de formules af van de nieuwe vraaglijn en de nieuwe MK-lijn na vervanging door een consumentenbelasting van € 30.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraaglijn verschuift € 30 omlaag: p = 70 – Q (of Qvraag = 70 – p).<br>MK zonder producentenbelasting: TK = 18 + 10Q + ½Q² → MK = 10 + Q.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een consumentenbelasting daalt de betalingsbereidheid met het heffingsbedrag, waardoor de vraaglijn omlaag verschuift. De MK keren terug naar het niveau zonder heffing.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10e">
+          <div class="question-header">
+            <div class="question-label">Vraag 10e — Nieuw evenwicht</div>
+            <div class="question-text">Bereken het nieuwe marktevenwicht.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = (70 – Q) × Q = 70Q – Q²<br>MO = 70 – 2Q.<br>MO = MK → 70 – 2Q = 10 + Q → 3Q = 60 → Q = 20.<br>p = 70 – 20 = 50.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De hoeveelheid is identiek (Q = 20), maar de prijs die de producent ontvangt is lager (€ 50 in plaats van € 80). De consument betaalt € 50 + € 30 = € 80.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10f">
+          <div class="question-header">
+            <div class="question-label">Vraag 10f — Vergelijking producenten- vs. consumentenbelasting</div>
+            <div class="question-text">Bereken CS, PS en belastingopbrengst. Vergelijk met vraag c.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (€ 70 – € 50) × 20 × 0,5 = € 200.<br>MO bij Q = 20: 70 – 40 = 30.<br>PS = (€ 50 – € 30) × 20 + (€ 30 – € 10) × 20 × 0,5 = € 600.<br>Belastingopbrengst = 20 × € 30 = € 600.<br>Alle waarden zijn identiek. Het maakt niet uit of een vaste heffing wordt opgelegd aan producenten of consumenten.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is een fundamenteel economisch inzicht: bij een vaste heffing maakt het voor de economische doelmatigheid niet uit wie formeel de belasting betaalt. De verdeling van de last hangt af van de elasticiteiten, niet van wie de heffing betaalt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10g">
+          <div class="question-header">
+            <div class="question-label">Vraag 10g — Volkomen concurrentie met consumentenbelasting</div>
+            <div class="question-text">Bereken het marktevenwicht bij volkomen concurrentie met consumentenbelasting. Hoeveel aanbieders treden toe?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">GTK = MK → 18/q + 10 + ½q = 10 + q → q* = 6.<br>p* = MK = 10 + 6 = 16.<br>Q* = 70 – 16 = 54.<br>Aantal toetreders: 54/6 = 9.<br>Aanbodlijn: Q = 9(p – 10) = 9p – 90.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie treden bedrijven toe tot de winst nul is (p = GTK = MK). De individuele productie q* volgt uit GTK = MK, de marktprijs uit p* = MK(q*).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10h">
+          <div class="question-header">
+            <div class="question-label">Vraag 10h — Surplus volkomen concurrentie met belasting</div>
+            <div class="question-text">Bereken CS, PS en belastingopbrengst. Vergelijk met vraag f.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (€ 70 – € 16) × 54 × 0,5 = € 1.458.<br>PS = (€ 16 – € 10) × 54 × 0,5 = € 162.<br>Belastingopbrengst = 54 × € 30 = € 1.620.<br>CS is veel hoger dan bij monopolie; PS lager. De totale doelmatigheid is hoger bij volkomen concurrentie.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is de prijs lager en de hoeveelheid groter dan bij monopolie. Het consumentensurplus stijgt fors, het producentensurplus daalt. De belastingopbrengst is ook hoger door de grotere verhandelde hoeveelheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10i">
+          <div class="question-header">
+            <div class="question-label">Vraag 10i — Volkomen concurrentie met producentenbelasting</div>
+            <div class="question-text">Bereken opnieuw het evenwicht met producentenbelasting. Hoeveel toetreders?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TK = 18 + 40q + ½q² (inclusief heffing).<br>GTK = MK → 18/q + 40 + ½q = 40 + q → q* = 6.<br>p* = 40 + 6 = 46.<br>Q* = 100 – 46 = 54. Toetreders: 54/6 = 9.<br>Aanbodlijn: Q = 9(p – 40) = 9p – 360.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De producentenbelasting verschuift de MK-lijn omhoog, maar het evenwichtsresultaat (Q = 54, effectieve prijs voor consument) is identiek aan de consumentenbelasting.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10j">
+          <div class="question-header">
+            <div class="question-label">Vraag 10j — Vergelijking</div>
+            <div class="question-text">Bereken CS, PS en belastingopbrengst. Vergelijk met vraag h.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (€ 100 – € 46) × 54 × 0,5 = € 1.458.<br>PS = (€ 46 – € 40) × 54 × 0,5 = € 162.<br>Belastingopbrengst = 54 × € 30 = € 1.620.<br>Identiek aan vraag h. Ook bij volkomen concurrentie maakt het niet uit of de heffing aan producenten of consumenten wordt opgelegd.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het resultaat bevestigt opnieuw het economische principe: de formele heffingsdrager doet er niet toe. De werkelijke verdeling hangt af van de elasticiteiten van vraag en aanbod.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10k">
+          <div class="question-header">
+            <div class="question-label">Vraag 10k — Zonder belasting</div>
+            <div class="question-text">Bereken het evenwicht zonder belasting. Hoeveel toetreders?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TK = 18 + 10q + ½q².<br>GTK = MK → 18/q + 10 + ½q = 10 + q → q* = 6.<br>p* = 10 + 6 = 16.<br>Q* = 100 – 16 = 84. Toetreders: 84/6 = 14.<br>Aanbodlijn: Q = 14(p – 10) = 14p – 140.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Zonder belasting is de prijs lager, de hoeveelheid groter en treden er meer aanbieders toe. Dit is het referentiepunt voor maximale economische doelmatigheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q10l">
+          <div class="question-header">
+            <div class="question-label">Vraag 10l — Eindvergelijking</div>
+            <div class="question-text">Bereken CS en PS. Bespreek de invloed van belastingheffing op de economische doelmatigheid.</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (€ 100 – € 16) × 84 × 0,5 = € 3.528.<br>PS = (€ 16 – € 10) × 84 × 0,5 = € 252.<br>Het maakt bij een vaste heffing niet uit of deze aan consumenten of producenten wordt opgelegd.<br>Volkomen concurrentie met belasting geeft hogere doelmatigheid dan monopolie met belasting.<br>De maximale doelmatigheid wordt bereikt bij volkomen concurrentie zónder belasting.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De eindconclusie: (1) formele heffingsdrager doet er niet toe, (2) volkomen concurrentie is doelmatiger dan monopolie, (3) belasting verlaagt de doelmatigheid, maar bij volkomen concurrentie is het welvaartsverlies kleiner.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Handelsbeleid en haven</td><td>Invoerrechten, Brexit en handelsverdragen beïnvloeden handelsstromen en dus de omzet van havens.</td></tr>
+            <tr><td>Volume vs. waarde</td><td>Waarde = volume × prijs. Analyseer altijd of veranderingen in waarde door volume of prijzen komen.</td></tr>
+            <tr><td>Wisselkoerseffecten</td><td>Stijging eigen munt = nadelig voor export (duurder voor buitenlanders). Daling = voordelig voor export.</td></tr>
+            <tr><td>Wisselkoersrisico</td><td>Groter op lange termijn. Alleen op korte termijn betaalbaar te verzekeren.</td></tr>
+            <tr><td>Intra-industriële handel</td><td>Zelfde product zowel importeren als exporteren: verklaard door productdifferentiatie en schaalvoordelen.</td></tr>
+            <tr><td>Internationale productieketens</td><td>Een zwakkere munt maakt import van onderdelen duurder — nadeel voor bedrijven in internationale ketens.</td></tr>
+            <tr><td>Belastingheffing</td><td>Bij een vaste heffing maakt het niet uit of producenten of consumenten formeel betalen. Volkomen concurrentie is doelmatiger dan monopolie.</td></tr>
+            <tr><td>Economische doelmatigheid</td><td>Maximaal bij volkomen concurrentie zonder belasting. Invoerrechten en monopolieposities verlagen de doelmatigheid.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

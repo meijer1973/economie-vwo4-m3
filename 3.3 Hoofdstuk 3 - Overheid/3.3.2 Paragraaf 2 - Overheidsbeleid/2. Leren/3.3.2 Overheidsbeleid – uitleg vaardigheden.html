@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.3.2 Overheidsbeleid – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --arbeids-primary: #E67E22;
+    --arbeids-light: #FEF5E7;
+    --arbeids-dark: #BA6A1C;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-arbeids { border-left-color: var(--arbeids-primary); }
+  .domain-arbeids .nav-number { background: var(--arbeids-primary); }
+  .domain-arbeids .nav-badge { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .section-header.border-arbeids { border-bottom: 3px solid var(--arbeids-primary); }
+  .section-num.bg-arbeids { background: var(--arbeids-primary); }
+  .badge-arbeids { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .samenvatting-table caption.caption-arbeids { background: var(--arbeids-primary); }
+  .hero-card.card-arbeids { border-top-color: var(--arbeids-primary); }
+  .card-arbeids .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--arbeids-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 33%, var(--arbeids-primary) 33% 67%, var(--bedrijf-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.3.2 Overheidsbeleid</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Overheidsregulering herkennen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Minimumprijs analyseren</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Maximumprijs analyseren</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-arbeids" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Minimumloon op de arbeidsmarkt</span>
+        <span class="nav-badge">Arbeidsmarkt</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Effect van een accijns</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Subsidie en surplus analyseren</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.3.2 &middot; Vaardigheden</span>
+        <h1>Overheidsbeleid &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Overheidsregulering herkennen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Minimumprijs analyseren</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Maximumprijs analyseren</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-arbeids" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Minimumloon op de arbeidsmarkt</div>
+            <span class="hero-card-domain">Arbeidsmarkt</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Effect van een accijns</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Subsidie en surplus analyseren</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Overheidsregulering herkennen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">De overheid grijpt in als het marktmechanisme niet leidt tot een wenselijke uitkomst. Dit noemen we marktfalen. Drie veelvoorkomende redenen zijn: een natuurlijk monopolie dat te hoge prijzen vraagt, negatieve externe effecten zoals milieuvervuiling, en een te ongelijke inkomensverdeling. Als je deze redenen kent, kun je bij elke overheidsmaatregel benoemen waarom de overheid ingrijpt.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Lees de situatie: welk probleem is er op de markt?<br>
+            2. Bepaal het type marktfalen:<br>
+               - Monopolie → te hoge prijs (Harbergerdriehoek)<br>
+               - Extern effect → kosten niet in de prijs<br>
+               - Ongelijke verdeling → herverdeling nodig<br>
+            3. Koppel het beleidsinstrument aan het probleem.
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Vraag: Waarom moet de overheid een natuurlijk monopolie reguleren?</p>
+        <p class="intro-text">Antwoord: Zonder regulering vraagt de monopolist een te hoge prijs. Dit leidt tot welvaartsverlies (de Harbergerdriehoek), waardoor de economische doelmatigheid afneemt.</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Denk bij ‘reguleren’ niet alleen aan wetten. De overheid kan ook zelf producent worden (bijv. het spoor) of een netwerk beheren (bijv. het elektriciteitsnet).
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Marktfalen: de markt leidt niet tot een optimale uitkomst</td></tr>
+            <tr><td>Drie redenen</td><td>Monopolie, externe effecten, ongelijkheid</td></tr>
+            <tr><td>Beleidsinstrumenten</td><td>Regulering, productie door overheid, belastingen, subsidies</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2–3 (prijsmaatregelen), 5 (accijns), 6 (subsidie)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Minimumprijs analyseren</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">Een minimumprijs beschermt producenten tegen te lage prijzen. Denk aan het minimumloon of de minimumprijs voor melk. De minimumprijs is alleen bindend als hij boven de evenwichtsprijs ligt. In dat geval is het marktevenwicht niet meer toegestaan en ontstaat een aanbodoverschot.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Vergelijk P_min met P*<br>
+               P_min > P* → bindend (markt mag niet lager)<br>
+               P_min < P* → niet-bindend (evenwicht is toegestaan)<br>
+            2. Bij bindende minimumprijs:<br>
+               - Bepaal Qv bij P_min (op de vraaglijn)<br>
+               - Bepaal Qa bij P_min (op de aanbodlijn)<br>
+               - Aanbodoverschot = Qa − Qv
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: V: P = −Q/5 + 60, A: P = Q/5. P* = 30, Q* = 150.</p>
+        <p class="intro-text">P_min = 40: 40 &gt; 30 dus bindend.</p>
+        <div class="formula-box">
+            Qv = (−40 + 60) × 5 = 100<br>
+            Qa = 40 × 5 = 200<br>
+            Aanbodoverschot = 200 − 100 = 100 stuks
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Een minimumprijs onder P* heeft géén effect! De markt bereikt dan gewoon het evenwicht. Dit is de meest gemaakte fout.
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Minimumprijs: ondergrens, beschermt producenten</td></tr>
+            <tr><td>Bindend als</td><td>P_min &gt; P*</td></tr>
+            <tr><td>Gevolg</td><td>Aanbodoverschot = Qa − Qv</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (maximumprijs), 4 (minimumloon)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Maximumprijs analyseren</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">Een maximumprijs beschermt consumenten tegen te hoge prijzen. Denk aan maximale huurprijzen of prijsplafonds voor energie. De maximumprijs is alleen bindend als hij onder de evenwichtsprijs ligt. In dat geval is het marktevenwicht niet bereikbaar en ontstaat een vraagoverschot.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Vergelijk P_max met P*<br>
+               P_max < P* → bindend (markt mag niet hoger)<br>
+               P_max > P* → niet-bindend (evenwicht is toegestaan)<br>
+            2. Bij bindende maximumprijs:<br>
+               - Bepaal Qv bij P_max (op de vraaglijn)<br>
+               - Bepaal Qa bij P_max (op de aanbodlijn)<br>
+               - Vraagoverschot = Qv − Qa
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: V: P = −Q/5 + 60, A: P = Q/5. P* = 30.</p>
+        <p class="intro-text">P_max = 20: 20 &lt; 30 dus bindend.</p>
+        <div class="formula-box">
+            Qv = (−20 + 60) × 5 = 200<br>
+            Qa = 20 × 5 = 100<br>
+            Vraagoverschot = 200 − 100 = 100 stuks
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Minimumprijs = bodem (beschermt producent). Maximumprijs = plafond (beschermt consument). Ezelsbruggetje: minimum = voor de producent, maximum = voor de consument.
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Maximumprijs: bovengrens, beschermt consumenten</td></tr>
+            <tr><td>Bindend als</td><td>P_max &lt; P*</td></tr>
+            <tr><td>Gevolg</td><td>Vraagoverschot = Qv − Qa</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (minimumprijs), 4 (minimumloon)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-arbeids">
+          <span class="section-num bg-arbeids">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Minimumloon op de arbeidsmarkt</div>
+            <span class="section-badge badge-arbeids">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">Het minimumloon is eigenlijk een minimumprijs op de arbeidsmarkt. De overheid stelt een ondergrens aan het uurloon om werknemers te beschermen. Als het minimumloon boven het evenwichtsloon ligt, is het bindend: er is dan meer aanbod van arbeid dan vraag. Het verschil is werkloosheid.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Teken de arbeidsmarkt (V_A dalend, A_A stijgend)<br>
+            2. Bepaal evenwicht: L*, W*<br>
+            3. Teken W_min boven W*<br>
+            4. Lees af: L_v (arbeidsvraag bij W_min)<br>
+            5. Lees af: L_a (arbeidsaanbod bij W_min)<br>
+            6. Werkloosheid = L_a − L_v
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: V_A: W = −L/2 + 25, A_A: W = L/2 + 5.</p>
+        <p class="intro-text">Evenwicht: L* = 20, W* = 15.</p>
+        <div class="formula-box">
+            W_min = 20: L_v = 10, L_a = 30<br>
+            Werkloosheid = 30 − 10 = 20
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Het minimumloon heeft een dubbel effect: werknemers die wél werken verdienen meer (bestedingen stijgen), maar sommige werknemers verliezen hun baan (werkloosheid). Bedrijven kunnen arbeid ook vervangen door machines (kapitaal).
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-arbeids">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Minimumloon = minimumprijs op de arbeidsmarkt</td></tr>
+            <tr><td>Bindend als</td><td>W_min &gt; W* (evenwichtsloon)</td></tr>
+            <tr><td>Gevolg</td><td>Werkloosheid = L_a − L_v</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (minimumprijs — zelfde mechanisme)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Effect van een accijns</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">Een accijns is een belasting per eenheid product die de overheid oplegt aan producenten. Doordat de productiekosten stijgen, verschuift de aanbodlijn omhoog. De evenwichtsprijs stijgt en de evenwichtshoeveelheid daalt. De overheid gebruikt dit instrument om ongewenst gedrag te ontmoedigen, bijvoorbeeld bij milieuvervuiling of ongezonde producten.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Noteer de oude aanbodformule<br>
+            2. Tel het accijnsbedrag op bij de aanbodformule<br>
+               A_nieuw: P = (oude formule) + accijns<br>
+            3. Bereken het nieuwe evenwicht:<br>
+               V = A_nieuw → nieuw Q* en nieuw P*<br>
+            4. Vergelijk met het oude evenwicht
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: V: P = −Q + 40, A₁: P = Q/2 + 10. Accijns = 10.</p>
+        <p class="intro-text">A₂: P = Q/2 + 20.</p>
+        <div class="formula-box">
+            Nieuw evenwicht: −Q + 40 = Q/2 + 20 → 1,5Q = 20 → Q ≈ 13,3<br>
+            P ≈ 26,7<br>
+            Verschil: Q daalt van 20 naar 13,3 (−33,5%). P stijgt van 20 naar 26,7.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De aanbodlijn verschuift OMHOOG (niet naar links). Elke hoeveelheid wordt duurder met het accijnsbedrag. Teken de verschuiving als een verticale verplaatsing van de hele lijn.
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Accijns: belasting per eenheid, aanbodlijn verschuift omhoog</td></tr>
+            <tr><td>Effect</td><td>Prijs stijgt, hoeveelheid daalt</td></tr>
+            <tr><td>Doel</td><td>Ontmoedigen van consumptie (bijv. milieu, gezondheid)</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (marktfalen), 6 (subsidie — tegenovergesteld effect)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Subsidie en surplus analyseren</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom?</h3>
+        <p class="intro-text">Een subsidie is het tegenovergestelde van een accijns: de overheid betaalt een deel van de aankoopprijs. Hierdoor verschuift de vraaglijn naar rechts. De evenwichtsprijs stijgt en de hoeveelheid neemt toe. Het totale surplus verandert: CS en PS stijgen, maar de overheid draagt kosten. Het verschil (de Harbergerdriehoek) is het welvaartsverlies.</p>
+        <h3 class="sub-heading">Hoe?</h3>
+        <div class="formula-box">
+            1. Noteer de oude vraagformule<br>
+            2. Tel het subsidiebedrag op bij de vraagformule<br>
+               V_nieuw: P = (oude formule) + subsidie<br>
+            3. Bereken het nieuwe evenwicht<br>
+            4. Bereken het totale subsidiebedrag:<br>
+               = Q_nieuw × subsidie per stuk<br>
+            5. Bepaal de Harbergerdriehoek (welvaartsverlies)
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: V₁: P = −Q/2 + 30, A: P = Q/2. Subsidie = 8 per stuk.</p>
+        <p class="intro-text">V₂: P = −Q/2 + 38.</p>
+        <div class="formula-box">
+            Nieuw evenwicht: −Q/2 + 38 = Q/2 → Q = 38, P = 19<br>
+            Totale subsidie: 38 × 8 = 304<br>
+            Let op: CS + PS stijgen, maar de subsidie kost de overheid geld.<br>
+            Per saldo verliest de markt surplus (Harbergerdriehoek).
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Het totale subsidiebedrag is altijd groter dan de toename in CS + PS. Het verschil is de Harbergerdriehoek: het welvaartsverlies door de subsidie. Dit betekent niet dat de subsidie slecht is — het positieve milieueffect kan dit compenseren!
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Kernbegrip</td><td>Subsidie: overheid betaalt mee, vraaglijn verschuift rechts</td></tr>
+            <tr><td>Effect</td><td>Prijs stijgt, hoeveelheid stijgt, CS en PS stijgen</td></tr>
+            <tr><td>Kosten</td><td>Totale subsidie = Q_nieuw × subsidie per stuk</td></tr>
+            <tr><td>Welvaart</td><td>Harbergerdriehoek = welvaartsverlies op de markt</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 5 (accijns — tegenovergesteld), 1 (marktfalen)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Een minimumprijs onder P* beschermt producenten&quot; → Onjuist! Een minimumprijs onder P* is niet-bindend en heeft geen enkel effect.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Een accijns verschuift de vraaglijn&quot; → Onjuist! Een accijns wordt opgelegd aan producenten, dus de aanbodlijn verschuift omhoog.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Een subsidie is altijd goed voor de welvaart&quot; → Onjuist! Een subsidie leidt tot een Harbergerdriehoek: het totale subsidiebedrag is groter dan de toename in CS + PS.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Overheidsregulering herkennen: waarom grijpt de overheid in?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Minimumprijs analyseren: bindend/niet-bindend, aanbodoverschot berekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Maximumprijs analyseren: bindend/niet-bindend, vraagoverschot berekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Minimumloon toepassen op de arbeidsmarkt: werkloosheid berekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Effect van een accijns: nieuwe aanbodlijn, nieuw evenwicht</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Subsidie en surplus: vraaglijn verschuift, Harbergerdriehoek</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

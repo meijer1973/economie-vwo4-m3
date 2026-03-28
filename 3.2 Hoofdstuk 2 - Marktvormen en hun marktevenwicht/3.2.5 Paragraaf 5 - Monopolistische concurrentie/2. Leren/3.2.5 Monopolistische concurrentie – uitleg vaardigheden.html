@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.5 Monopolistische concurrentie – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 50%, var(--bedrijf-primary) 50% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.5 Monopolistische concurrentie</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Kenmerken van monopolistische concurrentie herkennen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Effect van toetreding op de vraaglijn</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Winst bepalen: MO = MK</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Lange termijn: winst verdwijnt door toetreding</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Verschil met volkomen concurrentie</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktaandeel berekenen</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.5 &middot; Vaardigheden</span>
+        <h1>Monopolistische concurrentie &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Kenmerken van monopolistische concurrentie herkennen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Effect van toetreding op de vraaglijn</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Winst bepalen: MO = MK</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Lange termijn: winst verdwijnt door toetreding</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Verschil met volkomen concurrentie</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Marktaandeel berekenen</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Kenmerken van monopolistische concurrentie herkennen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Op het examen moet je kunnen uitleggen welke marktvorm bij een situatie past. Bij monopolistische concurrentie draait alles om drie kenmerken die je moet herkennen in een tekst of casus.</p>
+        <h3 class="sub-heading">De drie kenmerken</h3>
+        <p class="intro-text">Stel bij elke casus drie checkvragen. Als je op alle drie ‘ja’ antwoordt, is er sprake van monopolistische concurrentie.</p>
+        <div class="formula-box">
+            Check 1: Is het product heterogeen?<br>
+            Check 2: Zijn er veel aanbieders?<br>
+            Check 3: Zijn de toetredingsdrempels laag?<br>
+            Alle drie ja → monopolistische concurrentie
+        </div>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Heterogeen</td><td>Product verschilt per aanbieder (merk, stijl, kwaliteit)</td></tr>
+            <tr><td>Veel aanbieders</td><td>Geen enkele aanbieder heeft grote marktmacht</td></tr>
+            <tr><td>Lage drempels</td><td>Nieuwe aanbieders kunnen makkelijk toetreden</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeeld: horeca in Limburg</h3>
+        <p class="intro-text">In Limburg zijn meer dan 4.000 horecagelegenheden. Elk restaurant onderscheidt zich met een eigen concept. Nieuwe restaurants openen regelmatig.</p>
+        <p class="intro-text">Conclusie: monopolistische concurrentie.</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Vergelijk met een monopolie (1 aanbieder) of volkomen concurrentie (homogeen product). Het verschil zit in het product: bij MC is het product net anders per aanbieder.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Monopolistische concurrentie = monopolie&quot; → Onjuist! Bij MC zijn er veel aanbieders met lage drempels. Alleen de dalende vraaglijn lijkt op een monopolie.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een casus de drie kenmerken van MC herkennen en benoemen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Heterogeen</td><td>Product verschilt per aanbieder</td></tr>
+            <tr><td>Veel aanbieders</td><td>Geen enkele aanbieder heeft grote marktmacht</td></tr>
+            <tr><td>Lage drempels</td><td>Nieuwe aanbieders kunnen makkelijk toetreden</td></tr>
+            <tr><td>Checklijst</td><td>Alle drie ja → MC</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Effect van toetreding op de vraaglijn</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij monopolistische concurrentie kunnen nieuwe aanbieders toetreden als er winst wordt gemaakt. Dit heeft twee gevolgen voor de vraaglijn. Je moet beide effecten kunnen benoemen en verklaren.</p>
+        <h3 class="sub-heading">De twee effecten van toetreding</h3>
+        <p class="intro-text">Als een nieuwe aanbieder toetreedt, gebeuren er twee dingen tegelijk. De marktvraag stijgt, maar de individuele vraag per aanbieder daalt.</p>
+        <div class="formula-box">
+            Nieuwe aanbieder treedt toe →<br>
+            1. Marktvraag verschuift naar RECHTS (meer keuze trekt meer vragers)<br>
+            2. Residuele vraag per aanbieder naar LINKS (klanten verdeeld over meer aanbieders)
+        </div>
+        <h3 class="sub-heading">Voorbeeld: koffiezaken</h3>
+        <p class="intro-text">Stel: er zijn 10 koffiezaken in een stad. Een 11e koffiezaak opent.</p>
+        <p class="intro-text">De totale vraag naar koffie stijgt (meer variatie). Maar elke individuele koffiezaak verliest klanten aan de nieuwkomer. De individuele vraaglijn verschuift naar links.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Marktvraag en individuele vraag bewegen in TEGENGESTELDE richtingen bij toetreding.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De MARKTvraag verschuift naar rechts, maar de INDIVIDUELE vraaglijn (residuele vraag) verschuift naar links. Verwar deze twee niet!
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom de marktvraag naar rechts verschuift maar de individuele vraaglijn naar links bij toetreding?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Marktvraag</td><td>Verschuift naar rechts (meer variatie)</td></tr>
+            <tr><td>Individuele vraag</td><td>Verschuift naar links (klanten delen)</td></tr>
+            <tr><td>Gevolg</td><td>Minder afzet en lagere prijs per aanbieder</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (lange termijn: winst verdwijnt)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Winst bepalen: MO = MK</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Net als bij een monopolie maximaliseert een aanbieder bij monopolistische concurrentie de winst door de hoeveelheid te kiezen waarbij MO = MK. De winst hangt af van het verschil tussen prijs en GTK.</p>
+        <h3 class="sub-heading">Stappenplan winstberekening</h3>
+        <p class="intro-text">Volg altijd dezelfde vijf stappen om de winst te bepalen.</p>
+        <div class="formula-box">
+            Stap 1: Stel MO = MK op<br>
+            Stap 2: Los Q* op<br>
+            Stap 3: Lees p* af op de vraaglijn bij Q*<br>
+            Stap 4: Lees GTK af bij Q*<br>
+            Stap 5: Winst = (p* − GTK) × Q*
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">Bij Q = 50 geldt MO = MK. De prijs op de vraaglijn is €30, de GTK is €10.</p>
+        <div class="formula-box">
+            Winst per stuk = p* − GTK = €30 − €10 = €20<br>
+            Totale winst = €20 × 50 = €1.000
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Winst = (p* − GTK) × Q*. Dit geldt voor monopolie én monopolistische concurrentie.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Lees de prijs ALTIJD af op de vraaglijn (V), niet op de MO-lijn of de MK-lijn. De prijs is wat de consument betaalt.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De MO-lijn ligt bij MC onder de vraaglijn. Lees je de prijs af op MO, dan krijg je een te laag bedrag!
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het vijfstappenplan toepassen om de winst uit een grafiek af te lezen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Winstmaximalisatie</td><td>Produceer bij MO = MK</td></tr>
+            <tr><td>Prijs</td><td>Aflezen op vraaglijn (V) bij Q*</td></tr>
+            <tr><td>Winst</td><td>(p* − GTK) × Q*</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (lange termijn: winst → 0)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Lange termijn: winst verdwijnt door toetreding</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Winst op korte termijn trekt nieuwe aanbieders aan. Door toetreding verschuift de individuele vraaglijn naar links, waardoor de winst afneemt. Dit gaat door totdat de winst nul is.</p>
+        <h3 class="sub-heading">Het mechanisme stap voor stap</h3>
+        <p class="intro-text">Op het moment dat de vraaglijn (V) precies de GTK-curve raakt, is er break-even: de winst is nul.</p>
+        <div class="formula-box">
+            Korte termijn: p* > GTK → winst > 0<br>
+            ↓<br>
+            Toetreding nieuwe aanbieders<br>
+            ↓<br>
+            Vraaglijn schuift naar links<br>
+            ↓<br>
+            Lange termijn: p* = GTK → winst = 0<br>
+            (V raakt de GTK-curve: break-even)
+        </div>
+        <h3 class="sub-heading">Voorbeeld: eetcafés in Limburg</h3>
+        <p class="intro-text">Als een nieuw eetcafé in Limburg winst maakt, openen anderen ook een eetcafé. Uiteindelijk is de winst voor iedereen nul.</p>
+        <p class="intro-text">Omgekeerd: bij verlies treden aanbieders uit, waardoor de vraag per overgebleven aanbieder stijgt.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Op lange termijn geldt bij MC: p* = GTK → winst = 0. Dit is het break-even punt.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> ‘Geen winst’ betekent niet dat de ondernemer niets verdient! Het ondernemersloon zit in de GTK. Geen winst = precies quitte spelen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom de winst op lange termijn verdwijnt bij monopolistische concurrentie?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Korte termijn</td><td>Winst &gt; 0 trekt nieuwe aanbieders aan</td></tr>
+            <tr><td>Lange termijn</td><td>V raakt GTK: winst = 0 (break-even)</td></tr>
+            <tr><td>Mechanisme</td><td>Toetreding verschuift individuele vraaglijn naar links</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (effect toetreding) en 5 (overcapaciteit)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Verschil met volkomen concurrentie</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij volkomen concurrentie produceert een aanbieder bij het minimum van de GTK. Bij monopolistische concurrentie produceert een aanbieder links van dat minimum. Dit verschil heet overcapaciteit.</p>
+        <h3 class="sub-heading">De vergelijking</h3>
+        <p class="intro-text">Beide marktvormen hebben op lange termijn geen winst. Het verschil zit in de productieomvang en de prijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>Productie bij GTK-minimum, laagste prijs voor consument</td></tr>
+            <tr><td>Monopol. concurrentie</td><td>Productie links van GTK-minimum, hogere prijs, lagere productie</td></tr>
+            <tr><td>Overcapaciteit</td><td>MC produceert minder dan de efficiënte hoeveelheid</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Waarom accepteren we overcapaciteit?</h3>
+        <p class="intro-text">De consument betaalt een hogere prijs, maar krijgt er keuzevrijheid voor terug. Elk restaurant, elke kapper en elke kledingwinkel biedt iets net anders.</p>
+        <div class="formula-box">
+            Volkomen concurrentie:<br>
+              → Productie bij GTK-minimum<br>
+              → Laagste prijs voor consument<br>
+            <br>
+            Monopolistische concurrentie:<br>
+              → Productie LINKS van GTK-minimum<br>
+              → Hogere prijs, lagere productie<br>
+              → Overcapaciteit (inefficiëntie)
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Overcapaciteit is de prijs die we betalen voor keuzevrijheid. Meer variatie = minder efficiëntie.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Beide marktvormen hebben op lange termijn geen winst. Het verschil zit in de productieomvang en de prijs.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het verschil tussen VC en MC tekenen en uitleggen in termen van overcapaciteit?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>VC</td><td>Productie bij GTK-minimum, laagste prijs</td></tr>
+            <tr><td>MC</td><td>Productie links van GTK-minimum, hogere prijs</td></tr>
+            <tr><td>Overcapaciteit</td><td>MC produceert minder dan efficiënt</td></tr>
+            <tr><td>Trade-off</td><td>Hogere prijs ↔ meer keuzevrijheid</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktaandeel berekenen</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij monopolistische concurrentie heeft elke aanbieder een klein marktaandeel. Je moet dit kunnen berekenen op basis van gegeven aantallen.</p>
+        <h3 class="sub-heading">De formule</h3>
+        <div class="formula-box">
+            Marktaandeel = (eigen afzet / totale marktafzet) × 100%
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">In 2019 zijn er 573 eetcafés in Limburg. Er komen 276 bij. Totaal horecazaken: 4.000.</p>
+        <div class="formula-box">
+            Aantal eetcafés in 2019: 573 + 276 = 849<br>
+            Marktaandeel: 849 / 4.000 × 100% = 21,2%
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> De noemer is altijd het TOTAAL van de hele markt. De teller is het deel van één specifieke groep.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Let goed op welk getal je deelt door welk. De noemer is altijd het TOTAAL van de hele markt, de teller is het deel van één specifieke groep.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Verwisseling van teller en noemer is de meest gemaakte fout! 4.000 / 849 is NIET het marktaandeel van eetcafés.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je een marktaandeel berekenen als je de aantallen kent?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Formule</td><td>Marktaandeel = deelgetal / totaal × 100%</td></tr>
+            <tr><td>Noemer</td><td>Altijd het totaal van de hele markt</td></tr>
+            <tr><td>Teller</td><td>Het deel van één specifieke groep</td></tr>
+            <tr><td>Voorbeeld</td><td>849 / 4.000 × 100% = 21,2%</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Monopolistische concurrentie = monopolie&quot; → Onjuist! Bij MC zijn er veel aanbieders met lage drempels. Alleen de dalende vraaglijn lijkt op een monopolie.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De marktvraag en de individuele vraaglijn verschuiven in TEGENGESTELDE richtingen bij toetreding. Verwar ze niet!
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> ‘Geen winst’ betekent niet dat de ondernemer niets verdient! Het ondernemersloon zit in de GTK. Geen winst = precies quitte spelen.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Kenmerken van monopolistische concurrentie herkennen in een casus</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Effect van toetreding op marktvraag én individuele vraaglijn uitleggen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Winst bepalen via MO = MK en grafiek aflezen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Uitleggen waarom winst op lange termijn verdwijnt</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Verschil met volkomen concurrentie: overcapaciteit</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Marktaandeel berekenen</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

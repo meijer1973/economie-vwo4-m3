@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.1.3 Toepassen – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+    --arbeids-primary: #E67E22;
+    --arbeids-light: #FEF5E7;
+    --arbeids-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-arbeids { border-left-color: var(--arbeids-primary); }
+  .domain-arbeids .nav-number { background: var(--arbeids-primary); }
+  .domain-arbeids .nav-badge { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .section-header.border-arbeids { border-bottom: 3px solid var(--arbeids-primary); }
+  .section-num.bg-arbeids { background: var(--arbeids-primary); }
+  .badge-arbeids { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .samenvatting-table caption.caption-arbeids { background: var(--arbeids-primary); }
+  .hero-card.card-arbeids { border-top-color: var(--arbeids-primary); }
+  .card-arbeids .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--arbeids-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 33%, var(--bedrijf-primary) 33% 67%, var(--arbeids-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.1.3 Toepassen</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Recap: Marktvorm Bepalen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Prijselasticiteit</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Toepassing: Landbouw en Voedsel</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Gevolg: Enorme Prijsschommelingen</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-arbeids" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Praktische Toepassing</span>
+        <span class="nav-badge">Arbeidsmarkt</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.1.3 &middot; Vaardigheden</span>
+        <h1>Toepassen &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Recap: Marktvorm Bepalen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Prijselasticiteit</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Toepassing: Landbouw en Voedsel</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Gevolg: Enorme Prijsschommelingen</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-arbeids" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Praktische Toepassing</div>
+            <span class="hero-card-domain">Arbeidsmarkt</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Recap: Marktvorm Bepalen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom herhalen?</h3>
+        <p class="intro-text">Voordat we iets nieuws leren, herhalen we hoe je een marktvorm bepaalt. Dit stappenplan heb je continu nodig bij alle opgaven in deze paragraaf.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <p class="intro-text">Doorloop altijd deze vier stappen in volgorde:</p>
+        <div class="formula-box">
+            Stap 1: Hoeveel aanbieders telt de markt?<br>
+                    → Eén / weinig / veel / zeer veel<br>
+            Stap 2: Is het product homogeen of heterogeen?<br>
+                    → Let op: consumentenperceptie!<br>
+            Stap 3: Hoe hoog zijn toetredingsdrempels?<br>
+                    → Vrij / beperkt / geblokkeerd<br>
+            Stap 4: Combineer en bepaal de marktvorm
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Sla nooit een stap over. Het stappenplan werkt alleen als je alle vier de stappen doorloopt.
+        </div>
+        <h3 class="sub-heading">Voorbeeld: Telefoniesector</h3>
+        <p class="intro-text">Laten we het stappenplan toepassen op de telefoniesector:</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Aanbieders</td><td>KPN, Vodafone, T-Mobile (+ kleinere spelers) → weinig</td></tr>
+            <tr><td>Product</td><td>Services zijn anders (coverage, apps, service) → heterogeen</td></tr>
+            <tr><td>Drempels</td><td>Netwerk aanleggen kost miljarden → beperkt</td></tr>
+            <tr><td>Conclusie</td><td>Heterogeen oligopolie</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet dat het bij homogeen/heterogeen gaat om de perceptie van de consument, niet om objectieve productverschillen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het stappenplan vlot toepassen op een onbekende markt?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Stap 1</td><td>Tel aanbieders</td></tr>
+            <tr><td>Stap 2</td><td>Homogeen of heterogeen (consumentenperceptie)</td></tr>
+            <tr><td>Stap 3</td><td>Toetredingsdrempels beoordelen</td></tr>
+            <tr><td>Stap 4</td><td>Combineer → marktvorm</td></tr>
+            <tr><td>Voorbeeld</td><td>Telefonie = heterogeen oligopolie</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Prijselasticiteit</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Wat is prijselasticiteit?</h3>
+        <p class="intro-text">Prijselasticiteit meet hoe sterk de gevraagde of aangeboden hoeveelheid reageert op een prijsverandering.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Prijselasticiteit</td><td>Mate waarin hoeveelheid reageert op prijsverandering</td></tr>
+            <tr><td>Elastisch</td><td>Sterke reactie: kleine prijsverandering → grote hoeveelheidsverandering</td></tr>
+            <tr><td>Inelastisch</td><td>Zwakke reactie: grote prijsverandering → kleine hoeveelheidsverandering</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeeld: Elastische vraag</h3>
+        <p class="intro-text">Prijs van appelflappen daalt van €2 naar €1 (50% daling). Verkoop stijgt van 100 naar 400 stuks (300% stijging).</p>
+        <p class="intro-text">De reactie is veel groter dan de oorzaak. Dat noemen we elastisch.</p>
+        <div class="formula-box">
+            Appelflappen: prijs −50% → verkoop +300%<br>
+            Reactie >> Oorzaak → ELASTISCH
+        </div>
+        <h3 class="sub-heading">Voorbeeld: Inelastische vraag</h3>
+        <p class="intro-text">Prijs van insuline stijgt van €10 naar €20 (100% stijging). Verkoop daalt van 1000 naar 900 stuks (10% daling).</p>
+        <p class="intro-text">De reactie is veel kleiner dan de oorzaak. Dat noemen we inelastisch.</p>
+        <div class="formula-box">
+            Insuline: prijs +100% → verkoop −10%<br>
+            Reactie << Oorzaak → INELASTISCH
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Waarom is insulinevraag inelastisch? Omdat je insuline nodig hebt om te leven. Je kunt niet minder nemen als het duurder wordt.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Elastisch = grote reactie op prijsverandering. Inelastisch = kleine reactie op prijsverandering.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Elastisch = altijd goed, inelastisch = altijd slecht&quot; → Onjuist! Beide hebben voor- en nadelen. Het zijn neutrale beschrijvingen van marktgedrag.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen wat het verschil is tussen elastische en inelastische vraag?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Elastisch</td><td>Sterke reactie op prijsverandering — hoeveelheid verandert veel</td></tr>
+            <tr><td>Inelastisch</td><td>Zwakke reactie op prijsverandering — hoeveelheid verandert weinig</td></tr>
+            <tr><td>Voorbeeld elastisch</td><td>Appelflappen: prijs −50% → verkoop +300%</td></tr>
+            <tr><td>Voorbeeld inelastisch</td><td>Insuline: prijs +100% → verkoop −10%</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Toepassing: Landbouw en Voedsel</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is landbouwaanbod inelastisch?</h3>
+        <p class="intro-text">Binnen een jaarcyclus ligt de productie vast. Een boer plant in maart tomaten. In juli kan hij niet zeggen: ‘Ah, prijzen stijgen! Nu plant ik extra!’</p>
+        <p class="intro-text">Het groeiseizoen is voorbij. Pas volgend jaar kan hij meer planten.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Inelastisch aanbod</td><td>Aanbod reageert nauwelijks op prijsverandering</td></tr>
+            <tr><td>Oorzaak</td><td>Productie is seizoensgebonden — boer kan niet bijplanten</td></tr>
+            <tr><td>Gevolg</td><td>Aanbodlijn is bijna verticaal (steil)</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            Gevolg: Aanbodlijn is bijna verticaal (steil)<br>
+            Prijs kan enorm schommelen, hoeveelheid verandert nauwelijks
+        </div>
+        <h3 class="sub-heading">Waarom is voedselvraag inelastisch?</h3>
+        <p class="intro-text">Voedsel is een eerste levensbehoefte. Je gaat niet 2x zoveel eten als voedsel 50% goedkoper wordt. En je stopt ook niet met eten als het 50% duurder wordt.</p>
+        <p class="intro-text">De hoeveelheid die je eet hangt niet veel af van de prijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Inelastische vraag</td><td>Vraag reageert nauwelijks op prijsverandering</td></tr>
+            <tr><td>Oorzaak</td><td>Voedsel is levensbehoefte — begrensd hongergevoel</td></tr>
+            <tr><td>Gevolg</td><td>Vraaglijn is bijna verticaal (steil)</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            Gevolg: Vraaglijn is bijna verticaal (steil)<br>
+            Prijs kan enorm schommelen, hoeveelheid verandert nauwelijks
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij landbouw zijn BEIDE lijnen steil: zowel de aanbodlijn (seizoen) als de vraaglijn (levensbehoefte).
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Inelastisch = verticale lijn, dus GEEN verandering in hoeveelheid&quot; → Onjuist! De hoeveelheid verandert weinig, maar niet nul. Bij een aanbodverschuiving beweegt het evenwicht wél.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom zowel aanbod als vraag in de landbouw inelastisch zijn?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Aanbod inelastisch</td><td>Productie ligt vast binnen seizoen — boer kan niet bijplanten</td></tr>
+            <tr><td>Vraag inelastisch</td><td>Voedsel is levensbehoefte — eetgedrag verandert nauwelijks</td></tr>
+            <tr><td>Beide steil</td><td>Zowel vraag- als aanbodlijn is bijna verticaal</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Gevolg: Enorme Prijsschommelingen</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Het kernidee</h3>
+        <p class="intro-text">Als zowel vraag als aanbod inelastisch zijn, schommelen prijzen enorm. Kleine veranderingen in aanbod leiden tot grote prijssprongen.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Inelastisch + Inelastisch = Veel prijsvolatiliteit (schommelingen). Twee steile lijnen zorgen voor grote prijssprongen.
+        </div>
+        <h3 class="sub-heading">Scenario: Goede oogst</h3>
+        <p class="intro-text">Boeren hebben een goede oogst. Het aanbod stijgt, de aanbodlijn verschuift naar rechts. Maar de vraaglijn reageert nauwelijks (voedsel is voedsel).</p>
+        <div class="formula-box">
+            Goede oogst → Aanbod stijgt → Aanbodlijn naar RECHTS<br>
+            Vraaglijn reageert nauwelijks (beide steil)<br>
+            Resultaat: kleine hoeveelheidsverandering, FORSE PRIJSDALING
+        </div>
+        <h3 class="sub-heading">Scenario: Slechte oogst</h3>
+        <p class="intro-text">Boeren hebben een slechte oogst. Het aanbod daalt, de aanbodlijn verschuift naar links. Weer reageert de vraaglijn nauwelijks.</p>
+        <div class="formula-box">
+            Slechte oogst → Aanbod daalt → Aanbodlijn naar LINKS<br>
+            Vraaglijn reageert nauwelijks (beide steil)<br>
+            Resultaat: kleine hoeveelheidsverandering, FORSE PRIJSSTIJGING
+        </div>
+        <h3 class="sub-heading">Vergelijking: goede vs slechte oogst</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Goede oogst</td><td>Aanbod → rechts → forse prijsdaling, weinig hoeveelheidsverandering</td></tr>
+            <tr><td>Slechte oogst</td><td>Aanbod → links → forse prijsstijging, weinig hoeveelheidsverandering</td></tr>
+            <tr><td>Kernidee</td><td>Twee steile lijnen → grote prijsschommelingen</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;De prijzen schommelen omdat boeren verkeerde keuzes maken&quot; → Onjuist! De prijzen schommelen omdat het WEER onvoorspelbaar is én omdat beide lijnen steil zijn.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom landbouwprijzen zo sterk schommelen met behulp van een grafiek?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Goede oogst</td><td>Aanbod → rechts → forse prijsdaling</td></tr>
+            <tr><td>Slechte oogst</td><td>Aanbod → links → forse prijsstijging</td></tr>
+            <tr><td>Kernidee</td><td>Twee steile lijnen → grote prijsschommelingen</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-arbeids">
+          <span class="section-num bg-arbeids">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Praktische Toepassing</div>
+            <span class="section-badge badge-arbeids">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Vier typen opgaven</h3>
+        <p class="intro-text">In de opgaven van deze paragraaf kom je vier typen vragen tegen. Elk type vereist een andere aanpak.</p>
+        <h3 class="sub-heading">Type 1: Bepaal de marktvorm</h3>
+        <p class="intro-text">Gebruik het stappenplan van paragraaf 3.1.2. Tel aanbieders, bepaal producttype, beoordeel drempels, en trek een conclusie.</p>
+        <div class="formula-box">
+            Voorbeeld: Is de telefoniemarkt volkomen concurrentie, monopolie, etc.?<br>
+            Aanpak: Tellen → homogeen/heterogeen → drempels → bepaal
+        </div>
+        <h3 class="sub-heading">Type 2: Waarom is het aanbod inelastisch?</h3>
+        <p class="intro-text">Je moet begrijpen dat grondgebonden landbouw een seizoensgebonden proces is. Een boer kan niet halverwege het seizoen omschakelen.</p>
+        <div class="formula-box">
+            Modelantwoord: Een boer kan niet halverwege het seizoen<br>
+            omschakelen van het ene gewas naar het andere.<br>
+            De productie ligt vast binnen de jaarcyclus.
+        </div>
+        <h3 class="sub-heading">Type 3: Waarom is de vraag inelastisch?</h3>
+        <p class="intro-text">Je moet begrijpen dat voedsel essentieel is. Mensen hebben een begrensd hongergevoel.</p>
+        <div class="formula-box">
+            Modelantwoord: Mensen hebben begrensd hongergevoel.<br>
+            Ze eten niet meer als voedsel goedkoper is.<br>
+            Voedsel is een eerste levensbehoefte.
+        </div>
+        <h3 class="sub-heading">Type 4: Grafische analyse</h3>
+        <p class="intro-text">Je tekent twee lijnen: vraag (V) en aanbod (A). Bij een goede oogst verschuift A naar rechts. Het nieuwe evenwicht ligt veel lager op de verticale as.</p>
+        <div class="formula-box">
+            Teken V-lijn en A-lijn (beide steil)<br>
+            Goede oogst: A verschuift naar RECHTS<br>
+            Nieuw evenwicht: prijs daalt VEEL, hoeveelheid stijgt WEINIG
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij elk type opgave: begin met het juiste gereedschap. Marktvorm → stappenplan. Elasticiteit → definitie + voorbeeld. Grafiek → teken en verschuif.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je alle vier de vraagtypen beantwoorden met de juiste economische redenering?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-arbeids">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Type 1</td><td>Marktvorm bepalen → stappenplan</td></tr>
+            <tr><td>Type 2</td><td>Inelastisch aanbod → seizoensgebonden productie</td></tr>
+            <tr><td>Type 3</td><td>Inelastische vraag → levensbehoefte</td></tr>
+            <tr><td>Type 4</td><td>Grafische analyse → verschuiving en nieuw evenwicht</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Inelastisch = verticale lijn, dus geen verandering in hoeveelheid&quot; → Onjuist! Als het aanbod verandert (bijv. oogstschommeling), beweegt het evenwicht wel. De hoeveelheid verandert weinig, maar niet nul.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Elastisch = altijd goed, inelastisch = altijd slecht&quot; → Onjuist! Beide hebben voor- en nadelen. Elastische markten hebben minder prijsschommelingen. Inelastische markten kunnen grote prijssprongen hebben.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;De prijzen schommelen omdat boeren verkeerde keuzes maken&quot; → Onjuist! Het weer is onvoorspelbaar. De boer heeft hier geen invloed op. Het is de combinatie van onvoorspelbaar weer én steile lijnen die zorgt voor prijsvolatiliteit.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Marktvorm bepalen met het stappenplan</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Wat is prijselasticiteit (elastisch vs inelastisch)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Waarom landbouwaanbod inelastisch is (seizoen vastgesteld)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Waarom voedselvraag inelastisch is (levensbehoefte)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Gevolg: Inelastisch + inelastisch → grote prijsschommelingen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Alle vier de opgaventypen beantwoorden met juiste redenering</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

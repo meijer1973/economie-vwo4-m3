@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg voorkennis</title>
+<title>3.4.4 Internationale productieketens – Uitleg voorkennis</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -29,9 +29,6 @@
     --economisch-primary: #E67E22;
     --economisch-light: #FEF5E7;
     --economisch-dark: #BA6A1C;
-    --grafisch-primary: #1E8449;
-    --grafisch-light: #E8F8F0;
-    --grafisch-dark: #186A3B;
   }
 
   .page-layout { display: flex; min-height: 100vh; }
@@ -76,15 +73,6 @@
   .samenvatting-table caption.caption-economisch { background: var(--economisch-primary); }
   .hero-card.card-economisch { border-top-color: var(--economisch-primary); }
   .card-economisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--economisch-light); }
-  .nav-item.active.domain-grafisch { border-left-color: var(--grafisch-primary); }
-  .domain-grafisch .nav-number { background: var(--grafisch-primary); }
-  .domain-grafisch .nav-badge { background: var(--grafisch-light); color: var(--grafisch-primary); }
-  .section-header.border-grafisch { border-bottom: 3px solid var(--grafisch-primary); }
-  .section-num.bg-grafisch { background: var(--grafisch-primary); }
-  .badge-grafisch { background: var(--grafisch-light); color: var(--grafisch-primary); }
-  .samenvatting-table caption.caption-grafisch { background: var(--grafisch-primary); }
-  .hero-card.card-grafisch { border-top-color: var(--grafisch-primary); }
-  .card-grafisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--grafisch-light); }
 
   .nav-number {
     display: inline-flex; align-items: center; justify-content: center;
@@ -118,7 +106,7 @@
   }
   .hero::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 5px; background: linear-gradient(90deg, var(--wiskunde-primary) 0% 33%, var(--economisch-primary) 33% 67%, var(--grafisch-primary) 67% 100%);
+    height: 5px; background: linear-gradient(90deg, var(--wiskunde-primary) 0% 50%, var(--economisch-primary) 50% 100%);
   }
   .hero-inner { max-width: 860px; margin: 0 auto; }
   .hero-badge {
@@ -130,7 +118,7 @@
   .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
   .hero-cards {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
     margin-top: 1.5rem;
   }
   .hero-card {
@@ -265,35 +253,28 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.4.4 Internationale productieketens</h2>
       <p>Uitleg voorkennis</p>
     </div>
     <a class="nav-item domain-wiskunde" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Vergelijkingen met twee onbekenden</span>
+        <span class="nav-title">Percentages berekenen</span>
         <span class="nav-badge">Wiskundig</span>
       </span>
     </a>
-    <a class="nav-item domain-wiskunde" href="#sectie-2" data-section="sectie-2">
+    <a class="nav-item domain-economisch" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Afleiden en MO berekenen</span>
-        <span class="nav-badge">Wiskundig</span>
+        <span class="nav-title">Economische begrippen</span>
+        <span class="nav-badge">Economisch</span>
       </span>
     </a>
     <a class="nav-item domain-economisch" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Economische begrippen bij oligopolie</span>
+        <span class="nav-title">Oorzaak-gevolgredeneringen</span>
         <span class="nav-badge">Economisch</span>
-      </span>
-    </a>
-    <a class="nav-item domain-grafisch" href="#sectie-4" data-section="sectie-4">
-      <span class="nav-number">4</span>
-      <span class="nav-text">
-        <span class="nav-title">Grafieken met reactielijnen</span>
-        <span class="nav-badge">Grafisch</span>
       </span>
     </a>
 
@@ -302,29 +283,24 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Voorkennis</span>
-        <h1>Oligopolie &mdash; Voorkennis</h1>
+        <span class="hero-badge">3.4.4 &middot; Voorkennis</span>
+        <h1>Internationale productieketens &mdash; Voorkennis</h1>
         <p class="hero-sub">Wat moet je al weten voordat je aan deze paragraaf begint?</p>
         <div class="hero-cards">
           <div class="hero-card card-wiskunde" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Vergelijkingen met twee onbekenden</div>
+            <div class="hero-card-title">Percentages berekenen</div>
             <span class="hero-card-domain">Wiskundig</span>
           </div>
-          <div class="hero-card card-wiskunde" data-target="sectie-2">
+          <div class="hero-card card-economisch" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Afleiden en MO berekenen</div>
-            <span class="hero-card-domain">Wiskundig</span>
+            <div class="hero-card-title">Economische begrippen</div>
+            <span class="hero-card-domain">Economisch</span>
           </div>
           <div class="hero-card card-economisch" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Economische begrippen bij oligopolie</div>
+            <div class="hero-card-title">Oorzaak-gevolgredeneringen</div>
             <span class="hero-card-domain">Economisch</span>
-          </div>
-          <div class="hero-card card-grafisch" data-target="sectie-4">
-            <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Grafieken met reactielijnen</div>
-            <span class="hero-card-domain">Grafisch</span>
           </div>
 
         </div>
@@ -337,110 +313,56 @@
         <div class="section-header border-wiskunde">
           <span class="section-num bg-wiskunde">1</span>
           <div class="section-title-group">
-            <div class="section-title">Vergelijkingen met twee onbekenden</div>
+            <div class="section-title">Percentages berekenen</div>
             <span class="section-badge badge-wiskunde">Wiskundig</span>
           </div>
         </div>
-        <h3 class="sub-heading">Waarom heb je dit nodig?</h3>
-        <p class="intro-text">Bij oligopolie werk je met twee reactielijnen: twee vergelijkingen met twee onbekenden. Om het evenwicht te vinden, moet je deze vergelijkingen tegelijk oplossen.</p>
-        <h3 class="sub-heading">Wat is substitutie?</h3>
-        <p class="intro-text">Substitutie betekent dat je de ene vergelijking in de andere invult. Zo breng je twee onbekenden terug tot één onbekende.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Substitutie</td><td>Eén vergelijking invullen in de andere om één onbekende weg te werken</td></tr>
-            <tr><td>Stelsel</td><td>Twee (of meer) vergelijkingen die tegelijk gelden</td></tr>
-            <tr><td>Reactielijn</td><td>Vergelijking die jouw optimale q geeft als functie van q van de concurrent</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Stappenplan substitutie</h3>
-        <div class="formula-box">
-            Stap 1: Schrijf beide vergelijkingen op<br>
-            Stap 2: Kies één vergelijking en vul deze in de andere in<br>
-            Stap 3: Los op naar de overgebleven onbekende<br>
-            Stap 4: Vul de uitkomst terug in de andere vergelijking
-        </div>
+        <h3 class="sub-heading">Wat moet je kunnen?</h3>
+        <p class="intro-text">In deze paragraaf moet je percentuele veranderingen en verhoudingen kunnen berekenen. Je vergelijkt kosten in twee scenario’s en drukt het verschil uit als percentage. Ook bereken je winstmarges.</p>
         <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: q₁ = 35 − 0,5q₂ en q₂ = 35 − 0,5q₁</p>
         <div class="formula-box">
-            q₁ = 35 − 0,5q₂<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
-        </div>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) geldt altijd q₁ = q₂ in het evenwicht. Dat is een handige controle!
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Vergeet niet om na het oplossen van q₁ de waarde terug te vullen in de andere vergelijking om q₂ te vinden.
+            Kostenbesparing:<br>
+            Internationaal: €480 | Nationaal: €650<br>
+            Verschil: €650 − €480 = €170<br>
+            Percentage: 170 / 480 × 100% = 35,4%<br>
+            <br>
+            Winstmarge:<br>
+            Winst = €600 − €518,40 = €81,60<br>
+            Marge = 81,60 / 600 × 100% = 13,6%
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Los op: x = 10 − 0,5y en y = 10 − 0,5x. (antwoord: x = y = 6⅔)
+          <strong>Controle:</strong> Kun je berekenen hoeveel procent €150 is van €400? (Antwoord: 37,5%)
         </div>
         <table class="samenvatting-table">
           <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Methode</td><td>Substitutie: vul vergelijking 2 in vergelijking 1 in</td></tr>
-            <tr><td>Doel</td><td>Twee onbekenden terugbrengen tot één onbekende</td></tr>
-            <tr><td>Toepassing</td><td>Reactielijnen bij oligopolie / Cournot-evenwicht</td></tr>
+            <tr><td>Kernvaardigheid</td><td>Verschil / basis × 100% = percentage</td></tr>
+            <tr><td>Toepassing</td><td>Kostenbesparing en winstmarge</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-2">
-        <div class="section-header border-wiskunde">
-          <span class="section-num bg-wiskunde">2</span>
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">2</span>
           <div class="section-title-group">
-            <div class="section-title">Afleiden en MO berekenen</div>
-            <span class="section-badge badge-wiskunde">Wiskundig</span>
+            <div class="section-title">Economische begrippen</div>
+            <span class="section-badge badge-economisch">Economisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Van residuele vraag naar TO</h3>
-        <p class="intro-text">Je moet de totale opbrengst (TO) kunnen berekenen uit de residuele vraaglijn. Dat doe je door p te vermenigvuldigen met q.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Residuele vraag</td><td>De vraaglijn die overblijft na aftrek van de productie van de concurrent</td></tr>
-            <tr><td>TO (totale opbrengst)</td><td>TO = p × q (vul de vraaglijn in voor p)</td></tr>
-            <tr><td>MO (marginale opbrengst)</td><td>De afgeleide van TO naar q</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">De vuistregel voor MO</h3>
-        <p class="intro-text">Bij een lineaire vraaglijn (p = aq + b) heeft de MO-lijn altijd een dubbele helling. Dit is een handig ezelsbruggetje.</p>
-        <div class="formula-box">
-            Vraaglijn:  p = aq + b<br>
-            TO = p × q = aq² + bq<br>
-            MO = 2aq + b  (dubbele helling!)
-        </div>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij een lineaire vraaglijn geldt: MO heeft dezelfde constante als p, maar een dubbele helling.
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: p = −10q + 800</p>
-        <div class="formula-box">
-            TO = p × q = (−10q + 800) × q = −10q² + 800q<br>
-            MO = −20q + 800
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Schrijf de vraaglijn altijd eerst om naar p = f(q) voordat je TO berekent. Doe je dat niet, dan gaat de vermenigvuldiging mis.
-        </div>
+        <h3 class="sub-heading">Wat moet je kennen?</h3>
+        <p class="intro-text">Voor deze paragraaf moet je een aantal begrippen kennen die te maken hebben met internationale productie en handel.</p>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Leid MO af uit p = −5q + 200. (antwoord: MO = −10q + 200)
+          <strong>Controle:</strong> Kun je in eigen woorden uitleggen waarom een productieketen over meerdere landen goedkoper is?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>TO</td><td>TO = p × Q (schrijf p eerst om naar p = f(Q))</td></tr>
-            <tr><td>MO</td><td>MO = afgeleide van TO naar Q</td></tr>
-            <tr><td>Vuistregel</td><td>Bij lineaire vraaglijn: MO heeft dubbele helling</td></tr>
+            <tr><td>Kernbegrippen</td><td>Productieketen, comparatief voordeel, transactiekosten</td></tr>
+            <tr><td>Toepassing</td><td>Alle oefeningen in de paragraaf</td></tr>
           </tbody>
         </table>
 
@@ -450,108 +372,30 @@
         <div class="section-header border-economisch">
           <span class="section-num bg-economisch">3</span>
           <div class="section-title-group">
-            <div class="section-title">Economische begrippen bij oligopolie</div>
+            <div class="section-title">Oorzaak-gevolgredeneringen</div>
             <span class="section-badge badge-economisch">Economisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Wat is een oligopolie?</h3>
-        <p class="intro-text">Een oligopolie is een marktvorm met slechts een paar grote aanbieders. Omdat er zo weinig spelers zijn, houdt iedereen rekening met het gedrag van de concurrent.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders die elkaars gedrag beïnvloeden</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus de productie van de concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale hoeveelheid als functie van de hoeveelheid van de concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van de reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK en winst = 0</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Cournot versus Bertrand</h3>
-        <p class="intro-text">Het verschil zit in het type concurrentie. Bij Cournot concurreren bedrijven op hoeveelheid, bij Bertrand op prijs.</p>
+        <h3 class="sub-heading">Wat moet je kunnen?</h3>
+        <p class="intro-text">In deze paragraaf moet je causale redeneringen kunnen opbouwen. Dat betekent: uitleggen waarom iets gebeurt door een keten van oorzaken en gevolgen te beschrijven. Gebruik signaalwoorden als ‘doordat’, ‘waardoor’, ‘hierdoor’.</p>
+        <h3 class="sub-heading">Voorbeeld</h3>
         <div class="formula-box">
-            Cournot (hoeveelheid)  →  p > MK  →  winst > 0<br>
-            Bertrand (prijs)       →  p = MK  →  winst = 0
-        </div>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij Cournot blijft er winst over doordat bedrijven de hoeveelheid beperken. Bij Bertrand onderbieden ze elkaar tot p = MK.
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwar residuele vraag niet met collectieve vraag. De residuele vraag is altijd kleiner: het is wat er voor jou overblijft na aftrek van de concurrent.
-        </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij Cournot concurreren bedrijven op hoeveelheid (er blijft winst over). Bij Bertrand concurreren ze op prijs (winst verdwijnt).
+            Communicatietechnologie verbetert<br>
+            → doordat bedrijven beter kunnen afstemmen<br>
+            → waardoor productie over landen verdeeld kan worden<br>
+            → hierdoor dalen de productiekosten<br>
+            → waardoor de consumentenprijs daalt
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het verschil uitleggen tussen Cournot en Bertrand?
+          <strong>Controle:</strong> Kun je uitleggen waarom de prijs van een product stijgt als het in één land gemaakt wordt?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-economisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale q als functie van q_concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK, winst = 0</td></tr>
-          </tbody>
-        </table>
-
-      </section>
-
-      <section class="section" id="sectie-4">
-        <div class="section-header border-grafisch">
-          <span class="section-num bg-grafisch">4</span>
-          <div class="section-title-group">
-            <div class="section-title">Grafieken met reactielijnen</div>
-            <span class="section-badge badge-grafisch">Grafisch</span>
-          </div>
-        </div>
-        <h3 class="sub-heading">Hoe teken je reactielijnen?</h3>
-        <p class="intro-text">Reactielijnen teken je in een assenstelsel met q₁ op de x-as en q₂ op de y-as. Elke lijn laat zien hoeveel de ene aanbieder produceert bij elke hoeveelheid van de ander.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>x-as</td><td>q₁ (hoeveelheid van aanbieder 1)</td></tr>
-            <tr><td>y-as</td><td>q₂ (hoeveelheid van aanbieder 2)</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Stappen voor het tekenen</h3>
-        <p class="intro-text">Bepaal van elke reactielijn twee punten door de ander op 0 en op het maximum te zetten. Verbind deze punten met een rechte lijn.</p>
-        <div class="formula-box">
-            Reactielijn 1: q₁ = 35 − 0,5q₂<br>
-              bij q₂ = 0:  q₁ = 35<br>
-              bij q₂ = 70: q₁ = 0<br>
-            <br>
-            Reactielijn 2: q₂ = 35 − 0,5q₁<br>
-              bij q₁ = 0:  q₂ = 35<br>
-              bij q₁ = 70: q₂ = 0
-        </div>
-        <h3 class="sub-heading">Wat zegt het snijpunt?</h3>
-        <p class="intro-text">Het snijpunt van de twee reactielijnen is het Cournot-evenwicht. Op dat punt produceert geen van beide bedrijven te veel of te weinig, gegeven wat de ander doet.</p>
-        <div class="callout callout-kernregel">
-          <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Reactielijnen zijn altijd dalend: als de concurrent meer produceert, produceer jij minder. Het snijpunt is het Nash-evenwicht.
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwissel de assen niet! Bij reactielijnen staat q₁ altijd op de x-as en q₂ op de y-as. Dit is anders dan bij een standaard V/A-grafiek.
-        </div>
-        <div class="callout callout-controle">
-          <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je twee reactielijnen tekenen en het snijpunt (Cournot-evenwicht) aanwijzen?
-        </div>
-        <table class="samenvatting-table">
-          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
-          <tbody>
-            <tr><td>Assen</td><td>q₁ op de x-as, q₂ op de y-as</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
-            <tr><td>Dalend</td><td>Reactielijnen zijn altijd dalend: meer q₂ → minder q₁</td></tr>
+            <tr><td>Kernvaardigheid</td><td>Causale keten opbouwen met signaalwoorden</td></tr>
+            <tr><td>Signaalwoorden</td><td>doordat, waardoor, hierdoor, want, dus</td></tr>
+            <tr><td>Toepassing</td><td>Oefening 1b en 2</td></tr>
           </tbody>
         </table>
 
@@ -563,27 +407,23 @@
         <p class="checklist-sub">Controleer of je de volgende zaken beheerst voordat je aan de paragraaf begint:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Ik kan de residuele vraaglijn afleiden</label>
+          <label for="check1">Ik kan een percentuele verandering berekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Ik kan MO berekenen uit de residuele vraag</label>
+          <label for="check2">Ik kan een winstmarge uitrekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Ik kan een reactielijn opstellen (MO = MK met twee variabelen)</label>
+          <label for="check3">Ik kan uitleggen wat een internationale productieketen is</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Ik kan het Cournot-evenwicht berekenen door substitutie</label>
+          <label for="check4">Ik kan uitleggen wat comparatief voordeel betekent</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">Ik ken het verschil tussen hoeveelheids- en prijsconcurrentie</label>
-        </div>
-        <div class="checklist-item">
-          <input type="checkbox" id="check6">
-          <label for="check6">Ik kan CS berekenen bij een oligopolie</label>
+          <label for="check5">Ik kan een oorzaak-gevolgketen opbouwen met signaalwoorden</label>
         </div>
 
       </div>

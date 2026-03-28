@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.1.2 Marktvormen – Uitleg voorkennis</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --economisch-primary: #E67E22;
+    --economisch-light: #FEF5E7;
+    --economisch-dark: #BA6A1C;
+    --wiskunde-primary: #1A5276;
+    --wiskunde-light: #EBF5FB;
+    --wiskunde-dark: #154360;
+    --grafisch-primary: #1E8449;
+    --grafisch-light: #E8F8F0;
+    --grafisch-dark: #186A3B;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-economisch { border-left-color: var(--economisch-primary); }
+  .domain-economisch .nav-number { background: var(--economisch-primary); }
+  .domain-economisch .nav-badge { background: var(--economisch-light); color: var(--economisch-primary); }
+  .section-header.border-economisch { border-bottom: 3px solid var(--economisch-primary); }
+  .section-num.bg-economisch { background: var(--economisch-primary); }
+  .badge-economisch { background: var(--economisch-light); color: var(--economisch-primary); }
+  .samenvatting-table caption.caption-economisch { background: var(--economisch-primary); }
+  .hero-card.card-economisch { border-top-color: var(--economisch-primary); }
+  .card-economisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--economisch-light); }
+  .nav-item.active.domain-wiskunde { border-left-color: var(--wiskunde-primary); }
+  .domain-wiskunde .nav-number { background: var(--wiskunde-primary); }
+  .domain-wiskunde .nav-badge { background: var(--wiskunde-light); color: var(--wiskunde-primary); }
+  .section-header.border-wiskunde { border-bottom: 3px solid var(--wiskunde-primary); }
+  .section-num.bg-wiskunde { background: var(--wiskunde-primary); }
+  .badge-wiskunde { background: var(--wiskunde-light); color: var(--wiskunde-primary); }
+  .samenvatting-table caption.caption-wiskunde { background: var(--wiskunde-primary); }
+  .hero-card.card-wiskunde { border-top-color: var(--wiskunde-primary); }
+  .card-wiskunde .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--wiskunde-light); }
+  .nav-item.active.domain-grafisch { border-left-color: var(--grafisch-primary); }
+  .domain-grafisch .nav-number { background: var(--grafisch-primary); }
+  .domain-grafisch .nav-badge { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .section-header.border-grafisch { border-bottom: 3px solid var(--grafisch-primary); }
+  .section-num.bg-grafisch { background: var(--grafisch-primary); }
+  .badge-grafisch { background: var(--grafisch-light); color: var(--grafisch-primary); }
+  .samenvatting-table caption.caption-grafisch { background: var(--grafisch-primary); }
+  .hero-card.card-grafisch { border-top-color: var(--grafisch-primary); }
+  .card-grafisch .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--grafisch-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--economisch-primary) 0% 33%, var(--wiskunde-primary) 33% 67%, var(--grafisch-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.1.2 Marktvormen</h2>
+      <p>Uitleg voorkennis</p>
+    </div>
+    <a class="nav-item domain-economisch" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Kennis van Paragraaf 3.1.1</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Basisbegrip: Concurrentie</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktdoelen van bedrijven</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Productverschillen herkennen</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Prijs en marktmacht</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-wiskunde" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Rekenvaardigheden</span>
+        <span class="nav-badge">Wiskundig</span>
+      </span>
+    </a>
+    <a class="nav-item domain-grafisch" href="#sectie-7" data-section="sectie-7">
+      <span class="nav-number">7</span>
+      <span class="nav-text">
+        <span class="nav-title">Maatschappelijk bewustzijn</span>
+        <span class="nav-badge">Grafisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-grafisch" href="#sectie-8" data-section="sectie-8">
+      <span class="nav-number">8</span>
+      <span class="nav-text">
+        <span class="nav-title">Leesvaardigheden</span>
+        <span class="nav-badge">Grafisch</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.1.2 &middot; Voorkennis</span>
+        <h1>Marktvormen &mdash; Voorkennis</h1>
+        <p class="hero-sub">Wat moet je al weten voordat je aan deze paragraaf begint?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-economisch" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Kennis van Paragraaf 3.1.1</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Basisbegrip: Concurrentie</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Marktdoelen van bedrijven</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Productverschillen herkennen</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Prijs en marktmacht</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-wiskunde" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Rekenvaardigheden</div>
+            <span class="hero-card-domain">Wiskundig</span>
+          </div>
+          <div class="hero-card card-grafisch" data-target="sectie-7">
+            <div class="hero-card-num">07</div>
+            <div class="hero-card-title">Maatschappelijk bewustzijn</div>
+            <span class="hero-card-domain">Grafisch</span>
+          </div>
+          <div class="hero-card card-grafisch" data-target="sectie-8">
+            <div class="hero-card-num">08</div>
+            <div class="hero-card-title">Leesvaardigheden</div>
+            <span class="hero-card-domain">Grafisch</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Kennis van Paragraaf 3.1.1</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit cruciaal?</h3>
+        <p class="intro-text">Deze paragraaf bouwt rechtstreeks voort op 3.1.1. Je moet de volgende begrippen beheersen voordat je verder gaat.</p>
+        <h3 class="sub-heading">Concrete vs abstracte markten</h3>
+        <p class="intro-text">Een concrete markt is een fysieke plek waar handel plaatsvindt (bijv. een weekmarkt). Een abstracte markt heeft geen fysieke locatie — de handel verloopt via communicatie.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Concrete markt</td><td>Fysieke plek waar vragers en aanbieders samenkomen</td></tr>
+            <tr><td>Abstracte markt</td><td>Geen fysieke plek — handel via communicatie</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Homogeen vs heterogeen</h3>
+        <p class="intro-text">Bij homogene producten ziet de consument geen verschil tussen aanbieders. Bij heterogene producten ervaart de consument wél verschil.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Homogeen</td><td>Consument ziet geen verschil tussen producten</td></tr>
+            <tr><td>Heterogeen</td><td>Consument ziet wél verschil — merk en kwaliteit spelen mee</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Toetredingsdrempels</h3>
+        <p class="intro-text">Drempels zijn obstakels die nieuwe bedrijven verhinderen om een markt te betreden. Hoge drempels betekenen minder aanbieders.</p>
+        <div class="formula-box">
+            Hoge drempels → Weinig aanbieders → Minder concurrentie<br>
+            Lage drempels → Veel aanbieders → Meer concurrentie
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Als je deze begrippen niet zeker weet: ga terug naar paragraaf 3.1.1 en zorg dat je ze beheerst vóórdat je verdergaat.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het verschil uitleggen tussen concrete en abstracte markten, en tussen homogene en heterogene producten?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Concrete markt</td><td>Fysieke plek waar vragers en aanbieders samenkomen</td></tr>
+            <tr><td>Abstracte markt</td><td>Geen fysieke plek — handel via communicatie</td></tr>
+            <tr><td>Homogeen</td><td>Consument ziet geen verschil tussen producten</td></tr>
+            <tr><td>Heterogeen</td><td>Consument ziet wél verschil tussen producten</td></tr>
+            <tr><td>Drempels</td><td>Obstakels die toetreding tot een markt bemoeilijken</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Basisbegrip: Concurrentie</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Wat is concurrentie?</h3>
+        <p class="intro-text">Concurrentie betekent dat bedrijven met elkaar wedijveren om klanten. Ze proberen beter te zijn dan de concurrent — via een lagere prijs, een beter product of betere service.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Concurrentie</td><td>Bedrijven proberen beter te zijn dan elkaar om klanten te winnen</td></tr>
+            <tr><td>Prijsconcurrentie</td><td>Bedrijven concurreren door lagere prijzen aan te bieden</td></tr>
+            <tr><td>Productconcurrentie</td><td>Bedrijven concurreren door een beter product of service te bieden</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Waarom is concurrentie belangrijk?</h3>
+        <p class="intro-text">Hoe meer concurrentie op een markt, hoe harder bedrijven vechten om de klant. Dat leidt tot lagere prijzen, betere producten en meer keuze.</p>
+        <div class="formula-box">
+            Meer concurrentie → Meer bedrijven strijden om klanten<br>
+            Gevolg: lagere prijzen + betere producten + meer keuze
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Concurrentie is goed voor consumenten: het dwingt bedrijven om scherper te presteren.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen wat concurrentie betekent en waarom het belangrijk is voor consumenten?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Concurrentie</td><td>Bedrijven proberen beter te zijn dan elkaar</td></tr>
+            <tr><td>Meer concurrentie</td><td>Meer bedrijven strijden om dezelfde klanten</td></tr>
+            <tr><td>Gevolg</td><td>Lagere prijzen, betere producten, meer keuze</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktdoelen van bedrijven</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waar streven bedrijven naar?</h3>
+        <p class="intro-text">Elk bedrijf heeft doelen. De drie belangrijkste zijn: marktaandeel vergroten, winst maximaliseren en klanten loyaal houden.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Marktaandeel</td><td>Welk percentage van de totale verkopen krijgt het bedrijf?</td></tr>
+            <tr><td>Winstmaximalisatie</td><td>Streven naar zo veel mogelijk winst</td></tr>
+            <tr><td>Klantenloyaliteit</td><td>Klanten binden door merk, kwaliteit of service</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Marktaandeel</h3>
+        <p class="intro-text">Het marktaandeel geeft aan hoe groot een bedrijf is ten opzichte van de totale markt. Een hoger marktaandeel betekent meer invloed.</p>
+        <h3 class="sub-heading">Winstmaximalisatie</h3>
+        <p class="intro-text">Bedrijven willen zo veel mogelijk winst maken. Dat kan door de omzet te verhogen of de kosten te verlagen.</p>
+        <h3 class="sub-heading">Klantenloyaliteit</h3>
+        <p class="intro-text">Door sterke merken, goede service of unieke producten proberen bedrijven klanten aan zich te binden. Loyale klanten stappen niet snel over naar een concurrent.</p>
+        <div class="formula-box">
+            Marktaandeel ↑ → Meer macht op de markt<br>
+            Klantenloyaliteit ↑ → Minder gevoelig voor concurrentie<br>
+            Winstmaximalisatie = Omzet maximaliseren − Kosten minimaliseren
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen wat marktaandeel, winstmaximalisatie en klantenloyaliteit betekenen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Marktaandeel</td><td>Percentage van de totale verkopen dat een bedrijf behaalt</td></tr>
+            <tr><td>Winstmaximalisatie</td><td>Streven naar zo veel mogelijk winst</td></tr>
+            <tr><td>Klantenloyaliteit</td><td>Klanten binden door merk en service</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Productverschillen herkennen</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Objectief vs subjectief</h3>
+        <p class="intro-text">Sommige producten zijn objectief vergelijkbaar — twee kilo’s suiker zijn hetzelfde. Maar consumenten zien producten soms anders dan ze objectief zijn.</p>
+        <h3 class="sub-heading">De perceptie van de consument</h3>
+        <p class="intro-text">Een BMW en een Fiat zijn allebei auto’s. Toch ervaren consumenten ze als totaal verschillende producten. Dat maakt ze heterogeen.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Productverschil</td><td>Verschil zoals de consument het ervaart</td></tr>
+            <tr><td>Voorbeeld</td><td>BMW vs Fiat — beide auto’s, maar anders ervaren</td></tr>
+            <tr><td>Gevolg</td><td>Heterogeen product → merk en kwaliteit spelen mee</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Het gaat altijd om de perceptie van de consument, niet om objectieve productverschillen.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Stel jezelf de vraag: zou de consument het erg vinden als hij product A in plaats van product B kreeg? Zo ja → heterogeen.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Twee producten die fysiek identiek zijn, kunnen toch heterogeen zijn als consumenten ze anders ervaren (bijv. door merknaam).
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom twee vergelijkbare producten toch als heterogeen worden gezien?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Productverschil</td><td>Verschil zoals de consument het ervaart</td></tr>
+            <tr><td>Voorbeeld</td><td>BMW vs Fiat — beide auto’s, maar anders ervaren</td></tr>
+            <tr><td>Gevolg</td><td>Heterogeen product → merk en kwaliteit spelen mee</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Prijs en marktmacht</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Wanneer bepaalt het bedrijf de prijs?</h3>
+        <p class="intro-text">Of een bedrijf zelf de prijs kan bepalen, hangt af van hoeveel concurrentie er is. Meer concurrentie betekent minder macht over de prijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Prijsnemer</td><td>Bedrijf dat de marktprijs moet accepteren (veel concurrentie)</td></tr>
+            <tr><td>Prijszetter</td><td>Bedrijf dat zelf invloed heeft op de prijs (weinig concurrentie)</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">De relatie: concurrentie en prijsmacht</h3>
+        <p class="intro-text">Bij veel concurrentie kan een bedrijf de prijs niet zelf bepalen — de markt dicteert de prijs. Bij weinig concurrentie heeft het bedrijf meer ruimte om zelf prijzen te kiezen.</p>
+        <div class="formula-box">
+            Veel concurrentie → Prijs is gegeven → Prijsnemer<br>
+            Weinig concurrentie → Prijs zelf bepalen → Prijszetter
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Hoe meer concurrentie, hoe minder een bedrijf de prijs zelf kan bepalen.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Een prijsnemer kan niet zómaar zijn prijs verhogen — klanten stappen over naar de concurrent. Een prijszetter heeft die luxe wél.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen wanneer een bedrijf prijsnemer of prijszetter is?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Prijsnemer</td><td>Bedrijf dat de marktprijs moet accepteren (veel concurrentie)</td></tr>
+            <tr><td>Prijszetter</td><td>Bedrijf dat zelf invloed heeft op de prijs (weinig concurrentie)</td></tr>
+            <tr><td>Kernrelatie</td><td>Meer concurrentie → minder prijsmacht</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-wiskunde">
+          <span class="section-num bg-wiskunde">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Rekenvaardigheden</div>
+            <span class="section-badge badge-wiskunde">Wiskundig</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Marktaandeel berekenen</h3>
+        <p class="intro-text">Het marktaandeel geeft aan welk deel van de totale markt een bedrijf in handen heeft. Je berekent het als een percentage.</p>
+        <div class="formula-box">
+            Marktaandeel = (eigen verkopen / totale verkopen) × 100%
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">Bedrijf A verkoopt 50 auto’s. Het totaal op de markt is 200 auto’s.</p>
+        <div class="formula-box">
+            Marktaandeel = 50 / 200 × 100% = 25%
+        </div>
+        <h3 class="sub-heading">Procenten</h3>
+        <p class="intro-text">In deze paragraaf kom je veel procenten tegen: marktaandeel, groeipercentages en verhoudingen. Zorg dat je vlot met procenten kunt rekenen.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Marktaandeel = eigen verkopen / totale verkopen × 100%. Vul altijd stap voor stap in.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet te vermenigvuldigen met 100% aan het einde. Een marktaandeel van 0,25 is niet hetzelfde als 25%.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je een marktaandeel berekenen als je de eigen verkopen en de totale verkopen kent?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Marktaandeel</td><td>Eigen verkopen / totale verkopen × 100%</td></tr>
+            <tr><td>Procenten</td><td>Verhoudingen uitdrukken als percentage</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-7">
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">7</span>
+          <div class="section-title-group">
+            <div class="section-title">Maatschappelijk bewustzijn</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Marktvormen in de echte wereld</h3>
+        <p class="intro-text">Je moet herkennen dat de marktvormen die je leert niet alleen theorie zijn. Ze komen overal in het dagelijks leven voor.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Monopolie</td><td>Eén aanbieder — PostNL (post), Tennet (elektriciteitsnet)</td></tr>
+            <tr><td>Oligopolie</td><td>Weinig aanbieders — supermarkten (AH, Jumbo), telefonie (KPN, Vodafone)</td></tr>
+            <tr><td>Mon. concurrentie</td><td>Veel aanbieders, heterogeen — restaurants, kappers, fitnessclubs</td></tr>
+            <tr><td>Volkomen concurrentie</td><td>Zeer veel aanbieders, homogeen — landbouw, financiële markten</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeelden koppelen aan theorie</h3>
+        <p class="intro-text">Bij elk type marktvorm moet je zelf een voorbeeld kunnen bedenken. Dit helpt enorm bij het onthouden en bij examenvragen.</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Probeer bij elk type marktvorm een eigen voorbeeld te bedenken — dat helpt bij het onthouden.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij elk van de vier marktvormen minstens één voorbeeld noemen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Monopolie</td><td>PostNL, Tennet — één aanbieder</td></tr>
+            <tr><td>Oligopolie</td><td>Supermarkten, telefonie — weinig aanbieders</td></tr>
+            <tr><td>Mon. concurrentie</td><td>Restaurants, kappers — veel aanbieders, heterogeen</td></tr>
+            <tr><td>Volkomen concurrentie</td><td>Landbouw — zeer veel aanbieders, homogeen</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-8">
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">8</span>
+          <div class="section-title-group">
+            <div class="section-title">Leesvaardigheden</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Uit casestudies de marktvorm afleiden</h3>
+        <p class="intro-text">Bij examenvragen krijg je vaak een tekst over een bedrijf of markt. Je moet dan systematisch de marktvorm afleiden.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <p class="intro-text">Lees de tekst en doorloop de volgende stappen:</p>
+        <div class="formula-box">
+            Stap 1: Tel de aanbieders (hoeveel bedrijven?)<br>
+            Stap 2: Bepaal het producttype (homogeen of heterogeen?)<br>
+            Stap 3: Combineer en bepaal de marktvorm
+        </div>
+        <h3 class="sub-heading">Voorbeeld: een casestudy analyseren</h3>
+        <p class="intro-text">&quot;In een stad zijn drie supermarkten actief. Klanten kiezen vooral op basis van locatie en assortiment.&quot;</p>
+        <p class="intro-text">Stap 1: Drie aanbieders = weinig. Stap 2: Klanten zien verschil = heterogeen. Stap 3: Weinig aanbieders + heterogeen = heterogeen oligopolie.</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Lees altijd systematisch: tel eerst de aanbieders, bepaal dan het producttype, en combineer.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Begin altijd bij stap 1 (aanbieders tellen). Sla geen stap over.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Laat je niet misleiden door de tekst. Soms lijkt een markt op volkomen concurrentie, maar als je de aanbieders telt, blijkt het een oligopolie.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uit een nieuwsbericht of casestudy de marktvorm afleiden?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Stap 1</td><td>Tel de aanbieders</td></tr>
+            <tr><td>Stap 2</td><td>Bepaal of het product homogeen of heterogeen is</td></tr>
+            <tr><td>Stap 3</td><td>Combineer en bepaal de marktvorm</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Checklist voorkennis</div>
+        <p class="checklist-sub">Controleer of je de volgende zaken beheerst voordat je aan de paragraaf begint:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Kan ik uitleggen wat homogeen en heterogeen betekent?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Begrijp ik wat toetredingsdrempels zijn?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Weet ik wat concurrentie betekent?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Kan ik een marktaandeel berekenen?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Begrijp ik dat meer concurrentie meestal lagere prijzen betekent?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Ken ik voorbeelden van monopolies, oligopolies en concurrentiële markten?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check7">
+          <label for="check7">Kan ik uit een casestudy de marktvorm afleiden?</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check8">
+          <label for="check8">Weet ik het verschil tussen prijsnemer en prijszetter?</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

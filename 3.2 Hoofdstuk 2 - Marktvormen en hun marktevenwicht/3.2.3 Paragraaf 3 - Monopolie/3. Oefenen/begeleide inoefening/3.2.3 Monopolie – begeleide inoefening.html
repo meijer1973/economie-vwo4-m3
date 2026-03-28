@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.3 Monopolie – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #E67E22; --accent-lt: #FEF5E7; --accent-dk: #BA6A1C;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.3 Monopolie</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; De monopolist en de vraaglijn</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#qvraag1welkelijn" data-q="qvraag1welkelijn">1 · Welke lijn bepaalt de prijskeuze ...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Winstmaximalisatie van een mon</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a · Leid MK, GTK en MO af</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b · Winstmaximaliserende hoeveelheid</a>
+        <a class="nav-q" href="#q2c" data-q="q2c">2c · Prijs bij maximale winst</a>
+        <a class="nav-q" href="#q2d" data-q="q2d">2d · Teken de vier lijnen</a>
+        <a class="nav-q" href="#q2e" data-q="q2e">2e · Bereken en arceer de maximale winst</a>
+        <a class="nav-q" href="#q2f" data-q="q2f">2f · Consumentensurplus bij maximale ...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Apples betwistbare monopolie</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a · Waarom is het monopolie betwistb...</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b · Alternatieve verklaring voor de ...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Prijsdiscriminatie bij een the</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · Betalingsbereidheid ouderen</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · Jongeren bij p = € 20</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c · Winstmaximaliserende prijs zonde...</a>
+        <a class="nav-q" href="#q6d" data-q="q6d">6d · Maximale winst zonder prijsdiscr...</a>
+        <a class="nav-q" href="#q6e" data-q="q6e">6e · Bereken het effect van prijsdisc...</a>
+        <a class="nav-q" href="#q6f" data-q="q6f">6f · Redeneer zonder berekening</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-7">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">7 &middot; Veilingen en perfecte prijsdis</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q7a" data-q="q7a">7a · Waarom is dit prijsdiscriminatie?</a>
+        <a class="nav-q" href="#q7b" data-q="q7b">7b · Consumentensurplus bij perfecte ...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-8">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">8 &middot; Prijsdiscriminatie bij de Muse</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q8a" data-q="q8a">8a · Voorwaarden voor prijsdiscriminatie</a>
+        <a class="nav-q" href="#q8b" data-q="q8b">8b · Waarom verdient de Stichting meer?</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.3 &middot; Begeleide inoefening</span>
+        <h1>Monopolie &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">De monopolist en de vraaglijn</div>
+            <div class="hero-card-count">1 deelvraag</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Winstmaximalisatie van een monopoli</div>
+            <div class="hero-card-count">6 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Apples betwistbare monopolie</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Prijsdiscriminatie bij een theater</div>
+            <div class="hero-card-count">6 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-7">
+            <div class="hero-card-num">Opgave 7</div>
+            <div class="hero-card-title">Veilingen en perfecte prijsdiscrimi</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-8">
+            <div class="hero-card-num">Opgave 8</div>
+            <div class="hero-card-title">Prijsdiscriminatie bij de Museumkaa</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">De monopolist en de vraaglijn</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+
+        <div class="question-card" id="qvraag1welkelijn">
+          <div class="question-header">
+            <div class="question-label">Vraag 1 — Welke lijn bepaalt de prijskeuze van de monopolist?</div>
+            <div class="question-text">Een monopolist kan zelf zijn prijs bepalen. Welke lijn geeft de verzameling prijzen waaruit de monopolist moet kiezen?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bedenk: een monopolist is de enige aanbieder op de markt.<br>2. De hoeveelheid die consumenten willen kopen hangt af van de prijs.<br>3. Welke lijn of curve geeft het verband tussen prijs en gevraagde hoeveelheid?<br>4. Waarom is de monopolist gebonden aan deze lijn?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De monopolist kan niet zomaar elke prijs vragen. Hij moet rekening houden met hoeveel consumenten bereid zijn te kopen bij die prijs.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Vraaglijn = prijsafzetlijn (bij monopolie)<br>p = f(Q): geeft bij elke hoeveelheid de maximale prijs</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = –Q + 50  (vraaglijn/prijsafzetlijn)<br>TK = 0,25q²</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een monopolist valt de vraaglijn samen met de prijsafzetlijn. De monopolist is weliswaar de enige aanbieder, maar kan niet onbeperkt hoge prijzen vragen — bij een hogere prijs daalt de gevraagde hoeveelheid. De vraaglijn bepaalt welke combinaties van prijs en hoeveelheid mogelijk zijn.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Winstmaximalisatie van een monopolist</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <div class="context-box">p = –Q + 50  (vraaglijn/prijsafzetlijn)<br>TK = 0,25q²</div>
+        <p class="opgave-intro">Een monopolist verkoopt een product waarbij de formule voor de vraaglijn als volgt is: p = –Q + 50, met p in euro’s. De kosten in euro’s van de monopolist worden beschreven met de functie TK = 0,25q².</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a — Leid MK, GTK en MO af</div>
+            <div class="question-text">Leid de formules af voor de MK, GTK en MO.</div>
+          </div>
+          <div class="fill-in">MK = TK’ = ............<br>GTK = TK / q = ............<br>TO = p × Q = (–Q + 50) × Q = ............<br>MO = TO’ = ............</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. MK = afgeleide van TK naar q.<br>2. GTK = TK gedeeld door q.<br>3. Bereken eerst TO = p × Q. Vul de vraaglijn in voor p.<br>4. MO = afgeleide van TO naar Q.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Let op bij MO: vul eerst de vraaglijn in de TO-formule in, zodat je TO als functie van Q krijgt. Dan pas afleiden!</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MK = TK’ (afgeleide van TK)<br>GTK = TK / q<br>TO = p × Q<br>MO = TO’ (afgeleide van TO)</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: Bij een lineaire vraaglijn p = –aQ + b geldt altijd: MO = –2aQ + b. De MO-lijn heeft dezelfde startwaarde maar een dubbele helling!</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK: TK’ = 0,5q<br>GTK: TK/q = 0,25q²/q = 0,25q<br>TO: (–Q + 50) × Q = –Q² + 50Q<br>MO: TO’ = –2Q + 50</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een monopolist is MO ≠ p. De MO-lijn daalt twee keer zo snel als de vraaglijn. Dit komt doordat een extra eenheid verkopen betekent dat de prijs op álle eenheden moet dalen. Vergelijk: de vraaglijn is p = –Q + 50, maar MO = –2Q + 50 — dubbele helling, zelfde snijpunt met de y-as.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b — Winstmaximaliserende hoeveelheid</div>
+            <div class="question-text">Bij hoeveel stuks is de winst maximaal? Licht je antwoord toe met een berekening.</div>
+          </div>
+          <div class="fill-in">MO = MK<br>–2q + 50 = 0,5q<br>......q = ......<br>q = ......</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Stel MO = MK (winstmaximalisatievoorwaarde).<br>2. Vul de formules in en los op naar q.<br>3. Controleer: is MO dalend en MK stijgend bij dit punt? Dan is het een maximum.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De winstmaximalisatieregel geldt ook voor een monopolist: produceer tot MO = MK.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MO = MK<br>MO = –2Q + 50<br>MK = 0,5q</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: –2q + 50 = 0,5q<br>Oplossing: 2,5q = 50 → q = 20</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De monopolist maximaliseert zijn winst bij MO = MK. Let op: bij een monopolist is MO ≠ p. De monopolist produceert minder dan bij volkomen concurrentie, omdat hij de prijs hoog wil houden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2c">
+          <div class="question-header">
+            <div class="question-label">Vraag 2c — Prijs bij maximale winst</div>
+            <div class="question-text">Bereken de prijs waarbij de winst maximaal is.</div>
+          </div>
+          <div class="fill-in">p = –(......) + 50 = € ......</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Je weet nu q = 20.<br>2. Vul q in de vraaglijn in om p te vinden.<br>3. Let op: de prijs lees je af op de vraaglijn, NIET op de MO-lijn!</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De monopolist vraagt de prijs die op de vraaglijn hoort bij q = 20. Dit is een veelgemaakte fout: gebruik de vraaglijn, niet MO!</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">p = –Q + 50 (vraaglijn, niet MO!)</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: Veelgemaakte fout: de prijs aflezen op de MO-lijn in plaats van de vraaglijn. Bij een monopolist geldt p > MO!</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Prijs: p = –20 + 50 = € 30</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De prijs wordt afgelezen op de vraaglijn, niet op de MO-lijn. Bij q = 20 hoort p = 30. De MO bij q = 20 is –2(20) + 50 = 10, maar dat is niet de prijs die de monopolist vraagt! De prijs komt altijd van de vraaglijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2d">
+          <div class="question-header">
+            <div class="question-label">Vraag 2d — Teken de vier lijnen</div>
+            <div class="question-text">Teken een assenstelsel met op de x-as Q en op de y-as p, MK, GTK en MO. Teken hierin de vraag-, GTK-, MK- en MO-lijn.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Teken de assen: x-as is Q (0 tot 50), y-as is p/kosten (0 tot 50).<br>2. Teken de vraaglijn: p = –Q + 50 (van (0; 50) naar (50; 0)).<br>3. Teken de MO-lijn: MO = –2Q + 50 (van (0; 50) naar (25; 0)) — steilere daling.<br>4. Teken de MK-lijn: MK = 0,5Q (door oorsprong, langzaam stijgend).<br>5. Teken de GTK-lijn: GTK = 0,25Q (door oorsprong, nog langzamer stijgend).</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraaglijn: p = –Q + 50, dalende rechte lijn van (0; 50) naar (50; 0)<br>MO-lijn: MO = –2Q + 50, dalende rechte lijn van (0; 50) naar (25; 0)<br>MK-lijn: MK = 0,5Q, stijgende rechte lijn door de oorsprong<br>GTK-lijn: GTK = 0,25Q, stijgende rechte lijn door de oorsprong, minder steil dan MK<br>Snijpunt MO = MK: bij Q = 20, prijs op vraaglijn = € 30</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> In het diagram van een monopolist liggen vier lijnen: de vraaglijn (= prijsafzetlijn), de MO-lijn (steilere daling dan vraaglijn), de MK-lijn (stijgend) en de GTK-lijn (onder MK als MK stijgt). Het winstmaximum is bij het snijpunt MO = MK; de prijs lees je verticaal daarboven af op de vraaglijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2e">
+          <div class="question-header">
+            <div class="question-label">Vraag 2e — Bereken en arceer de maximale winst</div>
+            <div class="question-text">Bereken de maximale winst en arceer deze winst in de figuur van vraag d.</div>
+          </div>
+          <div class="fill-in">TO = ...... × ...... = € ......<br>TK = 0,25 × ......² = € ......<br>W = € ...... – € ...... = € ......</div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Winst = TO – TK. Je kunt de winst ook zien als een rechthoek: (p – GTK) × q.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">W = TO – TK<br>TO = p × q<br>Alternatief: W = (p – GTK) × q</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO: p × q = 30 × 20 = € 600<br>TK: 0,25 × 20² = € 100<br>Winst: W = 600 – 100 = € 500<br>In de grafiek: Rechthoek met breedte q = 20, hoogte p – GTK = 30 – 5 = 25. Oppervlakte = 20 × 25 = 500. ✓</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De winst van de monopolist is het verschil tussen totale opbrengst en totale kosten. In de grafiek is de winst zichtbaar als een rechthoek: de breedte is q (= 20), de hoogte is het verschil tussen de prijs (op de vraaglijn) en de GTK bij die hoeveelheid. Dit geeft (30 – 5) × 20 = 500.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2f">
+          <div class="question-header">
+            <div class="question-label">Vraag 2f — Consumentensurplus bij maximale winst</div>
+            <div class="question-text">Bereken het consumentensurplus bij maximale winst en arceer het consumentensurplus in de figuur van vraag d.</div>
+          </div>
+          <div class="fill-in">CS = 0,5 × ...... × (€ ...... – € ......) = € ......</div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Het CS is de driehoek boven de monopolieprijs en onder de vraaglijn, tot Q = 20.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">CS = 0,5 × basis × hoogte<br>basis = Q bij MO = MK<br>hoogte = pmax – pmonopolie</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS: 0,5 × 20 × (50 – 30) = 0,5 × 20 × 20 = € 200</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het consumentensurplus is kleiner dan bij volkomen concurrentie, omdat de monopolist een hogere prijs vraagt en een lagere hoeveelheid aanbiedt. Het CS is de driehoek boven p = 30, onder de vraaglijn, met als basis de monopoliehoeveelheid (20). De maximale prijs (bij Q = 0) is € 50.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Apples betwistbare monopolie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees Uit de wetenschap over het monopolie van Apple op de markt van digitale muziekdragers.</p>
+
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a — Waarom is het monopolie betwistbaar?</div>
+            <div class="question-text">Waarom concluderen de onderzoekers dat het monopolie van Apple op de markt van digitale muziekdragers betwistbaar is?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij een betwistbaar monopolie gedraagt de monopolist zich alsof er concurrentie is. Kijk naar het prijsgedrag van Apple over de tijd.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: De prijs van een iPod is in acht jaar tijd heel gestaag en fors gedaald. In die periode introduceerden andere aanbieders ook digitale muziekspelers.<br>Redenering: Om deze toetreders niet succesvol te laten zijn, heeft Apple zijn prijs telkens moeten verlagen. Dit wijst op potentiële concurrentie: de dreiging van toetreding dwingt Apple tot lagere prijzen, alsof er al concurrentie is.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een betwistbaar monopolie is een monopolie waarbij de dreiging van toetreding de monopolist dwingt om zich te gedragen alsof er concurrentie is. Apple verlaagde zijn prijzen niet uit goedheid, maar om potentiële concurrenten buiten de markt te houden. De toetredingsdrempels waren dus niet onoverkomelijk.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b — Alternatieve verklaring voor de prijsdaling</div>
+            <div class="question-text">Geef een andere reden waarom de prijs van iPod zo spectaculair gedaald kan zijn.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vaste kosten: € 700.000<br>MK = € 40 (constant)<br>Jongeren: betalingsbereidheid € 0 – € 80<br>Ouderen: betalingsbereidheid > € 80</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Naast concurrentiedruk zijn dalende productiekosten een veelvoorkomende reden voor prijsdalingen in de technologiesector. Componenten worden goedkoper door technologische vooruitgang en schaalvoordelen. Het is belangrijk om meerdere verklaringen te overwegen voordat je concludeert dat er sprake is van een betwistbaar monopolie.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Prijsdiscriminatie bij een theater</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <div class="context-box">Vaste kosten: € 700.000<br>MK = € 40 (constant)<br>Jongeren: betalingsbereidheid € 0 – € 80<br>Ouderen: betalingsbereidheid > € 80</div>
+        <p class="opgave-intro">Een theater heeft twee groepen bezoekers. De helft bestaat uit 40.000 jongeren (tot 25 jaar, betalingsbereidheid p = 0 tot p = 80). De andere helft uit &#x27;ouderen&#x27; (boven 25 jaar, betalingsbereidheid boven p = 80). Samen vormen zij de vraaglijn in bron 9. Vaste kosten: € 700.000/jaar. MK = € 40.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — Betalingsbereidheid ouderen</div>
+            <div class="question-text">Hoeveel ouderen hebben een betalingsbereidheid van € 100 of meer voor een kaartje?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Lees op de vraaglijn af hoeveel mensen een kaartje willen kopen bij p = € 100.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: Bij p = 100 is de gevraagde hoeveelheid 30.000.<br>Toelichting: Alle 30.000 zijn ouderen, want jongeren hebben een maximale betalingsbereidheid van € 80.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op de vraaglijn lees je bij p = € 100 af dat 30.000 mensen bereid zijn zoveel te betalen. Aangezien jongeren maximaal € 80 willen betalen, zijn dit allemaal ouderen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — Jongeren bij p = € 20</div>
+            <div class="question-text">Hoeveel jongeren tot en met 25 jaar kopen een kaartje bij p = € 20?</div>
+          </div>
+          <div class="fill-in">Totaal bij p = 20: ......<br>Ouderen bij p = 20: 40.000<br>Jongeren: ...... – 40.000 = ......</div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij p = 20 kopen zowel ouderen als jongeren. Trek het aantal ouderen af van het totaal.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Totaal bij p = 20: lees af op vraaglijn<br>Ouderen bij p = 20: alle 40.000 (want p < 80)<br>Jongeren = Totaal – Ouderen</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Totaal bij p = 20: 70.000<br>Ouderen: 40.000 (allemaal, want p = 20 < 80)<br>Jongeren: 70.000 – 40.000 = 30.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij p = € 20 willen alle 40.000 ouderen kopen (€ 20 is ver onder hun betalingsbereidheid). Het totaal op de vraaglijn is 70.000, dus 70.000 – 40.000 = 30.000 jongeren.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c — Winstmaximaliserende prijs zonder discriminatie</div>
+            <div class="question-text">Lees in bron 9 af bij welke prijs de winst maximaal is.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">MO = MK geeft de winstmaximaliserende hoeveelheid. Lees de bijbehorende prijs af op de vraaglijn.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: bij Q = 30.000<br>Prijs op vraaglijn: p = € 100</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het snijpunt MO = MK bepaalt de winstmaximaliserende hoeveelheid. De prijs lees je daarboven af op de vraaglijn. Bij Q = 30.000 is p = € 100. Let op: bij deze prijs komen er alleen ouderen (jongeren betalen maximaal € 80).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6d">
+          <div class="question-header">
+            <div class="question-label">Vraag 6d — Maximale winst zonder prijsdiscriminatie</div>
+            <div class="question-text">Bereken de maximaal haalbare winst.</div>
+          </div>
+          <div class="fill-in">TO = ...... × € ...... = € ......<br>TK = ...... × € 40 + € 700.000 = € ......<br>W = € ...... – € ...... = € ......</div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">W = TO – TK<br>TK = MK × Q + vaste kosten</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO: 30.000 × € 100 = € 3 miljoen<br>TK: 30.000 × € 40 + € 700.000 = € 1,9 miljoen<br>Winst: W = € 3 miljoen – € 1,9 miljoen = € 1,1 miljoen</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De totale kosten bestaan uit variabele kosten (MK × Q) plus vaste kosten. De winst is het verschil tussen totale opbrengst en totale kosten. Zonder prijsdiscriminatie bedient het theater alleen de ouderen (bij p = € 100).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6e">
+          <div class="question-header">
+            <div class="question-label">Vraag 6e — Bereken het effect van prijsdiscriminatie</div>
+            <div class="question-text">Stel dat het theater een prijs van € 60 voor jongeren en € 100 voor ouderen hanteert. Laat met een berekening zien dat deze prijsdiscriminatie de winst verhoogt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bereken de totale omzet van beide groepen apart, tel op, en trek de totale kosten af. Vergelijk met de winst uit vraag d.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">TO = TO(ouderen) + TO(jongeren)<br>Bij p = 60: totaal 50.000 (waaronder 40.000 ouderen)<br>Jongeren bij p = 60: 50.000 – 40.000 = 10.000</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Jongeren: Bij p = 60 in totaal 50.000, minus 40.000 ouderen = 10.000 jongeren<br>TO jongeren: 10.000 × € 60 = € 600.000<br>TO ouderen: 30.000 × € 100 = € 3.000.000<br>TO totaal: € 3.600.000<br>TK: 40.000 × € 40 + € 700.000 = € 2.300.000<br>Winst: € 3.600.000 – € 2.300.000 = € 1.300.000<br>Verschil: € 1,3 mln – € 1,1 mln = € 0,2 mln hoger</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door prijsdiscriminatie bedient het theater nu ook jongeren (10.000 stuks à € 60). De ouderen betalen nog steeds € 100. De extra omzet van jongeren (€ 600.000) is meer dan de extra kosten (10.000 × € 40 = € 400.000), dus de winst stijgt met € 200.000.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6f">
+          <div class="question-header">
+            <div class="question-label">Vraag 6f — Redeneer zonder berekening</div>
+            <div class="question-text">Hoe had je zonder berekening kunnen beredeneren dat deze prijsdiscriminatie de winst verhoogt?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Redenering: De ouderen betaalden al € 100 — dat verandert niet. Jongeren gingen voorheen niet naar het theater (€ 100 > hun betalingsbereidheid), maar nu wel bij € 60.<br>Kernargument: De prijs voor jongeren (€ 60) ligt boven de MK (€ 40), dus elke jongere die een kaartje koopt levert een positieve bijdrage aan de winst. De vaste kosten zijn gelijk in beide situaties en spelen dus geen rol in de vergelijking.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het sleutelargument is dat de jongerenprijs (€ 60) boven de marginale kosten (€ 40) ligt. Elke extra verkoop boven MK draagt bij aan de winst. De ouderenomzet blijft onveranderd, dus de extra winst uit jongeren is puur positief. Dit is precies waarom prijsdiscriminatie voor een monopolist aantrekkelijk is.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-7">
+        <div class="opgave-header">
+          <span class="opgave-num">7</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Veilingen en perfecte prijsdiscriminatie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Stel dat de site vakantieveilingen.nl tien weekendjes in een vakantiepark op zijn website heeft staan.</p>
+
+        <div class="question-card" id="q7a">
+          <div class="question-header">
+            <div class="question-label">Vraag 7a — Waarom is dit prijsdiscriminatie?</div>
+            <div class="question-text">Leg uit waarom er hier sprake is van prijsdiscriminatie.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij een veiling betaalt elke koper een andere prijs voor hetzelfde product.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: Het is een veiling waarbij elke consument een eigen prijs voor het product betaalt. De prijzen voor hetzelfde product verschillen zodoende per klant.<br>Verband: Prijsdiscriminatie betekent dat een aanbieder verschillende prijzen vraagt voor hetzelfde product aan verschillende afnemers, zonder dat dit gebaseerd is op kostenverschillen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een veiling wordt elk weekendje apart verkocht, en elke koper betaalt zijn eigen biedprijs. Daardoor betalen verschillende consumenten verschillende prijzen voor een identiek product. Dit is per definitie prijsdiscriminatie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7b">
+          <div class="question-header">
+            <div class="question-label">Vraag 7b — Consumentensurplus bij perfecte prijsdiscriminatie</div>
+            <div class="question-text">Hoe groot is het consumentensurplus als perfecte prijsdiscriminatie wordt toegepast? Verklaar je antwoord.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: Er is dan geen consumentensurplus (CS = 0).<br>Verklaring: Bij perfecte prijsdiscriminatie betaalt elke consument precies het bedrag dat hij bereid is te betalen. Er is dus geen verschil meer tussen betalingsbereidheid en feitelijke prijs — en dat verschil is het consumentensurplus.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Consumentensurplus is het verschil tussen wat je bereid bent te betalen en wat je daadwerkelijk betaalt. Bij perfecte prijsdiscriminatie (eerste graad) wordt dat verschil volledig afgeroomd door de aanbieder. Alle consumenten betalen hun maximale betalingsbereidheid, en het volledige surplus gaat naar de producent.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-8">
+        <div class="opgave-header">
+          <span class="opgave-num">8</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Prijsdiscriminatie bij de Museumkaart</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees In context &#x27;De prijs van een museumkaart&#x27;.</p>
+
+        <div class="question-card" id="q8a">
+          <div class="question-header">
+            <div class="question-label">Vraag 8a — Voorwaarden voor prijsdiscriminatie</div>
+            <div class="question-text">Leg uit dat aan beide voorwaarden is voldaan om prijsdiscriminatie te kunnen doorvoeren.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Voorwaarde 1 (geen doorverkoop): De kaart staat op naam en kan dus niet worden doorverkocht.<br>Voorwaarde 2 (marktsegmentatie): Er worden marktsegmenten onderscheiden: jongeren en ouderen, die eenvoudig te identificeren zijn op basis van leeftijd.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Voor prijsdiscriminatie moet de aanbieder (1) doorverkoop kunnen voorkomen en (2) de markt kunnen segmenteren in groepen met verschillende betalingsbereidheid. De museumkaart op naam voorkomt doorverkoop, en het leeftijdsonderscheid maakt segmentatie mogelijk.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8b">
+          <div class="question-header">
+            <div class="question-label">Vraag 8b — Waarom verdient de Stichting meer?</div>
+            <div class="question-text">Leg uit dat de Stichting Museumkaart meer verdient als ze jongeren minder laten betalen dan ouderen.</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: Jongeren hebben een lagere betalingsbereidheid voor museumbezoek dan ouderen, en daarmee voor een museumkaart.<br>Redenering: Als jongeren dezelfde prijs als ouderen moeten betalen, schaffen minder jongeren een museumkaart aan. Door een lagere prijs voor jongeren trekt de stichting extra kopers aan wier prijs toch boven de marginale kosten ligt, waardoor de totale opbrengst stijgt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is dezelfde logica als bij het theater: door jongeren een lagere prijs te bieden die toch boven de marginale kosten ligt, genereert de stichting extra opbrengsten. De ouderen betalen onverminderd de hogere prijs. Prijsdiscriminatie vergroot zo de totale omzet zonder de omzet uit ouderen te verlagen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Monopolie</td><td>Eén aanbieder, geen substituten, hoge toetredingsdrempels</td></tr>
+            <tr><td>Prijsafzetlijn</td><td>De vraaglijn is tevens de prijsafzetlijn van de monopolist</td></tr>
+            <tr><td>MO bij monopolie</td><td>MO &lt; p; MO-lijn daalt 2× zo snel als lineaire vraaglijn</td></tr>
+            <tr><td>MO-formule</td><td>Bij p = –aQ + b geldt MO = –2aQ + b</td></tr>
+            <tr><td>Winstmaximalisatie</td><td>MO = MK; prijs aflezen op vraaglijn (niet op MO-lijn!)</td></tr>
+            <tr><td>Monopoliewinst</td><td>W = (p – GTK) × Q; meestal positief op lange termijn</td></tr>
+            <tr><td>Betwistbaar monopolie</td><td>Dreiging van toetreding dwingt monopolist tot lagere prijs</td></tr>
+            <tr><td>Prijsdiscriminatie</td><td>Verschillende prijzen voor zelfde product aan verschillende groepen</td></tr>
+            <tr><td>Voorwaarden</td><td>1) Doorverkoop voorkomen  2) Markt segmenteren</td></tr>
+            <tr><td>Perfecte prijsdiscriminatie</td><td>Elke consument betaalt maximale betalingsbereidheid; CS = 0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

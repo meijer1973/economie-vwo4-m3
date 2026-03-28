@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.2 Volkomen concurrentie – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--bedrijf-primary) 0% 50%, var(--markt-primary) 50% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.2 Volkomen concurrentie</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-bedrijf" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Van kostenfunctie naar aanbodfunctie</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Individueel naar collectief aanbod</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktevenwicht berekenen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Winst van een individuele aanbieder</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Consumenten- en producentensurplus</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Lange termijn: winst verdwijnt</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.2 &middot; Vaardigheden</span>
+        <h1>Volkomen concurrentie &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-bedrijf" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Van kostenfunctie naar aanbodfunctie</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Individueel naar collectief aanbod</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Marktevenwicht berekenen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Winst van een individuele aanbieder</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Consumenten- en producentensurplus</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Lange termijn: winst verdwijnt</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Van kostenfunctie naar aanbodfunctie</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Op een markt van volkomen concurrentie is elke aanbieder een prijsnemer: de marktprijs is gegeven. Een bedrijf maximaliseert zijn winst door te produceren waar MK = p.</p>
+        <p class="intro-text">De MK-lijn is daarom de individuele aanbodfunctie van het bedrijf.</p>
+        <h3 class="sub-heading">Stap 1: Leid MK af uit TK</h3>
+        <p class="intro-text">Gegeven een totale kostenfunctie, leid je deze af naar q om de marginale kosten te krijgen.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>TK</td><td>Totale kosten als functie van q</td></tr>
+            <tr><td>MK</td><td>Afgeleide van TK: de extra kosten per eenheid</td></tr>
+            <tr><td>Aanbodfunctie</td><td>p = MK (bij volkomen concurrentie)</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Stap 2: Schrijf als p = MK</h3>
+        <p class="intro-text">Omdat het bedrijf een prijsnemer is, geldt: p = MK. De MK-functie is dus direct de individuele aanbodfunctie.</p>
+        <div class="formula-box">
+            Stap 1: Gegeven TK = 0,5q² + 10q + 128<br>
+            Stap 2: MK = TK′ = q + 10<br>
+            Stap 3: Aanbodfunctie: p = q + 10
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij volkomen concurrentie geldt: p = MK. De MK-lijn IS de individuele aanbodfunctie.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> De constante kosten (hier: 128) verdwijnen bij het afleiden. Ze spelen geen rol in de aanbodfunctie.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Verwar de individuele aanbodfunctie niet met de collectieve aanbodfunctie. Hier gaat het om één bedrijf.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven TK = 2q² + 6q + 50. Wat is de individuele aanbodfunctie? (antwoord: p = 4q + 6)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Stap</td><td>TK → MK (afleiden) → p = MK</td></tr>
+            <tr><td>Resultaat</td><td>De MK-lijn is de individuele aanbodfunctie</td></tr>
+            <tr><td>Constante kosten</td><td>Verdwijnen bij afleiden</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (collectief aanbod) en 3 (evenwicht)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Individueel naar collectief aanbod</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Op een markt zijn meestal meerdere aanbieders actief. Om het marktevenwicht te bepalen heb je de collectieve aanbodfunctie nodig.</p>
+        <p class="intro-text">Die krijg je door het individuele aanbod te vermenigvuldigen met het aantal aanbieders.</p>
+        <h3 class="sub-heading">Stap 1: Schrijf om naar q = ...</h3>
+        <p class="intro-text">Begin met de individuele aanbodfunctie in de vorm p = ... en schrijf om naar q = .... Zo staat de hoeveelheid per bedrijf als functie van de prijs.</p>
+        <div class="formula-box">
+            Individueel: p = q + 10  →  q = p − 10
+        </div>
+        <h3 class="sub-heading">Stap 2: Vermenigvuldig q met n</h3>
+        <p class="intro-text">Vermenigvuldig de individuele hoeveelheid (q) met het aantal aanbieders (n) om de collectieve hoeveelheid (Q) te krijgen.</p>
+        <div class="formula-box">
+            Er zijn 10 identieke aanbieders (n = 10)<br>
+            Q = n × q = 10 × (p − 10) = 10p − 100<br>
+            <br>
+            Collectieve aanbodfunctie: Qa = 10p − 100
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Altijd EERST omschrijven naar q = ..., DAN vermenigvuldigen met n. Nooit p vermenigvuldigen!
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Je kunt de collectieve lijn NIET krijgen door de prijs te vermenigvuldigen. Je vermenigvuldigt de HOEVEELHEID (q), niet de prijs (p).
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven p = 2q + 5 en n = 8. Wat is Qa? (antwoord: Qa = 4p − 20)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Methode</td><td>Schrijf q = ..., vermenigvuldig met n</td></tr>
+            <tr><td>Fout</td><td>NIET p vermenigvuldigen, maar q</td></tr>
+            <tr><td>Resultaat</td><td>Q = n × q = collectieve aanbodlijn</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (individueel aanbod) en 3 (evenwicht)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktevenwicht berekenen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Het marktevenwicht is het punt waar vraag gelijk is aan aanbod. Hier bepaal je de evenwichtsprijs (p*) en -hoeveelheid (Q*).</p>
+        <p class="intro-text">Dit is het startpunt voor veel vervolgberekeningen, zoals winst en surplus.</p>
+        <h3 class="sub-heading">De methode: Qv = Qa</h3>
+        <p class="intro-text">Stel de collectieve vraagfunctie gelijk aan de collectieve aanbodfunctie en los op naar p.</p>
+        <div class="formula-box">
+            Stap 1: Stel Qv = Qa (vraag = aanbod)<br>
+            Stap 2: Los op naar p → dit is p*<br>
+            Stap 3: Vul p* in één functie in → dit is Q*
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: Qv = −10p + 500 en Qa = 10p − 100.</p>
+        <div class="formula-box">
+            Qv = Qa<br>
+            −10p + 500 = 10p − 100<br>
+            600 = 20p  →  p* = 30<br>
+            Q* = −10(30) + 500 = 200
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Het marktevenwicht: Qv = Qa. Los op naar p*, vul terug in voor Q*. Controleer met de andere functie.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Controleer altijd je antwoord door p* in BEIDE functies in te vullen. Komt dezelfde Q* uit? Dan klopt het.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet dat je de COLLECTIEVE functies gebruikt, niet de individuele. Check of je Qa hebt, niet qa.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven Qv = −5p + 250 en Qa = 5p − 50. Wat is p* en Q*? (antwoord: p* = 30, Q* = 100)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Methode</td><td>Stel Qv = Qa, los op naar p, bereken Q</td></tr>
+            <tr><td>Controle</td><td>Vul p* in beide functies in — zelfde Q?</td></tr>
+            <tr><td>Resultaat</td><td>p* = evenwichtsprijs, Q* = evenwichtshoeveelheid</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (winst) en 5 (surplus)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Winst van een individuele aanbieder</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Op korte termijn kan een individuele aanbieder winst maken als de marktprijs hoger is dan de gemiddelde kosten.</p>
+        <p class="intro-text">Het berekenen van die winst laat zien of een bedrijf gunstig gepositioneerd is op de markt.</p>
+        <h3 class="sub-heading">Stap 1: Bepaal de individuele hoeveelheid</h3>
+        <p class="intro-text">Gebruik de individuele aanbodfunctie (p = MK) en vul de marktprijs p* in om q te berekenen.</p>
+        <h3 class="sub-heading">Stap 2: Bereken TO en TK</h3>
+        <p class="intro-text">Bereken de totale opbrengst (TO = p × q) en de totale kosten (TK door q in te vullen in de kostenfunctie).</p>
+        <div class="formula-box">
+            Stap 1: q = p* invullen in aanbodfunctie<br>
+            Stap 2: TO = p* × q<br>
+            Stap 3: TK = invullen in kostenfunctie<br>
+            Stap 4: Winst = TO − TK
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: p* = 30, individueel: p = q + 10, TK = 0,5q² + 10q + 128.</p>
+        <div class="formula-box">
+            q = 30 − 10 = 20 stuks<br>
+            TO = 30 × 20 = €600<br>
+            TK = 0,5(20)² + 10(20) + 128 = 200 + 200 + 128 = €528<br>
+            Winst = 600 − 528 = €72
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Winst = TO − TK. Vergeet NOOIT de constante kosten in te vullen bij TK!
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Vergeet de constante kosten niet! Bij TK altijd de volledige functie invullen, inclusief het getal zonder q.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Als je de constante kosten (128) vergeet, bereken je de variabele winst in plaats van de totale winst. Dat is een veelgemaakte fout op toetsen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven p* = 20, p = 2q + 4, TK = q² + 4q + 32. Bereken de winst. (antwoord: q = 8, TO = 160, TK = 128, Winst = 32)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Methode</td><td>q bepalen → TO = p×q → TK invullen → Winst = TO−TK</td></tr>
+            <tr><td>Let op</td><td>Vergeet constante kosten niet bij TK</td></tr>
+            <tr><td>Controle</td><td>Winst &gt; 0 → bedrijf maakt winst op korte termijn</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (evenwicht) en 6 (lange termijn)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Consumenten- en producentensurplus</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Het consumentensurplus (CS) geeft aan hoeveel voordeel consumenten hebben: ze betalen minder dan ze bereid waren.</p>
+        <p class="intro-text">Het producentensurplus (PS) geeft het voordeel voor producenten: ze ontvangen meer dan hun minimumprijs.</p>
+        <h3 class="sub-heading">CS berekenen</h3>
+        <p class="intro-text">Het CS is de driehoek boven de evenwichtsprijs en onder de vraaglijn. Je berekent het als ½ × Q* × (p_max − p*).</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>CS</td><td>Consumentensurplus: driehoek boven p*</td></tr>
+            <tr><td>p_max</td><td>Snijpunt vraaglijn met y-as (Q = 0)</td></tr>
+            <tr><td>p*</td><td>Evenwichtsprijs</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            CS = ½ × Q* × (p_max − p*)<br>
+            waarbij p_max = het snijpunt van de vraaglijn met de y-as
+        </div>
+        <h3 class="sub-heading">PS berekenen</h3>
+        <p class="intro-text">Het PS is de driehoek onder de evenwichtsprijs en boven de aanbodlijn. Je berekent het als ½ × Q* × (p* − p_min).</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>PS</td><td>Producentensurplus: driehoek onder p*</td></tr>
+            <tr><td>p_min</td><td>Snijpunt aanbodlijn met y-as (Q = 0)</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            PS = ½ × Q* × (p* − p_min)<br>
+            waarbij p_min = het snijpunt van de aanbodlijn met de y-as
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: p_max = 50, p_min = 10, p* = 30, Q* = 200.</p>
+        <div class="formula-box">
+            CS = ½ × 200 × (50 − 30) = ½ × 200 × 20 = 2000<br>
+            PS = ½ × 200 × (30 − 10) = ½ × 200 × 20 = 2000
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> CS = driehoek BOVEN p*. PS = driehoek ONDER p*. Gebruik altijd de COLLECTIEVE lijnen.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Het surplus bereken je met de COLLECTIEVE vraag- en aanbodlijnen, niet met de individuele. Gebruik Q* en de collectieve snijpunten!
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven p_max = 40, p_min = 5, p* = 20, Q* = 100. Bereken CS en PS. (CS = 1000, PS = 750)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>CS</td><td>½ × Q* × (p_max − p*) — driehoek boven p*</td></tr>
+            <tr><td>PS</td><td>½ × Q* × (p* − p_min) — driehoek onder p*</td></tr>
+            <tr><td>Let op</td><td>Gebruik collectieve lijnen, niet individuele</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (evenwicht) en 4 (winst)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Lange termijn: winst verdwijnt</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Op korte termijn kan een bedrijf winst maken. Maar die winst trekt nieuwe aanbieders aan.</p>
+        <p class="intro-text">Meer aanbieders betekent meer aanbod, een lagere prijs, en uiteindelijk verdwijnt de winst helemaal. Dit is het lange-termijnevenwicht.</p>
+        <h3 class="sub-heading">Het mechanisme</h3>
+        <p class="intro-text">Nieuwe toetreders verhogen het collectieve aanbod. De aanbodlijn verschuift naar rechts, de prijs daalt. Dit gaat door totdat de winst nul is.</p>
+        <div class="formula-box">
+            Winst op KT → Toetreding → Meer aanbod → Lagere prijs<br>
+            → Winst daalt → Toetreding stopt als winst = 0
+        </div>
+        <h3 class="sub-heading">Wiskundige uitwerking: MK = GTK</h3>
+        <p class="intro-text">Op lange termijn geldt: p = MK = GTK(min). De prijs daalt tot het minimum van de gemiddelde kosten. Economische winst is dan nul.</p>
+        <div class="formula-box">
+            Stap 1: Stel MK = GTK<br>
+            Stap 2: Los op naar q<br>
+            Stap 3: Vul q in MK of GTK in voor p<br>
+            Stap 4: Controleer: winst = TO − TK = 0
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: MK = q + 10, GTK = 0,5q + 10 + 128/q.</p>
+        <div class="formula-box">
+            MK = GTK<br>
+            q + 10 = 0,5q + 10 + 128/q<br>
+            0,5q = 128/q<br>
+            0,5q² = 128  →  q² = 256  →  q = 16<br>
+            p = MK = 16 + 10 = 26
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Lange termijn bij volkomen concurrentie: p = MK = GTK(min). Economische winst = 0.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> MK = GTK geeft het minimum van de GTK-curve. Op dat punt is de winst per product precies nul.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Economische winst = 0 betekent NIET dat het bedrijf geen geld verdient. Het verdient een normaal rendement — maar geen bovengemiddeld rendement.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Gegeven MK = 2q + 6, GTK = q + 6 + 50/q. Bereken q en p op lange termijn. (q² = 50, q ≈ 7,07, p ≈ 20,14)
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Methode</td><td>Stel MK = GTK, los op naar q en p</td></tr>
+            <tr><td>Resultaat</td><td>p = MK = GTK(min), economische winst = 0</td></tr>
+            <tr><td>Mechanisme</td><td>Winst trekt toetreding aan → aanbod stijgt → prijs daalt</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (winstberekening korte termijn)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Collectief aanbod = prijs vermenigvuldigen met n&quot; → Onjuist! Je vermenigvuldigt de HOEVEELHEID (q) met n, niet de prijs (p).
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Constante kosten vergeten bij TK&quot; → Bij het berekenen van winst moet je de volledige TK-functie invullen, inclusief de constante term.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;CS berekenen met individuele getallen&quot; → Het surplus bereken je altijd met de COLLECTIEVE vraag- en aanbodlijnen, niet met individuele.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Van kostenfunctie naar aanbodfunctie (TK → MK → p = MK)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Individueel naar collectief aanbod (Q = n × q)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Marktevenwicht berekenen (Qv = Qa)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Winst individuele aanbieder berekenen (TO − TK)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">CS en PS berekenen als driehoeken</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Lange termijn: MK = GTK en economische winst = 0</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

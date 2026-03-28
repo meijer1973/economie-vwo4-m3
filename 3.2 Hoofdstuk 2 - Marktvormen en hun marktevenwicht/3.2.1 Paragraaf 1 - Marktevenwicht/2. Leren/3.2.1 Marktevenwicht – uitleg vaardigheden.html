@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.1 Marktevenwicht – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+    --arbeids-primary: #E67E22;
+    --arbeids-light: #FEF5E7;
+    --arbeids-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-arbeids { border-left-color: var(--arbeids-primary); }
+  .domain-arbeids .nav-number { background: var(--arbeids-primary); }
+  .domain-arbeids .nav-badge { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .section-header.border-arbeids { border-bottom: 3px solid var(--arbeids-primary); }
+  .section-num.bg-arbeids { background: var(--arbeids-primary); }
+  .badge-arbeids { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .samenvatting-table caption.caption-arbeids { background: var(--arbeids-primary); }
+  .hero-card.card-arbeids { border-top-color: var(--arbeids-primary); }
+  .card-arbeids .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--arbeids-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 33%, var(--bedrijf-primary) 33% 67%, var(--arbeids-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.1 Marktevenwicht</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktevenwicht herkennen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Winstmaximalisatie: MO = MK</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">MO per marktvorm onderscheiden</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-arbeids" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Arbeidsmarkt analyseren</span>
+        <span class="nav-badge">Arbeidsmarkt</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Verschuivingen in V/A verklaren</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-arbeids" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Werkloosheid herkennen en typeren</span>
+        <span class="nav-badge">Arbeidsmarkt</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.1 &middot; Vaardigheden</span>
+        <h1>Marktevenwicht &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Marktevenwicht herkennen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Winstmaximalisatie: MO = MK</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">MO per marktvorm onderscheiden</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-arbeids" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Arbeidsmarkt analyseren</div>
+            <span class="hero-card-domain">Arbeidsmarkt</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Verschuivingen in V/A verklaren</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-arbeids" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Werkloosheid herkennen en typeren</div>
+            <span class="hero-card-domain">Arbeidsmarkt</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktevenwicht herkennen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Marktevenwicht is het startpunt van bijna alle economische analyse. Het is de situatie waarin er geen druk is om de prijs te veranderen.</p>
+        <h3 class="sub-heading">De twee voorwaarden</h3>
+        <p class="intro-text">Er zijn twee voorwaarden voor marktevenwicht. Beide moeten tegelijk gelden.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Voorwaarde 1</td><td>Qv = Qa — de gevraagde hoeveelheid is gelijk aan de aangeboden hoeveelheid</td></tr>
+            <tr><td>Voorwaarde 2</td><td>Elke aanbieder maximaliseert winst: MO = MK</td></tr>
+            <tr><td>Marktevenwicht</td><td>Pas als BEIDE voorwaarden gelden → stabiel evenwicht</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">In de grafiek</h3>
+        <p class="intro-text">In de grafiek is het marktevenwicht het snijpunt van de vraag- en aanbodlijn. Daar lees je de evenwichtsprijs (p*) en de evenwichtshoeveelheid (Q*) af.</p>
+        <div class="formula-box">
+            Voorwaarde 1: Qv = Qa<br>
+            Voorwaarde 2: elke aanbieder maximaliseert winst (MO = MK)<br>
+            <br>
+            Pas als BEIDE voorwaarden gelden → marktevenwicht
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">Op een markt geldt: Qv = −200p + 10.000 en Qa = 200p.</p>
+        <p class="intro-text">Bij p = 25 is Qv = 5.000 en Qa = 5.000. Vraag en aanbod zijn gelijk, dus dit is de evenwichtsprijs.</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> In de grafiek is het marktevenwicht het snijpunt van de vraag- en aanbodlijn.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Marktevenwicht vereist twee dingen tegelijk: Qv = Qa én MO = MK voor elke aanbieder.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Qv = Qa is voldoende voor evenwicht&quot; → Onjuist! Ook MO = MK moet gelden. Anders is er geen stabiel evenwicht.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de twee voorwaarden voor marktevenwicht opnoemen en in een grafiek aanwijzen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Voorwaarde 1</td><td>Qv = Qa (vraag = aanbod)</td></tr>
+            <tr><td>Voorwaarde 2</td><td>Elke aanbieder maximaliseert winst (MO = MK)</td></tr>
+            <tr><td>In de grafiek</td><td>Snijpunt van vraag- en aanbodlijn</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (winstmaximalisatie) en 3 (MO per marktvorm)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Winstmaximalisatie: MO = MK</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Elk bedrijf wil zo veel mogelijk winst maken. De vuistregel is: produceer zolang de extra opbrengst groter is dan de extra kosten.</p>
+        <h3 class="sub-heading">De beslisregel</h3>
+        <p class="intro-text">Vergelijk bij elke extra eenheid de MO met de MK. Zolang MO &gt; MK levert een extra eenheid winst op.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>MO &gt; MK</td><td>Extra eenheid levert winst op → produceren</td></tr>
+            <tr><td>MO = MK</td><td>Winst is maximaal → stoppen</td></tr>
+            <tr><td>MO &lt; MK</td><td>Extra eenheid kost meer dan het oplevert → niet produceren</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">De denkroute</h3>
+        <div class="formula-box">
+            Produceer zolang MO > MK → winst stijgt<br>
+            Stop zodra MO = MK       → winst is maximaal<br>
+            Als MO < MK              → verlies op die eenheid
+        </div>
+        <h3 class="sub-heading">Rekenvoorbeeld</h3>
+        <p class="intro-text">Een bedrijf heeft MK = 2q + 5. De marktprijs is p = 25.</p>
+        <p class="intro-text">MO = p = 25 (bij volkomen concurrentie).</p>
+        <div class="formula-box">
+            MO = MK → 25 = 2q + 5 → q = 10
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Produceer tot MO = MK. Dit geldt bij élke marktvorm, niet alleen bij volkomen concurrentie.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> MO = MK geldt altijd voor winstmaximalisatie, maar MO = p geldt ALLÉÉN bij volkomen concurrentie. Bij een monopolie is MO &lt; p!
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de optimale productiehoeveelheid berekenen met MO = MK?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Regel</td><td>Produceer tot MO = MK</td></tr>
+            <tr><td>MO &gt; MK</td><td>Extra eenheid levert winst op → produceren</td></tr>
+            <tr><td>MO &lt; MK</td><td>Extra eenheid kost meer dan het oplevert → stoppen</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (evenwicht) en 3 (MO per marktvorm)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">MO per marktvorm onderscheiden</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De manier waarop MO zich verhoudt tot de prijs verschilt per marktvorm. Dit is cruciaal voor het begrijpen van latere paragrafen over monopolie en oligopolie.</p>
+        <h3 class="sub-heading">Prijsnemer: MO = p</h3>
+        <p class="intro-text">Bij volkomen concurrentie is de aanbieder een prijsnemer. Hij kan de marktprijs niet beïnvloeden. De MO is constant en gelijk aan de marktprijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Prijsnemer</td><td>Aanbieder die de marktprijs accepteert (MO = p)</td></tr>
+            <tr><td>Volkomen concurrentie</td><td>Veel aanbieders, homogeen product, geen drempels</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Prijszetter: MO &lt; p</h3>
+        <p class="intro-text">Bij een monopolist daalt de MO bij elke extra verkochte eenheid. Hij moet de prijs verlagen om meer te verkopen, waardoor MO altijd láger is dan p.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Prijszetter</td><td>Aanbieder die zelf de prijs bepaalt (MO &lt; p)</td></tr>
+            <tr><td>Monopolie</td><td>Eén aanbieder, geen substituten, hoge drempels</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Het kernverschil in één schema</h3>
+        <div class="formula-box">
+            Volkomen concurrentie: MO = p   (prijsnemer)<br>
+            Monopolie/oligopolie:  MO < p   (prijszetter)<br>
+            <br>
+            De aanbieder bepaalt of hij de prijs kan beïnvloeden — niet de klant.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Onthoud: prijsnemer (MO = p) vs. prijszetter (MO &lt; p). Dit is het kernverschil tussen marktvormen.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Onthoud: prijsnemer (MO = p) vs. prijszetter (MO &lt; p). Dit is het kernverschil tussen marktvormen.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;MO = p geldt altijd&quot; → Onjuist! MO = p geldt alleen bij volkomen concurrentie. Bij monopolie is MO &lt; p.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een marktvorm aangeven of MO = p of MO &lt; p geldt?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Prijsnemer</td><td>MO = p — marktprijs is gegeven</td></tr>
+            <tr><td>Prijszetter</td><td>MO &lt; p — moet prijs verlagen om meer te verkopen</td></tr>
+            <tr><td>Kernverschil</td><td>Bepaalt het hele verschil in winstberekening</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO = MK) en 4 (arbeidsmarkt)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-arbeids">
+          <span class="section-num bg-arbeids">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Arbeidsmarkt analyseren</div>
+            <span class="section-badge badge-arbeids">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De arbeidsmarkt werkt als elke andere markt, maar met andere namen. Als je begrijpt dat arbeid het ‘product’ is en het loon de ‘prijs’, kun je alle V/A-tools toepassen.</p>
+        <h3 class="sub-heading">De vertaaltabel</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Product</td><td>Arbeid (uren werk)</td></tr>
+            <tr><td>Prijs</td><td>Loon (W)</td></tr>
+            <tr><td>Vragers</td><td>Werkgevers (bedrijven)</td></tr>
+            <tr><td>Aanbieders</td><td>Werknemers</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Wie vraagt, wie biedt aan?</h3>
+        <p class="intro-text">Werkgevers vragen arbeid (zij zoeken werknemers). Werknemers bieden arbeid aan (zij bieden hun tijd en vaardigheden aan). Dit is tegengesteld aan wat je misschien verwacht!</p>
+        <div class="formula-box">
+            Product = arbeid (uren werk)<br>
+            Prijs = loon (W)<br>
+            Vragers = werkgevers (bedrijven)<br>
+            Aanbieders = werknemers
+        </div>
+        <h3 class="sub-heading">Voorbeeld: robots op de arbeidsmarkt</h3>
+        <p class="intro-text">Als robots een deel van het werk overnemen, hebben bedrijven minder werknemers nodig bij elk loon. De vraag naar arbeid daalt.</p>
+        <p class="intro-text">In de grafiek verschuift de vraaglijn naar links. Het evenwichtsloon daalt en de werkgelegenheid neemt af.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Vertaal altijd eerst: product = arbeid, prijs = loon. Pas dan je V/A-analyse toe.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Werkgevers bieden arbeid aan&quot; → Onjuist! Werkgevers vrágen arbeid, werknemers bieden arbeid aan.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Denk bij de arbeidsmarkt altijd: ‘wie vraagt?’ (werkgevers) en ‘wie biedt aan?’ (werknemers). Dit is tegengesteld aan de productenmarkt.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de arbeidsmarkt analyseren met dezelfde V/A-tools als een goederenmarkt?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-arbeids">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Product</td><td>Arbeid (uren werk)</td></tr>
+            <tr><td>Prijs</td><td>Loon (W)</td></tr>
+            <tr><td>Vragers</td><td>Werkgevers (bedrijven)</td></tr>
+            <tr><td>Aanbieders</td><td>Werknemers</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 5 (verschuivingen) en 6 (werkloosheid)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Verschuivingen in V/A verklaren</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Veel examenvragen gaan over wat er gebeurt als een lijn verschuift. Je moet het verschil kennen tussen een beweging lángs de lijn en een verschuiving ván de lijn.</p>
+        <h3 class="sub-heading">Beweging vs. verschuiving</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Beweging</td><td>Langs de lijn — veroorzaakt door een prijsverandering</td></tr>
+            <tr><td>Verschuiving</td><td>Van de lijn — veroorzaakt door een externe factor</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Wat veroorzaakt een verschuiving?</h3>
+        <div class="formula-box">
+            Verandering IN de prijs     → Beweging lángs de lijn<br>
+            Verandering in iets ANDERS  → Verschuiving ván de lijn<br>
+            <br>
+            Vraag verschuift door:  voorkeur, inkomen, substituten<br>
+            Aanbod verschuift door: technologie, kosten, toetreding
+        </div>
+        <h3 class="sub-heading">Voorbeeld: technologische verandering</h3>
+        <p class="intro-text">Robots nemen werk over → technologische verandering → de vraag naar arbeid verschuift naar links → het evenwichtsloon daalt en de werkgelegenheid neemt af.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Vraag jezelf altijd af: verandert de prijs (= beweging) of verandert er iets anders (= verschuiving)?
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Verschuiving = beweging langs de lijn&quot; → Onjuist! Een verschuiving verplaatst de hele lijn; een beweging is een ander punt op dezelfde lijn.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een gegeven verandering bepalen of het een verschuiving of een beweging langs de lijn is?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Beweging</td><td>Langs de lijn — door prijsverandering</td></tr>
+            <tr><td>Verschuiving</td><td>Van de lijn — door externe factor</td></tr>
+            <tr><td>Vraag verschuift</td><td>Door voorkeur, inkomen, substituten</td></tr>
+            <tr><td>Aanbod verschuift</td><td>Door technologie, kosten, toetreding</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (arbeidsmarkt) en 6 (werkloosheid)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-arbeids">
+          <span class="section-num bg-arbeids">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Werkloosheid herkennen en typeren</div>
+            <span class="section-badge badge-arbeids">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Als het loon niet kan dalen (bijv. door minimumloon), ontstaat er werkloosheid. Je moet het type werkloosheid kunnen herkennen aan de oorzaak.</p>
+        <h3 class="sub-heading">De drie typen</h3>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Conjunctureel</td><td>Door een recessie (tijdelijk) — verdwijnt bij economisch herstel</td></tr>
+            <tr><td>Structureel</td><td>Door blijvende verandering zoals technologie — permanent</td></tr>
+            <tr><td>Frictie</td><td>Door zoektijd tussen twee banen — kort en normaal</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Hoe herken je het type?</h3>
+        <div class="formula-box">
+            Conjunctureel: door een recessie (tijdelijk)<br>
+            Structureel:   door blijvende verandering (technologie, etc.)<br>
+            Frictie:       door zoektijd (kort en normaal)
+        </div>
+        <h3 class="sub-heading">Voorbeeld: robotisering</h3>
+        <p class="intro-text">Robots vervangen werknemers → dit is een permanente verandering, niet afhankelijk van de conjunctuur → structurele werkloosheid.</p>
+        <p class="intro-text">De vraaglijn naar arbeid verschuift naar links. Bij een minimumloon boven het nieuwe evenwicht ontstaat werkloosheid.</p>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Structurele werkloosheid verdwijnt NIET vanzelf bij economisch herstel. Dat is het kernverschil met conjuncturele werkloosheid.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Alle werkloosheid verdwijnt als de economie groeit&quot; → Onjuist! Structurele werkloosheid blijft bestaan, ongeacht de conjunctuur.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom robotisering leídt tot structurele werkloosheid en niet tot conjuncturele?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-arbeids">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Conjunctureel</td><td>Door recessie — tijdelijk</td></tr>
+            <tr><td>Structureel</td><td>Door blijvende verandering — permanent</td></tr>
+            <tr><td>Frictie</td><td>Door zoektijd — kort en normaal</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (arbeidsmarkt) en 5 (verschuivingen)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;MO = p geldt altijd&quot; → Onjuist! MO = p geldt alleen bij volkomen concurrentie. Bij monopolie is MO &lt; p.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Verschuiving = beweging langs de lijn&quot; → Onjuist! Een verschuiving verplaatst de hele lijn; een beweging is een ander punt op dezelfde lijn.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Werkgevers bieden arbeid aan&quot; → Onjuist! Werkgevers vragen arbeid, werknemers bieden arbeid aan.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Marktevenwicht herkennen (Qv = Qa en MO = MK)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Winstmaximalisatie berekenen met MO = MK</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">MO per marktvorm onderscheiden (prijsnemer vs. prijszetter)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">De arbeidsmarkt analyseren met V/A-tools</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Verschuivingen vs. bewegingen langs de lijn verklaren</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Werkloosheid herkennen en typeren</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

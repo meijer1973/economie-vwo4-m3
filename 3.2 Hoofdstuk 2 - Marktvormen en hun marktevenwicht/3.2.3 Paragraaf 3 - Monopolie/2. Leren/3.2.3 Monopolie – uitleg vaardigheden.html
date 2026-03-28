@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg vaardigheden</title>
+<title>3.2.3 Monopolie – Uitleg vaardigheden</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -23,12 +23,12 @@
     --border-gray: #CBD5E0;
     --white: #FFFFFF;
     --sidebar-w: 260px;
-    --bedrijf-primary: #E67E22;
-    --bedrijf-light: #FEF5E7;
-    --bedrijf-dark: #BA6A1C;
     --markt-primary: #1A5276;
     --markt-light: #EBF5FB;
     --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
   }
 
   .page-layout { display: flex; min-height: 100vh; }
@@ -55,15 +55,6 @@
   }
   .nav-item:hover { background: #F7FAFC; }
   .nav-item.active { background: var(--light-gray); font-weight: bold; }
-  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
-  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
-  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
-  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
-  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
   .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
   .domain-markt .nav-number { background: var(--markt-primary); }
   .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
@@ -73,6 +64,15 @@
   .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
   .hero-card.card-markt { border-top-color: var(--markt-primary); }
   .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
 
   .nav-number {
     display: inline-flex; align-items: center; justify-content: center;
@@ -106,7 +106,7 @@
   }
   .hero::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 5px; background: linear-gradient(90deg, var(--bedrijf-primary) 0% 50%, var(--markt-primary) 50% 100%);
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 50%, var(--bedrijf-primary) 50% 100%);
   }
   .hero-inner { max-width: 860px; margin: 0 auto; }
   .hero-badge {
@@ -118,7 +118,7 @@
   .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
   .hero-cards {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem;
     margin-top: 1.5rem;
   }
   .hero-card {
@@ -253,34 +253,41 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.2.3 Monopolie</h2>
       <p>Uitleg vaardigheden</p>
     </div>
-    <a class="nav-item domain-bedrijf" href="#sectie-1" data-section="sectie-1">
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Residuele vraaglijn afleiden</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">De monopolist als prijszetter</span>
+        <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
     <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Reactielijn berekenen</span>
+        <span class="nav-title">MO, MK en GTK afleiden</span>
         <span class="nav-badge">Bedrijfseconomie</span>
       </span>
     </a>
     <a class="nav-item domain-bedrijf" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Cournot-evenwicht bepalen</span>
+        <span class="nav-title">Winstmaximalisatie: MO = MK</span>
         <span class="nav-badge">Bedrijfseconomie</span>
       </span>
     </a>
-    <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
+    <a class="nav-item domain-bedrijf" href="#sectie-4" data-section="sectie-4">
       <span class="nav-number">4</span>
       <span class="nav-text">
-        <span class="nav-title">Prijs- vs. hoeveelheidsconcurrentie</span>
+        <span class="nav-title">Winst en CS berekenen</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Prijsdiscriminatie toepassen</span>
         <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
@@ -290,28 +297,33 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Vaardigheden</span>
-        <h1>Oligopolie &mdash; Vaardigheden</h1>
+        <span class="hero-badge">3.2.3 &middot; Vaardigheden</span>
+        <h1>Monopolie &mdash; Vaardigheden</h1>
         <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
         <div class="hero-cards">
-          <div class="hero-card card-bedrijf" data-target="sectie-1">
+          <div class="hero-card card-markt" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Residuele vraaglijn afleiden</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">De monopolist als prijszetter</div>
+            <span class="hero-card-domain">Marktanalyse</span>
           </div>
           <div class="hero-card card-bedrijf" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Reactielijn berekenen</div>
+            <div class="hero-card-title">MO, MK en GTK afleiden</div>
             <span class="hero-card-domain">Bedrijfseconomie</span>
           </div>
           <div class="hero-card card-bedrijf" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Cournot-evenwicht bepalen</div>
+            <div class="hero-card-title">Winstmaximalisatie: MO = MK</div>
             <span class="hero-card-domain">Bedrijfseconomie</span>
           </div>
-          <div class="hero-card card-markt" data-target="sectie-4">
+          <div class="hero-card card-bedrijf" data-target="sectie-4">
             <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="hero-card-title">Winst en CS berekenen</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Prijsdiscriminatie toepassen</div>
             <span class="hero-card-domain">Marktanalyse</span>
           </div>
 
@@ -322,64 +334,52 @@
     <main>
 
       <section class="section" id="sectie-1">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">1</span>
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
           <div class="section-title-group">
-            <div class="section-title">Residuele vraaglijn afleiden</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">De monopolist als prijszetter</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij een oligopolie hangt jouw vraag af van wat de concurrent doet. De residuele vraag is het deel van de collectieve vraag dat voor jou overblijft.</p>
-        <h3 class="sub-heading">Wat is de residuele vraag?</h3>
-        <p class="intro-text">De residuele vraaglijn is de collectieve vraaglijn minus de productie van de concurrent. Je trekt q₂ af van Q om jouw individuele vraaglijn te krijgen.</p>
+        <p class="intro-text">Bij volkomen concurrentie is de aanbieder een prijsnemer (MO = p). Een monopolist is de enige aanbieder en kan zelf kiezen welke prijs hij vraagt.</p>
+        <h3 class="sub-heading">De vraaglijn als menu</h3>
+        <p class="intro-text">De vraaglijn is het ‘menu’ van de monopolist: elke combinatie (Q, p) op de lijn is een mogelijke keuze. Hij kiest de combinatie die de meeste winst oplevert.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Collectieve vraag</td><td>De totale marktvraag: Q = f(p)</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag: q₁ = Q − q₂</td></tr>
-            <tr><td>Omschrijven</td><td>Herschrijf naar p = f(q₁) voor de volgende stap</td></tr>
+            <tr><td>Vraaglijn</td><td>= prijsafzetlijn: toont de prijs bij elke hoeveelheid</td></tr>
+            <tr><td>Prijszetter</td><td>De monopolist bepaalt zelf de prijs via zijn hoeveelheid</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan</h3>
+        <h3 class="sub-heading">De trade-off: meer verkopen = lagere prijs</h3>
+        <p class="intro-text">Omdat de vraaglijn dalend is, moet de monopolist de prijs verlagen als hij meer wil verkopen. Dit is het kerndilemma.</p>
         <div class="formula-box">
-            Stap 1: Collectieve vraag: Q = ...<br>
-            Stap 2: Jouw vraag: q₁ = Q − q₂<br>
-            Stap 3: Schrijf om naar p = f(q₁)<br>
-            Stap 4: Bereken TO = p × q₁<br>
-            Stap 5: Bereken MO = afgeleide van TO
+            De vraaglijn = de prijsafzetlijn<br>
+            De monopolist kiest een punt op deze lijn<br>
+            Meer verkopen = lagere prijs per stuk
         </div>
         <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: Q = −0,1p + 100, concurrent produceert q₂ = 20.</p>
-        <div class="formula-box">
-            q₁ = −0,1p + 100 − 20 = −0,1p + 80<br>
-            p = −10q₁ + 800<br>
-            TO = (−10q₁ + 800) × q₁ = −10q₁² + 800q₁<br>
-            MO = −20q₁ + 800
-        </div>
+        <p class="intro-text">Vraaglijn: p = −Q + 50. Bij Q = 20: p = 30. Bij Q = 30: p = 20. Meer verkopen betekent een lagere prijs.</p>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Meer q₂ betekent minder vraag voor jou.
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je verder rekent.
+          <strong>Kernregel:</strong> De vraaglijn bij monopolie is dalend. Dat is het grote verschil met volkomen concurrentie, waar de prijs vast is.
         </div>
         <div class="callout callout-tip">
           <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Oefen met verschillende waarden van q₂.
+          <strong>Tip:</strong> De vraaglijn bij monopolie is dalend. Dat is het grote verschil met volkomen concurrentie, waar de prijs vast is.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de residuele vraaglijn afleiden als je de collectieve vraag en q₂ kent?
+          <strong>Controle:</strong> Kun je uitleggen waarom een monopolist een prijszetter is en wat de vraaglijn als ‘menu’ betekent?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag − concurrent</td></tr>
-            <tr><td>Methode</td><td>Q − q₂, dan omschrijven naar p = f(q₁)</td></tr>
-            <tr><td>TO en MO</td><td>TO = p × q₁, MO = afgeleide van TO</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 2: reactielijn berekenen</td></tr>
+            <tr><td>Vraaglijn</td><td>= prijsafzetlijn — het ‘menu’ van de monopolist</td></tr>
+            <tr><td>Keuze</td><td>Monopolist kiest (Q, p) combinatie op de vraaglijn</td></tr>
+            <tr><td>Trade-off</td><td>Meer verkopen = lagere prijs per stuk</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (MO afleiden) en 3 (winstmaximalisatie)</td></tr>
           </tbody>
         </table>
 
@@ -389,57 +389,57 @@
         <div class="section-header border-bedrijf">
           <span class="section-num bg-bedrijf">2</span>
           <div class="section-title-group">
-            <div class="section-title">Reactielijn berekenen</div>
+            <div class="section-title">MO, MK en GTK afleiden</div>
             <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">De reactielijn geeft aan hoeveel jij produceert bij elke mogelijke productie van je concurrent. Het is jouw ‘beste antwoord’ op elke strategie van de ander.</p>
-        <h3 class="sub-heading">Wat is een reactielijn?</h3>
-        <p class="intro-text">Een reactielijn is een vergelijking die jouw winstmaximaliserende hoeveelheid uitdrukt als functie van q van de concurrent. Je vindt deze door MO gelijk te stellen aan MK.</p>
+        <p class="intro-text">Om de winstmaximaliserende hoeveelheid te vinden heb je MO en MK nodig. MO leid je af uit TO (= p × Q), MK uit TK. GTK heb je nodig voor de winstberekening.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <p class="intro-text">Werk altijd in deze volgorde. Begin met TO berekenen door de vraaglijn in te vullen voor p.</p>
+        <div class="formula-box">
+            Stap 1: Bereken TO = p × Q (vul de vraaglijn in voor p)<br>
+            Stap 2: MO = TO′ (afleiden naar Q)<br>
+            Stap 3: MK = TK′ (afleiden naar Q)<br>
+            Stap 4: GTK = TK / Q
+        </div>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <p class="intro-text">Gegeven: V: p = −Q + 50 en TK = 0,25Q².</p>
+        <div class="formula-box">
+            TO = (−Q + 50) × Q = −Q² + 50Q<br>
+            MO = −2Q + 50<br>
+            MK = 0,5Q<br>
+            GTK = 0,25Q
+        </div>
+        <h3 class="sub-heading">De dubbele helling van MO</h3>
+        <p class="intro-text">De MO-lijn heeft altijd dezelfde startwaarde als de vraaglijn, maar een dubbele helling. Dit is een wiskundig gevolg van het afleiden.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>MO</td><td>Marginale opbrengst: afgeleide van TO (bevat q₂ als parameter)</td></tr>
-            <tr><td>MK</td><td>Marginale kosten: vaak een constante bij oligopolie-opgaven</td></tr>
+            <tr><td>V: p = −Q + 50</td><td>Helling = −1, startwaarde = 50</td></tr>
+            <tr><td>MO = −2Q + 50</td><td>Helling = −2 (dubbel!), startwaarde = 50</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan</h3>
-        <div class="formula-box">
-            Stap 1: Leid MO af uit de residuele vraag (met q₂ als variabele)<br>
-            Stap 2: Stel MO = MK<br>
-            Stap 3: Los op naar q₁ → dit is de reactielijn van bedrijf 1<br>
-            Stap 4: Herhaal voor bedrijf 2 (met q₁ als variabele)
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: MK = 100, collectieve vraag Q = −0,1p + 100.</p>
-        <div class="formula-box">
-            Residuele vraag: q₁ = −0,1p + 100 − q₂<br>
-            Omschrijven: p = −10q₁ − 10q₂ + 1000<br>
-            TO = p × q₁ = −10q₁² − 10q₁q₂ + 1000q₁<br>
-            MO = −20q₁ − 10q₂ + 1000<br>
-            MO = MK: −20q₁ − 10q₂ + 1000 = 100<br>
-            q₁ = 45 − 0,5q₂  (reactielijn bedrijf 1)
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De MO-lijn heeft dezelfde startwaarde als de vraaglijn maar een DUBBELE helling. Bij V: p = −Q + 50 wordt MO = −2Q + 50.
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De reactielijn is altijd dalend: hoe meer de concurrent produceert, hoe minder jij wilt produceren.
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Beide aanbieders hebben een reactielijn. Het evenwicht is waar de twee lijnen elkaar snijden — dat is vaardigheid 3.
+          <strong>Kernregel:</strong> TO = p × Q (vul vraaglijn in). MO = TO′. MK = TK′. GTK = TK / Q.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de reactielijn van bedrijf 1 opstellen als je MK en de collectieve vraag kent?
+          <strong>Controle:</strong> Kun je bij gegeven V en TK de MO, MK en GTK berekenen?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>Methode</td><td>Leid MO af met q₂ als parameter, stel MO = MK</td></tr>
-            <tr><td>Verband</td><td>→ Vaardigheid 3: reactielijnen samen oplossen</td></tr>
+            <tr><td>TO</td><td>p × Q (vul vraaglijn in voor p)</td></tr>
+            <tr><td>MO</td><td>TO′ — dubbele helling van V</td></tr>
+            <tr><td>MK</td><td>TK′</td></tr>
+            <tr><td>GTK</td><td>TK / Q</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (prijszetter) en 3 (MO = MK)</td></tr>
           </tbody>
         </table>
 
@@ -449,117 +449,169 @@
         <div class="section-header border-bedrijf">
           <span class="section-num bg-bedrijf">3</span>
           <div class="section-title-group">
-            <div class="section-title">Cournot-evenwicht bepalen</div>
+            <div class="section-title">Winstmaximalisatie: MO = MK</div>
             <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">In het Cournot-evenwicht kiest elke aanbieder de hoeveelheid die zijn winst maximaliseert, gegeven de productie van de ander. Geen van beide wil dan nog veranderen.</p>
-        <h3 class="sub-heading">Wat is het Cournot-evenwicht?</h3>
-        <p class="intro-text">Het Cournot-evenwicht is het snijpunt van de twee reactielijnen. Op dat punt is de hoeveelheid van beide bedrijven optimaal, gegeven wat de ander doet.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Het punt waar beide reactielijnen elkaar snijden</td></tr>
-            <tr><td>Nash-evenwicht</td><td>Geen van beide spelers wil eenzijdig afwijken</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂ in het evenwicht</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Stappenplan</h3>
+        <p class="intro-text">Net als bij volkomen concurrentie maximaliseert de monopolist zijn winst waar MO = MK. Het verschil: de prijs lees je af op de VRAAGLIJN bij Q*, niet op de MK-lijn.</p>
+        <h3 class="sub-heading">Het stappenplan</h3>
+        <p class="intro-text">Dit zijn de drie stappen die je altijd moet doorlopen:</p>
         <div class="formula-box">
-            Stap 1: Schrijf beide reactielijnen op<br>
-            Stap 2: Vul de ene in de andere in (substitutie)<br>
-            Stap 3: Los op naar de eerste onbekende<br>
-            Stap 4: Vul terug in de andere reactielijn
+            Stap 1: Stel MO = MK<br>
+            Stap 2: Los op naar Q*<br>
+            Stap 3: Vul Q* in de VRAAGLIJN in voor p*<br>
+                    (NIET in de MK-lijn!)
         </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: beide bedrijven met MK = GTK = 100, collectieve vraag Q = −0,1p + 100.</p>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <p class="intro-text">MO = −2Q + 50 en MK = 0,5Q. Stel gelijk en los op:</p>
         <div class="formula-box">
-            Beide reactielijnen: q = 35 − 0,5q_ander<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
+            MO = MK: −2Q + 50 = 0,5Q<br>
+            2,5Q = 50 → Q* = 20<br>
+            p* = −20 + 50 = €30 (aflezen op V!)
+        </div>
+        <h3 class="sub-heading">De grootste fout bij monopolie</h3>
+        <p class="intro-text">Bij Q = 20 is MK = 10, maar de prijs is 30! De prijs lees je ALTIJD af op de vraaglijn, nooit op de MK-lijn.</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> DE MEEST GEMAAKTE FOUT: de prijs aflezen op de MK-lijn in plaats van op de vraaglijn. Bij Q = 20 is MK = 10, maar de prijs is 30!
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Gebruik dit als controle!
-        </div>
-        <div class="callout callout-letop">
-          <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf!
-        </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Dat scheelt rekentijd bij controle.
+          <strong>Kernregel:</strong> MO = MK → Q* → vul Q* in de vraaglijn in → p*. Nooit de prijs op de MK-lijn aflezen.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het Cournot-evenwicht berekenen door de twee reactielijnen op te lossen?
+          <strong>Controle:</strong> Kun je bij gegeven MO en MK de winstmaximaliserende Q* en p* berekenen?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van beide reactielijnen</td></tr>
-            <tr><td>Methode</td><td>Substitutie: vul reactielijn 2 in reactielijn 1</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 4: vergelijking met Bertrand</td></tr>
+            <tr><td>Methode</td><td>MO = MK → Q* → p* op vraaglijn</td></tr>
+            <tr><td>Grootste fout</td><td>Prijs aflezen op MK i.p.v. op V</td></tr>
+            <tr><td>Controle</td><td>p* moet op de vraaglijn liggen bij Q*</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (afleiden) en 4 (winst berekenen)</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-4">
-        <div class="section-header border-markt">
-          <span class="section-num bg-markt">4</span>
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">4</span>
           <div class="section-title-group">
-            <div class="section-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="section-title">Winst en CS berekenen</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De winst is het verschil tussen totale opbrengst en totale kosten. Het consumentensurplus (CS) is het voordeel dat consumenten hebben doordat ze minder betalen dan hun maximale bereidheid.</p>
+        <h3 class="sub-heading">Winst berekenen</h3>
+        <p class="intro-text">Er zijn twee methodes om de winst te berekenen. Beide geven hetzelfde resultaat:</p>
+        <div class="formula-box">
+            Methode 1: Winst = TO − TK<br>
+            Methode 2: Winst = (p* − GTK*) × Q*<br>
+            <br>
+            In de grafiek: winst = rechthoek (p* tot GTK*)
+        </div>
+        <h3 class="sub-heading">CS berekenen</h3>
+        <p class="intro-text">Het CS is de driehoek boven de prijs, onder de vraaglijn. Je hebt drie waarden nodig: Q*, p* en p_max (snijpunt V met y-as).</p>
+        <div class="formula-box">
+            CS = ½ × Q* × (p_max − p*)<br>
+            waarbij p_max = snijpunt V met y-as
+        </div>
+        <h3 class="sub-heading">Voorbeeld uitgewerkt</h3>
+        <p class="intro-text">Met Q* = 20, p* = 30, GTK* = 5, p_max = 50:</p>
+        <div class="formula-box">
+            TO = 30 × 20 = €600<br>
+            TK = 0,25 × 400 = €100<br>
+            Winst = 600 − 100 = €500<br>
+            CS = ½ × 20 × (50 − 30) = €200
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Winst = rechthoek (p* tot GTK*) × Q*. CS = driehoek ½ × Q* × (p_max − p*).
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> In de grafiek is de winst een rechthoek (p* tot GTK*) en het CS een driehoek (boven p*, onder V).
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Gebruik voor GTK* de waarde op de GTK-curve bij Q*, niet de MK bij Q*. GTK en MK zijn verschillende grootheden.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je met gegeven Q*, p* en GTK* de winst en het CS berekenen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Winst</td><td>(p* − GTK*) × Q* = rechthoek in grafiek</td></tr>
+            <tr><td>CS</td><td>½ × Q* × (p_max − p*) = driehoek boven p*</td></tr>
+            <tr><td>Grafisch</td><td>Winst = rechthoek, CS = driehoek</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (Q* en p*) en 5 (prijsdiscriminatie)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Prijsdiscriminatie toepassen</div>
             <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij prijsconcurrentie (Bertrand) daalt de prijs tot MK en verdwijnt de winst. Bij hoeveelheidsconcurrentie (Cournot) blijft er winst over. Het type concurrentie bepaalt de uitkomst.</p>
-        <h3 class="sub-heading">Cournot: hoeveelheidsconcurrentie</h3>
-        <p class="intro-text">Bij Cournot kiezen bedrijven tegelijkertijd hun hoeveelheid. Doordat ze de productie beperken, blijft de prijs boven MK en is er winst.</p>
+        <p class="intro-text">Een monopolist kan meer winst maken door verschillende prijzen te vragen aan verschillende groepen. Dit heet prijsdiscriminatie.</p>
+        <h3 class="sub-heading">De twee voorwaarden</h3>
+        <p class="intro-text">Prijsdiscriminatie werkt alleen als aan twee voorwaarden is voldaan:</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Twee aanbieders gedragen zich alsof er volledige mededinging is</td></tr>
+            <tr><td>Voorwaarde 1</td><td>De groepen zijn te onderscheiden (bijv. leeftijd, locatie)</td></tr>
+            <tr><td>Voorwaarde 2</td><td>Doorverkoop is niet mogelijk (anders koopt iedereen bij de goedkoopste groep)</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Bertrand: prijsconcurrentie</h3>
-        <p class="intro-text">Bij Bertrand kiezen bedrijven tegelijkertijd hun prijs. Ze onderbieden elkaar totdat p = MK. Dit heet de Bertrand-paradox: slechts twee bedrijven maar toch het resultaat van volledige mededinging.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">De monopolist vraagt een hogere prijs aan de groep met een lage prijsgevoeligheid en een lagere prijs aan de groep die anders niet zou kopen. Zolang de lagere prijs boven MK ligt, levert het extra winst op.</p>
         <div class="formula-box">
-            Hoeveelheidsconcurrentie (Cournot): p > MK  →  winst > 0<br>
-            Prijsconcurrentie (Bertrand):       p = MK  →  winst = 0
+            Voorwaarde 1: groepen zijn te onderscheiden<br>
+            Voorwaarde 2: doorverkoop is niet mogelijk<br>
+            <br>
+            Effect: extra klanten kopen tegen lagere prijs<br>
+            Zolang die prijs > MK: extra winst
         </div>
-        <h3 class="sub-heading">Gevolgen voor consumentensurplus (CS)</h3>
-        <p class="intro-text">Bij Bertrand is de prijs lager dan bij Cournot. Consumenten hebben daarom de voorkeur voor prijsconcurrentie: het levert hen meer surplus op.</p>
+        <h3 class="sub-heading">Voorbeeld: theaterkaartjes</h3>
+        <p class="intro-text">Een theater vraagt €100 aan ouderen en €60 aan jongeren. Jongeren gingen eerder niet (te duur). Nu kopen 10.000 jongeren een kaartje.</p>
         <div class="formula-box">
-            Bertrand: lagere prijs → hoger CS voor consumenten<br>
-            Cournot:  hogere prijs → lager CS maar winst voor bedrijven
+            Extra omzet: 10.000 × €60 = €600.000<br>
+            Extra kosten: 10.000 × €40 = €400.000<br>
+            Extra winst: €200.000
         </div>
+        <h3 class="sub-heading">Perfecte prijsdiscriminatie</h3>
+        <p class="intro-text">Bij perfecte prijsdiscriminatie betaalt elke consument precies zijn maximale betalingsbereidheid. Het consumentensurplus wordt dan nul — de monopolist pikt het hele surplus in.</p>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Benoem bij examenvragen altijd welk type concurrentie (Cournot of Bertrand) én het gevolg voor prijs, winst en CS.
+          <strong>Kernregel:</strong> Prijsdiscriminatie = verschillende prijzen per groep. Werkt alleen als groepen onderscheidbaar zijn én doorverkoop onmogelijk is.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst. Vergeet niet te vermelden dat dit een paradox is (twee bedrijven, toch p = MK).
+          <strong>Let op:</strong> &quot;Prijsdiscriminatie is altijd mogelijk&quot; → Onjuist! Het werkt alleen als groepen te onderscheiden zijn én doorverkoop niet mogelijk is.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je uitleggen waarom consumenten de voorkeur hebben voor prijsconcurrentie boven hoeveelheidsconcurrentie?
+          <strong>Controle:</strong> Kun je uitleggen waarom perfecte prijsdiscriminatie het consumentensurplus naar nul brengt?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>CS</td><td>Hoger bij Bertrand (lagere prijs voor consument)</td></tr>
-            <tr><td>Examentip</td><td>Benoem altijd welk type concurrentie én het gevolg</td></tr>
+            <tr><td>Voorwaarden</td><td>Groepen onderscheidbaar + geen doorverkoop</td></tr>
+            <tr><td>Effect</td><td>Extra klanten tegen lagere prijs → extra winst</td></tr>
+            <tr><td>Perfecte PD</td><td>Elke klant betaalt maximale bereidheid → CS = 0</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (winst en CS) en 1 (prijszetter)</td></tr>
           </tbody>
         </table>
 
@@ -571,15 +623,15 @@
         <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je TO en MO berekent.
+          <strong>Let op:</strong> &quot;De prijs aflezen op de MK-lijn&quot; → Onjuist! Bij monopolie lees je de prijs ALTIJD af op de vraaglijn (V) bij Q*.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf.
+          <strong>Let op:</strong> &quot;MO = p bij monopolie&quot; → Onjuist! MO = p geldt alleen bij volkomen concurrentie. Bij monopolie is MO &lt; p.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst — ook al zijn er maar twee aanbieders.
+          <strong>Let op:</strong> &quot;Prijsdiscriminatie is altijd mogelijk&quot; → Onjuist! Het werkt alleen als groepen te onderscheiden zijn én doorverkoop niet mogelijk is.
         </div>
 
       </div>
@@ -590,23 +642,23 @@
         <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Residuele vraaglijn afleiden uit collectieve vraag</label>
+          <label for="check1">De monopolist als prijszetter begrijpen (vraaglijn = menu)</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Reactielijn berekenen via MO = MK</label>
+          <label for="check2">MO, MK en GTK afleiden uit TO en TK</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Cournot-evenwicht bepalen door substitutie</label>
+          <label for="check3">Winstmaximalisatie: MO = MK, prijs aflezen op V</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Verschil tussen Cournot en Bertrand uitleggen</label>
+          <label for="check4">Winst en CS berekenen (rechthoek en driehoek)</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">CS vergelijken bij prijs- vs. hoeveelheidsconcurrentie</label>
+          <label for="check5">Prijsdiscriminatie toepassen en voorwaarden kennen</label>
         </div>
 
       </div>

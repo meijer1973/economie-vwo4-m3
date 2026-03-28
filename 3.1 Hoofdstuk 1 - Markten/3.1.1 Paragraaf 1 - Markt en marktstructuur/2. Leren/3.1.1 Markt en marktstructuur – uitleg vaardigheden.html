@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg vaardigheden</title>
+<title>3.1.1 Markt en marktstructuur – Uitleg vaardigheden</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -23,9 +23,6 @@
     --border-gray: #CBD5E0;
     --white: #FFFFFF;
     --sidebar-w: 260px;
-    --bedrijf-primary: #E67E22;
-    --bedrijf-light: #FEF5E7;
-    --bedrijf-dark: #BA6A1C;
     --markt-primary: #1A5276;
     --markt-light: #EBF5FB;
     --markt-dark: #154360;
@@ -55,15 +52,6 @@
   }
   .nav-item:hover { background: #F7FAFC; }
   .nav-item.active { background: var(--light-gray); font-weight: bold; }
-  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
-  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
-  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
-  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
-  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
-  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
-  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
   .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
   .domain-markt .nav-number { background: var(--markt-primary); }
   .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
@@ -106,7 +94,7 @@
   }
   .hero::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 5px; background: linear-gradient(90deg, var(--bedrijf-primary) 0% 50%, var(--markt-primary) 50% 100%);
+    height: 5px; background: var(--markt-primary);
   }
   .hero-inner { max-width: 860px; margin: 0 auto; }
   .hero-badge {
@@ -118,7 +106,7 @@
   .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
   .hero-cards {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem;
     margin-top: 1.5rem;
   }
   .hero-card {
@@ -253,34 +241,41 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.1.1 Markt en marktstructuur</h2>
       <p>Uitleg vaardigheden</p>
     </div>
-    <a class="nav-item domain-bedrijf" href="#sectie-1" data-section="sectie-1">
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Residuele vraaglijn afleiden</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">Concrete en Abstracte Markten</span>
+        <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
-    <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Reactielijn berekenen</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">Homogeen versus Heterogeen</span>
+        <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
-    <a class="nav-item domain-bedrijf" href="#sectie-3" data-section="sectie-3">
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Cournot-evenwicht bepalen</span>
-        <span class="nav-badge">Bedrijfseconomie</span>
+        <span class="nav-title">Toetredingsdrempels</span>
+        <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
     <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
       <span class="nav-number">4</span>
       <span class="nav-text">
-        <span class="nav-title">Prijs- vs. hoeveelheidsconcurrentie</span>
+        <span class="nav-title">De Redeneerketen: Van Drempels naar Prijs</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Netwerksectoren en de Rol van de Overheid</span>
         <span class="nav-badge">Marktanalyse</span>
       </span>
     </a>
@@ -290,28 +285,33 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Vaardigheden</span>
-        <h1>Oligopolie &mdash; Vaardigheden</h1>
+        <span class="hero-badge">3.1.1 &middot; Vaardigheden</span>
+        <h1>Markt en marktstructuur &mdash; Vaardigheden</h1>
         <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
         <div class="hero-cards">
-          <div class="hero-card card-bedrijf" data-target="sectie-1">
+          <div class="hero-card card-markt" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Residuele vraaglijn afleiden</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">Concrete en Abstracte Markten</div>
+            <span class="hero-card-domain">Marktanalyse</span>
           </div>
-          <div class="hero-card card-bedrijf" data-target="sectie-2">
+          <div class="hero-card card-markt" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Reactielijn berekenen</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">Homogeen versus Heterogeen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
           </div>
-          <div class="hero-card card-bedrijf" data-target="sectie-3">
+          <div class="hero-card card-markt" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Cournot-evenwicht bepalen</div>
-            <span class="hero-card-domain">Bedrijfseconomie</span>
+            <div class="hero-card-title">Toetredingsdrempels</div>
+            <span class="hero-card-domain">Marktanalyse</span>
           </div>
           <div class="hero-card card-markt" data-target="sectie-4">
             <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="hero-card-title">De Redeneerketen: Van Drempels naar Prijs</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Netwerksectoren en de Rol van de Overheid</div>
             <span class="hero-card-domain">Marktanalyse</span>
           </div>
 
@@ -322,188 +322,165 @@
     <main>
 
       <section class="section" id="sectie-1">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">1</span>
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
           <div class="section-title-group">
-            <div class="section-title">Residuele vraaglijn afleiden</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">Concrete en Abstracte Markten</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij een oligopolie hangt jouw vraag af van wat de concurrent doet. De residuele vraag is het deel van de collectieve vraag dat voor jou overblijft.</p>
-        <h3 class="sub-heading">Wat is de residuele vraag?</h3>
-        <p class="intro-text">De residuele vraaglijn is de collectieve vraaglijn minus de productie van de concurrent. Je trekt q₂ af van Q om jouw individuele vraaglijn te krijgen.</p>
+        <p class="intro-text">De eerste stap in het begrijpen van markten is weten wat een markt precies is. Niet alle markten zijn een gebouw of een plein.</p>
+        <h3 class="sub-heading">Wat is een concrete markt?</h3>
+        <p class="intro-text">Een concrete markt is een fysieke plek waar vragers en aanbieders elkaar ontmoeten. Je kunt er naartoe lopen en de handel met eigen ogen zien.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Collectieve vraag</td><td>De totale marktvraag: Q = f(p)</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag: q₁ = Q − q₂</td></tr>
-            <tr><td>Omschrijven</td><td>Herschrijf naar p = f(q₁) voor de volgende stap</td></tr>
+            <tr><td>Concrete markt</td><td>Fysieke plek waar vragers en aanbieders samenkomen</td></tr>
+            <tr><td>Voorbeelden</td><td>Vismarkt, veiling, weekmarkt, supermarkt</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan</h3>
-        <div class="formula-box">
-            Stap 1: Collectieve vraag: Q = ...<br>
-            Stap 2: Jouw vraag: q₁ = Q − q₂<br>
-            Stap 3: Schrijf om naar p = f(q₁)<br>
-            Stap 4: Bereken TO = p × q₁<br>
-            Stap 5: Bereken MO = afgeleide van TO
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: Q = −0,1p + 100, concurrent produceert q₂ = 20.</p>
-        <div class="formula-box">
-            q₁ = −0,1p + 100 − 20 = −0,1p + 80<br>
-            p = −10q₁ + 800<br>
-            TO = (−10q₁ + 800) × q₁ = −10q₁² + 800q₁<br>
-            MO = −20q₁ + 800
-        </div>
+        <h3 class="sub-heading">Wat is een abstracte markt?</h3>
+        <p class="intro-text">Een abstracte markt heeft geen fysieke locatie. De handel verloopt via communicatiemiddelen zoals internet, telefoon of contracten.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Abstracte markt</td><td>Geen fysieke plek — handel verloopt via communicatie</td></tr>
+            <tr><td>Voorbeelden</td><td>Huizenmarkt, oliemarkt, arbeidsmarkt, online platforms</td></tr>
+          </tbody>
+        </table>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Meer q₂ betekent minder vraag voor jou.
+          <strong>Kernregel:</strong> Stel altijd de kernvraag: Is er een fysieke ontmoetingsplek? Zo ja → concreet. Zo nee → abstract.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je verder rekent.
+          <strong>Let op:</strong> &quot;Abstracte markt = de markt bestaat niet&quot; → Onjuist! Abstracte markten zijn heel reëel. De huizenmarkt is abstract maar wel een van de grootste markten.
         </div>
         <div class="callout callout-tip">
           <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> De residuele vraaglijn verschuift elke keer als de concurrent zijn productie wijzigt. Oefen met verschillende waarden van q₂.
+          <strong>Tip:</strong> Stel jezelf altijd de kernvraag: Is er een fysieke ontmoetingsplek? Zo ja → concreet. Zo nee → abstract.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de residuele vraaglijn afleiden als je de collectieve vraag en q₂ kent?
+          <strong>Controle:</strong> Kun je bij een gegeven markt bepalen of deze concreet of abstract is?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag − concurrent</td></tr>
-            <tr><td>Methode</td><td>Q − q₂, dan omschrijven naar p = f(q₁)</td></tr>
-            <tr><td>TO en MO</td><td>TO = p × q₁, MO = afgeleide van TO</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 2: reactielijn berekenen</td></tr>
+            <tr><td>Concreet</td><td>Fysieke plek waar vragers en aanbieders samenkomen</td></tr>
+            <tr><td>Abstract</td><td>Geen vaste plek — handel via communicatie</td></tr>
+            <tr><td>Kernvraag</td><td>Is er een fysieke ontmoetingsplek?</td></tr>
+            <tr><td>Voorbeeld</td><td>Vismarkt (concreet) vs huizenmarkt (abstract)</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 2 (producttype bepaalt marktdynamiek)</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-2">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">2</span>
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
           <div class="section-title-group">
-            <div class="section-title">Reactielijn berekenen</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">Homogeen versus Heterogeen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">De reactielijn geeft aan hoeveel jij produceert bij elke mogelijke productie van je concurrent. Het is jouw ‘beste antwoord’ op elke strategie van de ander.</p>
-        <h3 class="sub-heading">Wat is een reactielijn?</h3>
-        <p class="intro-text">Een reactielijn is een vergelijking die jouw winstmaximaliserende hoeveelheid uitdrukt als functie van q van de concurrent. Je vindt deze door MO gelijk te stellen aan MK.</p>
+        <p class="intro-text">Het producttype bepaalt hoe concurrentie op een markt werkt. Bij sommige producten draait alles om de prijs, bij andere spelen merk en kwaliteit een grote rol.</p>
+        <h3 class="sub-heading">Homogene producten</h3>
+        <p class="intro-text">Bij homogene producten ziet de consument geen verschil tussen de aanbieders. Daardoor is prijs het enige concurrentiemiddel.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>MO</td><td>Marginale opbrengst: afgeleide van TO (bevat q₂ als parameter)</td></tr>
-            <tr><td>MK</td><td>Marginale kosten: vaak een constante bij oligopolie-opgaven</td></tr>
+            <tr><td>Homogeen product</td><td>Consument ziet geen verschil tussen producten</td></tr>
+            <tr><td>Gevolg</td><td>Alleen prijs telt → prijsconcurrentie</td></tr>
+            <tr><td>Voorbeelden</td><td>Stroom, benzine, prei, suiker</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan</h3>
-        <div class="formula-box">
-            Stap 1: Leid MO af uit de residuele vraag (met q₂ als variabele)<br>
-            Stap 2: Stel MO = MK<br>
-            Stap 3: Los op naar q₁ → dit is de reactielijn van bedrijf 1<br>
-            Stap 4: Herhaal voor bedrijf 2 (met q₁ als variabele)
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: MK = 100, collectieve vraag Q = −0,1p + 100.</p>
-        <div class="formula-box">
-            Residuele vraag: q₁ = −0,1p + 100 − q₂<br>
-            Omschrijven: p = −10q₁ − 10q₂ + 1000<br>
-            TO = p × q₁ = −10q₁² − 10q₁q₂ + 1000q₁<br>
-            MO = −20q₁ − 10q₂ + 1000<br>
-            MO = MK: −20q₁ − 10q₂ + 1000 = 100<br>
-            q₁ = 45 − 0,5q₂  (reactielijn bedrijf 1)
-        </div>
+        <h3 class="sub-heading">Heterogene producten</h3>
+        <p class="intro-text">Bij heterogene producten ervaart de consument wél verschillen. Merknaam, kwaliteit en service worden belangrijke concurrentiemiddelen.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Heterogeen product</td><td>Consument ervaart wel verschil tussen producten</td></tr>
+            <tr><td>Gevolg</td><td>Merk, kwaliteit en service spelen mee</td></tr>
+            <tr><td>Voorbeelden</td><td>Smartphones, auto’s, cafés, kleding</td></tr>
+          </tbody>
+        </table>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> De reactielijn is altijd dalend: hoe meer de concurrent produceert, hoe minder jij wilt produceren.
+          <strong>Kernregel:</strong> Het gaat altijd om de perceptie van de consument, niet om objectieve productverschillen.
+        </div>
+        <div class="formula-box">
+            Homogeen product → Alleen prijs telt → Prijsconcurrentie<br>
+            Heterogeen product → Merk/kwaliteit telt → Productdifferentiatie
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Beide aanbieders hebben een reactielijn. Het evenwicht is waar de twee lijnen elkaar snijden — dat is vaardigheid 3.
+          <strong>Let op:</strong> &quot;Homogeen = identiek product&quot; → Onjuist! Homogeen gaat over consumentenperceptie. Taxi’s kunnen fysiek identiek zijn maar toch als heterogeen worden ervaren als consumenten merkvoorkeur hebben.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je de reactielijn van bedrijf 1 opstellen als je MK en de collectieve vraag kent?
+          <strong>Controle:</strong> Kun je bij een product bepalen of het homogeen of heterogeen is vanuit consumentenperspectief?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Reactielijn</td><td>q₁ als functie van q₂ via MO = MK</td></tr>
-            <tr><td>Methode</td><td>Leid MO af met q₂ als parameter, stel MO = MK</td></tr>
-            <tr><td>Verband</td><td>→ Vaardigheid 3: reactielijnen samen oplossen</td></tr>
+            <tr><td>Homogeen</td><td>Consument ziet geen verschil — alleen prijs telt</td></tr>
+            <tr><td>Heterogeen</td><td>Consument ziet verschil — merk/kwaliteit spelen mee</td></tr>
+            <tr><td>Criterium</td><td>Perceptie van de consument, niet objectieve kenmerken</td></tr>
+            <tr><td>Gevolg</td><td>Homogeen → prijsconcurrentie; heterogeen → productdifferentiatie</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (markttype) en 3 (drempels)</td></tr>
           </tbody>
         </table>
 
       </section>
 
       <section class="section" id="sectie-3">
-        <div class="section-header border-bedrijf">
-          <span class="section-num bg-bedrijf">3</span>
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
           <div class="section-title-group">
-            <div class="section-title">Cournot-evenwicht bepalen</div>
-            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+            <div class="section-title">Toetredingsdrempels</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">In het Cournot-evenwicht kiest elke aanbieder de hoeveelheid die zijn winst maximaliseert, gegeven de productie van de ander. Geen van beide wil dan nog veranderen.</p>
-        <h3 class="sub-heading">Wat is het Cournot-evenwicht?</h3>
-        <p class="intro-text">Het Cournot-evenwicht is het snijpunt van de twee reactielijnen. Op dat punt is de hoeveelheid van beide bedrijven optimaal, gegeven wat de ander doet.</p>
+        <p class="intro-text">Drempels bepalen hoeveel bedrijven er op een markt actief kunnen zijn. Hoe hoger de drempels, hoe minder aanbieders.</p>
+        <h3 class="sub-heading">Wat zijn toetredingsdrempels?</h3>
+        <p class="intro-text">Een toetredingsdrempel is een obstakel dat nieuwe bedrijven verhindert om toe te treden tot een markt.</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Het punt waar beide reactielijnen elkaar snijden</td></tr>
-            <tr><td>Nash-evenwicht</td><td>Geen van beide spelers wil eenzijdig afwijken</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂ in het evenwicht</td></tr>
+            <tr><td>Toetredingsdrempel</td><td>Obstakel dat nieuwe bedrijven verhindert om toe te treden tot een markt</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Stappenplan</h3>
-        <div class="formula-box">
-            Stap 1: Schrijf beide reactielijnen op<br>
-            Stap 2: Vul de ene in de andere in (substitutie)<br>
-            Stap 3: Los op naar de eerste onbekende<br>
-            Stap 4: Vul terug in de andere reactielijn
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: beide bedrijven met MK = GTK = 100, collectieve vraag Q = −0,1p + 100.</p>
-        <div class="formula-box">
-            Beide reactielijnen: q = 35 − 0,5q_ander<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
-        </div>
+        <h3 class="sub-heading">Voorbeelden van hoge drempels</h3>
+        <h3 class="sub-heading">Voorbeelden van lage drempels</h3>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Gebruik dit als controle!
+          <strong>Kernregel:</strong> Bij examenvragen over toetredingsdrempels: noem altijd het type drempel (financieel, juridisch, technisch) én een concreet voorbeeld.
+        </div>
+        <div class="formula-box">
+            Hoge drempels → Weinig aanbieders → Minder concurrentie<br>
+            Lage drempels → Veel aanbieders → Meer concurrentie
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf!
-        </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij symmetrische bedrijven (zelfde MK) produceren beide evenveel in het Cournot-evenwicht. Dat scheelt rekentijd bij controle.
+          <strong>Let op:</strong> &quot;Lage drempels = geen concurrentie&quot; → Onjuist! Juist omgekeerd: lage drempels leiden tot méér concurrentie, omdat meer bedrijven kunnen toetreden.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het Cournot-evenwicht berekenen door de twee reactielijnen op te lossen?
+          <strong>Controle:</strong> Kun je in een beschrijving van een markt de toetredingsdrempels herkennen en benoemen?
         </div>
         <table class="samenvatting-table">
-          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van beide reactielijnen</td></tr>
-            <tr><td>Methode</td><td>Substitutie: vul reactielijn 2 in reactielijn 1</td></tr>
-            <tr><td>Symmetrie</td><td>Bij gelijke MK geldt q₁ = q₂</td></tr>
-            <tr><td>Verband met</td><td>→ Vaardigheid 4: vergelijking met Bertrand</td></tr>
+            <tr><td>Definitie</td><td>Obstakels die nieuwe bedrijven verhinderen om toe te treden</td></tr>
+            <tr><td>Hoge drempels</td><td>Startkapitaal, netwerk, naamsbekendheid, vergunningen</td></tr>
+            <tr><td>Lage drempels</td><td>Weinig investering nodig — bijles, freelance, straatverkoop</td></tr>
+            <tr><td>Gevolg</td><td>Hoge drempels → weinig aanbieders; lage → veel aanbieders</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 4 (redeneerketen) en 5 (netwerksectoren)</td></tr>
           </tbody>
         </table>
 
@@ -513,53 +490,95 @@
         <div class="section-header border-markt">
           <span class="section-num bg-markt">4</span>
           <div class="section-title-group">
-            <div class="section-title">Prijs- vs. hoeveelheidsconcurrentie</div>
+            <div class="section-title">De Redeneerketen: Van Drempels naar Prijs</div>
             <span class="section-badge badge-markt">Marktanalyse</span>
           </div>
         </div>
         <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
-        <p class="intro-text">Bij prijsconcurrentie (Bertrand) daalt de prijs tot MK en verdwijnt de winst. Bij hoeveelheidsconcurrentie (Cournot) blijft er winst over. Het type concurrentie bepaalt de uitkomst.</p>
-        <h3 class="sub-heading">Cournot: hoeveelheidsconcurrentie</h3>
-        <p class="intro-text">Bij Cournot kiezen bedrijven tegelijkertijd hun hoeveelheid. Doordat ze de productie beperken, blijft de prijs boven MK en is er winst.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Twee aanbieders gedragen zich alsof er volledige mededinging is</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Bertrand: prijsconcurrentie</h3>
-        <p class="intro-text">Bij Bertrand kiezen bedrijven tegelijkertijd hun prijs. Ze onderbieden elkaar totdat p = MK. Dit heet de Bertrand-paradox: slechts twee bedrijven maar toch het resultaat van volledige mededinging.</p>
+        <p class="intro-text">Dit is de kern van het hele verhaal. De logische keten verbindt drempels, aanbieders, concurrentie en prijzen.</p>
+        <h3 class="sub-heading">De twee ketens</h3>
+        <p class="intro-text">Er zijn twee tegengestelde ketens. Bij hoge drempels gaat de prijs omhoog, bij lage drempels gaat de prijs omlaag.</p>
         <div class="formula-box">
-            Hoeveelheidsconcurrentie (Cournot): p > MK  →  winst > 0<br>
-            Prijsconcurrentie (Bertrand):       p = MK  →  winst = 0
+            Hoge drempels → Weinig aanbieders → Minder concurrentie → Hogere prijzen
         </div>
-        <h3 class="sub-heading">Gevolgen voor consumentensurplus (CS)</h3>
-        <p class="intro-text">Bij Bertrand is de prijs lager dan bij Cournot. Consumenten hebben daarom de voorkeur voor prijsconcurrentie: het levert hen meer surplus op.</p>
         <div class="formula-box">
-            Bertrand: lagere prijs → hoger CS voor consumenten<br>
-            Cournot:  hogere prijs → lager CS maar winst voor bedrijven
+            Lage drempels → Veel aanbieders → Veel concurrentie → Lagere prijzen
         </div>
+        <h3 class="sub-heading">Voorbeeld: de telecommarkt</h3>
+        <p class="intro-text">Toen KPN een monopolie had, waren de prijzen hoog. Na toetreding van Vodafone en T-Mobile ontstond concurrentie en zijn de prijzen gedaald.</p>
+        <p class="intro-text">Dit is de tweede keten in actie: verlaging van drempels leidde tot meer aanbieders en uiteindelijk lagere prijzen.</p>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Benoem bij examenvragen altijd welk type concurrentie (Cournot of Bertrand) én het gevolg voor prijs, winst en CS.
+          <strong>Kernregel:</strong> Doorloop bij examenvragen altijd de héle keten. Begin bij de drempels, niet bij de prijs.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst. Vergeet niet te vermelden dat dit een paradox is (twee bedrijven, toch p = MK).
+          <strong>Let op:</strong> Sla geen stappen over in de keten! Je mag niet direct van ‘hoge drempels’ naar ‘hogere prijzen’ springen — je moet de tussenstappen benoemen.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je uitleggen waarom consumenten de voorkeur hebben voor prijsconcurrentie boven hoeveelheidsconcurrentie?
+          <strong>Controle:</strong> Kun je de volledige redeneerketen opschrijven en toepassen op een voorbeeld?
         </div>
         <table class="samenvatting-table">
           <caption class="caption-markt">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Cournot</td><td>Hoeveelheidsconcurrentie: p &gt; MK, winst &gt; 0</td></tr>
-            <tr><td>Bertrand</td><td>Prijsconcurrentie: p = MK, winst = 0</td></tr>
-            <tr><td>CS</td><td>Hoger bij Bertrand (lagere prijs voor consument)</td></tr>
-            <tr><td>Examentip</td><td>Benoem altijd welk type concurrentie én het gevolg</td></tr>
+            <tr><td>Keten 1</td><td>Hoge drempels → weinig aanbieders → minder concurrentie → hogere prijzen</td></tr>
+            <tr><td>Keten 2</td><td>Lage drempels → veel aanbieders → veel concurrentie → lagere prijzen</td></tr>
+            <tr><td>Voorbeeld</td><td>Telecom: KPN monopolie → toetreding → prijsdaling</td></tr>
+            <tr><td>Examentip</td><td>Begin altijd bij de drempels, niet bij het prijseffect</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (drempels) en 5 (netwerksectoren)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Netwerksectoren en de Rol van de Overheid</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Sommige markten hebben zulke hoge drempels dat de overheid moet ingrijpen. Dit zijn de netwerksectoren.</p>
+        <h3 class="sub-heading">Wat zijn netwerksectoren?</h3>
+        <p class="intro-text">Netwerksectoren zijn markten met zo hoge drempels dat zelfs grote bedrijven niet kunnen toetreden. Het netwerk zelf is de drempel.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Netwerksector</td><td>Markt met zo hoge drempels dat zelfs grote bedrijven niet kunnen toetreden</td></tr>
+            <tr><td>Voorbeelden</td><td>Elektriciteitsnet, gasnet, waterleidingen, spoorwegen</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Het dilemma van de overheid</h3>
+        <p class="intro-text">De overheid moet kiezen: het netwerk zelf beheren of het aan een privaat bedrijf verkopen. Beide opties hebben voor- en nadelen.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Privatiseren</td><td>Pro: marktwerking. Con: risico op monopolistisch gedrag</td></tr>
+            <tr><td>In overheidshanden</td><td>Pro: eerlijke prijzen. Con: overheid moet zelf onderhouden en investeren</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            Netwerksector → Extreem hoge drempels → Natuurlijk monopolie → Overheid moet kiezen
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Een netwerksector privatiseren betekent NIET automatisch meer concurrentie — de eigenaar van het netwerk kan monopolistisch gedrag vertonen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom de overheid bij netwerksectoren voor een dilemma staat?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Netwerksector</td><td>Markt met zo hoge drempels dat zelfs grote bedrijven niet kunnen toetreden</td></tr>
+            <tr><td>Voorbeelden</td><td>Elektriciteitsnet, gasnet, waterleidingen, spoorwegen</td></tr>
+            <tr><td>Verkopen</td><td>Pro: marktwerking. Con: monopolie-risico</td></tr>
+            <tr><td>Behouden</td><td>Pro: eerlijke prijzen. Con: overheid moet onderhouden</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (drempels) en 4 (redeneerketen)</td></tr>
           </tbody>
         </table>
 
@@ -571,15 +590,15 @@
         <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> De residuele vraaglijn is NIET de collectieve vraaglijn. Vergeet niet q₂ af te trekken voordat je TO en MO berekent.
+          <strong>Let op:</strong> &quot;Abstracte markt = de markt bestaat niet&quot; → Onjuist! Abstracte markten zijn heel reëel. De huizenmarkt is abstract maar wel een van de grootste markten.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bij het berekenen van het Cournot-evenwicht: vul de reactielijn van de ánder in, niet je eigen reactielijn in zichzelf.
+          <strong>Let op:</strong> &quot;Homogeen = identiek product&quot; → Onjuist! Homogeen gaat over consumentenperceptie. Taxi’s kunnen fysiek identiek zijn maar toch als heterogeen worden ervaren.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Bertrand-paradox: bij prijsconcurrentie met identieke producten en gelijke MK verdwijnt alle winst — ook al zijn er maar twee aanbieders.
+          <strong>Let op:</strong> &quot;Lage drempels = geen concurrentie&quot; → Onjuist! Juist omgekeerd: lage drempels leiden tot méér concurrentie, omdat meer bedrijven kunnen toetreden.
         </div>
 
       </div>
@@ -590,23 +609,23 @@
         <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Residuele vraaglijn afleiden uit collectieve vraag</label>
+          <label for="check1">Concrete vs abstracte markten onderscheiden</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Reactielijn berekenen via MO = MK</label>
+          <label for="check2">Homogeen vs heterogeen — en waarom consumentenperceptie telt</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Cournot-evenwicht bepalen door substitutie</label>
+          <label for="check3">Toetredingsdrempels herkennen in beschrijvingen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Verschil tussen Cournot en Bertrand uitleggen</label>
+          <label for="check4">De redeneerketen: drempels → aanbieders → concurrentie → prijs</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">CS vergelijken bij prijs- vs. hoeveelheidsconcurrentie</label>
+          <label for="check5">Rol van de overheid bij netwerksectoren</label>
         </div>
 
       </div>

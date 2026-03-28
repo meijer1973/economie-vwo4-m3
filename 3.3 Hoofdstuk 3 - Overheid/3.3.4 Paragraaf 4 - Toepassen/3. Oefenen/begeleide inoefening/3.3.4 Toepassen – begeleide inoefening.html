@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.3.4 Toepassen – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #1A5276; --accent-lt: #EBF5FB; --accent-dk: #154360;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.3.4 Toepassen</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; PostNL en Sandd: mededinging e</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q1a" data-q="q1a">1a · Mededingingswet</a>
+        <a class="nav-q" href="#q1b" data-q="q1b">1b · Collectief goed?</a>
+        <a class="nav-q" href="#q1c" data-q="q1c">1c · Prijsregulering</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Elektrische fiets: kosten, win</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a · Toon aan: TVK = € 22.500.000</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b · Maximale winst berekenen</a>
+        <a class="nav-q" href="#q2c" data-q="q2c">2c · Consumentensurplus</a>
+        <a class="nav-q" href="#q2d" data-q="q2d">2d · Producentensurplus</a>
+        <a class="nav-q" href="#q2e" data-q="q2e">2e · Negatief extern effect</a>
+        <a class="nav-q" href="#q2f" data-q="q2f">2f · Verlies aan surplus</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Belasting op Greenfield grasma</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a · Negatieve externe effecten</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b · Prijzen</a>
+        <a class="nav-q" href="#q3c" data-q="q3c">3c · Afwenteling</a>
+        <a class="nav-q" href="#q3d" data-q="q3d">3d · Waarom niet volledig afwentelen?</a>
+        <a class="nav-q" href="#q3g" data-q="q3g">3g · Conclusie doelmatigheid</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; Kinderopvang: marktvorm en sub</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a · Marktvorm</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b · Positief extern effect</a>
+        <a class="nav-q" href="#q4c" data-q="q4c">4c · Vraaglijnverschuiving</a>
+        <a class="nav-q" href="#q4d" data-q="q4d">4d · Hoeveel naar de sector?</a>
+        <a class="nav-q" href="#q4e" data-q="q4e">4e · Maatregel bij grafiek 2</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Staaroperatie: maximumprijs</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a · Horizontale MO-lijn</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b · Verlies berekenen</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c · Grafisch</a>
+        <a class="nav-q" href="#q5d" data-q="q5d">5d · Besparing vaste kosten</a>
+        <a class="nav-q" href="#q5e" data-q="q5e">5e · Winst bij vrije prijs</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Museum Homerus: subsidie en su</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · GO = prijs</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · Kostendekkend</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c · Grafisch</a>
+        <a class="nav-q" href="#q6d" data-q="q6d">6d · Geen maximale winst</a>
+        <a class="nav-q" href="#q6e" data-q="q6e">6e · Waarom niet maximaliseren?</a>
+        <a class="nav-q" href="#q6f" data-q="q6f">6f · Consumentensurplus</a>
+        <a class="nav-q" href="#q6g" data-q="q6g">6g · Stopzetten subsidie</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-7">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">7 &middot; Arbeidsmarkt en minimumloon</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q7a" data-q="q7a">7a · vs. werkgelegenheid</a>
+        <a class="nav-q" href="#q7b" data-q="q7b">7b · Gevoeligheid</a>
+        <a class="nav-q" href="#q7c" data-q="q7c">7c · Waarom gevoeliger?</a>
+        <a class="nav-q" href="#q7d" data-q="q7d">7d · Evenwichtsloon</a>
+        <a class="nav-q" href="#q7e" data-q="q7e">7e · Afname werkgelegenheid</a>
+        <a class="nav-q" href="#q7f" data-q="q7f">7f · Werkloosheid</a>
+        <a class="nav-q" href="#q7g" data-q="q7g">7g · Verschil e en f</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-8">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">8 &middot; Suikerbelasting en externe eff</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q8a" data-q="q8a">8a · Waarom minder suiker?</a>
+        <a class="nav-q" href="#q8b" data-q="q8b">8b · Is belasting effectief?</a>
+        <a class="nav-q" href="#q8c" data-q="q8c">8c · Andere factoren</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-9">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">9 &middot; Milieubelasting op product Mie</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q9a" data-q="q9a">9a · Marktomzet</a>
+        <a class="nav-q" href="#q9b" data-q="q9b">9b · Hoeveelheidsaanpasser</a>
+        <a class="nav-q" href="#q9c" data-q="q9c">9c · Productie Bayer</a>
+        <a class="nav-q" href="#q9d" data-q="q9d">9d · Winst Bayer</a>
+        <a class="nav-q" href="#q9e" data-q="q9e">9e · Verschuiving aanbodlijn</a>
+        <a class="nav-q" href="#q9f" data-q="q9f">9f · Nieuwe evenwichtsprijs</a>
+        <a class="nav-q" href="#q9g" data-q="q9g">9g · Afwenteling</a>
+        <a class="nav-q" href="#q9h" data-q="q9h">9h · Belastingopbrengst</a>
+        <a class="nav-q" href="#q9i" data-q="q9i">9i · Prijselasticiteit</a>
+        <a class="nav-q" href="#q9j" data-q="q9j">9j · Belasting vs. surplusverlies</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.3.4 &middot; Begeleide inoefening</span>
+        <h1>Toepassen &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">PostNL en Sandd: mededinging en reg</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Elektrische fiets: kosten, winst en</div>
+            <div class="hero-card-count">6 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Belasting op Greenfield grasmaaier</div>
+            <div class="hero-card-count">5 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">Kinderopvang: marktvorm en subsidie</div>
+            <div class="hero-card-count">5 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Staaroperatie: maximumprijs</div>
+            <div class="hero-card-count">5 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Museum Homerus: subsidie en surplus</div>
+            <div class="hero-card-count">7 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-7">
+            <div class="hero-card-num">Opgave 7</div>
+            <div class="hero-card-title">Arbeidsmarkt en minimumloon</div>
+            <div class="hero-card-count">7 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-8">
+            <div class="hero-card-num">Opgave 8</div>
+            <div class="hero-card-title">Suikerbelasting en externe effecten</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-9">
+            <div class="hero-card-num">Opgave 9</div>
+            <div class="hero-card-title">Milieubelasting op product Mierweg</div>
+            <div class="hero-card-count">10 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">PostNL en Sandd: mededinging en regulering</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees nog eens de introductie van het hoofdstuk. PostNL nam Sandd over en werd monopolist op de postmarkt.</p>
+
+        <div class="question-card" id="q1a">
+          <div class="question-header">
+            <div class="question-label">Vraag 1a — Mededingingswet</div>
+            <div class="question-text">Welk onderdeel van de Mededingingswet is van toepassing bij een overname?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. De Mededingingswet heeft drie pijlers: kartelverbod, misbruik machtspositie, concentratietoezicht.<br>2. Bij een overname verandert de marktstructuur. Welk onderdeel past?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Een overname is een vorm van marktconcentratie.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Toezicht op marktconcentraties (fusies).<br>De ACM beoordeelt of de fusie leidt tot onacceptabele marktmacht.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De drie pijlers: (1) kartelverbod, (2) verbod misbruik machtspositie, (3) concentratietoezicht (fusies/overnames).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1b">
+          <div class="question-header">
+            <div class="question-label">Vraag 1b — Collectief goed?</div>
+            <div class="question-text">Is postbezorging een collectief goed?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Toets: is postbezorging niet-uitsluitbaar?<br>2. Is het niet-rivaal?</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Voldoet postbezorging aan beide criteria van een collectief goed?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Nee. Je kunt een prijs vragen (postzegel) en consumenten willen betalen.<br>Het is uitsluitbaar en rivaal. Het is een natuurlijk monopolie, geen collectief goed.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een natuurlijk monopolie kan de markt het goed voortbrengen. Bij een collectief goed faalt de markt volledig.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1c">
+          <div class="question-header">
+            <div class="question-label">Vraag 1c — Prijsregulering</div>
+            <div class="question-text">Hoe voorkomt de overheid dat de prijs sterk stijgt na de overname?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. PostNL is nu monopolist. Wat kan de overheid doen?<br>2. Denk aan regulering via rendementseisen.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De overheid stelt een maximum aan de winstgevendheid.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = 100.000 − 40p   of   p = 2.500 − 0,025Qv<br>Bij p = 1.000: Q = 60.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Rendementregulering beperkt de winst tot een 'redelijk' niveau. De consument wordt beschermd tegen te hoge prijzen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Elektrische fiets: kosten, winst en belasting</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = 100.000 − 40p   of   p = 2.500 − 0,025Qv<br>Bij p = 1.000: Q = 60.000</div>
+        <p class="opgave-intro">Fabrikant Johnli introduceert de Speed for All tegen € 1.000 (kostendekkend). Vraagfunctie: Qv = 100.000 − 40p. De overheid heft € 375 belasting per fiets.</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a — Toon aan: TVK = € 22.500.000</div>
+            <div class="question-text">Toon aan dat de totale vaste kosten gelijk zijn aan € 22.500.000.</div>
+          </div>
+          <div class="fill-in">MK = € ............<br>TVK per stuk = € 1.000 − € ............ = € ............<br>Bij p = € 1.000 → Q = ............<br>Totale vaste kosten = ............ × € ............ = € ............</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. MK zijn constant → variabele kosten per stuk = MK.<br>2. Bij kostendekkende prijs: winst = 0 → TO = TK.<br>3. TVK per stuk = prijs − MK.<br>4. Totale vaste kosten = TVK per stuk × Q.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij winst = 0: prijs = GTK. De MK zijn constant (€ 625).</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MK constant → variabele kosten per stuk = MK<br>TVK per stuk = prijs − MK<br>Totale vaste kosten = TVK per stuk × Q</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK = € 625 per fiets<br>TVK per stuk: € 1.000 − € 625 = € 375<br>Q = 100.000 − 40 × 1.000 = 60.000 fietsen<br>Totale vaste kosten: 60.000 × € 375 = € 22.500.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij constante MK zijn de variabele kosten per stuk gelijk aan de MK. Bij break-even: TVK per stuk = prijs − MK. Totale vaste kosten = TVK per stuk × Q.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b — Maximale winst berekenen</div>
+            <div class="question-text">Bereken de maximale winst van Johnli.</div>
+          </div>
+          <div class="fill-in">MO = MK: ............ = 625 → Q = ............<br>p = 2.500 − 0,025 × ............ = € ............<br>TO = € ............<br>TK = 625 × ............ + 22.500.000 = € ............<br>Winst = € ............</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. TO = p × Q = (2.500 − 0,025Q) × Q<br>2. MO = −0,05Q + 2.500<br>3. MO = MK: −0,05Q + 2.500 = 625<br>4. Bereken Q, p, winst.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Maximale winst bij MO = MK.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">TO = −0,025Q² + 2.500Q<br>MO = −0,05Q + 2.500<br>Winst = TO − TK</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: −0,05Q + 2.500 = 625 → Q = 37.500<br>p = 2.500 − 0,025 × 37.500 = € 1.562,50<br>TO = 1.562,50 × 37.500 = € 58.593.750<br>TK = 625 × 37.500 + 22.500.000 = € 45.937.500<br>Winst = € 58.593.750 − € 45.937.500 = € 12.656.250</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij MO = MK is de winst maximaal. MO is de afgeleide van TO naar Q.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2c">
+          <div class="question-header">
+            <div class="question-label">Vraag 2c — Consumentensurplus</div>
+            <div class="question-text">Welke oppervlakte is het consumentensurplus bij maximale winst?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. CS = driehoek boven de prijs en onder de vraaglijn.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">CS ligt altijd boven de prijslijn en onder de vraaglijn.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">A + B</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het CS meet de extra waarde boven de prijs die consumenten betalen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2d">
+          <div class="question-header">
+            <div class="question-label">Vraag 2d — Producentensurplus</div>
+            <div class="question-text">Welke oppervlakte is het producentensurplus bij maximale winst?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. PS = oppervlak onder de prijs en boven de MK-lijn.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">PS ligt onder de prijslijn en boven de marginale kostenlijn.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">C + D + E</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> PS = opbrengst boven de marginale kosten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2e">
+          <div class="question-header">
+            <div class="question-label">Vraag 2e — Negatief extern effect</div>
+            <div class="question-text">Leg uit hoe de e-fiets een negatief extern effect veroorzaakt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Welke overlast? Zit dat in de prijs? Wie draagt de kosten?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De snelheid is gevaarlijk voor andere weggebruikers. Dit effect is niet in de kostprijs verrekend.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De fietser betaalt niet voor de overlast die hij veroorzaakt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2f">
+          <div class="question-header">
+            <div class="question-label">Vraag 2f — Verlies aan surplus</div>
+            <div class="question-text">Welke variant toont het juiste surplusverlies?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Variant B — de Harbergerdriehoek door de belasting.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De belasting vermindert het aantal transacties, wat leidt tot welvaartsverlies.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Belasting op Greenfield grasmaaier</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Monopolist Vlieger BV produceert Greenfield-grasmaaiers. De overheid legt € 25 belasting op vanwege negatieve externe effecten.</p>
+
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a — Negatieve externe effecten</div>
+            <div class="question-text">Welke twee negatieve externe effecten?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Wat doen benzine-grasmaaiers dat elektrische niet doen?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">1. Geluidsoverlast. 2. Luchtvervuiling.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Kosten die door derden worden gedragen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b — Prijzen</div>
+            <div class="question-text">Wat is de verkoopprijs voor en na belasting?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vóór: € 62,50. Na: € 75,00. Stijging van € 12,50.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De monopolist berekent niet de volledige belasting door maar optimaliseert opnieuw.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3c">
+          <div class="question-header">
+            <div class="question-label">Vraag 3c — Afwenteling</div>
+            <div class="question-text">Hoeveel procent wentelt Vlieger af op de consument?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Afwenteling = (prijsstijging / belasting per stuk) × 100%</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">€ 12,50 / € 25 = 50%.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De consument draagt de helft, de producent de andere helft.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3d">
+          <div class="question-header">
+            <div class="question-label">Vraag 3d — Waarom niet volledig afwentelen?</div>
+            <div class="question-text">Waarom wentelt Vlieger niet de hele belasting af?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij € 75 is de winst maximaal. Bij € 87,50 zouden te veel klanten afhaken.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De monopolist optimaliseert bij MO = MK + belasting. Een te hoge prijs verlaagt de winst.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3g">
+          <div class="question-header">
+            <div class="question-label">Vraag 3g — Conclusie doelmatigheid</div>
+            <div class="question-text">Waarom is de conclusie over gedaalde doelmatigheid niet juist?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Het overheidsingrijpen heeft negatieve externe effecten beperkt.<br>Als die baten groter zijn dan het surplusverlies, is de totale welvaart gestegen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een complete welvaartsanalyse weegt het surplusverlies af tegen de brede maatschappelijke baten.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Kinderopvang: marktvorm en subsidie</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Veel aanbieders van kinderopvang met kwaliteitsverschillen. Positieve externe effecten. De gemeente overweegt subsidie.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a — Marktvorm</div>
+            <div class="question-text">Welke marktvorm?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Veel aanbieders + heterogeen product = ?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Monopolistische concurrentie. Veel aanbieders met gedifferentieerde producten.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Combineert kenmerken van volkomen concurrentie en monopolie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b — Positief extern effect</div>
+            <div class="question-text">Geef een voorbeeld van een positief extern effect van kinderopvang.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Ouders kunnen meer betaald werk doen → gunstig voor bedrijfsleven en maatschappij.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De baten zijn breder dan alleen het nut voor de ouders die de kinderopvang afnemen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4c">
+          <div class="question-header">
+            <div class="question-label">Vraag 4c — Vraaglijnverschuiving</div>
+            <div class="question-text">Leg uit dat grafiek 1 de situatie juist weergeeft bij subsidie.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De vraag stijgt door de subsidie. De vraaglijn verschuift naar rechts.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Subsidie aan consumenten werkt als een prijsverlaging → meer vraag.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4d">
+          <div class="question-header">
+            <div class="question-label">Vraag 4d — Hoeveel naar de sector?</div>
+            <div class="question-text">Bereken hoeveel procent van de subsidie naar de sector gaat.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Voordeel sector = (nieuwe prijs − oude prijs) / oude prijs × 100%</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Prijs stijgt van € 3 naar € 5. (€ 5 − € 3) / € 3 × 100% = 66,7%.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De subsidie komt niet volledig ten goede aan de consument. De sector profiteert ook via een hogere prijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4e">
+          <div class="question-header">
+            <div class="question-label">Vraag 4e — Maatregel bij grafiek 2</div>
+            <div class="question-text">Bedenk een maatregel die bij grafiek 2 past.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TK = 45q² − 10q + 5.000<br>MK = 90q − 10<br>MO = € 620 (horizontale lijn bij maximumprijs)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Linksverschuiving = minder vraag bij elke prijs.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Staaroperatie: maximumprijs</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">TK = 45q² − 10q + 5.000<br>MK = 90q − 10<br>MO = € 620 (horizontale lijn bij maximumprijs)</div>
+        <p class="opgave-intro">Ziekenhuis biedt staaroperatie aan voor maximumprijs € 620/dag. TK = 45q² − 10q + 5.000.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a — Horizontale MO-lijn</div>
+            <div class="question-text">Waarom is de MO-lijn horizontaal bij een maximumprijs?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Als de prijs vastligt, wat is de extra opbrengst per extra eenheid?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Elke extra behandeling levert exact € 620 op. MO = maximumprijs = constant.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een maximumprijs is de aanbieder een prijsnemer: MO = maximumprijs.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b — Verlies berekenen</div>
+            <div class="question-text">Toon aan dat het ziekenhuis bij € 620 verlies maakt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MO = MK → optimale q<br>TO = 620 × q<br>TK = 45q² − 10q + 5.000</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: 620 = 90q − 10 → q = 7<br>TO = € 620 × 7 = € 4.340<br>TK = 45 × 49 − 70 + 5.000 = € 7.135<br>Verlies = € 4.340 − € 7.135 = −€ 2.795</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Zelfs bij de optimale q zijn de totale kosten hoger dan de opbrengsten. De maximumprijs is te laag voor de hoge vaste kosten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c — Grafisch</div>
+            <div class="question-text">Hoe zie je in bron 7 dat kostendekking niet mogelijk is?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De GTK-lijn ligt bij alle q boven de MO-lijn (€ 620). Er is geen q waarbij prijs ≥ GTK.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als de GTK-lijn overal boven de prijslijn ligt, maakt het ziekenhuis bij elke hoeveelheid verlies.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5d">
+          <div class="question-header">
+            <div class="question-label">Vraag 5d — Besparing vaste kosten</div>
+            <div class="question-text">Bereken de benodigde besparing op vaste kosten.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij q = 4: TO = TK → 620 × 4 = 45 × 16 − 40 + TCK<br>2.480 = 680 + TCK → TCK = € 1.800<br>Besparing = € 5.000 − € 1.800 = € 3.200</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij break-even geldt TO = TK. Bereken de maximaal toelaatbare vaste kosten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5e">
+          <div class="question-header">
+            <div class="question-label">Vraag 5e — Winst bij vrije prijs</div>
+            <div class="question-text">Hoe blijkt uit de grafiek dat winst mogelijk is bij vrije prijs?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De GTK-lijn loopt deels onder de prijsafzetlijn. Bij die hoeveelheden is winst mogelijk.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als prijs > GTK op enig punt, dan is winst mogelijk bij die productieomvang.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Museum Homerus: subsidie en surplus</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Museum Homerus vraagt € 6 entree, ontvangt € 1,50 subsidie per kaartje. De overheid overweegt stopzetting.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — GO = prijs</div>
+            <div class="question-text">Waarom zijn prijs en gemiddelde opbrengst altijd gelijk?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">GO = TO / Q = (p × Q) / Q = p. Altijd gelijk aan de prijs.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> GO = TO/Q = pQ/Q = p. Dit geldt voor alle marktvormen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — Kostendekkend</div>
+            <div class="question-text">Toon aan dat Homerus bij € 6 kostendekkend is.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Gebruik de vraaglijn voor Q en de GTK-functie voor kosten.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Q bij p = 6: 6 = −2Q + 14 → Q = 4 (duizendtallen)<br>TO = 4.000 × € 6 = € 24.000<br>GTK = 2 + 14,8/4 = € 5,70 → TK = € 22.800<br>TO > TK: kostendekkend.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> TO > TK betekent winst. De subsidie verlaagt effectief de kosten.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c — Grafisch</div>
+            <div class="question-text">Hoe lees je kostendekking af uit bron 8?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij Q = 4 ligt de GTK-lijn onder de GO-lijn (prijs > kostprijs).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als GO > GTK, dan TO > TK → winst.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6d">
+          <div class="question-header">
+            <div class="question-label">Vraag 6d — Geen maximale winst</div>
+            <div class="question-text">Hoe blijkt dat Homerus niet maximaliseert?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK bij Q = 3 en p = € 8. Homerus vraagt € 6 (Q = 4), dus niet winstmaximaliserend.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het museum kiest een lagere prijs en hogere hoeveelheid dan bij winstmaximalisatie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6e">
+          <div class="question-header">
+            <div class="question-label">Vraag 6e — Waarom niet maximaliseren?</div>
+            <div class="question-text">Waarom streeft Homerus niet naar maximale winst?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Mogelijk in overheidsbezit; moet de collectie toegankelijk maken voor een breed publiek.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Overheids- en semipublieke instellingen hebben vaak andere doelen dan winstmaximalisatie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6f">
+          <div class="question-header">
+            <div class="question-label">Vraag 6f — Consumentensurplus</div>
+            <div class="question-text">Welke variant geeft het verschil in consumentensurplus correct weer?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Variant B. Bij MO = MK: Q = 3, p = € 8.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het CS is groter bij p = 6 dan bij p = 8.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6g">
+          <div class="question-header">
+            <div class="question-label">Vraag 6g — Stopzetten subsidie</div>
+            <div class="question-text">Waarom wordt het museum verlieslijdend zonder subsidie?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa = 0,6L + 4<br>Qv = −0,8L + 11<br>Jaarloon = L × € 5.000<br>Minimumloon € 30.000 → L = 6</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Als het verschil GO−GTK nergens groter was dan € 1,50, ligt na stopzetting de GTK overal boven de GO.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-7">
+        <div class="opgave-header">
+          <span class="opgave-num">7</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Arbeidsmarkt en minimumloon</div>
+            <span class="opgave-badge">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <div class="context-box">Qa = 0,6L + 4<br>Qv = −0,8L + 11<br>Jaarloon = L × € 5.000<br>Minimumloon € 30.000 → L = 6</div>
+        <p class="opgave-intro">Qa = 0,6L + 4, Qv = −0,8L + 11 (miljoenen). Jaarloon = L × € 5.000. Minimumloon: € 30.000.</p>
+
+        <div class="question-card" id="q7a">
+          <div class="question-header">
+            <div class="question-label">Vraag 7a — Vraag vs. werkgelegenheid</div>
+            <div class="question-text">Waaruit bestaat het verschil?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Uit de vacatures. Vraag = werkgelegenheid + vacatures.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De arbeidsvraag is het totaal; werkgelegenheid is wat daadwerkelijk is ingevuld.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7b">
+          <div class="question-header">
+            <div class="question-label">Vraag 7b — Gevoeligheid</div>
+            <div class="question-text">Waaruit blijkt dat de vraag gevoeliger is?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Coëfficiënt van L in Qv is 0,8; in Qa is 0,6. De vraag reageert sterker (0,8 > 0,6).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De coëfficiënten geven de gevoeligheid voor loonsveranderingen aan.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7c">
+          <div class="question-header">
+            <div class="question-label">Vraag 7c — Waarom gevoeliger?</div>
+            <div class="question-text">Waarom reageert de vraag sterker dan het aanbod?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Niet-werkenden hebben zorgtaken en reageren weinig op loonveranderingen.<br>Werkgevers vervangen arbeid door kapitaal bij hogere lonen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Arbeidsaanbod is relatief inelastisch; arbeidsvraag is elastischer.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7d">
+          <div class="question-header">
+            <div class="question-label">Vraag 7d — Evenwichtsloon</div>
+            <div class="question-text">Bereken het evenwichtsloon.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa = Qv: 0,6L + 4 = −0,8L + 11 → 1,4L = 7 → L = 5<br>Jaarloon = 5 × € 5.000 = € 25.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij evenwicht: aanbod = vraag.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7e">
+          <div class="question-header">
+            <div class="question-label">Vraag 7e — Afname werkgelegenheid</div>
+            <div class="question-text">Bereken de afname van de werkgelegenheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv bij L = 6: −0,8 × 6 + 11 = 6,2 miljoen<br>Qv bij L = 5: 7 miljoen<br>Afname: 0,8 miljoen</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het minimumloon ligt boven het evenwicht → werkgevers vragen minder arbeid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7f">
+          <div class="question-header">
+            <div class="question-label">Vraag 7f — Werkloosheid</div>
+            <div class="question-text">Bereken de werkloosheid.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa bij L = 6: 0,6 × 6 + 4 = 7,6 miljoen<br>Werkloosheid = 7,6 − 6,2 = 1,4 miljoen</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Werkloosheid = aanbod − vraag bij het minimumloon.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q7g">
+          <div class="question-header">
+            <div class="question-label">Vraag 7g — Verschil e en f</div>
+            <div class="question-text">Verklaar het verschil.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Werkloosheid (1,4 mln) > daling werkgelegenheid (0,8 mln).<br>Door het hogere loon stijgt ook het arbeidsaanbod (+0,6 mln). Werkloosheid = daling vraag + stijging aanbod.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het dubbeleffect (dalende vraag + stijgend aanbod) is kenmerkend voor een minimumprijs boven het evenwicht.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-8">
+        <div class="opgave-header">
+          <span class="opgave-num">8</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Suikerbelasting en externe effecten</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Accijnzen op suikerhoudende dranken. Prijselasticiteit: −0,9 tot −1,3.</p>
+
+        <div class="question-card" id="q8a">
+          <div class="question-header">
+            <div class="question-label">Vraag 8a — Waarom minder suiker?</div>
+            <div class="question-text">Waarom willen we minder suikerhoudende dranken? Gebruik het begrip externe effecten.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Negatieve externe effecten: gezondheidsklachten (diabetes, overgewicht) kosten de samenleving geld.<br>De consument houdt hier geen rekening mee bij aankoop.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De zorgkosten worden via belastingen en premies door de hele samenleving betaald.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8b">
+          <div class="question-header">
+            <div class="question-label">Vraag 8b — Is belasting effectief?</div>
+            <div class="question-text">Is een belasting effectief?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Ja. |Ev| rond 1 → de vraag reageert substantieel op prijsveranderingen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De effectiviteit hangt af van de prijselasticiteit. Bij |Ev| rond 1 is de belasting een effectief instrument.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q8c">
+          <div class="question-header">
+            <div class="question-label">Vraag 8c — Andere factoren</div>
+            <div class="question-text">Bedenk enkele andere bepalende factoren.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = −P + 50 | Qa = 0,5P − 10<br>Na belasting: Qa' = 0,5P − 14,5<br>TK Bayer = 0,0625q² + 32q + 60<br>MK Bayer = 0,125q + 32</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De vraag wordt door meer bepaald dan alleen de prijs.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-9">
+        <div class="opgave-header">
+          <span class="opgave-num">9</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Milieubelasting op product Mierweg</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Qv = −P + 50 | Qa = 0,5P − 10<br>Na belasting: Qa' = 0,5P − 14,5<br>TK Bayer = 0,0625q² + 32q + 60<br>MK Bayer = 0,125q + 32</div>
+        <p class="opgave-intro">Volkomen concurrentie. Qv = −P + 50, Qa = 0,5P − 10. Bayer: TK = 0,0625q² + 32q + 60. Milieubelasting € 9. Na belasting: Qa&#x27; = 0,5P − 14,5.</p>
+
+        <div class="question-card" id="q9a">
+          <div class="question-header">
+            <div class="question-label">Vraag 9a — Marktomzet</div>
+            <div class="question-text">Bereken de totale marktomzet zonder belasting.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Evenwicht: −P + 50 = 0,5P − 10 → P = € 40, Q = 10 mln<br>TO = € 40 × 10.000.000 = € 400.000.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij evenwicht: Qv = Qa.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9b">
+          <div class="question-header">
+            <div class="question-label">Vraag 9b — Hoeveelheidsaanpasser</div>
+            <div class="question-text">Omschrijf het begrip hoeveelheidsaanpasser.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De ondernemer heeft geen invloed op de prijs; hij past alleen zijn hoeveelheid aan.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Kenmerkend voor volkomen concurrentie: de aanbieder is te klein om de prijs te beïnvloeden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9c">
+          <div class="question-header">
+            <div class="question-label">Vraag 9c — Productie Bayer</div>
+            <div class="question-text">Bereken de productieomvang van Bayer.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK: 40 = 0,125q + 32 → q = 64 stuks</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie: MO = P. Produceren tot MO = MK.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9d">
+          <div class="question-header">
+            <div class="question-label">Vraag 9d — Winst Bayer</div>
+            <div class="question-text">Hoeveel winst maakt Bayer?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO = 40 × 64 = € 2.560<br>TK = 0,0625 × 4.096 + 2.048 + 60 = € 2.364<br>Winst = € 196</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een bescheiden winst die op lange termijn zou dalen door toetreding.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9e">
+          <div class="question-header">
+            <div class="question-label">Vraag 9e — Verschuiving aanbodlijn</div>
+            <div class="question-text">Leg uit dat de aanbodlijn verandert.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Producentenbelasting: aanbieders willen dezelfde Q maar tegen € 9 hogere prijs.<br>Aanbodlijn verschuift evenwijdig omhoog met € 9.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een producentenbelasting verhoogt de kosten per eenheid. Grafisch: aanbodlijn omhoog.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9f">
+          <div class="question-header">
+            <div class="question-label">Vraag 9f — Nieuwe evenwichtsprijs</div>
+            <div class="question-text">Bereken de evenwichtsprijs na belasting.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = Qa': −P + 50 = 0,5P − 14,5 → 1,5P = 64,5 → P = € 43</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De prijs stijgt van € 40 naar € 43. De belastinglast wordt verdeeld.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9g">
+          <div class="question-header">
+            <div class="question-label">Vraag 9g — Afwenteling</div>
+            <div class="question-text">Bereken het afwentelingspercentage op de consument.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">(€ 43 − € 40) / € 9 × 100% = 33,3%.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De consument draagt 33,3% van de belasting.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9h">
+          <div class="question-header">
+            <div class="question-label">Vraag 9h — Belastingopbrengst</div>
+            <div class="question-text">Bereken de opbrengst voor de Belastingdienst.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Q na belasting: 7 miljoen stuks<br>Opbrengst = 7 mln × € 9 = € 63 miljoen</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Belastingopbrengst = tarief × aantal verhandelde eenheden na belasting.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9i">
+          <div class="question-header">
+            <div class="question-label">Vraag 9i — Prijselasticiteit</div>
+            <div class="question-text">Bereken de prijselasticiteit van de vraag.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Q: −30% ((7−10)/10). P: +7,5% ((43−40)/40).<br>Ev = −30% / 7,5% = −4</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> |Ev| > 1: sterk elastische vraag.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q9j">
+          <div class="question-header">
+            <div class="question-label">Vraag 9j — Belasting vs. surplusverlies</div>
+            <div class="question-text">Is de belasting gelijk aan het surplusverlies?</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Nee. Het surplusverlies is groter. Het extra verlies (bovenop de belastingopbrengst) is de Harbergerdriehoek.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Surplusverlies = belastingopbrengst + Harbergerdriehoek (deadweight loss).</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Mededingingswet</td><td>Drie pijlers: kartelverbod, misbruik machtspositie, concentratietoezicht.</td></tr>
+            <tr><td>Natuurlijk monopolie</td><td>Eén aanbieder heeft lagere GTK. Regulering: producent, beheerder, regelgever.</td></tr>
+            <tr><td>Collectief goed</td><td>Niet-uitsluitbaar + niet-rivaal. Free-rider probleem → overheid via belastingen.</td></tr>
+            <tr><td>Negatief extern effect</td><td>Maatschappelijke kosten niet in de prijs. Oplossing: belasting (pigouviaans).</td></tr>
+            <tr><td>Positief extern effect</td><td>Maatschappelijke baten niet in de prijs. Oplossing: subsidie.</td></tr>
+            <tr><td>Minimumprijs / minimumloon</td><td>Boven evenwicht → aanbodoverschot. Arbeidsmarkt: werkloosheid = stijgend aanbod + dalende vraag.</td></tr>
+            <tr><td>Maximumprijs</td><td>Onder evenwicht → vraagoverschot / tekort.</td></tr>
+            <tr><td>Belasting (accijns)</td><td>Aanbodlijn omhoog. Hogere prijs, lagere Q. Afwenteling afh. van elasticiteiten.</td></tr>
+            <tr><td>Subsidie</td><td>Vraaglijn naar rechts. Verdeling voordeel afh. van elasticiteiten.</td></tr>
+            <tr><td>Harbergerdriehoek</td><td>Welvaartsverlies door marktverstoring.</td></tr>
+            <tr><td>Hoeveelheidsaanpasser</td><td>Volkomen concurrentie: geen invloed op prijs. MO = P.</td></tr>
+            <tr><td>Prijselasticiteit</td><td>Ev = %ΔQ / %ΔP. |Ev| &gt; 1: elastisch. |Ev| &lt; 1: inelastisch.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

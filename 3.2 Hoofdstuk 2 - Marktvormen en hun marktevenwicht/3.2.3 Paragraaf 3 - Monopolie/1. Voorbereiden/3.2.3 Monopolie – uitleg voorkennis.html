@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3.2.4 Oligopolie – Uitleg voorkennis</title>
+<title>3.2.3 Monopolie – Uitleg voorkennis</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -130,7 +130,7 @@
   .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
   .hero-cards {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem;
     margin-top: 1.5rem;
   }
   .hero-card {
@@ -265,34 +265,41 @@
 <div class="page-layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>3.2.4 Oligopolie</h2>
+      <h2>3.2.3 Monopolie</h2>
       <p>Uitleg voorkennis</p>
     </div>
     <a class="nav-item domain-wiskunde" href="#sectie-1" data-section="sectie-1">
       <span class="nav-number">1</span>
       <span class="nav-text">
-        <span class="nav-title">Vergelijkingen met twee onbekenden</span>
+        <span class="nav-title">Kwadratische functies en afleiden</span>
         <span class="nav-badge">Wiskundig</span>
       </span>
     </a>
     <a class="nav-item domain-wiskunde" href="#sectie-2" data-section="sectie-2">
       <span class="nav-number">2</span>
       <span class="nav-text">
-        <span class="nav-title">Afleiden en MO berekenen</span>
+        <span class="nav-title">Vergelijkingen met breuken oplossen</span>
         <span class="nav-badge">Wiskundig</span>
       </span>
     </a>
     <a class="nav-item domain-economisch" href="#sectie-3" data-section="sectie-3">
       <span class="nav-number">3</span>
       <span class="nav-text">
-        <span class="nav-title">Economische begrippen bij oligopolie</span>
+        <span class="nav-title">Economische begrippen bij monopolie</span>
         <span class="nav-badge">Economisch</span>
       </span>
     </a>
     <a class="nav-item domain-grafisch" href="#sectie-4" data-section="sectie-4">
       <span class="nav-number">4</span>
       <span class="nav-text">
-        <span class="nav-title">Grafieken met reactielijnen</span>
+        <span class="nav-title">Oppervlakten in een grafiek</span>
+        <span class="nav-badge">Grafisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-grafisch" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Grafieken met meerdere lijnen</span>
         <span class="nav-badge">Grafisch</span>
       </span>
     </a>
@@ -302,28 +309,33 @@
   <div class="content">
     <header class="hero">
       <div class="hero-inner">
-        <span class="hero-badge">3.2.4 &middot; Voorkennis</span>
-        <h1>Oligopolie &mdash; Voorkennis</h1>
+        <span class="hero-badge">3.2.3 &middot; Voorkennis</span>
+        <h1>Monopolie &mdash; Voorkennis</h1>
         <p class="hero-sub">Wat moet je al weten voordat je aan deze paragraaf begint?</p>
         <div class="hero-cards">
           <div class="hero-card card-wiskunde" data-target="sectie-1">
             <div class="hero-card-num">01</div>
-            <div class="hero-card-title">Vergelijkingen met twee onbekenden</div>
+            <div class="hero-card-title">Kwadratische functies en afleiden</div>
             <span class="hero-card-domain">Wiskundig</span>
           </div>
           <div class="hero-card card-wiskunde" data-target="sectie-2">
             <div class="hero-card-num">02</div>
-            <div class="hero-card-title">Afleiden en MO berekenen</div>
+            <div class="hero-card-title">Vergelijkingen met breuken oplossen</div>
             <span class="hero-card-domain">Wiskundig</span>
           </div>
           <div class="hero-card card-economisch" data-target="sectie-3">
             <div class="hero-card-num">03</div>
-            <div class="hero-card-title">Economische begrippen bij oligopolie</div>
+            <div class="hero-card-title">Economische begrippen bij monopolie</div>
             <span class="hero-card-domain">Economisch</span>
           </div>
           <div class="hero-card card-grafisch" data-target="sectie-4">
             <div class="hero-card-num">04</div>
-            <div class="hero-card-title">Grafieken met reactielijnen</div>
+            <div class="hero-card-title">Oppervlakten in een grafiek</div>
+            <span class="hero-card-domain">Grafisch</span>
+          </div>
+          <div class="hero-card card-grafisch" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Grafieken met meerdere lijnen</div>
             <span class="hero-card-domain">Grafisch</span>
           </div>
 
@@ -337,56 +349,47 @@
         <div class="section-header border-wiskunde">
           <span class="section-num bg-wiskunde">1</span>
           <div class="section-title-group">
-            <div class="section-title">Vergelijkingen met twee onbekenden</div>
+            <div class="section-title">Kwadratische functies en afleiden</div>
             <span class="section-badge badge-wiskunde">Wiskundig</span>
           </div>
         </div>
-        <h3 class="sub-heading">Waarom heb je dit nodig?</h3>
-        <p class="intro-text">Bij oligopolie werk je met twee reactielijnen: twee vergelijkingen met twee onbekenden. Om het evenwicht te vinden, moet je deze vergelijkingen tegelijk oplossen.</p>
-        <h3 class="sub-heading">Wat is substitutie?</h3>
-        <p class="intro-text">Substitutie betekent dat je de ene vergelijking in de andere invult. Zo breng je twee onbekenden terug tot één onbekende.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Substitutie</td><td>Eén vergelijking invullen in de andere om één onbekende weg te werken</td></tr>
-            <tr><td>Stelsel</td><td>Twee (of meer) vergelijkingen die tegelijk gelden</td></tr>
-            <tr><td>Reactielijn</td><td>Vergelijking die jouw optimale q geeft als functie van q van de concurrent</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Stappenplan substitutie</h3>
+        <h3 class="sub-heading">Waarom is dit nodig?</h3>
+        <p class="intro-text">Bij monopolie werk je met kwadratische functies (met Q²). Om de marginale opbrengst (MO) en marginale kosten (MK) te berekenen, moet je deze functies kunnen afleiden.</p>
+        <h3 class="sub-heading">De afleidregel</h3>
+        <p class="intro-text">De basisregel voor afleiden is eenvoudig: vermenigvuldig de exponent met de coëfficiënt en verlaag de exponent met 1.</p>
         <div class="formula-box">
-            Stap 1: Schrijf beide vergelijkingen op<br>
-            Stap 2: Kies één vergelijking en vul deze in de andere in<br>
-            Stap 3: Los op naar de overgebleven onbekende<br>
-            Stap 4: Vul de uitkomst terug in de andere vergelijking
-        </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: q₁ = 35 − 0,5q₂ en q₂ = 35 − 0,5q₁</p>
-        <div class="formula-box">
-            q₁ = 35 − 0,5q₂<br>
-            Invullen: q₁ = 35 − 0,5(35 − 0,5q₁)<br>
-            q₁ = 35 − 17,5 + 0,25q₁<br>
-            0,75q₁ = 17,5<br>
-            q₁ = 23⅓  →  q₂ = 23⅓
+            Regel: als f(Q) = aQⁿ, dan f′(Q) = n × a × Qⁿ⁻¹<br>
+            <br>
+            Voorbeeld: f(Q) = 3Q²  →  f′(Q) = 2 × 3 × Q¹ = 6Q
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) geldt altijd q₁ = q₂ in het evenwicht. Dat is een handige controle!
+          <strong>Kernregel:</strong> Exponent naar voren halen, exponent met 1 verlagen. Dat is de hele truc.
+        </div>
+        <h3 class="sub-heading">MO en MK berekenen</h3>
+        <p class="intro-text">MO is de afgeleide van TO naar Q. MK is de afgeleide van TK naar Q. Werk altijd stap voor stap.</p>
+        <div class="formula-box">
+            TO = −Q² + 50Q<br>
+            MO = TO′ = −2Q + 50<br>
+            <br>
+            TK = 0,25Q²<br>
+            MK = TK′ = 0,5Q
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Vergeet niet om na het oplossen van q₁ de waarde terug te vullen in de andere vergelijking om q₂ te vinden.
+          <strong>Let op:</strong> Vergeet niet dat een constante term (bijv. +100) bij het afleiden wegvalt. De afgeleide van een constante is 0.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Los op: x = 10 − 0,5y en y = 10 − 0,5x. (antwoord: x = y = 6⅔)
+          <strong>Controle:</strong> Leid af: TO = −3Q² + 60Q. Wat is MO? (antwoord: MO = −6Q + 60)
         </div>
         <table class="samenvatting-table">
           <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Methode</td><td>Substitutie: vul vergelijking 2 in vergelijking 1 in</td></tr>
-            <tr><td>Doel</td><td>Twee onbekenden terugbrengen tot één onbekende</td></tr>
-            <tr><td>Toepassing</td><td>Reactielijnen bij oligopolie / Cournot-evenwicht</td></tr>
+            <tr><td>Regel</td><td>f(Q) = aQⁿ → f′(Q) = n·a·Qⁿ⁻¹</td></tr>
+            <tr><td>MO</td><td>Afgeleide van TO naar Q</td></tr>
+            <tr><td>MK</td><td>Afgeleide van TK naar Q</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 2 (vergelijkingen) en 3 (begrippen)</td></tr>
           </tbody>
         </table>
 
@@ -396,51 +399,45 @@
         <div class="section-header border-wiskunde">
           <span class="section-num bg-wiskunde">2</span>
           <div class="section-title-group">
-            <div class="section-title">Afleiden en MO berekenen</div>
+            <div class="section-title">Vergelijkingen met breuken oplossen</div>
             <span class="section-badge badge-wiskunde">Wiskundig</span>
           </div>
         </div>
-        <h3 class="sub-heading">Van residuele vraag naar TO</h3>
-        <p class="intro-text">Je moet de totale opbrengst (TO) kunnen berekenen uit de residuele vraaglijn. Dat doe je door p te vermenigvuldigen met q.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>Residuele vraag</td><td>De vraaglijn die overblijft na aftrek van de productie van de concurrent</td></tr>
-            <tr><td>TO (totale opbrengst)</td><td>TO = p × q (vul de vraaglijn in voor p)</td></tr>
-            <tr><td>MO (marginale opbrengst)</td><td>De afgeleide van TO naar q</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">De vuistregel voor MO</h3>
-        <p class="intro-text">Bij een lineaire vraaglijn (p = aq + b) heeft de MO-lijn altijd een dubbele helling. Dit is een handig ezelsbruggetje.</p>
+        <h3 class="sub-heading">Waarom is dit nodig?</h3>
+        <p class="intro-text">Bij MO = MK krijg je een vergelijking die je moet oplossen naar Q. Soms zitten er breuken in, of moet je GTK = TK/Q omrekenen.</p>
+        <h3 class="sub-heading">De methode</h3>
+        <p class="intro-text">Breng alle Q-termen naar één kant en alle getallen naar de andere kant. Bij breuken: vermenigvuldig eerst beide kanten met de noemer.</p>
         <div class="formula-box">
-            Vraaglijn:  p = aq + b<br>
-            TO = p × q = aq² + bq<br>
-            MO = 2aq + b  (dubbele helling!)
+            −2Q + 50 = 0,5Q<br>
+            50 = 2,5Q<br>
+            Q = 20
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij een lineaire vraaglijn geldt: MO heeft dezelfde constante als p, maar een dubbele helling.
+          <strong>Kernregel:</strong> Stap 1: Q-termen naar links. Stap 2: getallen naar rechts. Stap 3: deel door het getal voor Q.
         </div>
-        <h3 class="sub-heading">Voorbeeld</h3>
-        <p class="intro-text">Gegeven: p = −10q + 800</p>
+        <h3 class="sub-heading">Controle achteraf</h3>
+        <p class="intro-text">Vul je antwoord altijd terug in beide functies. Als MO en MK dezelfde waarde geven, klopt je berekening.</p>
         <div class="formula-box">
-            TO = p × q = (−10q + 800) × q = −10q² + 800q<br>
-            MO = −20q + 800
+            Controle bij Q = 20:<br>
+            MO = −2(20) + 50 = 10<br>
+            MK = 0,5(20) = 10  ✓
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Schrijf de vraaglijn altijd eerst om naar p = f(q) voordat je TO berekent. Doe je dat niet, dan gaat de vermenigvuldiging mis.
+          <strong>Let op:</strong> Vergeet bij breuken niet om beide kanten met de noemer te vermenigvuldigen. Doe dit als eerste stap, niet halverwege.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Leid MO af uit p = −5q + 200. (antwoord: MO = −10q + 200)
+          <strong>Controle:</strong> Los op: −4Q + 80 = 2Q. Wat is Q? (antwoord: Q = 13⅓)
         </div>
         <table class="samenvatting-table">
           <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>TO</td><td>TO = p × Q (schrijf p eerst om naar p = f(Q))</td></tr>
-            <tr><td>MO</td><td>MO = afgeleide van TO naar Q</td></tr>
-            <tr><td>Vuistregel</td><td>Bij lineaire vraaglijn: MO heeft dubbele helling</td></tr>
+            <tr><td>Methode</td><td>Breng Q-termen naar één kant, getallen naar de andere</td></tr>
+            <tr><td>Met breuken</td><td>Vermenigvuldig met noemer om breuken weg te werken</td></tr>
+            <tr><td>Controle</td><td>Vul Q terug in beide functies</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 1 (afleiden) en 3 (begrippen)</td></tr>
           </tbody>
         </table>
 
@@ -450,54 +447,51 @@
         <div class="section-header border-economisch">
           <span class="section-num bg-economisch">3</span>
           <div class="section-title-group">
-            <div class="section-title">Economische begrippen bij oligopolie</div>
+            <div class="section-title">Economische begrippen bij monopolie</div>
             <span class="section-badge badge-economisch">Economisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Wat is een oligopolie?</h3>
-        <p class="intro-text">Een oligopolie is een marktvorm met slechts een paar grote aanbieders. Omdat er zo weinig spelers zijn, houdt iedereen rekening met het gedrag van de concurrent.</p>
+        <h3 class="sub-heading">Wat is een monopolist?</h3>
+        <p class="intro-text">Een monopolist is de enige aanbieder op een markt. Daardoor is hij een prijszetter: hij bepaalt zelf de prijs door de hoeveelheid te kiezen die hij aanbiedt.</p>
+        <h3 class="sub-heading">Begrippen overzicht</h3>
+        <p class="intro-text">De volgende begrippen moet je kennen voordat je met monopolie aan de slag gaat:</p>
         <table class="begrippen-table">
           <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
           <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders die elkaars gedrag beïnvloeden</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus de productie van de concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale hoeveelheid als functie van de hoeveelheid van de concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van de reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK en winst = 0</td></tr>
+            <tr><td>Monopolist</td><td>De enige aanbieder op een markt</td></tr>
+            <tr><td>Vraaglijn</td><td>= prijsafzetlijn: toont de prijs bij elke hoeveelheid</td></tr>
+            <tr><td>MO</td><td>Marginale opbrengst: extra opbrengst van één extra product</td></tr>
+            <tr><td>MK</td><td>Marginale kosten: extra kosten van één extra product</td></tr>
+            <tr><td>GTK</td><td>Gemiddelde totale kosten: TK / Q</td></tr>
+            <tr><td>CS</td><td>Consumentensurplus: voordeel consument (driehoek boven p*)</td></tr>
+            <tr><td>Prijsdiscriminatie</td><td>Verschillende prijzen vragen voor hetzelfde product</td></tr>
           </tbody>
         </table>
-        <h3 class="sub-heading">Cournot versus Bertrand</h3>
-        <p class="intro-text">Het verschil zit in het type concurrentie. Bij Cournot concurreren bedrijven op hoeveelheid, bij Bertrand op prijs.</p>
+        <h3 class="sub-heading">Waarom is MO &lt; p bij monopolie?</h3>
+        <p class="intro-text">Bij volkomen concurrentie geldt MO = p. Bij monopolie geldt MO &lt; p. Dat komt doordat de monopolist de prijs moet verlagen voor alle eenheden als hij één extra wil verkopen.</p>
         <div class="formula-box">
-            Cournot (hoeveelheid)  →  p > MK  →  winst > 0<br>
-            Bertrand (prijs)       →  p = MK  →  winst = 0
+            Volkomen concurrentie: MO = p (prijs is vast)<br>
+            Monopolie: MO < p (prijs daalt bij meer verkopen)
         </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Bij Cournot blijft er winst over doordat bedrijven de hoeveelheid beperken. Bij Bertrand onderbieden ze elkaar tot p = MK.
+          <strong>Kernregel:</strong> Bij monopolie is MO altijd kleiner dan de prijs, omdat de monopolist de prijs moet verlagen om meer te verkopen.
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwar residuele vraag niet met collectieve vraag. De residuele vraag is altijd kleiner: het is wat er voor jou overblijft na aftrek van de concurrent.
-        </div>
-        <div class="callout callout-tip">
-          <span class="callout-icon">&#10024;</span>
-          <strong>Tip:</strong> Bij Cournot concurreren bedrijven op hoeveelheid (er blijft winst over). Bij Bertrand concurreren ze op prijs (winst verdwijnt).
+          <strong>Let op:</strong> Verwar MO niet met p. Bij volkomen concurrentie zijn ze gelijk (MO = p), bij monopolie niet (MO &lt; p). Dit is een klassieke examenfout.
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je het verschil uitleggen tussen Cournot en Bertrand?
+          <strong>Controle:</strong> Weet je het verschil tussen MO en p bij monopolie? (MO &lt; p!)
         </div>
         <table class="samenvatting-table">
           <caption class="caption-economisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders</td></tr>
-            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
-            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus concurrent</td></tr>
-            <tr><td>Reactielijn</td><td>Jouw optimale q als functie van q_concurrent</td></tr>
-            <tr><td>Cournot-evenwicht</td><td>Snijpunt van reactielijnen (hoeveelheidsconcurrentie)</td></tr>
-            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK, winst = 0</td></tr>
+            <tr><td>Monopolist</td><td>Enige aanbieder — prijszetter</td></tr>
+            <tr><td>MO &lt; p</td><td>Bij monopolie is MO altijd kleiner dan de prijs</td></tr>
+            <tr><td>Vraaglijn</td><td>= prijsafzetlijn van de monopolist</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 4 (oppervlakten) en 5 (grafieken)</td></tr>
           </tbody>
         </table>
 
@@ -507,51 +501,109 @@
         <div class="section-header border-grafisch">
           <span class="section-num bg-grafisch">4</span>
           <div class="section-title-group">
-            <div class="section-title">Grafieken met reactielijnen</div>
+            <div class="section-title">Oppervlakten in een grafiek</div>
             <span class="section-badge badge-grafisch">Grafisch</span>
           </div>
         </div>
-        <h3 class="sub-heading">Hoe teken je reactielijnen?</h3>
-        <p class="intro-text">Reactielijnen teken je in een assenstelsel met q₁ op de x-as en q₂ op de y-as. Elke lijn laat zien hoeveel de ene aanbieder produceert bij elke hoeveelheid van de ander.</p>
-        <table class="begrippen-table">
-          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
-          <tbody>
-            <tr><td>x-as</td><td>q₁ (hoeveelheid van aanbieder 1)</td></tr>
-            <tr><td>y-as</td><td>q₂ (hoeveelheid van aanbieder 2)</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
-          </tbody>
-        </table>
-        <h3 class="sub-heading">Stappen voor het tekenen</h3>
-        <p class="intro-text">Bepaal van elke reactielijn twee punten door de ander op 0 en op het maximum te zetten. Verbind deze punten met een rechte lijn.</p>
+        <h3 class="sub-heading">Waarom is dit nodig?</h3>
+        <p class="intro-text">Bij monopolie bereken je de winst als een rechthoek en het consumentensurplus (CS) als een driehoek. Je moet de hoogte en breedte kunnen aflezen uit de grafiek.</p>
+        <h3 class="sub-heading">Winst als rechthoek</h3>
+        <p class="intro-text">De winst is het verschil tussen de prijs en de gemiddelde kosten, vermenigvuldigd met de hoeveelheid. In de grafiek is dit een rechthoek.</p>
         <div class="formula-box">
-            Reactielijn 1: q₁ = 35 − 0,5q₂<br>
-              bij q₂ = 0:  q₁ = 35<br>
-              bij q₂ = 70: q₁ = 0<br>
+            Winst = (p* − GTK*) × Q*<br>
             <br>
-            Reactielijn 2: q₂ = 35 − 0,5q₁<br>
-              bij q₁ = 0:  q₂ = 35<br>
-              bij q₁ = 70: q₂ = 0
+            Voorbeeld: (30 − 5) × 20 = €500
         </div>
-        <h3 class="sub-heading">Wat zegt het snijpunt?</h3>
-        <p class="intro-text">Het snijpunt van de twee reactielijnen is het Cournot-evenwicht. Op dat punt produceert geen van beide bedrijven te veel of te weinig, gegeven wat de ander doet.</p>
+        <h3 class="sub-heading">CS als driehoek</h3>
+        <p class="intro-text">Het consumentensurplus is het voordeel dat consumenten hebben doordat ze minder betalen dan hun maximale betalingsbereidheid. In de grafiek is dit een driehoek.</p>
+        <div class="formula-box">
+            CS = ½ × Q* × (p_max − p*)<br>
+            waarbij p_max = snijpunt V met y-as<br>
+            <br>
+            Voorbeeld: ½ × 20 × (50 − 30) = €200
+        </div>
         <div class="callout callout-kernregel">
           <span class="callout-icon">&#11088;</span>
-          <strong>Kernregel:</strong> Reactielijnen zijn altijd dalend: als de concurrent meer produceert, produceer jij minder. Het snijpunt is het Nash-evenwicht.
+          <strong>Kernregel:</strong> Winst = rechthoek (p* tot GTK*). CS = driehoek (boven p*, onder V).
         </div>
         <div class="callout callout-letop">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <strong>Let op:</strong> Verwissel de assen niet! Bij reactielijnen staat q₁ altijd op de x-as en q₂ op de y-as. Dit is anders dan bij een standaard V/A-grafiek.
+          <strong>Let op:</strong> Lees GTK* af op de GTK-curve bij Q*, niet op de MK-lijn. GTK en MK zijn verschillende dingen!
         </div>
         <div class="callout callout-controle">
           <span class="callout-icon">&#9989;</span>
-          <strong>Controle:</strong> Kun je twee reactielijnen tekenen en het snijpunt (Cournot-evenwicht) aanwijzen?
+          <strong>Controle:</strong> Bereken: (40 − 12) × 15 = ? en ½ × 15 × (60 − 40) = ? (antwoord: 420 en 150)
         </div>
         <table class="samenvatting-table">
           <caption class="caption-grafisch">&#128203; Samenvatting</caption>
           <tbody>
-            <tr><td>Assen</td><td>q₁ op de x-as, q₂ op de y-as</td></tr>
-            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
-            <tr><td>Dalend</td><td>Reactielijnen zijn altijd dalend: meer q₂ → minder q₁</td></tr>
+            <tr><td>Winst</td><td>(p* − GTK*) × Q* — rechthoek</td></tr>
+            <tr><td>CS</td><td>½ × Q* × (p_max − p*) — driehoek boven p*</td></tr>
+            <tr><td>Aflezen</td><td>p* op vraaglijn, GTK* op GTK-curve bij Q*</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 3 (begrippen) en 5 (grafieken)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Grafieken met meerdere lijnen</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit nodig?</h3>
+        <p class="intro-text">Bij monopolie teken je vier lijnen in één grafiek: V (vraaglijn), MO (stippellijn), MK (stijgend) en GTK. Je moet het snijpunt MO = MK kunnen vinden en dan de prijs aflezen op V.</p>
+        <h3 class="sub-heading">De vier lijnen herkennen</h3>
+        <p class="intro-text">Elke lijn heeft een eigen rol in de grafiek. Leer ze herkennen aan hun vorm en positie:</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>V (vraaglijn)</td><td>Dalend — de prijsafzetlijn van de monopolist</td></tr>
+            <tr><td>MO</td><td>Dalend, dubbele helling van V — zelfde startpunt op y-as</td></tr>
+            <tr><td>MK</td><td>Stijgend — snijpunt met MO geeft optimale Q*</td></tr>
+            <tr><td>GTK</td><td>U-vormig of stijgend — nodig voor winstberekening</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Het verband tussen V en MO</h3>
+        <p class="intro-text">V en MO starten bij hetzelfde punt op de y-as. MO heeft een dubbele helling ten opzichte van V. Daardoor snijdt MO de x-as op de helft van waar V de x-as snijdt.</p>
+        <div class="formula-box">
+            V:  p = −Q + 50  →  snijdt x-as bij Q = 50<br>
+            MO: MO = −2Q + 50  →  snijdt x-as bij Q = 25 (de helft!)
+        </div>
+        <h3 class="sub-heading">Prijs aflezen op de vraaglijn</h3>
+        <p class="intro-text">Het snijpunt MO = MK geeft Q*. De prijs lees je vervolgens af op de vraaglijn (V) bij Q*. Niet op de MK-lijn!</p>
+        <div class="formula-box">
+            Stap 1: Zoek snijpunt MO = MK → Q*<br>
+            Stap 2: Ga naar boven tot de vraaglijn (V) → p*<br>
+            Stap 3: NIET aflezen op MK-lijn!
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De prijs lees je ALTIJD af op de vraaglijn bij Q*, en NIET op de MK-lijn. Dit is de meest gemaakte fout bij monopolie.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> MO = MK geeft Q*. De prijs (p*) vind je door Q* in te vullen in de vraaglijn.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Teken in je grafiek altijd een stippellijn van Q* naar boven tot V. Dan zie je direct de juiste prijs.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je in een grafiek de prijs aflezen op de vraaglijn bij Q* (en NIET op de MK-lijn)?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>V</td><td>Vraaglijn = prijsafzetlijn (dalend)</td></tr>
+            <tr><td>MO</td><td>Zelfde startpunt als V, dubbele helling</td></tr>
+            <tr><td>MK</td><td>Stijgend — snijpunt met MO = optimum</td></tr>
+            <tr><td>Prijs aflezen</td><td>Op V bij Q*, NIET op MK</td></tr>
+            <tr><td>Verband met</td><td>→ Hoofdstuk 3 (begrippen) en 4 (oppervlakten)</td></tr>
           </tbody>
         </table>
 
@@ -563,27 +615,31 @@
         <p class="checklist-sub">Controleer of je de volgende zaken beheerst voordat je aan de paragraaf begint:</p>
         <div class="checklist-item">
           <input type="checkbox" id="check1">
-          <label for="check1">Ik kan de residuele vraaglijn afleiden</label>
+          <label for="check1">Ik kan een kwadratische functie afleiden</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check2">
-          <label for="check2">Ik kan MO berekenen uit de residuele vraag</label>
+          <label for="check2">Ik kan MO en MK berekenen uit TO en TK</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check3">
-          <label for="check3">Ik kan een reactielijn opstellen (MO = MK met twee variabelen)</label>
+          <label for="check3">Ik kan een vergelijking met Q oplossen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check4">
-          <label for="check4">Ik kan het Cournot-evenwicht berekenen door substitutie</label>
+          <label for="check4">Ik weet wat monopolist, vraaglijn, MO, MK, GTK en CS betekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check5">
-          <label for="check5">Ik ken het verschil tussen hoeveelheids- en prijsconcurrentie</label>
+          <label for="check5">Ik kan een rechthoek en driehoek in een grafiek berekenen</label>
         </div>
         <div class="checklist-item">
           <input type="checkbox" id="check6">
-          <label for="check6">Ik kan CS berekenen bij een oligopolie</label>
+          <label for="check6">Ik kan vier lijnen in één grafiek herkennen (V, MO, MK, GTK)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check7">
+          <label for="check7">Ik weet dat bij monopolie MO &lt; p geldt</label>
         </div>
 
       </div>

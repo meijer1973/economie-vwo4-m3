@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.2 Volkomen concurrentie – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #E67E22; --accent-lt: #FEF5E7; --accent-dk: #BA6A1C;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.2 Volkomen concurrentie</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Volkomen concurrentie — van ko</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a · Leid de individuele aanbodfuncti...</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b · Van individueel naar collectief ...</a>
+        <a class="nav-q" href="#q2c" data-q="q2c">2c · Bereken het marktevenwicht</a>
+        <a class="nav-q" href="#q2d" data-q="q2d">2d · Bereken de winst per aanbieder</a>
+        <a class="nav-q" href="#q2e" data-q="q2e">2e · Waarom houdt de winst niet stand?</a>
+        <a class="nav-q" href="#q2f" data-q="q2f">2f · Bereken de prijs op lange termijn</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Toetreding en kanteling van de</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#qvraag3zetdestap" data-q="qvraag3zetdestap">3 · Zet de stappen in de juiste volgorde</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; Melkveehouders in Litouwen — v</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a · Herken kenmerken van volkomen co...</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b · Voorspel de marktuitkomst op lan...</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Volkomen concurrentie — uitgeb</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a · Bereken de MK-formule</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b · Individuele aanbodfunctie</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c · Collectieve aanbodfunctie</a>
+        <a class="nav-q" href="#q5d" data-q="q5d">5d · Marktevenwicht</a>
+        <a class="nav-q" href="#q5e" data-q="q5e">5e · Winst per aanbieder</a>
+        <a class="nav-q" href="#q5f" data-q="q5f">5f · Consumentensurplus</a>
+        <a class="nav-q" href="#q5g" data-q="q5g">5g · Producentensurplus</a>
+        <a class="nav-q" href="#q5h" data-q="q5h">5h · Teken MK- en GTK-lijn met winsto...</a>
+        <a class="nav-q" href="#q5i" data-q="q5i">5i · Teken vraag- en aanbodlijn met s...</a>
+        <a class="nav-q" href="#q5j" data-q="q5j">5j · Toetreding op lange termijn</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; Winsten op de lange termijn — </span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a · Welk land past het beste bij vol...</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b · Alternatieve verklaring</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.2 &middot; Begeleide inoefening</span>
+        <h1>Volkomen concurrentie &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Volkomen concurrentie — van kostenf</div>
+            <div class="hero-card-count">6 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Toetreding en kanteling van de aanb</div>
+            <div class="hero-card-count">1 deelvraag</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">Melkveehouders in Litouwen — volkom</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Volkomen concurrentie — uitgebreide</div>
+            <div class="hero-card-count">10 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">Winsten op de lange termijn — inter</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Volkomen concurrentie — van kostenfunctie tot winst</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <div class="context-box">TK = 0,5q² + 10q + 128<br>Qv = –10p + 500<br>Aantal aanbieders: 10</div>
+        <p class="opgave-intro">Op een markt van volkomen concurrentie bieden tien identieke aanbieders hun product aan. Zij hebben als kostenfunctie TK = 0,5q² + 10q + 128. De formule voor de collectieve vraaglijn is: Qv = –10p + 500. De prijs en de totale kosten zijn in euro’s.</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a — Leid de individuele aanbodfunctie af</div>
+            <div class="question-text">Leid uit de kostenfunctie van een individuele aanbieder de individuele aanbodfunctie af.</div>
+          </div>
+          <div class="fill-in">MK = TK’ = ............<br>MO = p = MK<br>p = ............  ← dit is de individuele aanbodfunctie</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bij volkomen concurrentie geldt: MO = p. De aanbieder is een prijsnemer.<br>2. Bereken MK door TK af te leiden naar q: MK = TK’.<br>3. Stel MO = MK, oftewel p = MK.<br>4. De uitkomst p = ... is de individuele aanbodfunctie.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De individuele aanbodfunctie geeft het verband tussen p en q. Bij volkomen concurrentie is MO = p, dus stel p = MK.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MK = TK’ (afgeleide van TK naar q)<br>Bij volkomen concurrentie: MO = p<br>Winstmax: MO = MK → p = MK</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK: TK’ = q + 10<br>Aanbodfunctie: MO = p = MK = TK’ = q + 10<br>Dus: p = q + 10</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is de prijs een gegeven (MO = p). De aanbieder maximaliseert zijn winst door te produceren tot MO = MK. Door MK te berekenen (de afgeleide van TK) en gelijk te stellen aan p, krijg je de individuele aanbodfunctie: het verband tussen de prijs en de hoeveelheid die één aanbieder wil aanbieden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b — Van individueel naar collectief aanbod</div>
+            <div class="question-text">Zet de individuele aanbodfunctie om in een collectieve aanbodfunctie.</div>
+          </div>
+          <div class="fill-in">q = p – 10<br>Qa = 10 × q = 10 × (.........) = .........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Schrijf de individuele aanbodfunctie om naar q = ...<br>2. Het collectieve aanbod is de som van alle individuele aanbieders.<br>3. Vermenigvuldig q met het aantal aanbieders (10): Qa = 10 × q.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij 10 identieke aanbieders is het collectieve aanbod simpelweg 10 keer het individuele aanbod. Schrijf eerst q als functie van p.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Qa = aantal aanbieders × q<br>Schrijf eerst om: p = q + 10 → q = p – 10</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Stap 1: p = q + 10 → q = p – 10<br>Stap 2: Qa = 10 × (p – 10) = 10p – 100<br>Collectieve aanbodfunctie: Qa = 10p – 100</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Om van individueel naar collectief aanbod te gaan, tel je de hoeveelheden van alle aanbieders op. Omdat alle 10 aanbieders identiek zijn, vermenigvuldig je simpelweg de individuele hoeveelheid met 10. Let op: je moet q eerst als functie van p schrijven voordat je kunt optellen.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2c">
+          <div class="question-header">
+            <div class="question-label">Vraag 2c — Bereken het marktevenwicht</div>
+            <div class="question-text">Bereken het marktevenwicht.</div>
+          </div>
+          <div class="fill-in">Qv = Qa<br>–10p + 500 = 10p – 100<br>......p = ......<br>p = € ......<br>Q = .......... = ......</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Stel Qv = Qa (evenwichtsvoorwaarde).<br>2. Vul de formules in en los op naar p.<br>3. Bereken Q door p in te vullen in Qv of Qa.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Marktevenwicht: de gevraagde hoeveelheid is gelijk aan de aangeboden hoeveelheid.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Qv = Qa<br>Qv = –10p + 500<br>Qa = 10p – 100</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Evenwicht: –10p + 500 = 10p – 100<br>Oplossing: 20p = 600 → p = € 30<br>Hoeveelheid: Q = 10 × 30 – 100 = 200</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het marktevenwicht vind je door vraag en aanbod gelijk te stellen. Je lost de vergelijking op naar p (de evenwichtsprijs) en vult die prijs terug in om de evenwichtshoeveelheid te vinden. Controleer altijd door p in beide functies in te vullen — de uitkomst moet gelijk zijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2d">
+          <div class="question-header">
+            <div class="question-label">Vraag 2d — Bereken de winst per aanbieder</div>
+            <div class="question-text">Bereken de winst van een individuele aanbieder.</div>
+          </div>
+          <div class="fill-in">q = 30 – 10 = ......<br>TO = 30 × ...... = € ......<br>TK = 0,5 × ......² + 10 × ...... + 128 = € ......<br>W = € ...... – € ...... = € ......</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bereken eerst q per aanbieder: q = p – 10.<br>2. Bereken TO = p × q.<br>3. Bereken TK door q in te vullen in de kostenfunctie.<br>4. Winst = TO – TK.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vergeet niet: je rekent met de individuele hoeveelheid q, niet met de collectieve Q!</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">q = p – 10<br>TO = p × q<br>TK = 0,5q² + 10q + 128<br>W = TO – TK</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Individuele hoeveelheid: q = 30 – 10 = 20 stuks<br>TO: 30 × 20 = € 600<br>TK: 0,5 × 20² + 10 × 20 + 128 = 200 + 200 + 128 = € 528<br>Winst: W = 600 – 528 = € 72</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De winst per aanbieder bereken je via W = TO – TK. Belangrijk: gebruik de individuele hoeveelheid q (niet de markthoeveelheid Q). Elke aanbieder produceert q = p – 10 = 20 stuks. De totale kosten bereken je door q in te vullen in de kostenfunctie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2e">
+          <div class="question-header">
+            <div class="question-label">Vraag 2e — Waarom houdt de winst niet stand?</div>
+            <div class="question-text">Waarom zal de behaalde winst op de langere termijn niet standhouden?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij volkomen concurrentie zijn er geen toetredingsdrempels. Wat gebeurt er als bestaande aanbieders winst maken?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: De winst lokt nieuwe aanbieders naar de markt, waardoor de aanbodlijn naar rechts draait en verschuift, en de evenwichtsprijs daalt.<br>Gevolg: Dit proces gaat door totdat de winst verdwenen is en p = GTK (break-even).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie zijn er geen toetredingsdrempels. Positieve winst trekt nieuwe aanbieders aan. Meer aanbieders betekent meer aanbod, waardoor de prijs daalt. Dit proces stopt pas wanneer er geen winst meer te behalen valt: op de lange termijn geldt p = GTK en is de (economische) winst nul.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2f">
+          <div class="question-header">
+            <div class="question-label">Vraag 2f — Bereken de prijs op lange termijn</div>
+            <div class="question-text">Bereken de prijs op de markt op lange termijn.</div>
+          </div>
+          <div class="fill-in">MK = GTK<br>q + 10 = 0,5q + 10 + 128/q<br>0,5q = 128/q<br>0,5q² = 128<br>q = ......<br>p = ...... + 10 = € ......</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Op lange termijn geldt: MK = GTK (winst = 0).<br>2. Bereken GTK = TK / q.<br>3. Stel MK = GTK en los op naar q.<br>4. Bereken p via de aanbodfunctie p = q + 10.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Op lange termijn is de winst nul, dus p = MK = GTK. Los eerst MK = GTK op om q te vinden.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Lange termijn: MK = GTK (winst = 0)<br>GTK = TK / q = 0,5q + 10 + 128/q<br>MK = q + 10</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: Bij het oplossen van MK = GTK krijg je een term met 1/q. Vermenigvuldig beide kanten met q om de breuk weg te werken!</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Voorwaarde: MK = GTK → q + 10 = 0,5q + 10 + 128/q<br>Vereenvoudig: 0,5q = 128/q → 0,5q² = 128 → q² = 256 → q = 16<br>Langetermijnprijs: p = 16 + 10 = € 26</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op de lange termijn treedt er toe totdat de winst nul is. Dit betekent dat de prijs gelijk is aan de gemiddelde totale kosten (p = GTK). Het snijpunt van MK en GTK geeft de minimale GTK — en dat is precies de langetermijnprijs. Bij die prijs maakt elke aanbieder break-even.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Toetreding en kanteling van de aanbodlijn</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <div class="question-card" id="qvraag3zetdestap">
+          <div class="question-header">
+            <div class="question-label">Vraag 3 — Zet de stappen in de juiste volgorde</div>
+            <div class="question-text">In bron 4 kantelt de aanbodlijn naar rechts. Zet de stappen in de juiste volgorde. Begin bij stap C.
+
+A. De aanbodlijn kantelt naar rechts.
+B. De individuele aanbieders maken winst.
+C. De verkoopprijs is hoger dan de gemiddelde kosten per stuk.
+D. Dit lokt nieuwe toetreding van aanbieders uit.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Begin met de oorzaak (p > GTK) en eindig met het gevolg voor de markt. Denk logisch: winst → toetreding → meer aanbod.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Juiste volgorde: C – B – D – A<br>C: De verkoopprijs is hoger dan de gemiddelde kosten per stuk (p > GTK).<br>B: De individuele aanbieders maken winst (want TO > TK).<br>D: Dit lokt nieuwe toetreding van aanbieders uit (geen toetredingsdrempels).<br>A: De aanbodlijn kantelt naar rechts (meer aanbieders = meer aanbod bij elke prijs).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De keten is: p > GTK → winst → toetreding → aanbod stijgt. Dit is het zelfcorrigerend mechanisme van volkomen concurrentie: winst trekt nieuwe aanbieders aan, waardoor het aanbod stijgt en de prijs daalt tot de winst verdwijnt.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Melkveehouders in Litouwen — volkomen concurrentie in de praktijk</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees bron 7 over de melkveehouders in Litouwen.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a — Herken kenmerken van volkomen concurrentie</div>
+            <div class="question-text">Uit welke zin(nen) kun je afleiden dat de melkveehouders in Litouwen opereren op een markt met kenmerken van volkomen concurrentie? Verklaar je antwoord.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij volkomen concurrentie kan een individuele aanbieder de prijs niet beïnvloeden. Zoek een passage waaruit blijkt dat de melkveehouders de prijs niet zelf kunnen bepalen.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Relevante passage: 'De kosten van 1 liter melk komen in Litouwen uit op circa € 0,23, terwijl de verwerkers de melk inkopen voor zo’n € 0,21 per liter. Dat betekent dat de melkveehouderij niet meer kostendekkend is.'<br>Verklaring: Hieruit blijkt dat de melkveehouders de prijs niet naar boven toe kunnen beïnvloeden. Ze zijn prijsnemers — een kenmerk van volkomen concurrentie.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is de individuele aanbieder een prijsnemer. De melkveehouders in Litouwen kunnen de inkoopprijs van de verwerkers niet beïnvloeden: ze moeten de marktprijs accepteren, ook al dekt die hun kosten niet. Dit is het ultieme bewijs van prijsnemerschap.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b — Voorspel de marktuitkomst op lange termijn</div>
+            <div class="question-text">Wat voorspelt de theorie van een markt van volkomen concurrentie dat er op de markt van melk in Litouwen gaat gebeuren?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TK = 2q² + 98<br>p = –0,04Qv + 196<br>Aantal aanbieders: 250</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is het spiegelbeeld van toetreding bij winst. Bij verlies treden aanbieders uit, waardoor het aanbod daalt en de prijs stijgt. Het zelfcorrigerend mechanisme werkt in beide richtingen: bij winst toetreding, bij verlies uittreding, tot het langetermijnevenwicht is bereikt (winst = 0).</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Volkomen concurrentie — uitgebreide marktanalyse</div>
+            <span class="opgave-badge">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <div class="context-box">TK = 2q² + 98<br>p = –0,04Qv + 196<br>Aantal aanbieders: 250</div>
+        <p class="opgave-intro">Op een markt met volkomen concurrentie zijn 250 aanbieders actief met de kostenfunctie TK = 2q² + 98. De collectieve vraaglijn heeft als functie p = –0,04Qv + 196. De prijs en de totale kosten staan in euro’s.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a — Bereken de MK-formule</div>
+            <div class="question-text">Bereken de formule van de MK-lijn van een individuele aanbieder.</div>
+          </div>
+          <div class="fill-in">MK = TK’ = ............</div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">MK is de afgeleide van TK naar q.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MK = TK’</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK: TK’ = 4q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De marginale kosten zijn de afgeleide van de totale kostenfunctie. Bij TK = 2q² + 98 is de afgeleide MK = 4q. De constante 98 (vaste kosten) valt weg bij het afleiden.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b — Individuele aanbodfunctie</div>
+            <div class="question-text">Bereken de formule van de individuele aanbodlijn.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij volkomen concurrentie geldt p = MK.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Aanbodfunctie: p = MO = MK → p = 4q</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie is MO = p. Winstmaximalisatie (MO = MK) geeft dan p = MK = 4q. Dit is de individuele aanbodfunctie.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c — Collectieve aanbodfunctie</div>
+            <div class="question-text">Bereken de formule van de collectieve aanbodlijn.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Stap 1: p = 4q → q = 0,25p<br>Stap 2: Qa = 250 × 0,25p = 62,5p</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Schrijf de individuele aanbodfunctie om naar q als functie van p, en vermenigvuldig met het aantal aanbieders. Qa = 250 × q = 250 × 0,25p = 62,5p.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5d">
+          <div class="question-header">
+            <div class="question-label">Vraag 5d — Marktevenwicht</div>
+            <div class="question-text">Bereken het marktevenwicht.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraag omschrijven: p = –0,04Q + 196 → Qv = –25p + 4.900<br>Qv = Qa: –25p + 4.900 = 62,5p<br>Oplossing: 87,5p = 4.900 → p = € 56<br>Hoeveelheid: Q = 62,5 × 56 = 3.500</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Stel Qv = Qa. Let op: de vraaglijn is gegeven als p = f(Q), dus schrijf deze eerst om naar Q = f(p) om gelijk te stellen aan Qa = 62,5p.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5e">
+          <div class="question-header">
+            <div class="question-label">Vraag 5e — Winst per aanbieder</div>
+            <div class="question-text">Bereken de winst van een individuele aanbieder.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Individuele q: p = 4q → 56 = 4q → q = 14<br>TO: 56 × 14 = € 784<br>TK: 2 × 14² + 98 = 392 + 98 = € 490<br>Winst: W = 784 – 490 = € 294</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bereken eerst hoeveel één aanbieder produceert (q = p/4 = 14). Dan TO = p × q en TK via de kostenfunctie. Het verschil is de winst.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5f">
+          <div class="question-header">
+            <div class="question-label">Vraag 5f — Consumentensurplus</div>
+            <div class="question-text">Bereken het consumentensurplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS: (€ 196 – € 56) × 3.500 × 0,5 = € 245.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het consumentensurplus is de driehoek boven de evenwichtsprijs en onder de vraaglijn. De maximale prijs (bij Q = 0) is € 196. De driehoek heeft basis 3.500 en hoogte (196 – 56) = 140.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5g">
+          <div class="question-header">
+            <div class="question-label">Vraag 5g — Producentensurplus</div>
+            <div class="question-text">Bereken het producentensurplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">PS: (€ 56 – € 0) × 3.500 × 0,5 = € 98.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het producentensurplus is de driehoek onder de evenwichtsprijs en boven de aanbodlijn. De aanbodlijn begint bij p = 0 (Qa = 62,5p gaat door de oorsprong). De driehoek heeft basis 3.500 en hoogte 56.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5h">
+          <div class="question-header">
+            <div class="question-label">Vraag 5h — Teken MK- en GTK-lijn met winstoppervlak</div>
+            <div class="question-text">Teken een assenstelsel met op de x-as Q en op de y-as MK, GTK en p. Teken hierin de MK-lijn en GTK-lijn. Arceer de oppervlakte van de maximale winst.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK-lijn: MK = 4q, stijgende rechte lijn door de oorsprong<br>GTK-lijn: GTK = 2q + 98/q, dalend-stijgende U-curve<br>Prijslijn: p = 56, horizontale lijn<br>Winstoppervlak: Rechthoek tussen p-lijn en GTK-curve, van q = 0 tot q = 14. Hoogte = p – GTK bij q = 14 = 56 – 35 = 21.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De winst per stuk is het verschil tussen prijs en GTK. De totale winst is dit verschil vermenigvuldigd met q: het gearceerde rechthoekige gebied tussen de horizontale prijslijn en de GTK-curve, bij de winstmaximaliserende hoeveelheid.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5i">
+          <div class="question-header">
+            <div class="question-label">Vraag 5i — Teken vraag- en aanbodlijn met surplussen</div>
+            <div class="question-text">Teken een assenstelsel met op de x-as Q en op de y-as p. Teken hierin de vraag- en aanbodlijn. Arceer het consumenten- en producentensurplus.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraaglijn: p = –0,04Q + 196, dalende lijn van (0; 196) naar (4.900; 0)<br>Aanbodlijn: Qa = 62,5p → p = 0,016Q, stijgende lijn door oorsprong<br>Evenwicht: Snijpunt bij (3.500; 56)<br>CS: Driehoek boven p = 56, onder vraaglijn<br>PS: Driehoek onder p = 56, boven aanbodlijn</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het consumentensurplus is het gebied boven de prijs en onder de vraaglijn (wat consumenten bereid waren te betalen minus wat ze daadwerkelijk betalen). Het producentensurplus is het gebied onder de prijs en boven de aanbodlijn (wat producenten ontvangen minus het minimum waarvoor ze wilden aanbieden).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5j">
+          <div class="question-header">
+            <div class="question-label">Vraag 5j — Toetreding op lange termijn</div>
+            <div class="question-text">Hoeveel aanbieders treden er op de lange termijn toe?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MK = GTK: 4q = 2q + 98/q → 2q = 98/q → 2q² = 98 → q = 7<br>Langetermijnprijs: p = MK = 4 × 7 = € 28<br>Markthoeveelheid: Q = –25 × 28 + 4.900 = 4.200<br>Aantal aanbieders: 4.200 / 7 = 600<br>Toetreders: 600 – 250 = 350 nieuwe aanbieders</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op lange termijn is de winst nul (MK = GTK). Los dit op om de individuele productie q en de langetermijnprijs p te vinden. Vul p in de vraaglijn in voor de totale markthoeveelheid Q. Deel Q door q voor het totaal aantal aanbieders, en trek het oorspronkelijke aantal (250) af voor het aantal toetreders.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Winsten op de lange termijn — internationaal vergelijken</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Lees Uit de wetenschap &#x27;Winsten op de lange termijn&#x27;.</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a — Welk land past het beste bij volkomen concurrentie?</div>
+            <div class="question-text">In welk land komt volkomen concurrentie het meeste voor?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Antwoord: In Slovenië. Bij volkomen concurrentie verdwijnen de winsten op lange termijn. In Slovenië maakt slechts 1% van de bedrijven op lange termijn winst. Er zal daar het meest sprake zijn van volkomen concurrentie.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij volkomen concurrentie convergeert de winst naar nul op de lange termijn. Het land waar de minste bedrijven langdurig winst maken, past dus het beste bij deze marktvorm. Slovenië heeft het laagste percentage winstgevende bedrijven op lange termijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b — Alternatieve verklaring</div>
+            <div class="question-text">Is er een andere verklaring voor de verschillen in bedrijfswinsten tussen landen?</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Alternatief: Aanbieders kunnen ook werken met hoge kosten, bijvoorbeeld omdat ze gebruikmaken van verouderde productieprocessen. Dit brengt hoge kosten met zich mee waardoor winsten verdampen.<br>Nuance: Lage winsten hoeven dus niet per se te wijzen op volkomen concurrentie — ze kunnen ook het gevolg zijn van inefficiëntie.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Er zijn meerdere redenen waarom bedrijven lage winsten kunnen hebben. Naast volkomen concurrentie kan het ook liggen aan hoge productiekosten, verouderde technologie, of een ongunstig vestigingsklimaat. Je moet dus voorzichtig zijn met het trekken van conclusies uit winst alleen.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>Veel aanbieders, homogeen product, geen toetredingsdrempels, volledige informatie</td></tr>
+            <tr><td>Prijsnemer</td><td>Individuele aanbieder kan de marktprijs niet beïnvloeden (MO = p)</td></tr>
+            <tr><td>Individueel aanbod</td><td>Volgt uit MO = MK = p; geeft q als functie van p</td></tr>
+            <tr><td>Collectief aanbod</td><td>Som van individueel aanbod: Qa = n × q (bij identieke aanbieders)</td></tr>
+            <tr><td>Marktevenwicht</td><td>Qv = Qa; los op naar p en bereken Q</td></tr>
+            <tr><td>Winst per aanbieder</td><td>W = TO – TK = p·q – TK(q)</td></tr>
+            <tr><td>Korte termijn</td><td>Winst of verlies mogelijk; lokt toetreding of uittreding uit</td></tr>
+            <tr><td>Lange termijn</td><td>Winst = 0, p = GTK = MK; geen prikkel tot toe- of uittreding</td></tr>
+            <tr><td>Consumentensurplus</td><td>Driehoek boven p, onder vraaglijn: 0,5 × Q × (pmax – p)</td></tr>
+            <tr><td>Producentensurplus</td><td>Driehoek onder p, boven aanbodlijn: 0,5 × Q × (p – pmin)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

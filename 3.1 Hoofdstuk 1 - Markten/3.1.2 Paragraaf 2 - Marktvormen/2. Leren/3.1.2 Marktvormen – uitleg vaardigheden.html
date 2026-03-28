@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.1.2 Marktvormen – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+    --arbeids-primary: #E67E22;
+    --arbeids-light: #FEF5E7;
+    --arbeids-dark: #BA6A1C;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-arbeids { border-left-color: var(--arbeids-primary); }
+  .domain-arbeids .nav-number { background: var(--arbeids-primary); }
+  .domain-arbeids .nav-badge { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .section-header.border-arbeids { border-bottom: 3px solid var(--arbeids-primary); }
+  .section-num.bg-arbeids { background: var(--arbeids-primary); }
+  .badge-arbeids { background: var(--arbeids-light); color: var(--arbeids-primary); }
+  .samenvatting-table caption.caption-arbeids { background: var(--arbeids-primary); }
+  .hero-card.card-arbeids { border-top-color: var(--arbeids-primary); }
+  .card-arbeids .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--arbeids-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 33%, var(--bedrijf-primary) 33% 67%, var(--arbeids-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.1.2 Marktvormen</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">De Vijf Marktvormen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Spectrum van Concurrentie</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Homogeen vs Heterogeen bij Oligopolie</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktvorm Bepalen (Stappenplan)</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Voordelen van Concurrentie</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Risico’s van Weinig Concurrentie</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-arbeids" href="#sectie-7" data-section="sectie-7">
+      <span class="nav-number">7</span>
+      <span class="nav-text">
+        <span class="nav-title">Wanneer is een Monopolie Nuttig?</span>
+        <span class="nav-badge">Arbeidsmarkt</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.1.2 &middot; Vaardigheden</span>
+        <h1>Marktvormen &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Welke vaardigheden leer je in deze paragraaf?</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">De Vijf Marktvormen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Spectrum van Concurrentie</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Homogeen vs Heterogeen bij Oligopolie</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Marktvorm Bepalen (Stappenplan)</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Voordelen van Concurrentie</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Risico’s van Weinig Concurrentie</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-arbeids" data-target="sectie-7">
+            <div class="hero-card-num">07</div>
+            <div class="hero-card-title">Wanneer is een Monopolie Nuttig?</div>
+            <span class="hero-card-domain">Arbeidsmarkt</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">De Vijf Marktvormen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Er zijn vijf hoofdtypen markten. Je kunt ze ordenen van weinig concurrentie (monopolie) tot veel concurrentie (volkomen concurrentie). Dit overzicht is de basis van de hele paragraaf.</p>
+        <h3 class="sub-heading">Overzicht van de vijf marktvormen</h3>
+        <p class="intro-text">Elke marktvorm verschilt in aantal aanbieders, producttype, toetreding en prijsinvloed.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>Zeer veel aanbieders, homogeen product, vrije toetreding, geen prijsinvloed</td></tr>
+            <tr><td>Mon. concurrentie</td><td>Veel aanbieders, heterogeen product, vrije toetreding, weinig prijsinvloed</td></tr>
+            <tr><td>Homogeen oligopolie</td><td>Weinig aanbieders, homogeen product, beperkte toetreding, enige prijsinvloed</td></tr>
+            <tr><td>Heterogeen oligopolie</td><td>Weinig aanbieders, heterogeen product, beperkte toetreding, enige prijsinvloed</td></tr>
+            <tr><td>Monopolie</td><td>Eén aanbieder, geblokkeerde toetreding, zeer hoge prijsinvloed</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Hoe minder aanbieders en hoe hoger de drempels, hoe meer macht elk bedrijf heeft over de prijs.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet dat er vijf marktvormen zijn, niet vier! Oligopolie kent twee varianten: homogeen en heterogeen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de vijf marktvormen opnoemen en hun kenmerken beschrijven?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Volkomen concurrentie</td><td>Zeer veel aanbieders, homogeen product, vrije toetreding</td></tr>
+            <tr><td>Mon. concurrentie</td><td>Veel aanbieders, heterogeen product, vrije toetreding</td></tr>
+            <tr><td>Homogeen oligopolie</td><td>Weinig aanbieders, homogeen product, beperkte toetreding</td></tr>
+            <tr><td>Het. oligopolie</td><td>Weinig aanbieders, heterogeen product, beperkte toetreding</td></tr>
+            <tr><td>Monopolie</td><td>Eén aanbieder, geblokkeerde toetreding</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Spectrum van Concurrentie</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Van monopolie tot volkomen concurrentie</h3>
+        <p class="intro-text">Stel je een lijn voor met aan het ene uiteinde monopolie en aan het andere volkomen concurrentie. Elk type markt staat ergens op die lijn.</p>
+        <div class="formula-box">
+            Monopolie ←───────────────────────────→ Volkomen concurrentie<br>
+            Weinig concurrentie            Veel concurrentie<br>
+            Hoge prijsinvloed              Geen prijsinvloed
+        </div>
+        <h3 class="sub-heading">Waar staan de marktvormen?</h3>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Hoe meer aanbieders, hoe minder macht elk bedrijf heeft over de prijs.
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Het spectrum loopt van monopolie (maximale macht) naar volkomen concurrentie (geen macht). Elk bedrijf staat ergens op deze lijn.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de marktvormen ordenen op het spectrum van weinig naar veel concurrentie?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Monopolie</td><td>1 aanbieder, zeer hoge prijsinvloed</td></tr>
+            <tr><td>Oligopolie</td><td>Weinig aanbieders, enige prijsinvloed</td></tr>
+            <tr><td>Mon. concurrentie</td><td>Veel aanbieders, weinig prijsinvloed</td></tr>
+            <tr><td>Volkomen concurrentie</td><td>Zeer veel aanbieders, geen prijsinvloed</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Homogeen vs Heterogeen bij Oligopolie</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Binnen het oligopolie bestaan twee varianten. Het verschil bepaalt hoe bedrijven concurreren: op prijs of op product.</p>
+        <h3 class="sub-heading">Homogeen oligopolie</h3>
+        <p class="intro-text">Weinig aanbieders bieden hetzelfde product (in de ogen van de consument). Consumenten kiezen bijna alleen op prijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Homogeen oligopolie</td><td>Weinig aanbieders, zelfde product → alleen prijsconcurrentie</td></tr>
+            <tr><td>Voorbeeld</td><td>Benzinemarkt — Shell, Esso, Texaco: allemaal Euro 95</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Heterogeen oligopolie</h3>
+        <p class="intro-text">Weinig aanbieders bieden een verschillend product (in de ogen van de consument). Merk en service spelen een rol naast prijs.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Heterogeen oligopolie</td><td>Weinig aanbieders, verschillend product → merk speelt mee</td></tr>
+            <tr><td>Voorbeeld</td><td>Telefonie — KPN, Vodafone, T-Mobile: zelfde service, anders ervaren</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            Homogeen oligopolie → Alleen prijs telt → Prijsconcurrentie<br>
+            Heterogeen oligopolie → Merk/kwaliteit telt → Productdifferentiatie
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> In homogeen oligopolie kunnen bedrijven nooit hun prijs veel hoger zetten dan concurrenten — klanten gaan weg. In heterogeen oligopolie heb je iets meer ruimte voor prijsverschillen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het verschil uitleggen tussen homogeen en heterogeen oligopolie?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Homogeen oligopolie</td><td>Weinig aanbieders, zelfde product → alleen prijsconcurrentie</td></tr>
+            <tr><td>Heterogeen oligopolie</td><td>Weinig aanbieders, verschillend product → merk speelt mee</td></tr>
+            <tr><td>Voorbeeld homogeen</td><td>Benzinemarkt — Shell, Esso, Texaco</td></tr>
+            <tr><td>Voorbeeld heterogeen</td><td>Telefonie — KPN, Vodafone, T-Mobile</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktvorm Bepalen (Stappenplan)</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij examenvragen moet je snel en systematisch de marktvorm kunnen bepalen. Dit stappenplan helpt je daarbij.</p>
+        <h3 class="sub-heading">Stap 1: Tel de aanbieders</h3>
+        <p class="intro-text">Hoeveel bedrijven spelen op deze markt? Eén, weinig, veel of zeer veel?</p>
+        <h3 class="sub-heading">Stap 2: Homogeen of heterogeen?</h3>
+        <p class="intro-text">Ziet de consument verschil tussen de aanbieders of niet? Dit bepaalt of er productdifferentiatie is.</p>
+        <h3 class="sub-heading">Stap 3: Toetredingsdrempels</h3>
+        <p class="intro-text">Kun je als nieuw bedrijf makkelijk toetreden, of zijn er grote obstakels?</p>
+        <h3 class="sub-heading">Stap 4: Combineer je antwoorden</h3>
+        <p class="intro-text">Op basis van de drie stappen kun je de marktvorm bepalen:</p>
+        <div class="formula-box">
+            Zeer veel aanbieders + homogeen  = volkomen concurrentie<br>
+            Veel aanbieders + heterogeen     = monopolistische concurrentie<br>
+            Weinig aanbieders + homogeen     = homogeen oligopolie<br>
+            Weinig aanbieders + heterogeen   = heterogeen oligopolie<br>
+            Eén aanbieder                     = monopolie
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Bij examenvragen: doorloop altijd alle vier de stappen. Sla er geen over!
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Begin altijd bij stap 1 (aanbieders tellen) en werk systematisch naar beneden.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Kijk niet alleen naar het aantal aanbieders! Een markt met veel aanbieders en een homogeen product is volkomen concurrentie, niet monopolistische concurrentie.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het stappenplan toepassen op een onbekende markt?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Stap 1</td><td>Tel de aanbieders (één / weinig / veel / zeer veel)</td></tr>
+            <tr><td>Stap 2</td><td>Homogeen of heterogeen? (consumentenperceptie)</td></tr>
+            <tr><td>Stap 3</td><td>Toetredingsdrempels (vrij / beperkt / geblokkeerd)</td></tr>
+            <tr><td>Stap 4</td><td>Combineer en bepaal de marktvorm</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Voordelen van Concurrentie</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Concurrentie heeft grote voordelen voor consumenten. Je moet deze voordelen kunnen benoemen én toelichten met een voorbeeld.</p>
+        <h3 class="sub-heading">Lagere prijzen</h3>
+        <p class="intro-text">Bedrijven moeten hun prijzen laag houden om klanten te behouden. Als jij duurder bent dan de concurrent, lopen klanten weg.</p>
+        <h3 class="sub-heading">Meer innovatie</h3>
+        <p class="intro-text">Bedrijven verbeteren hun product om concurrentie te winnen. Zonder concurrentie is er geen prikkel om te vernieuwen.</p>
+        <h3 class="sub-heading">Meer keuze</h3>
+        <p class="intro-text">Meer bedrijven op de markt betekent meer varianten voor de consument.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Lagere prijzen</td><td>Bedrijven houden prijzen laag om klanten te behouden</td></tr>
+            <tr><td>Meer innovatie</td><td>Bedrijven verbeteren producten om concurrentie te winnen</td></tr>
+            <tr><td>Meer keuze</td><td>Meer varianten beschikbaar voor consumenten</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeeld: Mobiele telefonie</h3>
+        <p class="intro-text">Jaren 80-90: KPN had nagenoeg monopolie. Dure abonnementen, weinig keuze.</p>
+        <p class="intro-text">Jaren 2000+: Vodafone, T-Mobile, Hi, Tele2 treden toe. Plotseling veel meer mogelijkheden en scherpe prijsconcurrentie.</p>
+        <div class="formula-box">
+            Meer concurrentie → Lagere prijzen + Meer innovatie + Meer keuze
+        </div>
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Concurrentie dwingt bedrijven om scherper te presteren — dat is voordelig voor de consument.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je drie voordelen van concurrentie noemen en toelichten met een voorbeeld?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Lagere prijzen</td><td>Bedrijven houden prijzen laag om klanten te behouden</td></tr>
+            <tr><td>Meer innovatie</td><td>Bedrijven verbeteren producten om concurrentie te winnen</td></tr>
+            <tr><td>Meer keuze</td><td>Meer varianten beschikbaar voor consumenten</td></tr>
+            <tr><td>Voorbeeld</td><td>Telecom: van KPN-monopolie naar scherpe prijsconcurrentie</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Risico’s van Weinig Concurrentie</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Wanneer er weinig aanbieders zijn, kan dat nadelige gevolgen hebben voor consumenten.</p>
+        <h3 class="sub-heading">Hogere prijzen</h3>
+        <p class="intro-text">Bedrijven met weinig concurrentie hebben minder prikkel om hun prijzen te verlagen. Ze kunnen hogere marges hanteren.</p>
+        <h3 class="sub-heading">Minder innovatie</h3>
+        <p class="intro-text">Waarom investeren in verbetering als je toch weinig concurrentie hebt? Zonder druk van buiten wordt een bedrijf lui.</p>
+        <h3 class="sub-heading">Kartelvorming</h3>
+        <p class="intro-text">Bedrijven kunnen afspraken maken om prijzen hoog te houden. Dit heet een kartel en het is illegaal.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Hogere prijzen</td><td>Minder prikkel om prijzen te verlagen</td></tr>
+            <tr><td>Minder innovatie</td><td>Geen noodzaak om te verbeteren</td></tr>
+            <tr><td>Kartelvorming</td><td>Illegale prijsafspraken tussen bedrijven</td></tr>
+          </tbody>
+        </table>
+        <h3 class="sub-heading">Voorbeeld: OPEC oliekartel</h3>
+        <p class="intro-text">De olie-exporterende landen spreken met elkaar af hoeveel olie ze gaan produceren. Resultaat: kunstmatig hoge olieprijzen.</p>
+        <div class="formula-box">
+            Weinig concurrentie → Hogere prijzen + Minder innovatie + Kartelrisico
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Kartelvorming is illegaal in de EU. De Europese Commissie kan boetes van miljoenen euro’s opleggen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je uitleggen waarom weinig concurrentie nadelig kan zijn voor consumenten?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Hogere prijzen</td><td>Minder prikkel om prijzen te verlagen</td></tr>
+            <tr><td>Minder innovatie</td><td>Geen noodzaak om te verbeteren</td></tr>
+            <tr><td>Kartelvorming</td><td>Illegale prijsafspraken tussen bedrijven</td></tr>
+            <tr><td>Voorbeeld</td><td>OPEC — afspraken over olieproductie</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-7">
+        <div class="section-header border-arbeids">
+          <span class="section-num bg-arbeids">7</span>
+          <div class="section-title-group">
+            <div class="section-title">Wanneer is een Monopolie Nuttig?</div>
+            <span class="section-badge badge-arbeids">Arbeidsmarkt</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Een monopolie is niet altijd slecht. Er zijn situaties waarin één aanbieder beter is dan meerdere. Je moet deze situaties herkennen.</p>
+        <h3 class="sub-heading">Seizoensgebonden vraag</h3>
+        <p class="intro-text">Voorbeeld: de veerdienst naar de Waddeneilanden. In de zomer veel toeristen, in de winter nauwelijks.</p>
+        <p class="intro-text">Eén bedrijf kan het hele jaar varen en in de zomer winst maken. Twee bedrijven zouden beiden verlies maken.</p>
+        <h3 class="sub-heading">Zeer hoge investeringen</h3>
+        <p class="intro-text">Voorbeeld: spoorwegen of gasnetwerk. Het kost miljarden om de infrastructuur aan te leggen.</p>
+        <p class="intro-text">Geen twee bedrijven kunnen dit betalen. Beter één monopolie met goede prijsregulering dan helemaal geen service.</p>
+        <h3 class="sub-heading">Universele toegang</h3>
+        <p class="intro-text">Voorbeeld: postbezorging. De overheid wil dat iedereen — ook in afgelegen gebieden — post kan versturen tegen redelijke prijs.</p>
+        <p class="intro-text">Eén bedrijf kan dit garanderen. Veel bedrijven zouden alleen winstgevende routes doen.</p>
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Seizoensgebonden</td><td>Eén bedrijf kan jaarrond diensten bieden</td></tr>
+            <tr><td>Hoge investering</td><td>Infrastructuur te duur voor meerdere bedrijven</td></tr>
+            <tr><td>Universele toegang</td><td>Iedereen moet toegang hebben, ook in afgelegen gebieden</td></tr>
+          </tbody>
+        </table>
+        <div class="formula-box">
+            Seizoensgebonden vraag → Eén aanbieder overleeft, twee niet<br>
+            Hoge investeringen → Alleen één bedrijf kan dit betalen<br>
+            Universele toegang → Alleen één bedrijf bedient iedereen
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Meer bedrijven = altijd beter&quot; → Onjuist! Soms is één gereguleerd bedrijf efficiënter dan veel kleine bedrijven die alles dubbel doen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je drie situaties noemen waarin een monopolie nuttig kan zijn?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-arbeids">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Seizoensgebonden</td><td>Eén bedrijf kan jaarrond diensten bieden</td></tr>
+            <tr><td>Hoge investering</td><td>Infrastructuur te duur voor meerdere bedrijven</td></tr>
+            <tr><td>Universele toegang</td><td>Iedereen moet toegang hebben, ook in afgelegen gebieden</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Oligopolie = twee bedrijven&quot; → Onjuist! Oligopolie betekent ‘weinig’ aanbieders. Dit kan 3, 4, 5, soms 10 bedrijven zijn — afhankelijk van de markt.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Marktvormen veranderen nooit&quot; → Onjuist! Marktvormen kunnen verschuiven. Als hoge drempels verdwijnen, kan een monopolie worden tot concurrentie (bijv. telecom).
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Meer bedrijven = altijd beter&quot; → Onjuist! Soms is één gereguleerd bedrijf efficiënter dan veel kleine bedrijven die alles dubbel doen.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">De vijf marktvormen en hun kenmerken</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Het spectrum van monopolie tot volkomen concurrentie</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Verschil tussen homogeen en heterogeen oligopolie</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Stappenplan: hoe bepaal je welke marktvorm het is</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Voordelen van concurrentie voor consumenten</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Risico’s van weinig concurrentie, inclusief kartelvorming</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check7">
+          <label for="check7">Wanneer kan een monopolie nuttig zijn</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>
