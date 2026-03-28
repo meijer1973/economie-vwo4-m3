@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.4 Oligopolie – Uitleg voorkennis</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    /* Domain colors */
+    --wisk-primary: #1A5276;
+    --wisk-light: #EBF5FB;
+    --wisk-dark: #154360;
+    --econ-primary: #E67E22;
+    --econ-light: #FEF5E7;
+    --econ-dark: #BA6A1C;
+    --graf-primary: #1E8449;
+    --graf-light: #E8F8F0;
+    --graf-dark: #186A3B;
+  }
+
+  /* ── Layout ── */
+  .page-layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 {
+    font-size: 0.82rem; font-weight: bold; color: var(--navy);
+    line-height: 1.3;
+  }
+  .sidebar-header p {
+    font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem;
+  }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-wiskunde { border-left-color: var(--wisk-primary); }
+  .nav-item.active.domain-economisch { border-left-color: var(--econ-primary); }
+  .nav-item.active.domain-grafisch { border-left-color: var(--graf-primary); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .domain-wiskunde .nav-number { background: var(--wisk-primary); }
+  .domain-economisch .nav-number { background: var(--econ-primary); }
+  .domain-grafisch .nav-number { background: var(--graf-primary); }
+
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title {
+    font-size: 0.76rem; color: var(--dark); line-height: 1.3;
+    display: block;
+  }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .domain-wiskunde .nav-badge { background: var(--wisk-light); color: var(--wisk-primary); }
+  .domain-economisch .nav-badge { background: var(--econ-light); color: var(--econ-primary); }
+  .domain-grafisch .nav-badge { background: var(--graf-light); color: var(--graf-primary); }
+
+  /* ── Mobile toggle ── */
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9;
+  }
+
+  /* ── Content area ── */
+  .content { flex: 1; min-width: 0; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--wisk-primary) 50%, var(--econ-primary) 50% 75%, var(--graf-primary) 75%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  /* ── Hero cards ── */
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card.card-wiskunde { border-top-color: var(--wisk-primary); }
+  .hero-card.card-economisch { border-top-color: var(--econ-primary); }
+  .hero-card.card-grafisch { border-top-color: var(--graf-primary); }
+  .hero-card-num {
+    font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem;
+  }
+  .hero-card-title {
+    font-size: 0.82rem; font-weight: bold; line-height: 1.3;
+  }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .card-wiskunde .hero-card-domain { background: rgba(26,82,118,0.3); color: #85C1E9; }
+  .card-economisch .hero-card-domain { background: rgba(230,126,34,0.3); color: #F5CBA7; }
+  .card-grafisch .hero-card-domain { background: rgba(30,132,73,0.3); color: #82E0AA; }
+
+  /* ── Main content ── */
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-header.border-wiskunde { border-bottom: 3px solid var(--wisk-primary); }
+  .section-header.border-economisch { border-bottom: 3px solid var(--econ-primary); }
+  .section-header.border-grafisch { border-bottom: 3px solid var(--graf-primary); }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-num.bg-wiskunde { background: var(--wisk-primary); }
+  .section-num.bg-economisch { background: var(--econ-primary); }
+  .section-num.bg-grafisch { background: var(--graf-primary); }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .badge-wiskunde { background: var(--wisk-light); color: var(--wisk-primary); }
+  .badge-economisch { background: var(--econ-light); color: var(--econ-primary); }
+  .badge-grafisch { background: var(--graf-light); color: var(--graf-primary); }
+
+  /* ── Subsection heading ── */
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+
+  /* ── Intro text ── */
+  .intro-text {
+    font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7;
+  }
+
+  /* ── Begrippen table ── */
+  .begrippen-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+  }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td {
+    padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7;
+    vertical-align: top;
+  }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); white-space: nowrap; }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  /* ── Formula box ── */
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  /* ── Voorbeeld box ── */
+  .voorbeeld-box {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+  }
+  .voorbeeld-box .label {
+    font-size: 0.75rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--gray); margin-bottom: 0.5rem;
+  }
+  .voorbeeld-box .given {
+    font-size: 0.88rem; color: var(--dark); margin-bottom: 0.6rem;
+  }
+  .voorbeeld-box .steps {
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.85rem;
+    line-height: 1.8; color: var(--dark);
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel {
+    background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037;
+  }
+  .callout-letop {
+    background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C;
+  }
+  .callout-controle {
+    background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20;
+  }
+  .callout-tip {
+    background: var(--wisk-light); border-left: 4px solid var(--wisk-primary); color: var(--wisk-dark);
+  }
+  .callout-icon { margin-right: 0.4rem; }
+
+  /* ── Samenvatting table ── */
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden;
+    border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table caption.caption-wiskunde { background: var(--wisk-primary); }
+  .samenvatting-table caption.caption-economisch { background: var(--econ-primary); }
+  .samenvatting-table caption.caption-grafisch { background: var(--graf-primary); }
+  .samenvatting-table td {
+    padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top;
+  }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  /* ── Checklist ── */
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title {
+    font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem;
+  }
+  .checklist-sub {
+    font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem;
+  }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer;
+    user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: var(--graf-primary); cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.4 Oligopolie</h2>
+      <p>Uitleg voorkennis</p>
+    </div>
+
+    <a class="nav-item domain-wiskunde" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Vergelijkingen met twee onbekenden</span>
+        <span class="nav-badge">Wiskundig</span>
+      </span>
+    </a>
+    <a class="nav-item domain-wiskunde" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Afleiden en MO berekenen</span>
+        <span class="nav-badge">Wiskundig</span>
+      </span>
+    </a>
+    <a class="nav-item domain-economisch" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Economische begrippen bij oligopolie</span>
+        <span class="nav-badge">Economisch</span>
+      </span>
+    </a>
+    <a class="nav-item domain-grafisch" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Grafieken met reactielijnen</span>
+        <span class="nav-badge">Grafisch</span>
+      </span>
+    </a>
+  </nav>
+
+  <!-- ════════════════ CONTENT ════════════════ -->
+  <div class="content">
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.4 &middot; Voorkennis</span>
+        <h1>Oligopolie &mdash; Voorkennis</h1>
+        <p class="hero-sub">Wat moet je al weten voordat je aan deze paragraaf begint?</p>
+
+        <div class="hero-cards">
+          <div class="hero-card card-wiskunde" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Vergelijkingen met twee onbekenden</div>
+            <span class="hero-card-domain">Wiskundig</span>
+          </div>
+          <div class="hero-card card-wiskunde" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Afleiden en MO berekenen</div>
+            <span class="hero-card-domain">Wiskundig</span>
+          </div>
+          <div class="hero-card card-economisch" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Economische begrippen bij oligopolie</div>
+            <span class="hero-card-domain">Economisch</span>
+          </div>
+          <div class="hero-card card-grafisch" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Grafieken met reactielijnen</div>
+            <span class="hero-card-domain">Grafisch</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ══════════════════════════════════════════════
+           SECTIE 1 — Vergelijkingen met twee onbekenden
+           ══════════════════════════════════════════════ -->
+      <section class="section" id="sectie-1">
+        <div class="section-header border-wiskunde">
+          <span class="section-num bg-wiskunde">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Vergelijkingen met twee onbekenden</div>
+            <span class="section-badge badge-wiskunde">Wiskundig</span>
+          </div>
+        </div>
+
+        <h3 class="sub-heading">Waarom heb je dit nodig?</h3>
+        <p class="intro-text">Bij oligopolie werk je met twee reactielijnen: twee vergelijkingen met twee onbekenden. Om het evenwicht te vinden, moet je deze vergelijkingen tegelijk oplossen.</p>
+
+        <h3 class="sub-heading">Wat is substitutie?</h3>
+        <p class="intro-text">Substitutie betekent dat je de ene vergelijking in de andere invult. Zo breng je twee onbekenden terug tot &eacute;&eacute;n onbekende.</p>
+
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Substitutie</td><td>E&eacute;n vergelijking invullen in de andere om &eacute;&eacute;n onbekende weg te werken</td></tr>
+            <tr><td>Stelsel</td><td>Twee (of meer) vergelijkingen die tegelijk gelden</td></tr>
+            <tr><td>Reactielijn</td><td>Vergelijking die jouw optimale q geeft als functie van q van de concurrent</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="sub-heading">Stappenplan substitutie</h3>
+        <div class="formula-box">
+          Stap 1: Schrijf beide vergelijkingen op<br>
+          Stap 2: Kies &eacute;&eacute;n vergelijking en vul deze in de andere in<br>
+          Stap 3: Los op naar de overgebleven onbekende<br>
+          Stap 4: Vul de uitkomst terug in de andere vergelijking
+        </div>
+
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <div class="voorbeeld-box">
+          <div class="label">Voorbeeld</div>
+          <div class="given">Gegeven: q&#8321; = 35 &minus; 0,5q&#8322; en q&#8322; = 35 &minus; 0,5q&#8321;</div>
+          <div class="steps">
+            q&#8321; = 35 &minus; 0,5q&#8322;<br>
+            Invullen: q&#8321; = 35 &minus; 0,5(35 &minus; 0,5q&#8321;)<br>
+            q&#8321; = 35 &minus; 17,5 + 0,25q&#8321;<br>
+            0,75q&#8321; = 17,5<br>
+            q&#8321; = 23&#8531; &nbsp;&rarr;&nbsp; q&#8322; = 23&#8531;
+          </div>
+        </div>
+
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij symmetrische bedrijven (zelfde MK) geldt altijd q&#8321; = q&#8322; in het evenwicht. Dat is een handige controle!
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Vergeet niet om na het oplossen van q&#8321; de waarde terug te vullen in de andere vergelijking om q&#8322; te vinden.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Los op: x = 10 &minus; 0,5y en y = 10 &minus; 0,5x. (antwoord: x = y = 6&#8532;)
+        </div>
+
+        <table class="samenvatting-table">
+          <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Methode</td><td>Substitutie: vul vergelijking 2 in vergelijking 1 in</td></tr>
+            <tr><td>Doel</td><td>Twee onbekenden terugbrengen tot &eacute;&eacute;n onbekende</td></tr>
+            <tr><td>Toepassing</td><td>Reactielijnen bij oligopolie / Cournot-evenwicht</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           SECTIE 2 — Afleiden en MO berekenen
+           ══════════════════════════════════════════ -->
+      <section class="section" id="sectie-2">
+        <div class="section-header border-wiskunde">
+          <span class="section-num bg-wiskunde">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Afleiden en MO berekenen</div>
+            <span class="section-badge badge-wiskunde">Wiskundig</span>
+          </div>
+        </div>
+
+        <h3 class="sub-heading">Van residuele vraag naar TO</h3>
+        <p class="intro-text">Je moet de totale opbrengst (TO) kunnen berekenen uit de residuele vraaglijn. Dat doe je door p te vermenigvuldigen met q.</p>
+
+        <h3 class="sub-heading">De vuistregel voor MO</h3>
+        <p class="intro-text">Bij een lineaire vraaglijn (p = aq + b) heeft de MO-lijn altijd een dubbele helling. Dit is een handig ezelsbruggetje.</p>
+
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Residuele vraag</td><td>De vraaglijn die overblijft na aftrek van de productie van de concurrent</td></tr>
+            <tr><td>TO (totale opbrengst)</td><td>TO = p &times; q (vul de vraaglijn in voor p)</td></tr>
+            <tr><td>MO (marginale opbrengst)</td><td>De afgeleide van TO naar q</td></tr>
+          </tbody>
+        </table>
+
+        <div class="formula-box">
+          Vraaglijn: &nbsp;p = aq + b<br>
+          TO = p &times; q = aq&sup2; + bq<br>
+          MO = 2aq + b &nbsp;(dubbele helling!)
+        </div>
+
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij een lineaire vraaglijn geldt: MO heeft dezelfde constante als p, maar een dubbele helling.
+        </div>
+
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <div class="voorbeeld-box">
+          <div class="label">Voorbeeld</div>
+          <div class="given">Gegeven: p = &minus;10q + 800</div>
+          <div class="steps">
+            TO = p &times; q = (&minus;10q + 800) &times; q = &minus;10q&sup2; + 800q<br>
+            MO = &minus;20q + 800
+          </div>
+        </div>
+
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Schrijf de vraaglijn altijd eerst om naar p = f(q) voordat je TO berekent. Doe je dat niet, dan gaat de vermenigvuldiging mis.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Leid MO af uit p = &minus;5q + 200. (antwoord: MO = &minus;10q + 200)
+        </div>
+
+        <table class="samenvatting-table">
+          <caption class="caption-wiskunde">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>TO</td><td>TO = p &times; Q (schrijf p eerst om naar p = f(Q))</td></tr>
+            <tr><td>MO</td><td>MO = afgeleide van TO naar Q</td></tr>
+            <tr><td>Vuistregel</td><td>Bij lineaire vraaglijn: MO heeft dubbele helling</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+           SECTIE 3 — Economische begrippen bij oligopolie
+           ══════════════════════════════════════════════════════ -->
+      <section class="section" id="sectie-3">
+        <div class="section-header border-economisch">
+          <span class="section-num bg-economisch">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Economische begrippen bij oligopolie</div>
+            <span class="section-badge badge-economisch">Economisch</span>
+          </div>
+        </div>
+
+        <h3 class="sub-heading">Wat is een oligopolie?</h3>
+        <p class="intro-text">Een oligopolie is een marktvorm met slechts een paar grote aanbieders. Omdat er zo weinig spelers zijn, houdt iedereen rekening met het gedrag van de concurrent.</p>
+
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders die elkaars gedrag be&iuml;nvloeden</td></tr>
+            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
+            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus de productie van de concurrent</td></tr>
+            <tr><td>Reactielijn</td><td>Jouw optimale hoeveelheid als functie van de hoeveelheid van de concurrent</td></tr>
+            <tr><td>Cournot-evenwicht</td><td>Snijpunt van de reactielijnen (hoeveelheidsconcurrentie)</td></tr>
+            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK en winst = 0</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="sub-heading">Cournot versus Bertrand</h3>
+        <p class="intro-text">Het verschil zit in het type concurrentie. Bij Cournot concurreren bedrijven op hoeveelheid, bij Bertrand op prijs.</p>
+
+        <div class="formula-box">
+          Cournot (hoeveelheid) &nbsp;&rarr;&nbsp; p &gt; MK &nbsp;&rarr;&nbsp; winst &gt; 0<br>
+          Bertrand (prijs) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; p = MK &nbsp;&rarr;&nbsp; winst = 0
+        </div>
+
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Bij Cournot blijft er winst over doordat bedrijven de hoeveelheid beperken. Bij Bertrand onderbieden ze elkaar tot p = MK.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Verwar residuele vraag niet met collectieve vraag. De residuele vraag is altijd kleiner: het is wat er voor jou overblijft na aftrek van de concurrent.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Bij Cournot concurreren bedrijven op hoeveelheid (er blijft winst over). Bij Bertrand concurreren ze op prijs (winst verdwijnt).
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het verschil uitleggen tussen Cournot en Bertrand?
+        </div>
+
+        <table class="samenvatting-table">
+          <caption class="caption-economisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders</td></tr>
+            <tr><td>Duopolie</td><td>Oligopolie met precies twee aanbieders</td></tr>
+            <tr><td>Residuele vraag</td><td>Jouw vraag = collectieve vraag minus concurrent</td></tr>
+            <tr><td>Reactielijn</td><td>Jouw optimale q als functie van q_concurrent</td></tr>
+            <tr><td>Cournot-evenwicht</td><td>Snijpunt van reactielijnen (hoeveelheidsconcurrentie)</td></tr>
+            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie: p = MK, winst = 0</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           SECTIE 4 — Grafieken met reactielijnen
+           ══════════════════════════════════════════════ -->
+      <section class="section" id="sectie-4">
+        <div class="section-header border-grafisch">
+          <span class="section-num bg-grafisch">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Grafieken met reactielijnen</div>
+            <span class="section-badge badge-grafisch">Grafisch</span>
+          </div>
+        </div>
+
+        <h3 class="sub-heading">Hoe teken je reactielijnen?</h3>
+        <p class="intro-text">Reactielijnen teken je in een assenstelsel met q&#8321; op de x-as en q&#8322; op de y-as. Elke lijn laat zien hoeveel de ene aanbieder produceert bij elke hoeveelheid van de ander.</p>
+
+        <table class="begrippen-table">
+          <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+          <tbody>
+            <tr><td>x-as</td><td>q&#8321; (hoeveelheid van aanbieder 1)</td></tr>
+            <tr><td>y-as</td><td>q&#8322; (hoeveelheid van aanbieder 2)</td></tr>
+            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="sub-heading">Stappen voor het tekenen</h3>
+        <p class="intro-text">Bepaal van elke reactielijn twee punten door de ander op 0 en op het maximum te zetten. Verbind deze punten met een rechte lijn.</p>
+
+        <div class="formula-box">
+          Reactielijn 1: q&#8321; = 35 &minus; 0,5q&#8322;<br>
+          &nbsp;&nbsp;bij q&#8322; = 0: &nbsp;q&#8321; = 35<br>
+          &nbsp;&nbsp;bij q&#8322; = 70: q&#8321; = 0<br>
+          <br>
+          Reactielijn 2: q&#8322; = 35 &minus; 0,5q&#8321;<br>
+          &nbsp;&nbsp;bij q&#8321; = 0: &nbsp;q&#8322; = 35<br>
+          &nbsp;&nbsp;bij q&#8321; = 70: q&#8322; = 0
+        </div>
+
+        <h3 class="sub-heading">Wat zegt het snijpunt?</h3>
+        <p class="intro-text">Het snijpunt van de twee reactielijnen is het Cournot-evenwicht. Op dat punt produceert geen van beide bedrijven te veel of te weinig, gegeven wat de ander doet.</p>
+
+        <div class="callout callout-kernregel">
+          <span class="callout-icon">&#11088;</span>
+          <strong>Kernregel:</strong> Reactielijnen zijn altijd dalend: als de concurrent meer produceert, produceer jij minder. Het snijpunt is het Nash-evenwicht.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> Verwissel de assen niet! Bij reactielijnen staat q&#8321; altijd op de x-as en q&#8322; op de y-as. Dit is anders dan bij een standaard V/A-grafiek.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je twee reactielijnen tekenen en het snijpunt (Cournot-evenwicht) aanwijzen?
+        </div>
+
+        <table class="samenvatting-table">
+          <caption class="caption-grafisch">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Assen</td><td>q&#8321; op de x-as, q&#8322; op de y-as</td></tr>
+            <tr><td>Snijpunt</td><td>Het Cournot-evenwicht: geen van beide wil afwijken</td></tr>
+            <tr><td>Dalend</td><td>Reactielijnen zijn altijd dalend: meer q&#8322; &rarr; minder q&#8321;</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           CHECKLIST
+           ══════════════════════════════════════════ -->
+      <div class="checklist-section">
+        <div class="checklist-title">Checklist voorkennis</div>
+        <p class="checklist-sub">Controleer of je de volgende zaken beheerst voordat je aan de paragraaf begint:</p>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Ik kan de residuele vraaglijn afleiden</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Ik kan MO berekenen uit de residuele vraag</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Ik kan een reactielijn opstellen (MO = MK met twee variabelen)</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Ik kan het Cournot-evenwicht berekenen door substitutie</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Ik ken het verschil tussen hoeveelheids- en prijsconcurrentie</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Ik kan CS berekenen bij een oligopolie</label>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ── Smooth scroll navigation ──
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Close mobile sidebar
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  // ── IntersectionObserver for active state ──
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+
+  sections.forEach(function(s) { observer.observe(s); });
+
+  // ── Mobile sidebar toggle ──
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  // ── Checklist toggle ──
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>
