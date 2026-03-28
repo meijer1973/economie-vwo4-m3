@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.2.4 Oligopolie – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 270px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+  }
+
+  /* ── Layout ── */
+  .page-layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.4rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  /* Opgave group */
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem;
+    padding: 0.45rem 1rem; font-size: 0.76rem; font-weight: bold; color: var(--dark);
+    cursor: pointer; border-left: 3px solid transparent;
+    transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--markt-primary); background: var(--light-gray); }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    background: var(--markt-primary);
+  }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+
+  /* Question items */
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem;
+    font-size: 0.72rem; color: var(--gray); border-left: 3px solid transparent;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--markt-primary); background: var(--light-gray); }
+
+  /* ── Mobile toggle ── */
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9;
+  }
+
+  /* ── Content ── */
+  .content { flex: 1; min-width: 0; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: var(--markt-primary);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  /* Hero cards */
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--markt-primary);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+
+  /* ── How-to section ── */
+  .howto {
+    max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 0;
+  }
+  .howto-box {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.2rem 1.4rem;
+  }
+  .howto-title { font-size: 1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.8rem; }
+  .howto-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem;
+  }
+  .howto-item {
+    font-size: 0.8rem; padding: 0.5rem 0.7rem; border-radius: 5px; line-height: 1.4;
+  }
+  .howto-denkstappen { background: #E8F4FD; border-left: 3px solid #2196F3; color: #1565C0; }
+  .howto-hint { background: #FFF8E1; border-left: 3px solid #FFC107; color: #F57F17; }
+  .howto-formule { background: #F3E5F5; border-left: 3px solid #9C27B0; color: #6A1B9A; }
+  .howto-letop { background: #FFF3E0; border-left: 3px solid #EF6C00; color: #BF360C; }
+  .howto-antwoord { background: #E8F5E9; border-left: 3px solid #43A047; color: #1B5E20; }
+  .howto-uitleg { background: #FFFDE7; border-left: 3px solid #AFB42B; color: #827717; }
+
+  /* ── Main ── */
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── Opgave section ── */
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 0.8rem;
+    border-bottom: 3px solid var(--markt-primary);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white);
+    background: var(--markt-primary); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--markt-light); color: var(--markt-primary);
+  }
+
+  /* Context box (gegevens) */
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.85rem;
+    line-height: 1.7; color: var(--dark); border-left: 4px solid var(--markt-primary);
+  }
+
+  /* ── Question card ── */
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; margin-bottom: 1rem; overflow: hidden;
+    scroll-margin-top: 1rem;
+  }
+  .question-header {
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid #EDF2F7;
+  }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--markt-primary); margin-bottom: 0.3rem;
+  }
+  .question-text {
+    font-size: 0.92rem; color: var(--dark); line-height: 1.6;
+  }
+
+  /* Invulvelden */
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.85rem;
+    line-height: 1.8; color: var(--dark);
+  }
+
+  /* ── Toggleable helpers ── */
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+
+  details {
+    border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden;
+  }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; user-select: none; list-style: none;
+    display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content {
+    padding: 0.5rem 0.8rem 0.7rem;
+    font-size: 0.85rem; line-height: 1.7;
+  }
+
+  /* Denkstappen */
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+
+  /* Hint */
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+
+  /* Formule */
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content {
+    background: #F9F0FB; color: #4A148C;
+    font-family: Consolas, 'Courier New', monospace;
+  }
+
+  /* Let op */
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+
+  /* Controle */
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+
+  /* ── Answer toggle ── */
+  .answer-toggle {
+    border-top: 1px solid #EDF2F7;
+  }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold;
+    color: var(--markt-primary); cursor: pointer; user-select: none;
+    list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    background: var(--markt-light); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before {
+    content: "▸"; font-size: 0.75rem; transition: transform 0.2s;
+  }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content {
+    padding: 1rem 1.2rem;
+    border-top: 1px solid #D6EAF8;
+  }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.85rem;
+    line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+
+  /* ── Samenvatting table ── */
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--markt-primary); color: var(--white);
+    padding: 0.7rem 1rem; font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; font-size: 0.88rem;
+  }
+  .samenvatting-table td {
+    padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top;
+  }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+
+  /* ── Intro text between opgaven ── */
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem;
+    padding: 0.7rem 0.9rem; background: #FAFBFC; border-radius: 6px;
+    border-left: 3px solid var(--border-gray);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .hero-cards { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .howto { padding: 1rem 1.2rem 0; }
+    .howto-grid { grid-template-columns: 1fr; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.2.4 Oligopolie</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+
+    <!-- Opgave 1 -->
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; Kastengigant &amp; Janssen</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q1a" data-q="q1a">1a &middot; Residuele vraag (q&#7524;=20)</a>
+        <a class="nav-q" href="#q1b" data-q="q1b">1b &middot; Residuele vraag (q&#7524;=40)</a>
+        <a class="nav-q" href="#q1d" data-q="q1d">1d &middot; Reactielijn tekenen</a>
+        <a class="nav-q" href="#q1e" data-q="q1e">1e &middot; Reactielijn Janssen (punt 1)</a>
+        <a class="nav-q" href="#q1f" data-q="q1f">1f &middot; Reactielijn Janssen (punt 2)</a>
+        <a class="nav-q" href="#q1gh" data-q="q1gh">1g-h &middot; Reactielijnen &amp; evenwicht</a>
+        <a class="nav-q" href="#q1i" data-q="q1i">1i &middot; Evenwichtshoeveelheden</a>
+        <a class="nav-q" href="#q1j" data-q="q1j">1j &middot; Evenwichtsprijs</a>
+        <a class="nav-q" href="#q1k" data-q="q1k">1k &middot; Consumentensurplus</a>
+        <a class="nav-q" href="#q1c" data-q="q1c">1c &middot; Controle (q&#7524;=40)</a>
+      </div>
+    </div>
+
+    <!-- Opgave 2 -->
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; Prijsconcurrentie (Bertrand)</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a &middot; Evenwichtsprijs</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b &middot; Consumentensurplus</a>
+        <a class="nav-q" href="#q2c" data-q="q2c">2c &middot; Vergelijking</a>
+      </div>
+    </div>
+
+    <!-- Opgave 3 -->
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; Algebraische aanpak</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a &middot; Residuele vraag</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b &middot; TO aanbieder 1</a>
+        <a class="nav-q" href="#q3c" data-q="q3c">3c &middot; MO aanbieder 1</a>
+        <a class="nav-q" href="#q3d" data-q="q3d">3d &middot; MK aanbieder 1</a>
+        <a class="nav-q" href="#q3e" data-q="q3e">3e &middot; Reactielijn aanbieder 1</a>
+        <a class="nav-q" href="#q3f" data-q="q3f">3f &middot; Reactielijn aanbieder 2</a>
+        <a class="nav-q" href="#q3g" data-q="q3g">3g &middot; Marktevenwicht</a>
+        <a class="nav-q" href="#q3h" data-q="q3h">3h &middot; CS en PS</a>
+      </div>
+    </div>
+
+    <!-- Opgave 4 -->
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; Bertrandparadox</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a &middot; In het klaslokaal</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b &middot; In de praktijk</a>
+      </div>
+    </div>
+
+    <!-- Opgave 5 -->
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; Coca-Cola vs. Pepsi</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a &middot; Homogeen of heterogeen?</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b &middot; Residuele vraag</a>
+        <a class="nav-q" href="#q5c" data-q="q5c">5c &middot; Type concurrentie</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════════════ CONTENT ════════════════ -->
+  <div class="content">
+
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.2.4 &middot; Begeleide inoefening</span>
+        <h1>Oligopolie &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints die je stap voor stap helpen.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">Kastengigant &amp; Janssen BV</div>
+            <div class="hero-card-count">10 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">Prijs&shy;concurrentie (Bertrand)</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">Algebra&iuml;sche aanpak</div>
+            <div class="hero-card-count">8 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">Bertrand&shy;paradox</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">Coca-Cola vs. Pepsi</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- How-to -->
+    <div class="howto">
+      <div class="howto-box">
+        <div class="howto-title">Zo werkt dit document</div>
+        <div class="howto-grid">
+          <div class="howto-item howto-denkstappen"><strong>&#9654; Denkstappen</strong> &mdash; stappen om tot het antwoord te komen</div>
+          <div class="howto-item howto-hint"><strong>&#9654; Hint</strong> &mdash; een korte hint die je op weg helpt</div>
+          <div class="howto-item howto-formule"><strong>&#9654; Formule</strong> &mdash; formules die je nodig hebt</div>
+          <div class="howto-item howto-letop"><strong>&#9888; Let op</strong> &mdash; iets waar je extra op moet letten</div>
+          <div class="howto-item howto-antwoord"><strong>&#9989; Antwoord</strong> &mdash; het uitgewerkte antwoord</div>
+          <div class="howto-item howto-uitleg"><strong>&#9654; Uitleg</strong> &mdash; waarom dit het goede antwoord is</div>
+        </div>
+      </div>
+    </div>
+
+    <main>
+
+      <!-- ══════════════════════════════════════════════════
+           OPGAVE 1 — Kastengigant en Janssen BV
+           ══════════════════════════════════════════════════ -->
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Het Cournot-duopolie: Kastengigant en Janssen BV</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <div class="context-box">
+          Vraaglijn: Q = &minus;0,1p + 100 &nbsp;(ofwel: p = &minus;10Q + 1.000)<br>
+          MK = GTK = 100 (voor beide aanbieders)<br>
+          Residuele vraag = marktvraag &minus; productie concurrent
+        </div>
+
+        <p class="opgave-intro">Kastengigant en Janssen BV zijn de enige twee fabrikanten van een bepaald type kledingkast. De vraaglijn is: Q = &minus;0,1p + 100. Voor beide geldt: MK = GTK = 100.</p>
+
+        <!-- Vraag 1a -->
+        <div class="question-card" id="q1a">
+          <div class="question-header">
+            <div class="question-label">Vraag 1a &mdash; Residuele vraaglijn bij q&#7524; = 20</div>
+            <div class="question-text">Janssen BV produceert 20 kasten. De residuele vraaglijn van Kastengigant wordt dan q = &minus;0,1p + 80. Zijn MO is &minus;20q + 800. Bereken hoeveel kasten Kastengigant produceert.</div>
+          </div>
+          <div class="fill-in">
+            MO = MK<br>
+            &minus;20q + 800 = 100<br>
+            &minus;20q = ............<br>
+            q = ............
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Noteer de residuele vraaglijn: q = &minus;0,1p + 80<br>2. Schrijf de MO op: MO = &minus;20q + 800<br>3. Stel MO = MK op (winstmaximalisatie)<br>4. Los op naar q</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Winstmaximalisatie: MO = MK<br>MO = &minus;20q + 800<br>MK = 100</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO = MK<br>&minus;20q + 800 = 100<br>&minus;20q = &minus;700<br>q = 35 kasten</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij winstmaximalisatie produceert een aanbieder daar waar MO = MK. Door de residuele vraaglijn (marktvraag minus productie concurrent) te gebruiken, bepaal je hoeveel Kastengigant optimaal produceert gegeven de productie van Janssen BV.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1b -->
+        <div class="question-card" id="q1b">
+          <div class="question-header">
+            <div class="question-label">Vraag 1b &mdash; Residuele vraaglijn bij q&#7524; = 40</div>
+            <div class="question-text">Bereken voor Kastengigant de formule van de residuele vraaglijn en van de MO als Janssen BV 40 kasten produceert. Bereken ook de optimale productie.</div>
+          </div>
+          <div class="fill-in">
+            Residuele vraag: q&#7498; = &minus;0,1p + 100 &minus; 40 = &minus;0,1p + ......<br>
+            p = ............<br>
+            TO = p &times; q = ............<br>
+            MO = ............<br>
+            MO = MK &rarr; q = ............
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bereken de residuele vraag: Q&#7498; = Q&#7511;&#7506;&#7511;&#7424;&#7424;&#7448; &minus; q&#7524; = (&minus;0,1p + 100) &minus; 40<br>2. Schrijf de residuele vraaglijn om naar p = ...<br>3. Bereken TO = p &times; q<br>4. Leid MO af (de afgeleide van TO)<br>5. Stel MO = MK en los op</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Residuele vraag: q&#7498; = &minus;0,1p + 100 &minus; q&#7524;<br>TO = p &times; q<br>MO = TO' (afgeleide van TO naar q)</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Residuele vraag: q&#7498; = &minus;0,1p + 60<br>Omschrijven: p = &minus;10q + 600<br>TO = p &times; q = &minus;10q&sup2; + 600q<br>MO = TO' = &minus;20q + 600<br>MO = MK:<br>&minus;20q + 600 = 100<br>q = 25 kasten</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een hogere productie van Janssen BV (40 i.p.v. 20) blijft er minder residuele vraag over voor Kastengigant, waardoor die minder produceert (25 i.p.v. 35). Dit is precies wat de reactielijn laat zien: meer productie van de concurrent leidt tot minder eigen productie.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1d -->
+        <div class="question-card" id="q1d">
+          <div class="question-header">
+            <div class="question-label">Vraag 1d &mdash; Reactielijn tekenen</div>
+            <div class="question-text">Teken een assenstelsel met de productie van Kastengigant op de x-as en de productie van Janssen BV op de y-as. Teken de twee combinaties van vraag a en b als punten in de grafiek. Verbind de punten tot een reactielijn van Kastengigant.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Noteer de twee combinaties: (q&#7498;=35, q&#7524;=20) en (q&#7498;=25, q&#7524;=40)<br>2. Teken het assenstelsel (x-as: 0-100, y-as: 0-100)<br>3. Zet beide punten uit en verbind ze met een rechte lijn</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">De reactielijn van Kastengigant geeft aan hoeveel Kastengigant produceert bij elke mogelijke productie van Janssen BV. Trek de lijn door tot de assen.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Punt 1: (q&#7498; = 35, q&#7524; = 20)<br>Punt 2: (q&#7498; = 25, q&#7524; = 40)<br>Verbind deze punten tot de reactielijn van Kastengigant.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De reactielijn heeft een negatief verband: hoe meer de concurrent produceert, hoe minder je zelf produceert. Dit is logisch: bij meer concurrentie is de residuele vraag kleiner.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1e -->
+        <div class="question-card" id="q1e">
+          <div class="question-header">
+            <div class="question-label">Vraag 1e &mdash; Reactielijn Janssen BV (punt 1)</div>
+            <div class="question-text">Laat met een berekening zien dat Janssen BV 40 kasten produceert als hij zijn winst maximaliseert en Kastengigant 10 kasten produceert.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Gebruik dezelfde methode als bij vraag a en b, maar nu voor Janssen BV. De residuele vraag van Janssen is: q&#7524; = (&minus;0,1p + 100) &minus; q&#7498;.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Residuele vraag Janssen: q&#7524; = &minus;0,1p + 100 &minus; q&#7498;<br>Bij q&#7498; = 10: q&#7524; = &minus;0,1p + 90</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Residuele vraag Janssen: q&#7524; = &minus;0,1p + 100 &minus; 10 = &minus;0,1p + 90<br>Omschrijven: p = &minus;10q + 900<br>MO = &minus;20q + 900<br>MO = MK: &minus;20q + 900 = 100<br>q = 40 kasten &#10003;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Symmetrisch aan de berekening voor Kastengigant. Bij weinig concurrentie (q&#7498; = 10) kan Janssen BV veel produceren.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1f -->
+        <div class="question-card" id="q1f">
+          <div class="question-header">
+            <div class="question-label">Vraag 1f &mdash; Reactielijn Janssen BV (punt 2)</div>
+            <div class="question-text">Hoeveel kasten produceert Janssen BV als Kastengigant 50 kasten produceert?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Dezelfde methode: bereken de residuele vraag bij q&#7498; = 50 en maximaliseer de winst.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Residuele vraag Janssen: q&#7524; = &minus;0,1p + 100 &minus; 50 = &minus;0,1p + 50<br>Omschrijven: p = &minus;10q + 500<br>MO = &minus;20q + 500<br>MO = MK: &minus;20q + 500 = 100<br>q = 20 kasten</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij meer concurrentie (q&#7498; = 50) produceert Janssen BV minder (20 i.p.v. 40). De reactielijnen van beide bedrijven hebben dezelfde structuur door hun identieke kostenstructuur.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1g-h -->
+        <div class="question-card" id="q1gh">
+          <div class="question-header">
+            <div class="question-label">Vraag 1g-h &mdash; Reactielijnen en evenwicht tekenen</div>
+            <div class="question-text">Teken de reactielijn van Janssen BV in dezelfde grafiek en geef het evenwicht aan.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Het Cournot-evenwicht is het snijpunt van beide reactielijnen. Omdat de kostenstructuur identiek is, ligt het evenwicht op de 45&deg;-lijn.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Reactielijn Janssen: door (q&#7498;=10, q&#7524;=40) en (q&#7498;=50, q&#7524;=20)<br>Het Cournot-evenwicht ligt op het snijpunt van beide reactielijnen.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> In het Cournot-evenwicht is geen van beide aanbieders geneigd zijn productie te veranderen. Elk bedrijf maximaliseert zijn winst gegeven de productie van de ander.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1i -->
+        <div class="question-card" id="q1i">
+          <div class="question-header">
+            <div class="question-label">Vraag 1i &mdash; Evenwichtshoeveelheden aflezen</div>
+            <div class="question-text">Lees in de grafiek af hoeveel kasten Janssen BV en Kastengigant in het evenwicht verkopen.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Door de symmetrische kostenstructuur produceren beide evenveel in het evenwicht.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Beide produceren 30 kasten<br>Totale marktproductie: Q = 30 + 30 = 60 kasten</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij identieke kosten is het Cournot-evenwicht symmetrisch. De totale productie (60) ligt tussen het monopolieniveau en het niveau van volkomen concurrentie.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1j -->
+        <div class="question-card" id="q1j">
+          <div class="question-header">
+            <div class="question-label">Vraag 1j &mdash; Evenwichtsprijs</div>
+            <div class="question-text">Welke prijs komt bij het marktevenwicht tot stand?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vul Q = 60 in de vraaglijn Q = &minus;0,1p + 100 in.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Q = &minus;0,1p + 100<br>60 = &minus;0,1p + 100<br>&minus;0,1p = &minus;40<br>p = &euro; 400</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De Cournot-prijs (&euro; 400) ligt tussen de monopolieprijs en de prijs bij volkomen concurrentie (&euro; 100). Oligopolie leidt tot een hogere prijs dan volkomen concurrentie, maar een lagere prijs dan monopolie.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1k -->
+        <div class="question-card" id="q1k">
+          <div class="question-header">
+            <div class="question-label">Vraag 1k &mdash; Consumentensurplus</div>
+            <div class="question-text">Bereken het consumentensurplus in het marktevenwicht.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">CS = &frac12; &times; basis &times; hoogte<br>Basis = evenwichtshoeveelheid<br>Hoogte = maximale betalingsbereidheid &minus; evenwichtsprijs</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Productie = 60 stuks, prijs = &euro; 400<br>Maximale betalingsbereidheid: bij Q = 0 &rarr; p = &euro; 1.000<br>CS = (1.000 &minus; 400) &times; 60 &times; 0,5 = &euro; 18.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het consumentensurplus is de driehoek tussen de vraaglijn en de evenwichtsprijs. Hoe lager de prijs en hoe hoger de hoeveelheid, hoe groter het consumentensurplus.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 1c -->
+        <div class="question-card" id="q1c">
+          <div class="question-header">
+            <div class="question-label">Vraag 1c &mdash; Kastengigant bij q&#7524; = 40 (controle)</div>
+            <div class="question-text">Bereken hoeveel kasten Kastengigant produceert als hij zijn winst maximaliseert, gegeven dat Janssen BV 40 kasten produceert.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Dit is hetzelfde als vraag 1b. Controleer dat je antwoord klopt: q&#7498; = 25.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Uit vraag 1b: bij q&#7524; = 40 produceert Kastengigant q&#7498; = 25 kasten.<br>Dit punt (q&#7498; = 25, q&#7524; = 40) ligt op de reactielijn van Kastengigant.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit bevestigt de uitkomst van vraag 1b en vormt het tweede punt voor de reactielijn van Kastengigant.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════
+           OPGAVE 2 — Prijsconcurrentie (Bertrand)
+           ══════════════════════════════════════════════════ -->
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Prijsconcurrentie (Bertrand)</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <div class="context-box">
+          Vraaglijn: Q = &minus;0,1p + 100<br>
+          MK = GTK = 100 (voor beide aanbieders)<br>
+          CS = &frac12; &times; basis &times; hoogte
+        </div>
+
+        <p class="opgave-intro">Stel dat Janssen BV en Kastengigant elkaar met de prijs gaan beconcurreren in plaats van met de hoeveelheid.</p>
+
+        <!-- Vraag 2a -->
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a &mdash; Evenwichtsprijs bij prijsconcurrentie</div>
+            <div class="question-text">Welke prijs komt dan tot stand?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bedenk: bij prijsconcurrentie onderbieden aanbieders elkaar<br>2. Bepaal de ondergrens: tot welke prijs kan een aanbieder zakken?<br>3. Vergelijk met de kostenstructuur: GTK = 100</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij prijsconcurrentie (Bertrand) eindigt de prijs op het niveau van de gemiddelde kosten &mdash; er is dan geen winst meer.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p = &euro; 100<br>Omdat GTK = 100. Door de onderlinge prijsconcurrentie daalt de prijs totdat er geen winst meer wordt behaald.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is de Bertrand-paradox: met slechts twee aanbieders resulteert prijsconcurrentie in dezelfde uitkomst als volkomen concurrentie. De prijs daalt tot het kostenniveau omdat elke aanbieder een prikkel heeft om n&eacute;t onder de concurrent te gaan zitten.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 2b -->
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b &mdash; Consumentensurplus bij prijsconcurrentie</div>
+            <div class="question-text">Bereken het bijbehorende consumentensurplus.</div>
+          </div>
+          <div class="fill-in">
+            Q = &minus;0,1 &times; 100 + 100 = ............<br>
+            CS = (&euro; 1.000 &minus; &euro; 100) &times; ............ &times; 0,5 = &euro; ............
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bereken eerst de hoeveelheid: vul p = 100 in de vraaglijn in<br>2. Bepaal de maximale betalingsbereidheid (p bij Q = 0)<br>3. Bereken CS = &frac12; &times; Q &times; (p&#7488;&#7424;&#7521; &minus; p)</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Q = &minus;0,1 &times; 100 + 100 = ...<br>CS = (p&#7488;&#7424;&#7521; &minus; p) &times; Q &times; 0,5</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Q = &minus;0,1 &times; 100 + 100 = 90<br>CS = (&euro; 1.000 &minus; &euro; 100) &times; 90 &times; 0,5 = &euro; 40.500</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij prijsconcurrentie is het consumentensurplus veel groter dan bij hoeveelheidsconcurrentie (&euro; 40.500 vs. &euro; 18.000), omdat de prijs lager is en er meer wordt verkocht.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 2c -->
+        <div class="question-card" id="q2c">
+          <div class="question-header">
+            <div class="question-label">Vraag 2c &mdash; Vergelijking concurrentievormen</div>
+            <div class="question-text">Vergelijk je antwoord bij vraag b met dat bij opdracht 1k. Voor welk type concurrentie zullen consumenten een voorkeur hebben?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vergelijk: CS bij hoeveelheidsconcurrentie = &euro; 18.000, CS bij prijsconcurrentie = &euro; 40.500.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Bij prijsconcurrentie (Bertrand): CS = &euro; 40.500<br>Bij hoeveelheidsconcurrentie (Cournot): CS = &euro; 18.000<br>Consumenten prefereren prijsconcurrentie<br>Het consumentensurplus is meer dan twee keer zo groot.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Consumenten profiteren meer van prijsconcurrentie omdat de prijs dan daalt tot het kostenniveau. Bij hoeveelheidsconcurrentie beperken aanbieders hun productie, waardoor de prijs hoger blijft. Dit verklaart waarom mededingingsautoriteiten (zoals de ACM) kartelafspraken over hoeveelheden verbieden.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════
+           OPGAVE 3 — Algebraïsche aanpak
+           ══════════════════════════════════════════════════ -->
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Cournot-duopolie: algebra&iuml;sche aanpak</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <div class="context-box">
+          p = 120 &minus; Q = 120 &minus; q&#8321; &minus; q&#8322;<br>
+          TK&#8321; = 2 + q&#8321;&sup2; &nbsp;&nbsp;&nbsp;TK&#8322; = 2 + q&#8322;&sup2;<br>
+          MK = TK' = 2q
+        </div>
+
+        <p class="opgave-intro">Op een markt geldt: Q = 120 &minus; p (ofwel p = 120 &minus; Q). Er zijn twee aanbieders met TK = 2 + q&sup2;. De productie van aanbieder 1 is q&#8321;, die van aanbieder 2 is q&#8322;, waarbij Q = q&#8321; + q&#8322;.</p>
+
+        <!-- Vraag 3a -->
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a &mdash; Residuele vraag aanbieder 1</div>
+            <div class="question-text">Wat is de residuele vraag van aanbieder 1 bij aanbod q&#8322; van aanbieder 2?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Vervang Q door q&#8321; + q&#8322; in de vraaglijn en schrijf p als functie van q&#8321; (met q&#8322; als parameter).</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">q&#8321; = Q &minus; q&#8322; = 120 &minus; p &minus; q&#8322;<br>p = 120 &minus; q&#8321; &minus; q&#8322;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De residuele vraag houdt de productie van de concurrent als gegeven. Aanbieder 1 ziet q&#8322; als een vast gegeven en optimaliseert zijn eigen productie q&#8321;.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3b -->
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b &mdash; TO aanbieder 1</div>
+            <div class="question-text">Wat is de TO van aanbieder 1 bij aanbod q&#8322; van aanbieder 2?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">TO = p &times; q&#8321;. Vul de residuele prijsformule in.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO&#8321; = p &times; q&#8321; = (120 &minus; q&#8321; &minus; q&#8322;) &times; q&#8321;<br>= 120q&#8321; &minus; q&#8321;&sup2; &minus; q&#8322; &times; q&#8321;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door de totale opbrengst uit te schrijven als functie van q&#8321; (met q&#8322; als parameter) kun je in de volgende stap de MO afleiden.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3c -->
+        <div class="question-card" id="q3c">
+          <div class="question-header">
+            <div class="question-label">Vraag 3c &mdash; MO aanbieder 1</div>
+            <div class="question-text">Wat is de MO van aanbieder 1 bij aanbod q&#8322; van aanbieder 2?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">MO is de afgeleide van TO naar q&#8321;. Behandel q&#8322; als constante.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">MO&#8321; = dTO&#8321;/dq&#8321;<br>TO&#8321; = 120q&#8321; &minus; q&#8321;&sup2; &minus; q&#8322;q&#8321;</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TO&#8321; = 120q&#8321; &minus; q&#8321;&sup2; &minus; q&#8322;q&#8321;<br>MO&#8321; = 120 &minus; 2q&#8321; &minus; q&#8322;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij het afleiden naar q&#8321; wordt q&#8322; als constante behandeld. De term &minus;q&#8322;q&#8321; levert &minus;q&#8322; op (q&#8322; is een constante factor van q&#8321;).</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3d -->
+        <div class="question-card" id="q3d">
+          <div class="question-header">
+            <div class="question-label">Vraag 3d &mdash; MK aanbieder 1</div>
+            <div class="question-text">Wat zijn de MK van aanbieder 1?</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">MK is de afgeleide van TK naar q.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">TK&#8321; = 2 + q&#8321;&sup2;<br>MK&#8321; = 2q&#8321;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De constante term (2) valt weg bij differenti&euml;ren. Alleen de variabele kosten (q&sup2;) bepalen de marginale kosten.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3e -->
+        <div class="question-card" id="q3e">
+          <div class="question-header">
+            <div class="question-label">Vraag 3e &mdash; Reactielijn aanbieder 1</div>
+            <div class="question-text">Bepaal de formule van de reactielijn van aanbieder 1.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Stel MO&#8321; = MK&#8321; en los op naar q&#8321;.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">MO&#8321; = MK&#8321;<br>120 &minus; 2q&#8321; &minus; q&#8322; = 2q&#8321;<br>120 &minus; q&#8322; = 4q&#8321;<br>q&#8321; = 30 &minus; 0,25q&#8322;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De reactielijn geeft de optimale productie van aanbieder 1 als functie van de productie van aanbieder 2. Het negatieve verband (&minus;0,25q&#8322;) bevestigt: meer productie door de concurrent &rarr; minder eigen productie.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3f -->
+        <div class="question-card" id="q3f">
+          <div class="question-header">
+            <div class="question-label">Vraag 3f &mdash; Reactielijn aanbieder 2</div>
+            <div class="question-text">Bepaal de formule van de reactielijn van aanbieder 2.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Door de symmetrische kosten heeft aanbieder 2 dezelfde reactielijn, maar dan met q&#8321; en q&#8322; omgewisseld.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Door symmetrie (identieke kosten):<br>q&#8322; = 30 &minus; 0,25q&#8321;</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij identieke kostenfuncties zijn de reactielijnen symmetrisch. Dit maakt het oplossen eenvoudiger.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3g -->
+        <div class="question-card" id="q3g">
+          <div class="question-header">
+            <div class="question-label">Vraag 3g &mdash; Marktevenwicht</div>
+            <div class="question-text">Wat bieden beide aanbieders aan bij marktevenwicht? Wat is de bijbehorende prijs en winst?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Invullen reactielijn 2 in reactielijn 1:<br>q&#8321; = 30 &minus; 0,25(30 &minus; 0,25q&#8321;) = 22,5 + q&#8321;/16<br>15q&#8321;/16 = 22,5 &rarr; q&#8321; = 24<br>q&#8322; = 30 &minus; 0,25 &times; 24 = 24<br>Q = 48, p = 120 &minus; 48 = &euro; 72<br>Winst per aanbieder: TO &minus; TK = 72 &times; 24 &minus; 2 &minus; 24&sup2; = 1.728 &minus; 578 = &euro; 1.150</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het Cournot-evenwicht is een Nash-evenwicht: geen van beide aanbieders kan zijn winst verhogen door eenzijdig meer of minder te produceren.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 3h -->
+        <div class="question-card" id="q3h">
+          <div class="question-header">
+            <div class="question-label">Vraag 3h &mdash; CS en PS</div>
+            <div class="question-text">Hoe groot is bij marktevenwicht het consumenten- en het producentensurplus?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">CS = (120 &minus; 72) &times; 48 &times; 0,5 = &euro; 1.152<br>PS = 2 &times; &euro; 1.150 + 2 &times; &euro; 2 = &euro; 2.304<br>(PS = totale winst + totale constante kosten)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het producentensurplus omvat zowel de winst als de constante kosten (die wel gedekt worden door de opbrengst). Het totale surplus (CS + PS) is kleiner dan bij volkomen concurrentie &mdash; er is een effici&euml;ntieverlies.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════
+           OPGAVE 4 — Bertrandparadox
+           ══════════════════════════════════════════════════ -->
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">De Bertrandparadox in theorie en praktijk</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <p class="opgave-intro">Lees Uit de Wetenschap 'Een Bertrandparadox in de klas?'.</p>
+
+        <!-- Vraag 4a -->
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a &mdash; Bertrandparadox in het klaslokaal</div>
+            <div class="question-text">Leg uit waarom de Bertrandparadox in het klaslokaalexperiment niet opgaat.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Denk aan het verschil tussen de theorie (rationele spelers) en de praktijk (strategisch gedrag met risico).</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Deelnemers bieden meer dan &euro; 2 in de hoop dat anderen nog hoger bieden, waardoor ze een kans hebben een positieve winst te behalen.<br>In de praktijk nemen mensen risico's die de theorie niet voorspelt.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De Bertrand-theorie veronderstelt volledige rationaliteit en oneindig snelle aanpassing. In de praktijk nemen spelers risico en hopen dat de concurrent niet n&oacute;g lager biedt.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 4b -->
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b &mdash; Bertrandparadox in de praktijk</div>
+            <div class="question-text">Geef een reden waarom de Bertrandparadox in de praktijk niet opgaat.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Denk aan wat er gebeurt als aanbieders begrijpen dat onderbieden tot een prijzenoorlog leidt.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Aanbieders begrijpen dat als ze een lagere prijs vragen dan hun concurrent, er een prijzenoorlog ontstaat die doorgaat totdat niemand zijn prijs meer kan verlagen en niemand nog winst maakt.<br>Daarom zien ze ervan af om een lagere prijs te vragen dan hun concurrent.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> In een herhaald spel (repeated game) leren aanbieders dat onderbieden op termijn tot nulwinst leidt. Stilzwijgende co&ouml;rdinatie (tacit collusion) is dan aantrekkelijker.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════
+           OPGAVE 5 — Coca-Cola vs. Pepsi
+           ══════════════════════════════════════════════════ -->
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">Coca-Cola versus Pepsi: oligopolie in de praktijk</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+
+        <p class="opgave-intro">Lees bron 9 over de colamarkt.</p>
+
+        <!-- Vraag 5a -->
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a &mdash; Homogeen of heterogeen?</div>
+            <div class="question-text">Is de cola die Pepsi Cola en Coca-Cola verkopen een heterogeen of homogeen product? Verklaar je antwoord.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Heterogeen<br>Consumenten zien verschil in de producten (smaak, merk, imago). Coca-Cola en Pepsi zijn geen perfecte substituten.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Productdifferentiatie is een belangrijk kenmerk van de colamarkt. Door merkloyaliteit en smaakverschillen hebben beide bedrijven enige marktmacht.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 5b -->
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b &mdash; Residuele vraag overige producenten</div>
+            <div class="question-text">Wat kun je zeggen over de omvang van de residuele vraag van de overige colaproducenten?</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De overige aanbieders hebben 40% van de wereldproductie.<br>Hun residuele vraag is het deel van de markt dat niet door Coca-Cola en Pepsi wordt bediend.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Met een gezamenlijk marktaandeel van 60% voor Coca-Cola en Pepsi is de residuele vraag voor de rest beperkt. Dit illustreert de dominante positie van het duopolie.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Vraag 5c -->
+        <div class="question-card" id="q5c">
+          <div class="question-header">
+            <div class="question-label">Vraag 5c &mdash; Type concurrentie</div>
+            <div class="question-text">Zal er op de markt voor Pepsi Cola en Coca-Cola sprake zijn van hoeveelheidsconcurrentie of van prijsconcurrentie? Verklaar je antwoord.</div>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Hoeveelheidsconcurrentie<br>De aanbieders kunnen niet van de ene op de andere dag hun productie aanpassen (capaciteitsbeperkingen).<br>Er wordt nog steeds winst gemaakt &mdash; bij prijsconcurrentie zou dat niet het geval zijn (Bertrand-paradox).</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Cournot-concurrentie past beter bij markten waar productiecapaciteit op korte termijn vaststaat. Het feit dat beide bedrijven positieve winst maken, bevestigt dat er geen volledige prijsconcurrentie plaatsvindt.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           SAMENVATTEND SCHEMA
+           ══════════════════════════════════════════ -->
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Oligopolie</td><td>Marktvorm met weinig aanbieders die elkaars gedrag be&iuml;nvloeden</td></tr>
+            <tr><td>Cournot-model</td><td>Hoeveelheidsconcurrentie &mdash; aanbieders kiezen tegelijk hun productieniveau</td></tr>
+            <tr><td>Bertrand-model</td><td>Prijsconcurrentie &mdash; aanbieders kiezen tegelijk hun prijs</td></tr>
+            <tr><td>Residuele vraag</td><td>Marktvraag minus de productie van concurrenten</td></tr>
+            <tr><td>Reactielijn</td><td>Optimale productie van aanbieder i als functie van productie concurrent j</td></tr>
+            <tr><td>Nash-evenwicht</td><td>Snijpunt reactielijnen: geen aanbieder wil eenzijdig afwijken</td></tr>
+            <tr><td>Bertrand-paradox</td><td>Bij prijsconcurrentie met identieke producten &rarr; prijs daalt tot MK (= volkomen concurrentie)</td></tr>
+            <tr><td>MO = MK</td><td>Winstmaximalisatie: produceer tot marginale opbrengst gelijk is aan marginale kosten</td></tr>
+            <tr><td>CS bij oligopolie</td><td>Groter dan bij monopolie, kleiner dan bij volkomen concurrentie</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+
+  // ── Sidebar opgave expand/collapse ──
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+    });
+  });
+
+  // ── Smooth scroll: nav questions ──
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  // ── Smooth scroll: hero cards ──
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Also expand the corresponding sidebar opgave
+        var idx = el.dataset.target.replace('opgave-', '');
+        var navOpgaven = document.querySelectorAll('.nav-opgave');
+        if (navOpgaven[idx - 1]) navOpgaven[idx - 1].classList.add('expanded');
+      }
+    });
+  });
+
+  // ── IntersectionObserver: active question ──
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          // Auto-expand parent opgave
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) {
+            parent.classList.add('expanded');
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+
+  questionCards.forEach(function(q) { observer.observe(q); });
+
+  // ── Mobile sidebar toggle ──
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>
