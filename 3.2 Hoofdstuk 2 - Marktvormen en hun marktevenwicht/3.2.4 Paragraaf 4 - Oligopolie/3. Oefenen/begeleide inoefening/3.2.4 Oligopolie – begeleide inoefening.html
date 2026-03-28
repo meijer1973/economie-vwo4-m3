@@ -360,7 +360,7 @@
 
     <!-- Opgave 1 -->
     <div class="nav-opgave expanded">
-      <div class="nav-opgave-title" data-toggle="opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
         <span class="nav-dot"></span>
         <span class="nav-opgave-label">1 &middot; Kastengigant &amp; Janssen</span>
         <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
@@ -381,7 +381,7 @@
 
     <!-- Opgave 2 -->
     <div class="nav-opgave">
-      <div class="nav-opgave-title" data-toggle="opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
         <span class="nav-dot"></span>
         <span class="nav-opgave-label">2 &middot; Prijsconcurrentie (Bertrand)</span>
         <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
@@ -395,7 +395,7 @@
 
     <!-- Opgave 3 -->
     <div class="nav-opgave">
-      <div class="nav-opgave-title" data-toggle="opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
         <span class="nav-dot"></span>
         <span class="nav-opgave-label">3 &middot; Algebraische aanpak</span>
         <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
@@ -414,7 +414,7 @@
 
     <!-- Opgave 4 -->
     <div class="nav-opgave">
-      <div class="nav-opgave-title" data-toggle="opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
         <span class="nav-dot"></span>
         <span class="nav-opgave-label">4 &middot; Bertrandparadox</span>
         <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
@@ -427,7 +427,7 @@
 
     <!-- Opgave 5 -->
     <div class="nav-opgave">
-      <div class="nav-opgave-title" data-toggle="opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
         <span class="nav-dot"></span>
         <span class="nav-opgave-label">5 &middot; Coca-Cola vs. Pepsi</span>
         <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
@@ -1179,11 +1179,21 @@
   var overlay = document.getElementById('sidebarOverlay');
   var toggle = document.getElementById('sidebarToggle');
 
-  // ── Sidebar opgave expand/collapse ──
+  // ── Sidebar opgave expand/collapse + scroll ──
   document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
     title.addEventListener('click', function() {
       var opgave = this.closest('.nav-opgave');
       opgave.classList.toggle('expanded');
+      // Scroll to the opgave section
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
     });
   });
 
