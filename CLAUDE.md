@@ -401,11 +401,28 @@ Each reasoning game HTML file lives in `3. Oefenen/` and is named:
 
 ### Adding a new reasoning game paragraph:
 1. Author questions in a spreadsheet → export as semicolon-delimited CSV
-2. Run: `node build-scripts/build-reasoning-questions.js X.Y.Z <domain> path/to/questions.csv`
-3. Run: `node build-scripts/build-reasoning-engine.js` to generate the HTML shell
-4. Run `npm test` to validate
-5. Have an economics teacher review the questions for correctness
-6. Push and verify deployment
+2. Run: `node build-scripts/build-reasoning-questions.js X.Y.Z <domain> path/to/questions.csv --generate-review`
+3. **MANDATORY:** Run an economics review subagent on the generated review document (`shared/reasoning/X.Y.Z-review.md`). The subagent checks every question for:
+   - Correct market form classification (homogeen/heterogeen oligopolie vs. monopolistische concurrentie vs. volkomen concurrentie)
+   - Logical consistency of reasoning steps
+   - Distractor quality (different logical errors, plausible but wrong)
+   - Geographic scope clarity
+4. Apply corrections from the review to the CSV, then re-run the build script
+5. Run: `node build-scripts/build-reasoning-engine.js` to generate the HTML shell
+6. Run `npm test` to validate
+7. Delete the review document (`shared/reasoning/X.Y.Z-review.md`) — it's a temporary file
+8. Have an economics teacher do final review
+9. Push and verify deployment
+
+### Economics content validation (ALWAYS follow):
+- Every reasoning game question MUST be reviewed for economic accuracy before deployment
+- The build script's `--generate-review` flag creates a review document
+- A Claude Code subagent reviews the document for VWO bovenbouw level correctness
+- Common errors to watch for:
+  - Confusing heterogeen oligopolie with monopolistische concurrentie (check marktaandeel, not just product differentiation)
+  - Incorrect HHI interpretations
+  - Distractors that use the same logical fallacy as the correct answer
+  - Dutch-specific examples missing "(in Nederland)" context
 
 ### Modifying reasoning engine:
 1. Edit `shared/reasoning-engine.js`

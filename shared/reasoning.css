@@ -136,6 +136,15 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0f172a; }
     padding: 18px 20px; margin-bottom: 20px; font-size: 16px; line-height: 1.5;
 }
 
+/* ── Instruction box ────────────────────────────────────────────── */
+
+.r-instruction-box {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #64748b;
+    line-height: 1.5; display: flex; align-items: flex-start; gap: 8px;
+}
+.r-instruction-box i { color: var(--r-primary); margin-top: 2px; flex-shrink: 0; }
+
 /* ── Step cards (Order Steps, Find Error) ───────────────────────── */
 
 .r-step-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }

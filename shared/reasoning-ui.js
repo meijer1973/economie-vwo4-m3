@@ -37,6 +37,13 @@
         'Bouw een stroomdiagram door blokken in de juiste volgorde te plaatsen.',
         'Koppel 6 opgaven aan 3 paren die dezelfde oplossingsstructuur delen.'
     ];
+    var MODE_INSTRUCTIONS = [
+        'Je ziet 6 stappen: 3 zijn correct en 3 zijn afleidingsmanoeuvres. Selecteer de 3 juiste stappen en zet ze in de goede volgorde door erop te klikken.',
+        'Je ziet 5 deelvragen: 3 zijn correct en 2 zijn afleidingsmanoeuvres. Selecteer de 3 juiste deelvragen in de goede volgorde.',
+        'Je ziet 3 redeneerstappen. E\u00e9n stap bevat een fout. Klik op de stap die volgens jou fout is.',
+        'Bouw het stroomdiagram door de blokken in de juiste volgorde te plaatsen. Klik op een blok om het toe te voegen. Klik op een geplaatst blok om het te verwijderen.',
+        'Je ziet 6 opgaven. Koppel steeds 2 opgaven die dezelfde oplossingsstructuur delen. Klik op een opgave om te selecteren, dan op een tweede om een paar te vormen.'
+    ];
 
     // ── DOM references ──────────────────────────────────────────────
     var els = {
@@ -158,7 +165,9 @@
         els.problemBox.textContent = roundData.problemText || '';
         els.problemBox.style.display = roundData.problemText ? 'block' : 'none';
 
-        // Render mode-specific content
+        // Render instruction box + mode-specific content
+        var instructionHtml = '<div class="r-instruction-box"><i class="fa-solid fa-circle-info"></i> '
+            + esc(MODE_INSTRUCTIONS[currentMode]) + '</div>';
         var content = '';
         switch (currentMode) {
             case 0: content = renderOrderSteps(); break;
@@ -167,7 +176,7 @@
             case 3: content = renderFlowDiagram(); break;
             case 4: content = renderMatchStructures(); break;
         }
-        els.gameContent.innerHTML = content;
+        els.gameContent.innerHTML = instructionHtml + content;
         bindModeInteractions();
     }
 

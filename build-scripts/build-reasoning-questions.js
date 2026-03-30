@@ -199,27 +199,121 @@ function validate(csvContent, domain) {
                 warnings.push('Line ' + lineNum + ': math-economics problem has no formula fields');
             }
         }
+
+        // ── Distractor quality checks ──────────────────────────────
+        // Check distractor labels differ from correct step labels
+        const correctLabels = [row.step_1_label, row.step_2_label, row.step_3_label];
+        for (let di = 1; di <= 3; di++) {
+            const dLabel = row['distractor_' + di + '_label'];
+            if (dLabel && correctLabels.includes(dLabel)) {
+                warnings.push('Line ' + lineNum + ': distractor_' + di + '_label is identical to a correct step label ("' + dLabel + '")');
+            }
+        }
+
+        // Check error_wrong step differs from the correct step it replaces
+        const esiVal = parseInt(row.error_step_index);
+        if (esiVal >= 1 && esiVal <= 3) {
+            const correctLabel = row['step_' + esiVal + '_label'];
+            const wrongLabel = row.error_wrong_label;
+            if (correctLabel && wrongLabel && correctLabel === wrongLabel) {
+                errors.push('Line ' + lineNum + ': error_wrong_label is identical to the correct step_' + esiVal + '_label ("' + wrongLabel + '")');
+            }
+        }
+
+        // Check flow type progression (cause/given should come before effect/result)
+        if (domain === 'economics') {
+            const flowTypes = [];
+            for (let fi = 1; fi <= 6; fi++) {
+                const ft = row['flow_' + fi + '_type'];
+                if (ft) flowTypes.push(ft);
+            }
+            const lastCauseIdx = flowTypes.lastIndexOf('cause');
+            const firstEffectIdx = flowTypes.indexOf('effect');
+            if (lastCauseIdx >= 0 && firstEffectIdx >= 0 && lastCauseIdx > firstEffectIdx) {
+                warnings.push('Line ' + lineNum + ': flow diagram has "cause" block after "effect" block — check ordering');
+            }
+        }
+
+        // Check sub-question distractors differ from correct sub-questions
+        const correctSubqs = [row.subq_1, row.subq_2, row.subq_3];
+        for (let sdi = 1; sdi <= 2; sdi++) {
+            const sdText = row['subq_distractor_' + sdi];
+            if (sdText && correctSubqs.includes(sdText)) {
+                errors.push('Line ' + lineNum + ': subq_distractor_' + sdi + ' is identical to a correct sub-question');
+            }
+        }
     }
 
     return { errors, warnings, rowCount: rows.length, structureTypes: typeKeys };
 }
 
+/**
+ * Generate a review document for economics content validation.
+ * This document is designed to be reviewed by Claude Code subagent.
+ */
+function generateReviewDocument(csvContent, parNr, domain) {
+    const lines = csvContent.trim().split('\n');
+    const headers = parseLine(lines[0]);
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const values = parseLine(line);
+        const row = {};
+        for (let j = 0; j < headers.length; j++) {
+            row[headers[j]] = (j < values.length) ? values[j] : '';
+        }
+        rows.push(row);
+    }
+
+    let doc = '# Economische Review — ' + parNr + ' (domein: ' + domain + ')\n\n';
+    doc += 'Controleer elke vraag op economische correctheid voor VWO bovenbouw.\n';
+    doc += 'Let specifiek op: marktvormclassificatie (homogeen/heterogeen oligopolie vs. monopolistische concurrentie),\n';
+    doc += 'logische consistentie van redeneerstappen, kwaliteit van afleidingsmanoeuvres.\n\n';
+    doc += '---\n\n';
+
+    for (const row of rows) {
+        doc += '## Vraag ' + row.id + ' (structuur: ' + row.structure_type + ' — ' + row.structure_label + ')\n\n';
+        doc += '**Context:** ' + row.problem_text + '\n\n';
+        doc += '**Correcte stappen:**\n';
+        doc += '1. ' + row.step_1_label + ' — ' + row.step_1_detail + '\n';
+        doc += '2. ' + row.step_2_label + ' — ' + row.step_2_detail + '\n';
+        doc += '3. ' + row.step_3_label + ' — ' + row.step_3_detail + '\n\n';
+        doc += '**Afleidingsmanoeuvres:**\n';
+        doc += '- D1: ' + row.distractor_1_label + ' — ' + row.distractor_1_detail + '\n';
+        doc += '- D2: ' + row.distractor_2_label + ' — ' + row.distractor_2_detail + '\n';
+        doc += '- D3: ' + row.distractor_3_label + ' — ' + row.distractor_3_detail + '\n\n';
+        doc += '**Deelvragen:** ' + row.subq_1 + ' → ' + row.subq_2 + ' → ' + row.subq_3 + '\n';
+        doc += '**Deelvraag-distractors:** ' + row.subq_distractor_1 + ' | ' + row.subq_distractor_2 + '\n\n';
+        doc += '**Foutstap (vervangt stap ' + row.error_step_index + '):** ' + row.error_wrong_label + ' — ' + row.error_wrong_detail + '\n\n';
+        doc += '---\n\n';
+    }
+
+    return doc;
+}
+
 function main() {
     const args = process.argv.slice(2);
     if (args.length < 3) {
-        console.log('Usage: node build-reasoning-questions.js <parNr> <domain> <csvPath>');
+        console.log('Usage: node build-reasoning-questions.js <parNr> <domain> <csvPath> [--generate-review]');
         console.log('');
         console.log('Arguments:');
         console.log('  parNr   — Paragraph number (e.g. 3.1.1)');
         console.log('  domain  — arithmetic | economics | math-economics');
         console.log('  csvPath — Path to the CSV file');
         console.log('');
+        console.log('Flags:');
+        console.log('  --generate-review  Generate a review document for economics content validation');
+        console.log('');
         console.log('Example:');
         console.log('  node build-scripts/build-reasoning-questions.js 3.1.1 economics questions/3.1.1.csv');
         process.exit(1);
     }
 
-    const [parNr, domain, csvPath] = args;
+    const flagArgs = args.filter(a => a.startsWith('--'));
+    const posArgs = args.filter(a => !a.startsWith('--'));
+    const [parNr, domain, csvPath] = posArgs;
+    const generateReview = flagArgs.includes('--generate-review');
 
     // Validate domain
     if (!VALID_DOMAINS.includes(domain)) {
@@ -288,6 +382,15 @@ var REASONING_META = ${JSON.stringify({
 
     fs.writeFileSync(outPath, output, 'utf8');
     console.log('\n\u2713 Written: ' + path.relative(MODULE_ROOT, outPath));
+
+    // Generate review document if requested
+    if (generateReview) {
+        const reviewDoc = generateReviewDocument(csvContent, parNr, domain);
+        const reviewPath = path.join(OUTPUT_DIR, parNr + '-review.md');
+        fs.writeFileSync(reviewPath, reviewDoc, 'utf8');
+        console.log('\u2713 Review document: ' + path.relative(MODULE_ROOT, reviewPath));
+        console.log('\n  Run an economics review subagent on this document before deploying.');
+    }
 }
 
 main();
