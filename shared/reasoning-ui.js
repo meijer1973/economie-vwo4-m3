@@ -279,6 +279,15 @@
     // ── Bind interactions ───────────────────────────────────────────
 
     function bindModeInteractions() {
+        // Mode 3 uses #r-flow-bank, not #r-options — handle it before the options guard
+        if (currentMode === 3) {
+            var blocks = document.querySelectorAll('#r-flow-bank .r-flow-block');
+            for (var k = 0; k < blocks.length; k++) {
+                blocks[k].addEventListener('click', handleFlowBankClick);
+            }
+            return;
+        }
+
         var options = document.getElementById('r-options');
         if (!options) return;
 
@@ -298,13 +307,6 @@
                 }
                 // Find Error: clicking IS the answer (no separate check button)
                 els.checkBtn.style.display = 'none';
-                break;
-
-            case 3: // Flow Diagram
-                var blocks = document.querySelectorAll('#r-flow-bank .r-flow-block');
-                for (var k = 0; k < blocks.length; k++) {
-                    blocks[k].addEventListener('click', handleFlowBankClick);
-                }
                 break;
 
             case 4: // Match Structures

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internationale productieketens – Redeneer-spel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../../shared/reasoning.css">
+</head>
+<body>
+<div class="r-app">
+    <div class="r-header">
+        <h1><span class="par-badge">3.4.4</span> Internationale productieketens – Redeneer-spel</h1>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="r-menu" class="r-screen active">
+        <h2 class="r-menu-title">Internationale productieketens</h2>
+        <p class="r-menu-subtitle">Train je redeneervaardigheid. Kies een spelmodus om te beginnen.</p>
+        <div class="r-mode-grid" id="r-mode-btns"></div>
+        <div class="r-info-box" id="r-structure-info"></div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="r-game" class="r-screen">
+        <div class="r-game-bar" id="r-game-bar">
+            <button class="r-back-btn" id="r-back-btn">← Menu</button>
+            <span class="r-mode-badge" id="r-mode-badge"></span>
+            <span class="r-round-badge" id="r-round-badge">1/5</span>
+        </div>
+        <div class="r-problem-box" id="r-problem-box"></div>
+        <div id="r-game-content"></div>
+        <div class="r-feedback" id="r-feedback">
+            <div class="r-feedback-title" id="r-feedback-title"></div>
+            <div class="r-feedback-detail" id="r-feedback-detail"></div>
+        </div>
+        <div class="r-btn-row">
+            <button class="r-btn" id="r-check-btn" disabled>Controleer</button>
+            <button class="r-btn" id="r-next-btn" style="display:none">Volgende →</button>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="r-results" class="r-screen r-results">
+        <div class="r-results-emoji" id="r-results-emoji"></div>
+        <h2 class="r-results-title" id="r-results-title"></h2>
+        <p class="r-results-score" id="r-results-score"></p>
+        <div class="r-progress-bar"><div class="r-progress-fill" id="r-progress-fill"></div></div>
+        <div class="r-results-btns">
+            <button class="r-btn" id="r-replay-btn">Opnieuw (andere opgaven) <i class="fa-solid fa-rotate-right"></i></button>
+            <button class="r-btn" id="r-menu-btn" style="background:#64748b">Ander spel →</button>
+        </div>
+    </div>
+</div>
+<script src="../../../shared/reasoning/3.4.4.js"></script>
+<script src="../../../shared/reasoning-engine.js"></script>
+<script src="../../../shared/reasoning-ui.js"></script>
+</body>
+</html>
