@@ -6,3 +6,4 @@ Thumbs.db
 __pycache__/
 .~lock.*
 *.zip
+node_modules/

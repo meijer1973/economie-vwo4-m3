@@ -503,8 +503,8 @@ The typical flow for a single paragraaf:
 async function buildLesPresentation(config) {
   // config = {
   //   title: "Monopolie",
-  //   paragraafNr: "3.2.3",
-  //   hoofdstuk: "Hoofdstuk 3: Marktvormen",
+  //   paragraafNr: "X.Y.Z",
+  //   hoofdstuk: "Hoofdstuk Y: [Naam]",
   //   domain: "bedrijf",
   //   leerdoelen: ["Winstmaximalisatie bij monopolie berekenen", ...],
   //   slides: [

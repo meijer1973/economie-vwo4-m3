@@ -182,7 +182,7 @@ Use the domain banner from econ-word-templates for "Vragen" and "Antwoordmodel" 
 - Bold title in domain dark color
 
 ### Headers and footers
-- Header (right-aligned, gray): `3.X.Y [Naam] – Nieuws met visual`
+- Header (right-aligned, gray): `X.Y.Z [Naam] – Nieuws met visual`
 - Footer (centered, gray): `Pagina [number]`
 
 ---
@@ -192,7 +192,7 @@ Use the domain banner from econ-word-templates for "Vragen" and "Antwoordmodel" 
 ```javascript
 async function buildNieuws(config) {
   // config = {
-  //   paragraafNr: "3.2.3",
+  //   paragraafNr: "X.Y.Z",
   //   naam: "Monopolie",
   //   headline: "KPN verhoogt prijzen...",
   //   svg: "<svg ...>...</svg>",        // SVG string for the visual

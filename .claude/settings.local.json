@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "dontAsk",
     "allow": [
       "Bash",
       "Write",
@@ -12,7 +11,9 @@
       "Skill",
       "Glob",
       "Grep",
-      "TodoWrite"
-    ]
+      "TodoWrite",
+      "mcp__Claude_Preview__preview_start"
+    ],
+    "defaultMode": "dontAsk"
   }
 }

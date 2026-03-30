@@ -6,56 +6,12 @@
     <title>3.2.3 Monopolie - Instapquiz</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #e2e8f0; font-family: 'Lato', sans-serif; color: #334155; display: flex; justify-content: center; align-items: stretch; min-height: 100vh; padding: 10px; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0f172a; }
-        .app-container { background-color: #ffffff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 1360px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 20px); min-height: 0; }
-        .header { background-color: #2563eb; color: white; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
-        .header h1 { color: white; font-size: 22px; margin: 0; }
-        .stats-bar { display: flex; gap: 16px; font-size: 14px; font-weight: bold; }
-        .content-layout { display: flex; flex-direction: column; flex-grow: 1; min-height: 0; }
-        @media(min-width: 850px) { .content-layout { flex-direction: row; } .main-area { flex: 1.8; border-right: 1px solid #cbd5e1; } .sidebar-area { flex: 1; background-color: #f8fafc; box-shadow: inset 5px 0 15px rgba(0,0,0,0.02); } }
-        @media(max-width: 849px) { .sidebar-area { border-top: 2px solid #cbd5e1; background-color: #f8fafc; } }
-        .main-area { display: flex; flex-direction: column; min-height: 0; }
-        .screen { display: none; padding: 24px 28px; flex-grow: 1; flex-direction: column; min-height: 0; }
-        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
-        .sidebar-area { display: none; padding: 22px 20px; flex-direction: column; min-height: 0; overflow: auto; }
-        .sidebar-title { font-size: 18px; margin-bottom: 25px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        #start-screen { text-align: center; justify-content: center; align-items: center; }
-        #start-screen h2 { font-size: 32px; margin-bottom: 14px; }
-        #start-screen p { font-size: 17px; margin-bottom: 22px; max-width: 760px; line-height: 1.5; color: #475569; }
-        .category-badge { display: inline-block; background-color: #e0e7ff; color: #3730a3; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-        .question-text { font-size: 20px; font-weight: 600; margin-bottom: 18px; line-height: 1.35; }
-        .options-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
-        .option-btn { background-color: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-family: 'Lato', sans-serif; color: #334155; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: flex-start; line-height: 1.3; box-shadow: 0 2px 5px rgba(0,0,0,0.02); min-height: 72px; }
-        .option-btn:hover { border-color: #cbd5e1; background-color: #f1f5f9; transform: translateY(-1px); }
-        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
-        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
-        .option-btn:disabled { cursor: default; transform: none; }
-        .feedback-box { display: none; padding: 16px; border-radius: 12px; margin-bottom: 14px; animation: fadeIn 0.3s ease; }
-        .feedback-box.show { display: block; }
-        .feedback-box.success { background-color: #dcfce7; border-left: 5px solid #22c55e; color: #166534; }
-        .feedback-box.error { background-color: #fee2e2; border-left: 5px solid #ef4444; color: #991b1b; }
-        .feedback-title { font-weight: bold; margin-bottom: 6px; font-size: 17px; }
-        .btn { background-color: #2563eb; color: white; border: none; border-radius: 8px; padding: 12px 22px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; font-family: 'Poppins', sans-serif; align-self: flex-end; margin-top: auto; }
-        .btn:hover { background-color: #1d4ed8; }
-        .btn-large { padding: 16px 34px; font-size: 18px; align-self: center; }
-        .mastery-container { width: 100%; }
-        .mastery-item { margin-bottom: 16px; }
-        .mastery-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-weight: bold; font-size: 13px; }
-        .mastery-bar-bg { background-color: #e2e8f0; border-radius: 10px; height: 12px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
-        .mastery-bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.6s; }
-        .math { font-family: 'Courier New', Courier, monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0f172a; border: 1px solid #e2e8f0; }
-        @media(max-width: 980px) { .options-grid { grid-template-columns: 1fr; } }
-        @media(max-width: 849px) { body { padding: 0; } .app-container { height: 100vh; border-radius: 0; } .screen { padding: 20px; } .header { padding: 12px 16px; } .header h1 { font-size: 18px; } .stats-bar { font-size: 12px; gap: 10px; } .question-text { font-size: 18px; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <link rel="stylesheet" href="../../../shared/quiz.css">
 </head>
 <body>
 <div class="app-container">
     <div class="header">
-        <h1><i class="fa-solid fa-graduation-cap"></i> 3.2.3 Monopolie</h1>
+        <h1><span class="par-badge">3.2.3</span> 3.2.3 Monopolie – Instapquiz</h1>
         <div class="stats-bar" id="game-stats" style="display: none;">
             <div><i class="fa-solid fa-star"></i> Score: <span id="score-display">0</span></div>
             <div><i class="fa-solid fa-list-ol"></i> Vraag: <span id="question-count">0/10</span></div>
@@ -64,11 +20,11 @@
     <div class="content-layout">
         <div class="main-area">
             <div id="start-screen" class="screen active">
-                <h2>Monopolie - Instapquiz</h2>
+                <h2>3.2.3 Monopolie</h2>
                 <p>Test je kennis van monopolie: prijszetter gedrag, marginale opbrengst, consumentensurplus, winstmaximalisatie en relevante grafieken.</p>
-                <div style="text-align: left; background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                    <h3 style="margin-bottom: 15px; font-size: 18px;"><i class="fa-solid fa-bullseye" style="color:#2563eb;"></i> Wat we gaan toetsen:</h3>
-                    <ul style="list-style-position: inside; color: #475569; line-height: 1.8;">
+                <div class="topics-box">
+                    <h3><i class="fa-solid fa-bullseye icon"></i> Wat we gaan toetsen:</h3>
+                    <ul>
                         <li>Monopolie begrippen en barrières</li>
                         <li>Vraaglijn = Afzetlijn en MO afleiden</li>
                         <li>Winstmaximalisatie met MO = MK</li>
@@ -94,7 +50,7 @@
             </div>
             <div id="end-screen" class="screen">
                 <h2>Sessie Voltooid! <i class="fa-solid fa-trophy" style="color: #fbbf24;"></i></h2>
-                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: #2563eb;"></span> vragen goed beantwoord.</p>
+                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: var(--domain-primary);"></span> vragen goed beantwoord.</p>
                 <div style="background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
                     <h3 style="margin-bottom: 10px; font-size: 18px;">Hoe nu verder?</h3>
                     <p style="color: #475569; line-height: 1.6;">Bekijk je actuele voortgang in de zijbalk (of hieronder op mobiel). Bouw per onderwerp een <strong>reeks van 3</strong> op om deze definitief af te sluiten en de balk groen te maken. Maak je een fout? Dan reset de reeks naar nul.</p>
@@ -108,265 +64,8 @@
         </div>
     </div>
 </div>
-<script>
-    const questionBank = [
-        // CATEGORIE: monopolie_begrippen (niveau 1)
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "Wat is een monopolie?", "options": ["Één producent die de gehele markt bedient zonder directe concurrenten", "Veel kleine producenten die samen de markt bedienen met lage barrières", "Een formele fusie van concurrenten tot een nieuw gezamenlijk bedrijf", "Een staatsbedrijf dat naast private bedrijven op dezelfde markt opereert"], "answer": 0, "rationale": "Monopolie: één producent met barrières die concurrentie voorkomen. Monopolist is een prijszetter."},
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "Wat zijn barrières tot toetreding?", "options": ["Obstakels zoals patenten, schaalvoordelen en hoog startkapitaal die nieuwe bedrijven buiten de markt houden", "Hoge verkoopprijzen die consumenten ervan weerhouden het product aan te schaffen", "Overheidssubsidies die bestaande bedrijven een oneerlijk voordeel geven ten opzichte van nieuwkomers", "Importquota die de hoeveelheid buitenlandse goederen op de binnenlandse markt beperken"], "answer": 0, "rationale": "Barrières: patenten, schaalvoordelen, controle over essentiële input, hoog startkapitaal, etc."},
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "Wat is het verschil tussen monopolist en perfect concurreerder?", "options": ["Monopolist bepaalt prijs (prijszetter), concurreerder accepteert prijs (prijsnemer)", "Concurreerder bepaalt prijs", "Er is geen verschil", "Monopolist is altijd groter"], "answer": 0, "rationale": "Monopolist: beperkte vraaglijn, kan P en Q bepalen. Concurreerder: oneindig elastische vraag, is prijsnemer."},
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "Wat is een natuurlijk monopolie?", "options": ["Een bedrijf met zo sterke schaalvoordelen dat één producent efficiënter is dan meerdere", "Een monopolie dat door de overheid is ingesteld via wetgeving en vergunningen", "Een monopolie dat toevallig is ontstaan zonder bewuste strategie van het bedrijf", "Een monopolie dat illegaal is verkregen door concurrenten actief uit de markt te drukken"], "answer": 0, "rationale": "Natuurlijk monopolie: schaalvoordelen zijn zo groot dat één producent goedkoper kan produceren dan meerdere (bijv. waterleidingnet, elektriciteitsnet)."},
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "In monopolie, hoe reageert de monopolist op een vraagstijging?", "options": ["Bepaalt optimale Q via MO = MK, zet prijs via vraagfunctie", "Verhoogt altijd prijs", "Produceer meer tegen huidige prijs", "Doet niets"], "answer": 0, "rationale": "Monopolist: nieuwe vraag → verschoven vraagcurve → nieuw optimaal MO = MK → nieuwe P en Q via vraagfunctie."},
-        {"category": "monopolie_begrippen", "difficulty": 1, "q": "Waarom kan een monopolist P > MK stellen?", "options": ["Omdat beperkte concurrentie het toelaat; geen alternatieven voor consument", "Omdat kosten altijd laag zijn", "Dat kan helemaal niet", "Alleen in korte termijn"], "answer": 0, "rationale": "Monopolie macht: consument kan niet naar concurrent gaan. Monopolist exploiteert dit door P > MK."},
-
-        // CATEGORIE: monopolie_begrippen (niveau 2)
-        {"category": "monopolie_begrippen", "difficulty": 2, "q": "Hoe verschilt de marktstructuur van monopolie?", "options": ["Één producent, homogeen product, hoge barrières, prijszetter", "Veel producenten, differentiated product", "Twee producenten (duopolie)", "Minder dan 10 producenten"], "answer": 0, "rationale": "Monopolie: 1 producent, geen close substituten, no free entry, maakt prijsbeslissing."},
-        {"category": "monopolie_begrippen", "difficulty": 2, "q": "Gegeven: stijging in vaste kosten, hoe reageert monopolist?", "options": ["Geen directe reactie op Q of P korte termijn (FK beïnvloedt niet MK); lange termijn mogelijk uittreding", "Verhogt prijs onmiddellijk", "Verlaagt productievolume", "Geen effect"], "answer": 0, "rationale": "FK verhooging beïnvloedt niet de MO = MK regel. Korte termijn: Q en P onveranderd. Lange termijn: winst lager, eventueel geen incentive meer."},
-        {"category": "monopolie_begrippen", "difficulty": 2, "q": "Wat is betwistbaar monopolie?", "options": ["Monopolie waar potentiële concurrenten gereed staan toetreden (hot contestablemarkets)", "Monopolie dat voorgoed beschermd is", "Illegaal monopolie", "Een zeer kleine markt"], "answer": 0, "rationale": "Contestable markets: potentiële concurrentie zorgt dat monopolist zich gedraagt als perfect concurreerder om toetreding af te schrikken."},
-        {"category": "monopolie_begrippen", "difficulty": 2, "q": "Waarom is monopolie inefficiënt uit maatschappelijk oogpunt?", "options": ["P > MK leidt tot onderproductie en doodgewichtverlies vergeleken met volkomen concurrentie", "Monopolie produceert altijd meer", "Er is geen inefficiëntie", "Alleen rijke consumenten verliezen"], "answer": 0, "rationale": "Monopolie: onderproductie (Q* < Q_concurrentie), hogere prijs (P > P_concurrentie), consumentensurplus overgedragen naar producent + DWL."},
-
-        // CATEGORIE: monopolie_begrippen (niveau 3)
-        {"category": "monopolie_begrippen", "difficulty": 3, "q": "Gegeven: vraaglijn Qv = 100 - P en MK = 10. Wat is winstmaximale P vs. volkomen concurrentie P?", "options": ["Monopolie: P = 55; Concurrentie: P = 10. Monopolist beperkt output", "Monopolie: P = 10", "Beide hebben P = 50", "Monopolie: P = 100"], "answer": 0, "rationale": "Monopolie: MO = 100 - 2Q (bij Qv=100-P). MO=MK: 100-2Q=10 → Q=45, P=55. Concurrentie: P=MK=10, Q=90."},
-        {"category": "monopolie_begrippen", "difficulty": 3, "q": "Waardoor ontstaat monopolie macht?", "options": ["Uit verticale afstand tussen vraagcurve en MK; hoe meer afstand, hoe meer macht", "Uit lagere kosten", "Uit meer werknemers", "Alleen uit barrières"], "answer": 0, "rationale": "Monopolie macht = P - MK (Lerner index). Hangt af van vraag elasticiteit en MK positie."},
-
-        // CATEGORIE: mo_afleiden (niveau 1)
-        {"category": "mo_afleiden", "difficulty": 1, "q": "Gegeven vraag P = 100 - 2Q. Wat is MO?", "options": ["MO = 100 - 4Q", "MO = 100 - 2Q", "MO = 50 - Q", "MO = 100"], "answer": 0, "rationale": "TO = P × Q = (100 - 2Q) × Q = 100Q - 2Q². MO = dTO/dQ = 100 - 4Q."},
-        {"category": "mo_afleiden", "difficulty": 1, "q": "Wat is het kenmerk van MO in monopolie?", "options": ["MO daalt sneller dan vraaglijn (MO ligt onder P)", "MO = P altijd", "MO is constant", "MO stijgt"], "answer": 0, "rationale": "In monopolie: MO < P en MO daalt sneller. Bij lineaire vraag: MO heeft dubbele helling van vraag."},
-        {"category": "mo_afleiden", "difficulty": 1, "q": "Gegeven: P = 50 - 0,5Q. Bereken MO.", "options": ["MO = 50 - Q", "MO = 50 - 0,5Q", "MO = 25 - 0,5Q", "MO = 50"], "answer": 0, "rationale": "TO = (50 - 0,5Q) × Q = 50Q - 0,5Q². MO = 50 - Q."},
-        {"category": "mo_afleiden", "difficulty": 1, "q": "Waarom is MO ≠ P in monopolie?", "options": ["Omdat de monopolist moet prijzen dalen voor meer verkoop, dus extra opbrengst < nieuwe prijs", "MO is altijd gelijk aan P", "Omdat kosten stijgen", "Dit kan niet"], "answer": 0, "rationale": "Wanneer Q omhoog gaat, daalt P. Extra opbrengst = nieuw P × 1 - oude P × 1 < nieuwe P."},
-        {"category": "mo_afleiden", "difficulty": 1, "q": "Gegeven lineaire vraag. Wat is relatie MO tot vraag?", "options": ["MO intersect horizontale as op helft vraag; MO daalt dubbel zo snel", "MO = vraag", "MO is hoger", "MO is constant"], "answer": 0, "rationale": "Lineaire vraag P = a - bQ → MO = a - 2bQ. MO daalt dubbel zo snel en snijdt x-as op half Q van vraag."},
-
-        // CATEGORIE: mo_afleiden (niveau 2)
-        {"category": "mo_afleiden", "difficulty": 2, "q": "Gegeven: Vraag Q = 200 - 5P. Bereken MO functie.", "options": ["Eerst omschrijven naar P: P = 40 - 0,2Q. TO = 40Q - 0,2Q², dus MO = 40 - 0,4Q", "MO = 200 - 5P", "MO = 40", "MO = 200"], "answer": 0, "rationale": "Q = 200 - 5P → 5P = 200 - Q → P = 40 - 0,2Q. TO = 40Q - 0,2Q². MO = 40 - 0,4Q."},
-        {"category": "mo_afleiden", "difficulty": 2, "q": "Gegeven vraag Qv = 300 - 2P. Op welke Q = 0?", "options": ["Q = 150 (waar MO = 0)", "Q = 300", "Q = 0 (irrelevant)", "MO ≠ 0"], "answer": 0, "rationale": "P = 150 - 0,5Q. TO = 150Q - 0,5Q². MO = 150 - Q. MO = 0 als Q = 150."},
-        {"category": "mo_afleiden", "difficulty": 2, "q": "Voor niet-lineaire vraag, hoe bereken je MO?", "options": ["Eerst TO bepalen (P(Q) × Q), dan dTO/dQ nemen", "Rechtstreeks uit vraagcurve", "MO = P altijd", "Dit kan niet"], "answer": 0, "rationale": "Voor elke vraagfunctie: TO = P(Q) × Q. MO = dTO/dQ. Dit is algemene methode."},
-        {"category": "mo_afleiden", "difficulty": 2, "q": "Gegeven: P = 100 - 3Q. Bereken MO op Q = 10.", "options": ["MO(10) = 100 - 6(10) = 40", "MO(10) = 100 - 30 = 70", "MO(10) = 30", "MO(10) = 100"], "answer": 0, "rationale": "MO = 100 - 6Q. Bij Q = 10: MO = 100 - 60 = 40."},
-
-        // CATEGORIE: mo_afleiden (niveau 3)
-        {"category": "mo_afleiden", "difficulty": 3, "q": "Gegeven: vraag Q = 500/P (inverse vraag: P = 500/Q). Bepaal MO.", "options": ["TO = 500. MO = 0 (constante TO)", "TO = Q × (500/Q) = 500. MO = dTO/dQ = 0", "MO = 500/Q", "MO stijgt"], "answer": 0, "rationale": "Inverse elastische vraag: TO = P × Q = (500/Q) × Q = 500 (constant). MO = 0."},
-        {"category": "mo_afleiden", "difficulty": 3, "q": "Gegeven: P = e^(-0,1Q) × 100 (exponentiële vraag). Hoe bepaal je MO?", "options": ["TO = 100 Q e^(-0,1Q). MO = dTO/dQ = 100[e^(-0,1Q) - 0,1Q e^(-0,1Q)]", "MO = 100", "Dit kan niet", "MO = e^(-0,1Q)"], "answer": 0, "rationale": "Voor niet-lineaire vraag: gebruik calculus. TO = P × Q, dan afleiden."},
-
-        // CATEGORIE: winstmaximalisatie (niveau 1)
-        {"category": "winstmaximalisatie", "difficulty": 1, "q": "Wat is de regel voor winstmaximalisatie in monopolie?", "options": ["MO = MK, net als in elke andere marktvorm", "MO moet altijd groter zijn dan MK voor maximale winst", "P = MK, net als bij volkomen concurrentie", "De hoeveelheid zo hoog mogelijk opvoeren ongeacht kosten"], "answer": 0, "rationale": "Ook in monopolie geldt MO = MK. Het verschil is dat de monopolist daarna de prijs bepaalt via de vraaglijn (P > MK)."},
-        {"category": "winstmaximalisatie", "difficulty": 1, "q": "Stappen voor monopoliewinst maximaliseren?", "options": ["1) Bereken MO. 2) Stel MO = MK, los Q op. 3) Bepaal P via vraagcurve.", "1) Stel P = MK. 2) Bepaal Q.", "1) Maximize Q. 2) Bepaal P.", "Dit kan niet"], "answer": 0, "rationale": "Monopolie winstmaximalisatie: MO = MK → Q*, dan P* = P(Q*) via vraag."},
-        {"category": "winstmaximalisatie", "difficulty": 1, "q": "In monopolie, geldt altijd P > MK op optimale output?", "options": ["Ja, omdat monopolist Macht heeft; alleen bij perfekte concurrentie P = MK", "Nee, P = MK altijd", "Kan beide", "Afhankelijk van vraag"], "answer": 0, "rationale": "Monopolie: MO < P, dus MO = MK impliceert MK < P. Dit is monopolie winst."},
-        {"category": "winstmaximalisatie", "difficulty": 1, "q": "Gegeven monopolist: MK = 20. Op optimale Q geldt MO = 20. Wat kun je zeggen over P?", "options": ["P > 20 (uit MO < P eigenschap)", "P = 20", "P < 20", "Onbepaald"], "answer": 0, "rationale": "MO < P altijd in monopolie. Als MO = 20, dan P > 20."},
-        {"category": "winstmaximalisatie", "difficulty": 1, "q": "Waarom produceert monopolist NIET waar P = MK?", "options": ["Omdat MO < P; producent wint meer winst door minder output te bieden tegen hogere prijs", "Omdat kostne stijgen", "Dit is waar monopolist produceert", "Omdat vraag daalt"], "answer": 0, "rationale": "Waar P = MK ligt na de optimale Q*. Geeft onderproductie vergeleken met concurrentie."},
-
-        // CATEGORIE: winstmaximalisatie (niveau 2)
-        {"category": "winstmaximalisatie", "difficulty": 2, "q": "Gegeven: P = 100 - Q, MK = 10. Bereken optimale Q en P.", "options": ["MO = 100 - 2Q = MK = 10 → Q = 45, P = 55", "Q = 50, P = 50", "Q = 90, P = 10", "Q = 100, P = 0"], "answer": 0, "rationale": "MO = 100 - 2Q. MO = MK: 100 - 2Q = 10 → Q = 45. P = 100 - 45 = 55."},
-        {"category": "winstmaximalisatie", "difficulty": 2, "q": "Gegeven: Vraag Q = 80 - 2P. MK = 5. Bepaal optimale prijs.", "options": ["P = 80 - 0,5Q → MO = 80 - Q = MK = 5 → Q = 75, P = 42,5", "P = 45", "P = 50", "P = 80"], "answer": 0, "rationale": "Inverse vraag: P = 40 - 0,5Q. MO = 40 - Q = 5 → Q = 35, P = 40 - 17,5 = 22,5. [Check antwoord]"},
-        {"category": "winstmaximalisatie", "difficulty": 2, "q": "Als MK stijgt van 10 naar 15, hoe reageert monopolist Q?", "options": ["Q daalt (aangezien MO = MK, hogere MK geeft lagere Q)", "Q stijgt", "Q blijft gelijk", "Geen reactie"], "answer": 0, "rationale": "Nieuw snijpunt MO = MK geeft lagere Q. MO-curve verschuift niet, maar snijpunt beweegt naar links."},
-        {"category": "winstmaximalisatie", "difficulty": 2, "q": "Gegeven: TK = 100 + 5Q + 0,5Q². P = 30 - 0,1Q. Bepaal winstmaximale Q.", "options": ["MK = 5 + Q. MO = 30 - 0,2Q. MO = MK: 30 - 0,2Q = 5 + Q → Q ≈ 17,86", "Q = 25", "Q = 10", "Q = 50"], "answer": 0, "rationale": "MK = dTK/dQ = 5 + Q. MO = 30 - 0,2Q. Gelijk: 30 - 0,2Q = 5 + Q → 1,2Q = 25 → Q ≈ 20,83."},
-
-        // CATEGORIE: winstmaximalisatie (niveau 3)
-        {"category": "winstmaximalisatie", "difficulty": 3, "q": "Gegeven: TO = 150Q - Q². TK = 50 + 10Q + 0,1Q². Bereken optimale Q voor winst.", "options": ["MO = 150 - 2Q. MK = 10 + 0,2Q. MO = MK: 150 - 2Q = 10 + 0,2Q → Q = 65,2", "Q = 70", "Q = 50", "Q = 80"], "answer": 0, "rationale": "MO = 150 - 2Q. MK = 10 + 0,2Q. Gelijk: 150 - 2Q = 10 + 0,2Q → 140 = 2,2Q → Q ≈ 63,6."},
-        {"category": "winstmaximalisatie", "difficulty": 3, "q": "Gegeven: P = 200 - 3Q, MK = 50. Bereken totale winst en GTK op optimale output.", "options": ["MO = 200 - 6Q = 50 → Q = 25. P = 125. TO = 3125. TK = 50×25 = 1250. Winst = 1875 (als TK = MK×Q)", "Winst = 1000", "Winst = 500", "Verlies"], "answer": 0, "rationale": "MO = 200 - 6Q = 50 → Q = 25. P = 200 - 75 = 125. Als MK = 50 constant, TK = 50×25 = 1250. Winst = 3125 - 1250 = 1875."},
-
-        // CATEGORIE: surplus (niveau 1)
-        {"category": "surplus", "difficulty": 1, "q": "Wat is consumentensurplus?", "options": ["Het verschil tussen bereidheid te betalen en werkelijk betaalde prijs", "Het totale inkomen van consumenten", "De winst van producenten", "De totale welvaart"], "answer": 0, "rationale": "Consumentensurplus (CS) = area onder vraagcurve minus uitgegeven bedrag = area boven prijs en onder vraag."},
-        {"category": "surplus", "difficulty": 1, "q": "Gegeven: monopolie met P = 100, vraag op Q = 50 gaat tot P = 150. CS?", "options": ["CS = (150 - 100) × 50 / 2 = 1250 (driehoekarea)", "CS = 5000", "CS = 100", "CS = 150"], "answer": 0, "rationale": "CS = 0,5 × (max P - werkelijke P) × Q = 0,5 × 50 × 50 = 1250."},
-        {"category": "surplus", "difficulty": 1, "q": "Wat is doodgewichtverlies (DWL)?", "options": ["Verloren surplus doordat monopolie minder produceert dan bij volkomen concurrentie", "Het verlies dat individuele bedrijven lijden wanneer zij onder de kostprijs verkopen", "De totale winst die de monopolist behaalt door een hogere prijs te rekenen", "De belastinginkomsten die de overheid misloopt door monopolistisch gedrag"], "answer": 0, "rationale": "DWL is het verloren totaal surplus doordat de monopolist minder produceert dan sociaal optimaal (bij volkomen concurrentie). Transacties die beide partijen voordeel zouden bieden vinden niet plaats."},
-        {"category": "surplus", "difficulty": 1, "q": "Waarom leidt monopolie tot DWL?", "options": ["Monopolist produceert Q* < Q_concurrentie (waar P = MK). Waarderingsverschil > extra kosten", "Monopolie is altijd efficiënt", "Concurrentie veroorzaakt DWL", "DWL bestaat niet"], "answer": 0, "rationale": "Monopolie Q* < Q_perfectly_competitive. Voor units tussen beide: waardering > MK. Dit is verloren surplus."},
-        {"category": "surplus", "difficulty": 1, "q": "Gegeven: P_monopolie = 80, Q_monopolie = 40. P_concurrentie = 50, Q_concurrentie = 70. DWL is:", "options": ["Area tussen vraagcurve en MK van Q_monopolie tot Q_concurrentie", "Verschil in prijzen × hoeveelheid", "0 (geen DWL)", "Alleen producent verlies"], "answer": 0, "rationale": "DWL = 0,5 × (P_monopolie - P_concurrentie) × (Q_concurrentie - Q_monopolie) (benadering)."},
-
-        // CATEGORIE: surplus (niveau 2)
-        {"category": "surplus", "difficulty": 2, "q": "Gegeven: lineaire vraag P = 100 - Q. Monopolie: Q_m = 40, P_m = 60. Concurrentie (P = MK = 20): Q_c = 80. DWL?", "options": ["DWL ≈ 0,5 × (60 - 20) × (80 - 40) = 800", "DWL = 2000", "DWL = 0", "DWL = 400"], "answer": 0, "rationale": "DWL (driehoek): basis = 40, hoogte = 40 (verschil tussen P en MK). DWL = 0,5 × 40 × 40 = 800."},
-        {"category": "surplus", "difficulty": 2, "q": "Gegeven monopolie en concurrentie wat gebeurt met CS bij monopolie?", "options": ["CS daalt: hogere prijs en lagere Q", "CS stijgt", "CS blijft gelijk", "Niets gebeurt"], "answer": 0, "rationale": "Monopolie: P hoger, Q lager → CS is veel kleiner driehoek → CS daalt."},
-        {"category": "surplus", "difficulty": 2, "q": "Gegeven: monopolie winstmaximalisatie. Totale surplus = CS + producent surplus (PS). Hoe groot is DWL?", "options": ["DWL = (CS_concurrentie + PS_concurrentie) - (CS_monopolie + PS_monopolie)", "DWL is altijd nul", "DWL = CS_monopolie", "DWL = PS_monopolie"], "answer": 0, "rationale": "Totaal surplus in concurrentie > monopolie. DWL = verschil = verloren transacties voorbij monopolie Q*."},
-        {"category": "surplus", "difficulty": 2, "q": "Hoe reduceer je DWL in monopolie?", "options": ["Regulering: verplichting P = MK (concurrentie prijs) of P = ATK (nulwinst)", "Niets kan DWL reduceren", "Meer monopolies", "Subsidies"], "answer": 0, "rationale": "Regulering: forced pricing (P = MK) elimineert DWL. P = ATK geeft nulwinst-evenwicht zonder verlies."},
-
-        // CATEGORIE: surplus (niveau 3)
-        {"category": "surplus", "difficulty": 3, "q": "Gegeven: P = 200 - 2Q, MK = 20. Monopolie: Q_m = 45, P_m = 110. Perfecte concurrentie: Q_c = 90, P_c = 20. DWL?", "options": ["DWL = 0,5 × (110 - 20) × (90 - 45) = 2025", "DWL = 4050", "DWL = 1000", "DWL = 0"], "answer": 0, "rationale": "DWL driehoek: basis = 45, hoogte = 90. Area = 0,5 × 45 × 90 = 2025."},
-        {"category": "surplus", "difficulty": 3, "q": "Gegeven monopolie met P = 100, Q = 50, MK = 30, GTK = 60. Bereken CS, PS, DWL tegen concurrentie (P = MK = 30).", "options": ["CS_m ≈ 1250, PS_m = 2000, DWL groot; concurrentie: CS_c groter, PS_c smaller", "Alle gelijk", "DWL = 0", "Geen surplus"], "answer": 0, "rationale": "Monopolie: CS = deel onder vraag. DWL = deel tussen vraag en MK tot Q_concurrentie."},
-
-        // CATEGORIE: rekenen (niveau 1)
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: monopolist Q = 30, TO = 1500, TK = 900. Bereken winst.", "options": ["Winst = 1500 - 900 = 600", "Winst = 1500", "Winst = 900", "Winst = 30"], "answer": 0, "rationale": "Winst = TO - TK = 1500 - 900 = 600."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: P = 120, Q = 40, GTK = 70. Winst per eenheid?", "options": ["Winst per eenheid = 120 - 70 = 50", "Winst per eenheid = 120", "Winst per eenheid = 70", "Winst per eenheid = 40"], "answer": 0, "rationale": "Winst per eenheid = P - GTK = 120 - 70 = 50."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: vraag P = 80 - Q. Bereken opbrengsten als Q = 20.", "options": ["TO = 80 × 20 - 20² = 1600 - 400 = 1200", "TO = 1600", "TO = 400", "TO = 80"], "answer": 0, "rationale": "P = 80 - 20 = 60. TO = 60 × 20 = 1200."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: MK = 15, MO = 15 op output Q = 35. Wat is TO op Q = 35?", "options": ["TO = MO × Q = 15 × 35 = 525", "TO = 35", "TO = 15", "Onbepaald"], "answer": 0, "rationale": "TO = MO × Q (benadering). Bij discrete: TO = P × Q, MO = ΔTO / ΔQ."},
-
-        // CATEGORIE: rekenen (niveau 2)
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: TK = 200 + 30Q + Q². Bereken MK op Q = 10.", "options": ["MK(10) = 30 + 2(10) = 50", "MK(10) = 30", "MK(10) = 200", "MK(10) = 100"], "answer": 0, "rationale": "MK = dTK/dQ = 30 + 2Q. Op Q = 10: MK = 50."},
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: P = 90 - 0,5Q en TK = 100 + 20Q. Bereken TO op Q = 40.", "options": ["P = 90 - 20 = 70. TO = 70 × 40 = 2800", "TO = 3600", "TO = 2000", "TO = 4000"], "answer": 0, "rationale": "P(40) = 90 - 0,5(40) = 70. TO = 70 × 40 = 2800."},
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: TK = 0,5Q² + 10Q + 100. P = 60 - Q. Winst op Q = 20?", "options": ["TO = 40 × 20 = 800. TK = 200 + 200 + 100 = 500. Winst = 300", "Winst = 500", "Winst = 200", "Verlies"], "answer": 0, "rationale": "P(20) = 60 - 20 = 40. TO = 800. TK = 200 + 200 + 100 = 500. Winst = 300."},
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: MO = 60 - 4Q, MK = 10. Bepaal winstmaximale Q.", "options": ["60 - 4Q = 10 → Q = 12,5", "Q = 50", "Q = 60", "Q = 10"], "answer": 0, "rationale": "MO = MK: 60 - 4Q = 10 → 4Q = 50 → Q = 12,5."},
-
-        // CATEGORIE: rekenen (niveau 3)
-        {"category": "rekenen", "difficulty": 3, "q": "Gegeven: TO = 150Q - 2Q². TK = 50 + 20Q + 0,5Q². Bepaal winstmaximale Q en totale winst.", "options": ["MO = 150 - 4Q, MK = 20 + Q. MO = MK: 150 - 4Q = 20 + Q → Q = 26. Winst = TO - TK", "Q = 30, Winst = 2000", "Q = 20, Winst = 1000", "Q = 25, Winst = 1500"], "answer": 0, "rationale": "150 - 4Q = 20 + Q → 130 = 5Q → Q = 26. TO = 150(26) - 2(676) = 3900 - 1352 = 2548. TK = 50 + 520 + 338 = 908. Winst = 1640."},
-        {"category": "rekenen", "difficulty": 3, "q": "Gegeven: vraag Qd = 1000 - 10P. TK = 1000 + 20Q + 0,1Q². Bepaal monopolie winst.", "options": ["P = 100 - 0,1Q. MO = 100 - 0,2Q. MK = 20 + 0,2Q. MO = MK: Q = 200. P = 80. Winst = (P-ATK)×Q", "Winst = 5000", "Winst = 10000", "Verlies"], "answer": 0, "rationale": "100 - 0,2Q = 20 + 0,2Q → Q = 200. P = 80. TO = 16000. TK = 1000 + 4000 + 4000 = 9000. Winst = 7000."}
-    ];
-
-    let userProgress = {
-        "monopolie_begrippen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "mo_afleiden": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "winstmaximalisatie": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "surplus": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "rekenen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "grafische_analyse": { level: 1, correctCount: 0, passedLevel3: false, closed: false }
-    };
-
-    const catNames = {
-        "monopolie_begrippen": "Monopolie Begrippen",
-        "mo_afleiden": "MO Afleiden",
-        "winstmaximalisatie": "Winstmaximalisatie",
-        "surplus": "Surplus & DWL",
-        "rekenen": "Berekeningen",
-        "grafische_analyse": "Grafische Analyse"
-    };
-
-    let maxQuestions = 10;
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let currentQuestionData = null;
-    let shuffledCorrectIndex = 0;
-    let askedQuestionsThisSession = [];
-
-    function renderMasteryDashboard() {
-        const dash = document.getElementById('mastery-dashboard');
-        dash.innerHTML = '';
-        for (const [cat, p] of Object.entries(userProgress)) {
-            let steps = p.closed ? 3 : Math.min(p.correctCount, 3);
-            let percentage = Math.round((steps / 3) * 100);
-            let statusText = p.closed ? "Afgesloten <i class='fa-solid fa-check-circle'></i>" : `Reeks: ${steps}/3`;
-            let barColor = (percentage === 100) ? '#10b981' : '#3b82f6';
-            let textColor = (percentage === 100) ? '#10b981' : '#64748b';
-            const itemHTML = `<div class="mastery-item"><div class="mastery-label"><span>${catNames[cat]}</span><span style="color: ${textColor}">${statusText}</span></div><div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: ${percentage}%; background-color: ${barColor}"></div></div></div>`;
-            dash.innerHTML += itemHTML;
-        }
-    }
-
-    function startGame() {
-        document.getElementById('start-screen').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        document.getElementById('sidebar').style.display = 'flex';
-        document.getElementById('game-stats').style.display = 'flex';
-        renderMasteryDashboard();
-        nextQuestion();
-    }
-
-    function restartSession() {
-        const allClosed = Object.values(userProgress).every(p => p.closed);
-        if (allClosed) {
-            alert("Geniaal! Je hebt de gehele stof van dit onderdeel volledig afgesloten. Tijd voor een nieuwe uitdaging (voortgang wordt gereset).");
-            for (let cat in userProgress) {
-                userProgress[cat] = { level: 1, correctCount: 0, passedLevel3: false, closed: false };
-            }
-        }
-        currentQuestionIndex = 0;
-        score = 0;
-        askedQuestionsThisSession = [];
-        document.getElementById('end-screen').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        document.getElementById('score-display').innerText = "0";
-        document.getElementById('question-count').innerText = "0/10";
-        renderMasteryDashboard();
-        nextQuestion();
-    }
-
-    function getNextQuestion() {
-        let availableCategories = Object.keys(userProgress).filter(cat => !userProgress[cat].closed);
-        if (availableCategories.length === 0) return null;
-        availableCategories.sort(() => Math.random() - 0.5);
-        for (let targetCategory of availableCategories) {
-            let p = userProgress[targetCategory];
-            let targetDifficulty = p.level;
-            if (p.correctCount >= 2) targetDifficulty = 3;
-            let possibleQuestions = questionBank.filter(q => q.category === targetCategory && q.difficulty === targetDifficulty && !askedQuestionsThisSession.includes(q));
-            if (possibleQuestions.length === 0) {
-                possibleQuestions = questionBank.filter(q => q.category === targetCategory && !askedQuestionsThisSession.includes(q));
-            }
-            if (possibleQuestions.length > 0) {
-                const selected = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
-                askedQuestionsThisSession.push(selected);
-                return selected;
-            }
-        }
-        let absoluteFallback = questionBank.filter(q => !askedQuestionsThisSession.includes(q));
-        if (absoluteFallback.length > 0) {
-            const selected = absoluteFallback[Math.floor(Math.random() * absoluteFallback.length)];
-            askedQuestionsThisSession.push(selected);
-            return selected;
-        }
-        return null;
-    }
-
-    function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex > maxQuestions) { endGame(); return; }
-        document.getElementById('question-count').innerText = `${currentQuestionIndex}/${maxQuestions}`;
-        document.getElementById('feedback-container').classList.remove('show', 'success', 'error');
-        document.getElementById('next-btn').style.display = 'none';
-        currentQuestionData = getNextQuestion();
-        if (!currentQuestionData) { endGame(); return; }
-        document.getElementById('category-display').innerText = `${catNames[currentQuestionData.category]} - Niveau ${currentQuestionData.difficulty}`;
-        let stars = '';
-        for(let i=0; i < currentQuestionData.difficulty; i++) stars += '<i class="fa-solid fa-star"></i>';
-        document.getElementById('difficulty-stars').innerHTML = stars;
-        document.getElementById('question-text').innerHTML = currentQuestionData.q;
-        const optionsContainer = document.getElementById('options-container');
-        optionsContainer.innerHTML = '';
-        const indices = [...Array(currentQuestionData.options.length).keys()];
-        for(let i=indices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[indices[i],indices[j]]=[indices[j],indices[i]];}
-        shuffledCorrectIndex = indices.indexOf(currentQuestionData.answer);
-        indices.forEach((origIdx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerHTML = `<span>${currentQuestionData.options[origIdx]}</span>`;
-            btn.onclick = () => checkAnswer(origIdx, btn);
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    function checkAnswer(selectedIndex, btnElement) {
-        const allBtns = document.querySelectorAll('.option-btn');
-        allBtns.forEach(btn => btn.disabled = true);
-        const isCorrect = (selectedIndex === currentQuestionData.answer);
-        const feedbackBox = document.getElementById('feedback-container');
-        const feedbackTitle = document.getElementById('feedback-title');
-        const feedbackText = document.getElementById('feedback-text');
-        const cat = currentQuestionData.category;
-        const diff = currentQuestionData.difficulty;
-        if (isCorrect) {
-            btnElement.classList.add('correct');
-            feedbackBox.className = 'feedback-box show success';
-            feedbackTitle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Dat is correct!';
-            score++;
-            document.getElementById('score-display').innerText = score;
-            userProgress[cat].correctCount++;
-            if (diff === 3) userProgress[cat].passedLevel3 = true;
-            if (userProgress[cat].correctCount >= 3 && userProgress[cat].passedLevel3) { userProgress[cat].closed = true; }
-            if (userProgress[cat].level < 3) userProgress[cat].level++;
-        } else {
-            btnElement.classList.add('wrong');
-            allBtns[currentQuestionData.answer].classList.add('correct');
-            feedbackBox.className = 'feedback-box show error';
-            feedbackTitle.innerHTML = '<i class="fa-solid fa-times-circle"></i> Dat is helaas onjuist.';
-            if (userProgress[cat].level > 1) userProgress[cat].level--;
-            userProgress[cat].correctCount = 0;
-            userProgress[cat].passedLevel3 = false;
-        }
-        renderMasteryDashboard();
-        feedbackText.innerHTML = currentQuestionData.rationale;
-        document.getElementById('next-btn').style.display = 'block';
-    }
-
-    function endGame() {
-        document.getElementById('game-screen').classList.remove('active');
-        document.getElementById('end-screen').classList.add('active');
-        let questionsPlayed = currentQuestionIndex > maxQuestions ? maxQuestions : currentQuestionIndex - 1;
-        document.getElementById('final-score').innerText = `${score} van de ${questionsPlayed}`;
-        renderMasteryDashboard();
-    }
-
-    document.addEventListener('keydown', function(event) {
-        const nextBtn = document.getElementById('next-btn');
-        const activeElement = document.activeElement;
-        const isTypingInField = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.isContentEditable);
-        if (isTypingInField) return;
-        const nextVisible = nextBtn && nextBtn.style.display !== 'none';
-        if (!nextVisible) return;
-        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); nextQuestion(); }
-    });
-</script>
+<script src="../../../shared/questions/3.2.3.js"></script>
+<script src="../../../shared/quiz-engine.js"></script>
+<script src="../../../shared/quiz-ui.js"></script>
 </body>
 </html>

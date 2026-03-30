@@ -287,3 +287,67 @@ You MUST treat temporary/intermediate files as your responsibility. The user onl
 
 ### The principle
 > Work like a professional contractor: build what was asked, then clean the site before you leave. The client should only see the finished product.
+
+---
+
+## Shared Quiz Engine Architecture
+
+The 20 instapquiz HTML files use a shared engine architecture:
+
+```
+shared/
+  quiz-engine.js          ← Pure game logic (UMD, testable in Node.js + browser)
+  quiz-ui.js              ← DOM binding layer (browser only)
+  quiz.css                ← Shared styles with CSS custom properties
+  questions/
+    3.1.1.js ... 3.4.6.js ← Per-quiz data files (20 total)
+  tests/
+    quiz-engine.test.js   ← Game logic unit tests
+    quiz-data.test.js     ← Data validation tests
+```
+
+Each quiz HTML file is a thin shell (~70 lines) that loads:
+1. The per-quiz data file (`shared/questions/X.Y.Z.js` → sets `window.QUIZ_DATA`)
+2. `shared/quiz-engine.js` (pure logic, no DOM)
+3. `shared/quiz-ui.js` (wires engine to DOM)
+
+### Build scripts for quizzes
+
+| Script | Purpose |
+|--------|---------|
+| `build-scripts/extract-quiz-data.js` | Extract question data from HTML into JSON data files |
+| `build-scripts/generate-quiz-shells.js` | Generate slim HTML shells for all 20 quizzes |
+
+---
+
+## Testing & Verification (ALWAYS follow)
+
+### Before pushing (if quiz files were modified):
+```bash
+npm test                          # Run all 195 unit tests
+node scripts/check-links.js      # Verify all file references
+```
+
+- If `npm test` fails → fix before pushing
+- If link check fails → fix broken references before pushing
+
+### After every push to main:
+```bash
+bash scripts/verify-deployment.sh   # Confirm site is live + shared resources accessible
+```
+
+- If deployment verification fails → diagnose, fix, push again, re-verify
+- Do NOT consider a task complete until all checks pass
+
+### Adding a new quiz:
+1. Create question data in `shared/questions/X.Y.Z.js` (copy existing as template)
+2. Create quiz HTML shell (copy existing, update `<script src>` path)
+3. Run `npm test` to validate data structure
+4. Run `node scripts/check-links.js` to verify references
+5. Push and run deployment verification
+
+### Modifying quiz engine:
+1. Edit `shared/quiz-engine.js`
+2. Run `npm test` — all tests must pass
+3. Test in browser (start local server, play through a quiz)
+4. Push and verify deployment

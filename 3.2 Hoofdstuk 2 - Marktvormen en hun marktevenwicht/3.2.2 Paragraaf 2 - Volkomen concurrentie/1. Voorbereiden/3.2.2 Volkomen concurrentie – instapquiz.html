@@ -6,56 +6,12 @@
     <title>3.2.2 Volkomen concurrentie - Instapquiz</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #e2e8f0; font-family: 'Lato', sans-serif; color: #334155; display: flex; justify-content: center; align-items: stretch; min-height: 100vh; padding: 10px; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0f172a; }
-        .app-container { background-color: #ffffff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 1360px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 20px); min-height: 0; }
-        .header { background-color: #2563eb; color: white; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
-        .header h1 { color: white; font-size: 22px; margin: 0; }
-        .stats-bar { display: flex; gap: 16px; font-size: 14px; font-weight: bold; }
-        .content-layout { display: flex; flex-direction: column; flex-grow: 1; min-height: 0; }
-        @media(min-width: 850px) { .content-layout { flex-direction: row; } .main-area { flex: 1.8; border-right: 1px solid #cbd5e1; } .sidebar-area { flex: 1; background-color: #f8fafc; box-shadow: inset 5px 0 15px rgba(0,0,0,0.02); } }
-        @media(max-width: 849px) { .sidebar-area { border-top: 2px solid #cbd5e1; background-color: #f8fafc; } }
-        .main-area { display: flex; flex-direction: column; min-height: 0; }
-        .screen { display: none; padding: 24px 28px; flex-grow: 1; flex-direction: column; min-height: 0; }
-        .screen.active { display: flex; animation: fadeIn 0.4s ease; }
-        .sidebar-area { display: none; padding: 22px 20px; flex-direction: column; min-height: 0; overflow: auto; }
-        .sidebar-title { font-size: 18px; margin-bottom: 25px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        #start-screen { text-align: center; justify-content: center; align-items: center; }
-        #start-screen h2 { font-size: 32px; margin-bottom: 14px; }
-        #start-screen p { font-size: 17px; margin-bottom: 22px; max-width: 760px; line-height: 1.5; color: #475569; }
-        .category-badge { display: inline-block; background-color: #e0e7ff; color: #3730a3; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-        .question-text { font-size: 20px; font-weight: 600; margin-bottom: 18px; line-height: 1.35; }
-        .options-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
-        .option-btn { background-color: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-family: 'Lato', sans-serif; color: #334155; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: flex-start; line-height: 1.3; box-shadow: 0 2px 5px rgba(0,0,0,0.02); min-height: 72px; }
-        .option-btn:hover { border-color: #cbd5e1; background-color: #f1f5f9; transform: translateY(-1px); }
-        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
-        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
-        .option-btn:disabled { cursor: default; transform: none; }
-        .feedback-box { display: none; padding: 16px; border-radius: 12px; margin-bottom: 14px; animation: fadeIn 0.3s ease; }
-        .feedback-box.show { display: block; }
-        .feedback-box.success { background-color: #dcfce7; border-left: 5px solid #22c55e; color: #166534; }
-        .feedback-box.error { background-color: #fee2e2; border-left: 5px solid #ef4444; color: #991b1b; }
-        .feedback-title { font-weight: bold; margin-bottom: 6px; font-size: 17px; }
-        .btn { background-color: #2563eb; color: white; border: none; border-radius: 8px; padding: 12px 22px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; font-family: 'Poppins', sans-serif; align-self: flex-end; margin-top: auto; }
-        .btn:hover { background-color: #1d4ed8; }
-        .btn-large { padding: 16px 34px; font-size: 18px; align-self: center; }
-        .mastery-container { width: 100%; }
-        .mastery-item { margin-bottom: 16px; }
-        .mastery-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-weight: bold; font-size: 13px; }
-        .mastery-bar-bg { background-color: #e2e8f0; border-radius: 10px; height: 12px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
-        .mastery-bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.6s; }
-        .math { font-family: 'Courier New', Courier, monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0f172a; border: 1px solid #e2e8f0; }
-        @media(max-width: 980px) { .options-grid { grid-template-columns: 1fr; } }
-        @media(max-width: 849px) { body { padding: 0; } .app-container { height: 100vh; border-radius: 0; } .screen { padding: 20px; } .header { padding: 12px 16px; } .header h1 { font-size: 18px; } .stats-bar { font-size: 12px; gap: 10px; } .question-text { font-size: 18px; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <link rel="stylesheet" href="../../../shared/quiz.css">
 </head>
 <body>
 <div class="app-container">
     <div class="header">
-        <h1><i class="fa-solid fa-graduation-cap"></i> 3.2.2 Volkomen concurrentie</h1>
+        <h1><span class="par-badge">3.2.2</span> 3.2.2 Volkomen concurrentie – Instapquiz</h1>
         <div class="stats-bar" id="game-stats" style="display: none;">
             <div><i class="fa-solid fa-star"></i> Score: <span id="score-display">0</span></div>
             <div><i class="fa-solid fa-list-ol"></i> Vraag: <span id="question-count">0/10</span></div>
@@ -64,11 +20,11 @@
     <div class="content-layout">
         <div class="main-area">
             <div id="start-screen" class="screen active">
-                <h2>Volkomen concurrentie - Instapquiz</h2>
+                <h2>3.2.2 Volkomen concurrentie</h2>
                 <p>Test je begrip van volkomen concurrentie: het gedrag van prijsnemers, aanbodfuncties, collectief evenwicht en het belang van lange-termijn aanpassingen.</p>
-                <div style="text-align: left; background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                    <h3 style="margin-bottom: 15px; font-size: 18px;"><i class="fa-solid fa-bullseye" style="color:#2563eb;"></i> Wat we gaan toetsen:</h3>
-                    <ul style="list-style-position: inside; color: #475569; line-height: 1.8;">
+                <div class="topics-box">
+                    <h3><i class="fa-solid fa-bullseye icon"></i> Wat we gaan toetsen:</h3>
+                    <ul>
                         <li>Karakteristieken van volkomen concurrentie</li>
                         <li>Prijsnemer gedrag en individuele aanbodfunctie</li>
                         <li>Collectieve aanbodfunctie berekenen</li>
@@ -94,7 +50,7 @@
             </div>
             <div id="end-screen" class="screen">
                 <h2>Sessie Voltooid! <i class="fa-solid fa-trophy" style="color: #fbbf24;"></i></h2>
-                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: #2563eb;"></span> vragen goed beantwoord.</p>
+                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: var(--domain-primary);"></span> vragen goed beantwoord.</p>
                 <div style="background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
                     <h3 style="margin-bottom: 10px; font-size: 18px;">Hoe nu verder?</h3>
                     <p style="color: #475569; line-height: 1.6;">Bekijk je actuele voortgang in de zijbalk (of hieronder op mobiel). Bouw per onderwerp een <strong>reeks van 3</strong> op om deze definitief af te sluiten en de balk groen te maken. Maak je een fout? Dan reset de reeks naar nul.</p>
@@ -108,267 +64,8 @@
         </div>
     </div>
 </div>
-<script>
-    const questionBank = [
-        // CATEGORIE: volkomen_concurrentie (niveau 1)
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "Wat is het kenmerk van volkomen concurrentie?", "options": ["Veel kleine producenten, homogeen product, vrij toe- en uittreding", "Één grote producent bepaalt alles", "Producenten bepalen samen de prijs", "Hoge barrières voor nieuwe toetreders"], "answer": 0, "rationale": "Volkomen concurrentie: veel kleine producenten, identieke producten, geen toegangsbelemmeringen, perfect informatie, prijsnemers (geen prijsbepaling)."},
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "Wat is een prijsnemer?", "options": ["Een producent die de gegeven marktprijs aanneemt en niet kan beïnvloeden", "Een producent die zelf de prijs kan bepalen", "Een consument die de prijs onderhandelt", "Een tussenperson tussen producenten en consumenten"], "answer": 0, "rationale": "In volkomen concurrentie is elke producent een prijsnemer: de marktprijs is gegeven, onderneming kan deze niet beïnvloeden."},
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "Voor volkomen concurrentie geldt: MO = ?", "options": ["P (Prijs)", "MK (Marginale Kosten)", "GTK (Gemiddelde Totale Kosten)", "FK (Vaste Kosten)"], "answer": 0, "rationale": "In volkomen concurrentie is MO = P want de producent kan extra eenheden tegen vaste prijs verkopen."},
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "Wat is de individuele aanbodfunctie?", "options": ["De MK-functie (stijgend deel) boven het sluitingspunt", "De vraagfunctie van de markt", "De kostenfunctie van alle bedrijven", "De prijsfunctie van concurrenten"], "answer": 0, "rationale": "Voor een concurrerend bedrijf is de aanbodfunctie gelijk aan het stijgende deel van de MK-curve, boven het sluitingspunt."},
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "Wat is een sluitingspunt?", "options": ["Waar P = minimale GVK; beneden dit punt produceert het bedrijf niets", "Waar P = GTK", "Waar het bedrijf maximale winst maakt", "Waar alle bedrijven verdwijnen"], "answer": 0, "rationale": "Het sluitingspunt: P < minimale GVK betekent dat elke eenheid verlies oplevert. Producent stopt (Q = 0)."},
-        {"category": "volkomen_concurrentie", "difficulty": 1, "q": "In lange termijn volkomen concurrentie, hoe groot is de winst?", "options": ["Nul: vrije toe- en uittreding zorgt voor nulwinst evenwicht", "Maximaal hoog: bedrijven kunnen onbeperkt winst maken", "Altijd negatief: bedrijven maken structureel verlies", "Positief maar afnemend: winst daalt geleidelijk maar verdwijnt nooit"], "answer": 0, "rationale": "Lange termijn: P = GTK in evenwicht. Vrije toe- en uittreding zorgt voor nulwinst-evenwicht."},
-
-        // CATEGORIE: volkomen_concurrentie (niveau 2)
-        {"category": "volkomen_concurrentie", "difficulty": 2, "q": "Waarom treedt een bedrijf toe tot volkomen concurrentie markt?", "options": ["Zolang P > GTK, dus zolang positieve winst gemaakt wordt", "Omdat het verplicht is", "Omdat ze de laagste kosten hebben", "Alleen op overheid bevel"], "answer": 0, "rationale": "Toetreding gebeurt zolang P > GTK (winst). Bedrijven stoppen met toetreding zodra P = GTK (nulwinst)."},
-        {"category": "volkomen_concurrentie", "difficulty": 2, "q": "Wat gebeurt er met marktprijs als veel nieuwe bedrijven toetreden?", "options": ["Aanbod stijgt, prijs daalt totdat P = GTK (nulwinst)", "Prijs stijgt onmiddellijk", "Niets verandert", "Alleen vraag reageert"], "answer": 0, "rationale": "Toetreding verhoogt collectief aanbod. Dit drukt op prijs. Proces stopt wanneer P = minimale GTK."},
-        {"category": "volkomen_concurrentie", "difficulty": 2, "q": "In korte termijn volkomen concurrentie kan winst:", "options": ["Positief, nul of negatief zijn, afhankelijk van de verhouding P versus GTK", "Altijd positief zijn, want bedrijven produceren alleen als er winst is", "Altijd nul zijn, want vrije toetreding zorgt direct voor nulwinst", "Altijd negatief zijn, want vaste kosten drukken altijd op het resultaat"], "answer": 0, "rationale": "Korte termijn: productiefactoren zijn vast. Afhankelijk van prijs: P > GTK (winst), P = GTK (nulwinst), P < GTK (verlies)."},
-        {"category": "volkomen_concurrentie", "difficulty": 2, "q": "Hoe bepaal je de collectieve aanbodfunctie in volkomen concurrentie?", "options": ["Tel alle individuele aanbodfuncties (MK > GVK) bij elkaar op", "Neem het gemiddelde van alle aanboden", "Vermenigvuldig één aanbod met aantal bedrijven", "Dit kan niet bepaald worden"], "answer": 0, "rationale": "Collectief aanbod = som van alle individuele aanbodfuncties (voor elk bedrijf: het MK-deel boven GVK)."},
-        {"category": "volkomen_concurrentie", "difficulty": 2, "q": "In volkomen concurrentie is het marktevenwicht bepaald door:", "options": ["Snijpunt collectief aanbod en vraag; prijs = evenwichtsprijs", "Alleen door vraag", "Alleen door aanbod", "Door overheid instellingen"], "answer": 0, "rationale": "Marktevenwicht: collectieve vraag = collectief aanbod → evenwichtsprijs P*. Deze geldt voor alle bedrijven."},
-
-        // CATEGORIE: volkomen_concurrentie (niveau 3)
-        {"category": "volkomen_concurrentie", "difficulty": 3, "q": "Gegeven: P = 30, GTK_min = 20 op Q = 50. Een bedrijf heeft MK = 30 op alle output. Lang termijn?", "options": ["Bedrijf maakt winst (30 eenheden), zal toetreding aantrekken tot P = 20", "Bedrijf verliest onmiddellijk", "Markt is reeds in lange-termijn evenwicht", "GTK stijgt"], "answer": 0, "rationale": "P = 30 > GTK = 20 betekent winst. Bedrijven treden toe, collectief aanbod stijgt, P daalt naar 20 (nulwinst evenwicht)."},
-        {"category": "volkomen_concurrentie", "difficulty": 3, "q": "Waarom is GTK = P in lange-termijn volkomen concurrentie NIET dezelfde als korte-termijn?", "options": ["Lange termijn: bedrijven treden toe/uit tot nulwinst; korte termijn: productie kan anders zijn", "Er is geen verschil", "Lange termijn heeft hogere kosten", "Korte termijn heeft altijd verlies"], "answer": 0, "rationale": "Lange termijn: vrije toe/uittreding, P = minimale GTK (nulwinst schaal). Korte termijn: vaste factoren, P kan ≠ GTK."},
-        {"category": "volkomen_concurrentie", "difficulty": 3, "q": "Gegeven: Markt Qv = 1000 - 5P. 100 identieke bedrijven met MK = 0,2Q + 10. Collectief aanbod?", "options": ["Qa = 100 × individuele aanbod = 5000 - 250P (omgekeerd: P = 2 + 0,05Q)", "Qa = 1000 - 5P", "Qa = 100 × MK", "Dit kan niet berekend worden"], "answer": 0, "rationale": "Per bedrijf: MK = P → 0,2Q + 10 = P → Q = 5P - 50. Collectief: Qa = 100(5P - 50) = 500P - 5000."}
-    ];
-
-    // Continue with remaining 51+ questions across other categories
-    // For space, I'll add the essential categories
-
-    questionBank.push(
-        // CATEGORIE: aanbodfunctie (niveau 1-3)
-        {"category": "aanbodfunctie", "difficulty": 1, "q": "Hoe leid je de aanbodfunctie af uit MK in volkomen concurrentie?", "options": ["Uit MO = P → bepaal Q als functie van P (boven GVK)", "Uit vraagfunctie", "Uit winst functie", "Dit kan niet"], "answer": 0, "rationale": "MO = P in volkomen concurrentie. MO = MK → P = MK. Oplossen voor Q geeft aanbodfunctie Q(P)."},
-        {"category": "aanbodfunctie", "difficulty": 1, "q": "Wat is het verschil tussen individuele en collectieve aanbodfunctie?", "options": ["Individueel: één bedrijf; collectief: som van allen", "Collectief is altijd lineair", "Individueel is niet relevant", "Ze zijn identiek"], "answer": 0, "rationale": "Individuele: één bedrijf MK-curve. Collectieve: optelling van alle bedrijven (verschuiving omhoog bij toetreding)."},
-        {"category": "aanbodfunctie", "difficulty": 1, "q": "Bij welke prijs start een bedrijf met aanbod?", "options": ["Bij P = minimale GVK (sluitingspunt)", "Bij P = 0", "Bij P = maximale GTK", "Er is geen minimum"], "answer": 0, "rationale": "Beneden P = GVK_min verliest het bedrijf op elke eenheid → sluit. Aanbod start boven dit punt."},
-        {"category": "aanbodfunctie", "difficulty": 2, "q": "Gegeven: MK = 4Q + 20 en GVK_min = 40 op Q = 5. Bepaal sluitingspunt.", "options": ["P = 40 (waar MK snijdt GVK_min)", "P = 20", "P = 60", "Er is geen sluitingspunt"], "answer": 0, "rationale": "Sluitingspunt: P = GVK_min. Ook: MK = 4(5) + 20 = 40 ✓ Op dit punt MK = GVK_min."},
-        {"category": "aanbodfunctie", "difficulty": 2, "q": "Gegeven MK = 2Q + 10. Bepaal individuele aanbodfunctie.", "options": ["Q = 0,5P - 5 (voor P ≥ P_sluit)", "Q = 2P + 10", "Q = P/2", "Q = 10 - 2P"], "answer": 0, "rationale": "P = MK = 2Q + 10 → Q = 0,5P - 5. Dit is de individuele aanbodfunctie (boven sluitingspunt)."},
-        {"category": "aanbodfunctie", "difficulty": 3, "q": "Gegeven: 50 bedrijven elk Q = 0,5P - 2. Collectief aanbod Qa?", "options": ["Qa = 50(0,5P - 2) = 25P - 100", "Qa = 0,5P - 2", "Qa = 50 × P", "Qa = P - 100"], "answer": 0, "rationale": "Collectief Qa = som: 50 × (0,5P - 2) = 25P - 100."}
-    );
-
-    questionBank.push(
-        // CATEGORIE: marktevenwicht (niveau 1-3)
-        {"category": "marktevenwicht", "difficulty": 1, "q": "Wat is marktevenwicht in volkomen concurrentie?", "options": ["Snijpunt collectieve vraag en aanbod, bepaalt P* en Q*", "Waar één bedrijf wint maximaal", "Waar werkloosheid nul is", "Waar staat geen regels"], "answer": 0, "rationale": "Marktevenwicht: Qv = Qa → P* en Q*. Dit bepaalt de prijs voor alle bedrijven."},
-        {"category": "marktevenwicht", "difficulty": 1, "q": "Hoe reageert een individueel bedrijf op marktprijs?", "options": ["Accepteert P* en produceert Q zodat MK = P*", "Probeert P* te verhogen", "Sluit onmiddellijk", "Volgt niet"], "answer": 0, "rationale": "Prijsnemer: neemt P* van markt aan, produceert waarbij MK = P*."},
-        {"category": "marktevenwicht", "difficulty": 2, "q": "Gegeven: Qv = 600 - 4P; Qa = 100 + 6P. Marktevenwicht P*?", "options": ["P* = 50, Q* = 400", "P* = 100, Q* = 200", "P* = 25, Q* = 500", "P* = 75, Q* = 300"], "answer": 0, "rationale": "600 - 4P = 100 + 6P → 500 = 10P → P = 50. Q = 600 - 4(50) = 400."},
-        {"category": "marktevenwicht", "difficulty": 2, "q": "Als P_markt > P_evenwicht, wat gebeurt er?", "options": ["Overschot: Q_aanbod > Q_vraag, producenten zullen prijzen verlagen", "Tekort ontstaat", "Niets verandert", "Vraag stijgt"], "answer": 0, "rationale": "Boven evenwicht: aanbod > vraag, voorraden stapelen op, prijs zakt naar P*."},
-        {"category": "marktevenwicht", "difficulty": 3, "q": "Gegeven: Qv = 500 - 3P; 80 bedrijven met Q = 0,25P - 1 elk. Evenwicht?", "options": ["P* ≈ 25,2 en Q* ≈ 424 (Qa = 20P - 80 = Qv = 500 - 3P)", "P* = 50 en Q* = 350 (fout: Qa niet correct opgesteld)", "P* = 80 en Q* = 260 (fout: individuele aanbod niet vermenigvuldigd)", "P* = 100 en Q* = 200 (fout: vergelijking verkeerd opgelost)"], "answer": 0, "rationale": "Qa = 80(0,25P - 1) = 20P - 80. Evenwicht: 500 - 3P = 20P - 80 → 580 = 23P → P ≈ 25,2. Q = 500 - 3(25,2) ≈ 424."}
-    );
-
-    questionBank.push(
-        // CATEGORIE: winst_berekenen (niveau 1-3)
-        {"category": "winst_berekenen", "difficulty": 1, "q": "Gegeven: P = 40, Q = 50, GTK = 30. Bereken totale winst.", "options": ["Winst = (40 - 30) × 50 = 500", "Winst = 40 × 50 = 2000", "Winst = 30", "Winst = 70"], "answer": 0, "rationale": "Winst = (P - GTK) × Q = (40 - 30) × 50 = 500."},
-        {"category": "winst_berekenen", "difficulty": 1, "q": "Als P = GTK, hoe veel winst?", "options": ["Nul: prijs dekt precies de gemiddelde totale kosten", "Maximaal: dit is het punt van hoogste winstmarge", "Negatief: het bedrijf maakt verlies bij P = GTK", "Positief: er blijft altijd enige winst over boven GTK"], "answer": 0, "rationale": "P = GTK → (P - GTK) = 0 → Winst = 0. Dit is het nulwinst-evenwicht."},
-        {"category": "winst_berekenen", "difficulty": 1, "q": "Gegeven: TK = Q² + 20Q + 100; P = 50; Q = 20. Bereken winst.", "options": ["TO = 1000, TK = 900, Winst = 100", "Winst = 50", "Winst = 900", "Winst = 1900"], "answer": 0, "rationale": "TO = 50 × 20 = 1000. TK = 400 + 400 + 100 = 900. Winst = 100."},
-        {"category": "winst_berekenen", "difficulty": 2, "q": "Gegeven: TK = 2Q² + 10Q + 200; P = 60. Bepaal winst bij Q = 10.", "options": ["TO = 600, TK = 500, Winst = 100", "Winst = 200", "Winst = 600", "Verlies = 100"], "answer": 0, "rationale": "TO = 60 × 10 = 600. TK = 200 + 100 + 200 = 500. Winst = 100."},
-        {"category": "winst_berekenen", "difficulty": 2, "q": "Bij welke output is winst maximaal in volkomen concurrentie?", "options": ["Waar MO = MK (dus P = MK)", "Waar P = 0", "Waar GTK minimaal", "Altijd hetzelfde"], "answer": 0, "rationale": "Winstmaximalisatie: MO = MK. In volkomen concurrentie: MO = P, dus produceert tot P = MK."},
-        {"category": "winst_berekenen", "difficulty": 3, "q": "TK = 0,5Q² + 10Q + 50; P = 30; Bereken winstmaximaliserende Q en winst.", "options": ["Q = 20, TO = 600, TK = 450, Winst = 150", "Q = 10, Winst = 100", "Q = 30, Winst = 200", "Q = 15, Winst = 75"], "answer": 0, "rationale": "MO = P = 30. MK = Q + 10. MO = MK: 30 = Q + 10 → Q = 20. TO = 600, TK = 200 + 200 + 50 = 450. Winst = 150."}
-    );
-
-    questionBank.push(
-        // CATEGORIE: lange_termijn (niveau 1-3)
-        {"category": "lange_termijn", "difficulty": 1, "q": "Wat gebeurt er lange termijn als bedrijven winst maken (P > GTK)?", "options": ["Nieuwe bedrijven treden toe, collectief aanbod stijgt, prijs daalt", "Prijzen stijgen verder", "Bestaande bedrijven verdwijnen", "Niets verandert"], "answer": 0, "rationale": "Lange termijn: vrije toetreding zorgt dat positieve winsten aantrekken, totdat P = GTK (nulwinst)."},
-        {"category": "lange_termijn", "difficulty": 1, "q": "Wat is het lange-termijn evenwicht in volkomen concurrentie?", "options": ["P = minimale GTK met nulwinst voor alle bedrijven", "P > GTK altijd", "Alle bedrijven verdwijnen", "Slechts één bedrijf blijft"], "answer": 0, "rationale": "Lange termijn: P = minimale GTK. Nulwinst, geen prikkel tot toe- of uittreding meer."},
-        {"category": "lange_termijn", "difficulty": 1, "q": "Waarom verlaten bedrijven de markt in lange termijn?", "options": ["Als P < GTK (verlies op elke eenheid)", "Als P > GTK", "Willekeurig", "Nooit"], "answer": 0, "rationale": "Uittreding gebeurt wanneer P < GTK, omdat verlies wordt gemaakt. Bedrijven stoppen totdat P = GTK."},
-        {"category": "lange_termijn", "difficulty": 2, "q": "Gegeven: korte termijn P = 50, GTK = 40. Wat verwacht u lange termijn?", "options": ["Toetreding tot P = 40 (evenwichtsprijs)", "P blijft 50", "Prijzen stijgen", "Alle bedrijven sluiten"], "answer": 0, "rationale": "P = 50 > GTK = 40 → winst. Toetreding verhoogt aanbod, druk op prijs tot P = 40."},
-        {"category": "lange_termijn", "difficulty": 2, "q": "Hoeveel bedrijven blijven over in lange-termijn evenwicht?", "options": ["Zoveel als nodig voor Q = Q_evenwicht bij P = minimale GTK", "Altijd hetzelfde aantal", "Geen bedrijven", "Alleen één"], "answer": 0, "rationale": "Aantal bedrijven in lange termijn: bepaald door evenwichtsquantiteit / optimale Q per bedrijf."},
-        {"category": "lange_termijn", "difficulty": 3, "q": "Gegeven: minimale GTK = 25 op Q = 100. Markt vraag Q_totaal = 5000. Hoe veel bedrijven in LT?", "options": ["5000 / 100 = 50 bedrijven", "100 bedrijven", "25 bedrijven", "Onbepaald"], "answer": 0, "rationale": "LT evenwicht: P = 25, Q_markt = 5000. Per bedrijf Q_optimaal = 100. Aantal = 5000/100 = 50."}
-    );
-
-    questionBank.push(
-        // CATEGORIE: rekenen (niveau 1-3) - Extra vragen
-        {"category": "rekenen", "difficulty": 1, "q": "P = 15, GVK = 10, Bereken contributiemarge per eenheid.", "options": ["Contributiemarge = 15 - 10 = 5", "Contributiemarge = 10", "Contributiemarge = 25", "Niet bepaald"], "answer": 0, "rationale": "Contributiemarge = P - GVK = 15 - 10 = 5. Dit draagt bij aan vaste kosten."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: FK = 300, GVK = 5, P = 15. Bepaal break-even Q.", "options": ["Q = 300 / (15 - 5) = 30 eenheden", "Q = 300", "Q = 15", "Q = 5"], "answer": 0, "rationale": "Break-even: FK = (P - GVK) × Q → 300 = 10 × Q → Q = 30."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: Q = 100, TO = 2000, TK = 1800. Winst per eenheid?", "options": ["Winst per eenheid = (2000 - 1800) / 100 = 2", "Winst per eenheid = 20", "Winst per eenheid = 1800", "Niet bepaald"], "answer": 0, "rationale": "Winst totaal = 200. Winst per eenheid = 200 / 100 = 2."},
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: Qv = 800 - 5P; 100 bedrijven met Q = P - 4 (voor P ≥ 4). Evenwicht?", "options": ["P ≈ 11,4 en Q ≈ 743 (800 - 5P = 100P - 400 → 105P = 1200)", "P = 20 en Q = 700 (fout: aantal bedrijven niet meegenomen)", "P = 5 en Q = 775 (fout: vergelijking verkeerd opgesteld)", "P = 8 en Q = 760 (fout: alleen individueel aanbod gebruikt)"], "answer": 0, "rationale": "Qa = 100(P - 4) = 100P - 400. Evenwicht: 800 - 5P = 100P - 400 → 1200 = 105P → P ≈ 11,4. Q ≈ 743."},
-        {"category": "rekenen", "difficulty": 3, "q": "TK = 0,1Q³ - Q² + 5Q + 100. Bij P = 30, bereken optimale Q.", "options": ["MK = 0,3Q² - 2Q + 5 = 30 → Q ≈ 9,8 (gebruik numerieke oplossing)", "Q = 10", "Q = 20", "Q = 5"], "answer": 0, "rationale": "MK = 0,3Q² - 2Q + 5. Voor MK = 30: 0,3Q² - 2Q - 25 = 0. Gebruik ABC formule of numerieke benadering."}
-    );
-
-    questionBank.push(
-        // CATEGORIE: grafische_analyse (niveau 1-3)
-        {"category": "marktevenwicht", "difficulty": 1, "q": "In grafiek volkomen concurrentie: marktevenwicht bepaalt P* wat?", "options": ["Alle bedrijven produceren waar MK = P*", "Alleen grote bedrijven", "Niets bepaalt", "Consumenten bepalen"], "answer": 0, "rationale": "Marktprijs P* uit macro-evenwicht bepaalt hoe veel elk bedrijf produceert (MK = P*)."},
-        {"category": "marktevenwicht", "difficulty": 1, "q": "Hoe ziet de vraagcurve van één bedrijf in volkomen concurrentie?", "options": ["Horizontaal (perfect elastisch) op marktprijs P*", "Stijgend", "Dalend zoals normale vraag", "Verticaal"], "answer": 0, "rationale": "Individueel bedrijf ziet oneindig elastische vraag (horizontale lijn) tegen gegeven marktprijs."},
-        {"category": "marktevenwicht", "difficulty": 2, "q": "Gegeven marktevenwicht P* = 50. Bedrijf ziet vraagcurve op?", "options": ["P = 50 (horizontale lijn ongeacht Q)", "P = Q", "P = 100 - 2Q", "P stijgt met Q"], "answer": 0, "rationale": "Bedrijf is prijsnemer: vraagcurve is de gegeven marktprijs (horizontaal)."},
-        {"category": "lange_termijn", "difficulty": 1, "q": "Gegeven: P_markt > P_minimale_GTK. Wat zal langzaam gebeuren?", "options": ["Bedrijven treden toe; Qa verschuift naar rechts tot P = GTK_min", "Bedrijven verdwijnen", "Niets", "Vraag daalt"], "answer": 0, "rationale": "Positieve winst trekt toetreding aan. Collectief aanbod groeit, druk op prijs totdat nulwinst."},
-        {"category": "lange_termijn", "difficulty": 1, "q": "Gegeven: P_markt < P_minimale_GTK. Wat zal gebeuren?", "options": ["Bedrijven treden uit; Qa verschuift naar links tot P = GTK_min", "Allemaal blijven produceren", "Vraag stijgt", "Geen verandering"], "answer": 0, "rationale": "Verlies motiveert uittreding. Aanbod daalt, minder concurrentie, druk op prijs omhoog tot nulwinst."},
-        {"category": "lange_termijn", "difficulty": 2, "q": "Gegeven: minimale GTK = 25 op Q = 100. Markt vraag = 5000. Lang termijn bedrijven?", "options": ["5000 / 100 = 50 bedrijven; elk produceert 100 aan P = 25", "100 bedrijven", "1000 bedrijven", "Onbepaald"], "answer": 0, "rationale": "LT evenwicht: markt Q / optimale bedrijf Q = aantal bedrijven."},
-        {"category": "winst_berekenen", "difficulty": 1, "q": "Gegeven: P = 40, GTK = 35 op Q = 60. Totale winst?", "options": ["(40 - 35) × 60 = 300", "2400", "2100", "Verlies"], "answer": 0, "rationale": "Winst = (P - GTK) × Q = 5 × 60 = 300."},
-        {"category": "winst_berekenen", "difficulty": 2, "q": "Gegeven: P = 50, TK = 0,5Q² + 15Q + 200 op Q = 40. Winst?", "options": ["TO = 2000, TK = 800+600+200 = 1600, Winst = 400", "Winst = 1000", "Winst = 200", "Verlies"], "answer": 0, "rationale": "TO = 50 × 40 = 2000. TK = 800 + 600 + 200 = 1600. Winst = 400."},
-        {"category": "rekenen", "difficulty": 1, "q": "Gegeven: Qa = 10 + P per bedrijf; 100 bedrijven. Collectief Qa?", "options": ["100 × (10 + P) = 1000 + 100P", "10 + P", "100P", "10 × 100"], "answer": 0, "rationale": "Collectief aanbod = som van alle individuele = aantal × (individueel aanbod)."},
-        {"category": "rekenen", "difficulty": 2, "q": "Gegeven: 200 bedrijven elk Q = 0,1P - 0,5. Collectief aanbod op P = 100?", "options": ["200 × (10 - 0,5) = 200 × 9,5 = 1900", "200", "100", "1000"], "answer": 0, "rationale": "Qa_collectief = 200 × (0,1 × 100 - 0,5) = 200 × 9,5 = 1900."},
-        {"category": "rekenen", "difficulty": 3, "q": "Gegeven: Qv = 1000 - 2P; 150 bedrijven met Q = 0,2P - 1. Evenwicht?", "options": ["Qa = 150(0,2P-1) = 30P-150. Qa=Qv: 1000-2P = 30P-150 → 32P = 1150 → P ≈ 35,9", "P = 50", "P = 40", "P = 30"], "answer": 0, "rationale": "Stel evenwicht: 30P - 150 = 1000 - 2P → 32P = 1150 → P ≈ 35,9."},
-        {"category": "aanbodfunctie", "difficulty": 3, "q": "Gegeven: GVK_min = 15 op Q = 10, en MK = 0,5Q + 10. Wat is sluitingspunt Q?", "options": ["Sluitingspunt: MK = GVK_min → 0,5Q+10 = 15 → Q = 10", "Q = 0", "Q = 15", "Q = 20"], "answer": 0, "rationale": "Sluitingspunt: waar MK = GVK_min. Check: MK(10) = 5 + 10 = 15 ✓."}
-    );
-
-    let userProgress = {
-        "volkomen_concurrentie": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "aanbodfunctie": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "marktevenwicht": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "winst_berekenen": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "lange_termijn": { level: 1, correctCount: 0, passedLevel3: false, closed: false },
-        "rekenen": { level: 1, correctCount: 0, passedLevel3: false, closed: false }
-    };
-
-    const catNames = {
-        "volkomen_concurrentie": "Volkomen Concurrentie",
-        "aanbodfunctie": "Aanbodfunctie",
-        "marktevenwicht": "Marktevenwicht",
-        "winst_berekenen": "Winst Berekenen",
-        "lange_termijn": "Lange Termijn",
-        "rekenen": "Berekeningen"
-    };
-
-    let maxQuestions = 10;
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let currentQuestionData = null;
-    let shuffledCorrectIndex = 0;
-    let askedQuestionsThisSession = [];
-
-    function renderMasteryDashboard() {
-        const dash = document.getElementById('mastery-dashboard');
-        dash.innerHTML = '';
-        for (const [cat, p] of Object.entries(userProgress)) {
-            let steps = p.closed ? 3 : Math.min(p.correctCount, 3);
-            let percentage = Math.round((steps / 3) * 100);
-            let statusText = p.closed ? "Afgesloten <i class='fa-solid fa-check-circle'></i>" : `Reeks: ${steps}/3`;
-            let barColor = (percentage === 100) ? '#10b981' : '#3b82f6';
-            let textColor = (percentage === 100) ? '#10b981' : '#64748b';
-            const itemHTML = `<div class="mastery-item"><div class="mastery-label"><span>${catNames[cat]}</span><span style="color: ${textColor}">${statusText}</span></div><div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: ${percentage}%; background-color: ${barColor}"></div></div></div>`;
-            dash.innerHTML += itemHTML;
-        }
-    }
-
-    function startGame() {
-        document.getElementById('start-screen').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        document.getElementById('sidebar').style.display = 'flex';
-        document.getElementById('game-stats').style.display = 'flex';
-        renderMasteryDashboard();
-        nextQuestion();
-    }
-
-    function restartSession() {
-        const allClosed = Object.values(userProgress).every(p => p.closed);
-        if (allClosed) {
-            alert("Geniaal! Je hebt de gehele stof van dit onderdeel volledig afgesloten. Tijd voor een nieuwe uitdaging (voortgang wordt gereset).");
-            for (let cat in userProgress) {
-                userProgress[cat] = { level: 1, correctCount: 0, passedLevel3: false, closed: false };
-            }
-        }
-        currentQuestionIndex = 0;
-        score = 0;
-        askedQuestionsThisSession = [];
-        document.getElementById('end-screen').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        document.getElementById('score-display').innerText = "0";
-        document.getElementById('question-count').innerText = "0/10";
-        renderMasteryDashboard();
-        nextQuestion();
-    }
-
-    function getNextQuestion() {
-        let availableCategories = Object.keys(userProgress).filter(cat => !userProgress[cat].closed);
-        if (availableCategories.length === 0) return null;
-        availableCategories.sort(() => Math.random() - 0.5);
-        for (let targetCategory of availableCategories) {
-            let p = userProgress[targetCategory];
-            let targetDifficulty = p.level;
-            if (p.correctCount >= 2) targetDifficulty = 3;
-            let possibleQuestions = questionBank.filter(q => q.category === targetCategory && q.difficulty === targetDifficulty && !askedQuestionsThisSession.includes(q));
-            if (possibleQuestions.length === 0) {
-                possibleQuestions = questionBank.filter(q => q.category === targetCategory && !askedQuestionsThisSession.includes(q));
-            }
-            if (possibleQuestions.length > 0) {
-                const selected = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
-                askedQuestionsThisSession.push(selected);
-                return selected;
-            }
-        }
-        let absoluteFallback = questionBank.filter(q => !askedQuestionsThisSession.includes(q));
-        if (absoluteFallback.length > 0) {
-            const selected = absoluteFallback[Math.floor(Math.random() * absoluteFallback.length)];
-            askedQuestionsThisSession.push(selected);
-            return selected;
-        }
-        return null;
-    }
-
-    function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex > maxQuestions) { endGame(); return; }
-        document.getElementById('question-count').innerText = `${currentQuestionIndex}/${maxQuestions}`;
-        document.getElementById('feedback-container').classList.remove('show', 'success', 'error');
-        document.getElementById('next-btn').style.display = 'none';
-        currentQuestionData = getNextQuestion();
-        if (!currentQuestionData) { endGame(); return; }
-        document.getElementById('category-display').innerText = `${catNames[currentQuestionData.category]} - Niveau ${currentQuestionData.difficulty}`;
-        let stars = '';
-        for(let i=0; i < currentQuestionData.difficulty; i++) stars += '<i class="fa-solid fa-star"></i>';
-        document.getElementById('difficulty-stars').innerHTML = stars;
-        document.getElementById('question-text').innerHTML = currentQuestionData.q;
-        const optionsContainer = document.getElementById('options-container');
-        optionsContainer.innerHTML = '';
-        const indices = [...Array(currentQuestionData.options.length).keys()];
-        for(let i=indices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[indices[i],indices[j]]=[indices[j],indices[i]];}
-        shuffledCorrectIndex = indices.indexOf(currentQuestionData.answer);
-        indices.forEach((origIdx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerHTML = `<span>${currentQuestionData.options[origIdx]}</span>`;
-            btn.onclick = () => checkAnswer(origIdx, btn);
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    function checkAnswer(selectedIndex, btnElement) {
-        const allBtns = document.querySelectorAll('.option-btn');
-        allBtns.forEach(btn => btn.disabled = true);
-        const isCorrect = (selectedIndex === currentQuestionData.answer);
-        const feedbackBox = document.getElementById('feedback-container');
-        const feedbackTitle = document.getElementById('feedback-title');
-        const feedbackText = document.getElementById('feedback-text');
-        const cat = currentQuestionData.category;
-        const diff = currentQuestionData.difficulty;
-        if (isCorrect) {
-            btnElement.classList.add('correct');
-            feedbackBox.className = 'feedback-box show success';
-            feedbackTitle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Dat is correct!';
-            score++;
-            document.getElementById('score-display').innerText = score;
-            userProgress[cat].correctCount++;
-            if (diff === 3) userProgress[cat].passedLevel3 = true;
-            if (userProgress[cat].correctCount >= 3 && userProgress[cat].passedLevel3) { userProgress[cat].closed = true; }
-            if (userProgress[cat].level < 3) userProgress[cat].level++;
-        } else {
-            btnElement.classList.add('wrong');
-            allBtns[currentQuestionData.answer].classList.add('correct');
-            feedbackBox.className = 'feedback-box show error';
-            feedbackTitle.innerHTML = '<i class="fa-solid fa-times-circle"></i> Dat is helaas onjuist.';
-            if (userProgress[cat].level > 1) userProgress[cat].level--;
-            userProgress[cat].correctCount = 0;
-            userProgress[cat].passedLevel3 = false;
-        }
-        renderMasteryDashboard();
-        feedbackText.innerHTML = currentQuestionData.rationale;
-        document.getElementById('next-btn').style.display = 'block';
-    }
-
-    function endGame() {
-        document.getElementById('game-screen').classList.remove('active');
-        document.getElementById('end-screen').classList.add('active');
-        let questionsPlayed = currentQuestionIndex > maxQuestions ? maxQuestions : currentQuestionIndex - 1;
-        document.getElementById('final-score').innerText = `${score} van de ${questionsPlayed}`;
-        renderMasteryDashboard();
-    }
-
-    document.addEventListener('keydown', function(event) {
-        const nextBtn = document.getElementById('next-btn');
-        const activeElement = document.activeElement;
-        const isTypingInField = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.isContentEditable);
-        if (isTypingInField) return;
-        const nextVisible = nextBtn && nextBtn.style.display !== 'none';
-        if (!nextVisible) return;
-        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); nextQuestion(); }
-    });
-</script>
+<script src="../../../shared/questions/3.2.2.js"></script>
+<script src="../../../shared/quiz-engine.js"></script>
+<script src="../../../shared/quiz-ui.js"></script>
 </body>
 </html>

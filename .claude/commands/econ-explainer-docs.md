@@ -25,8 +25,8 @@ Trigger when:
 - Building batch explainer documents for a chapter
 
 Output files per paragraph:
-- `3.X.Y [Naam] – uitleg voorkennis.docx`
-- `3.X.Y [Naam] – uitleg vaardigheden.docx`
+- `X.Y.Z [Naam] – uitleg voorkennis.docx`
+- `X.Y.Z [Naam] – uitleg vaardigheden.docx`
 
 ---
 
