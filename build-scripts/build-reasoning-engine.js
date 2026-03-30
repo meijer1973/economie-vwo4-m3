@@ -56,8 +56,9 @@ function escapeHtml(str) {
 }
 
 function generateShell(parNr, parName) {
-    // Compute relative path from 3. Oefenen/ to shared/ (4 levels up)
-    const sharedPath = '../../../../shared';
+    // Compute relative path from 3. Oefenen/ to shared/ (3 levels up)
+    // Path: 3.X Hoofdstuk / 3.X.Y Paragraaf / 3. Oefenen / file.html
+    const sharedPath = '../../../shared';
 
     return `<!DOCTYPE html>
 <html lang="nl">
