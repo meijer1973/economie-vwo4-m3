@@ -324,7 +324,7 @@ Each quiz HTML file is a thin shell (~70 lines) that loads:
 
 ### Before pushing (if quiz files were modified):
 ```bash
-npm test                          # Run all 195 unit tests
+npm test                          # Run all unit tests (quiz + reasoning)
 node scripts/check-links.js      # Verify all file references
 ```
 
@@ -350,4 +350,65 @@ bash scripts/verify-deployment.sh   # Confirm site is live + shared resources ac
 1. Edit `shared/quiz-engine.js`
 2. Run `npm test` — all tests must pass
 3. Test in browser (start local server, play through a quiz)
+4. Push and verify deployment
+
+---
+
+## Reasoning Game Architecture
+
+The Reasoning Game trains students to recognize problem-solving structures. It supports 5 game modes and 3 content domains.
+
+```
+shared/
+  reasoning-engine.js       ← Pure game logic (UMD, 5 modes, 3 domains)
+  reasoning-ui.js           ← DOM binding layer (browser only)
+  reasoning.css             ← Shared styles with CSS custom properties
+  reasoning/
+    3.1.1.js ... 3.4.6.js  ← Per-paragraph data files (CSV wrapped in JS)
+    3.1.1.csv ... 3.4.6.csv ← Source CSV files
+  tests/
+    reasoning-engine.test.js ← Engine unit tests
+    reasoning-data.test.js   ← Data validation tests
+```
+
+Each reasoning game HTML file lives in `3. Oefenen/` and is named:
+`X.Y.Z [Naam] – redeneer-spel.html`
+
+### Game modes
+
+| # | Mode | What the student does |
+|---|------|----------------------|
+| 0 | Stappen ordenen | Select 3 correct steps from 6, place in order |
+| 1 | Deelvragen opbouwen | Select 3 correct sub-questions from 5, in order |
+| 2 | Vind de fout | Identify which of 3 steps contains an error |
+| 3 | Stroomdiagram bouwen | Arrange shuffled blocks into a flow diagram |
+| 4 | Structuren matchen | Pair 6 problems into 3 pairs with same structure |
+
+### Content domains per paragraph
+
+| Domain | Paragraphs | Layout |
+|--------|-----------|--------|
+| `economics` | 3.1.1-3, 3.3.1, 3.3.3-4, 3.4.1, 3.4.4-6 | Verbal reasoning chains, no formulas |
+| `math-economics` | 3.2.1-7, 3.3.2, 3.4.2-3 | Formula display, hide in Find Error |
+| `arithmetic` | (available for future use) | Operation counting for duplicates |
+
+### Build scripts for reasoning game
+
+| Script | Purpose |
+|--------|---------|
+| `build-scripts/build-reasoning-engine.js` | Generate HTML shells for all paragraphs with data files |
+| `build-scripts/build-reasoning-questions.js` | Validate CSV + generate JS data file from CSV |
+
+### Adding a new reasoning game paragraph:
+1. Author questions in a spreadsheet → export as semicolon-delimited CSV
+2. Run: `node build-scripts/build-reasoning-questions.js X.Y.Z <domain> path/to/questions.csv`
+3. Run: `node build-scripts/build-reasoning-engine.js` to generate the HTML shell
+4. Run `npm test` to validate
+5. Have an economics teacher review the questions for correctness
+6. Push and verify deployment
+
+### Modifying reasoning engine:
+1. Edit `shared/reasoning-engine.js`
+2. Run `npm test` — all tests must pass
+3. Test in browser locally (all 5 modes)
 4. Push and verify deployment
