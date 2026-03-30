@@ -56,6 +56,56 @@ function checkFile(htmlPath) {
     }
 }
 
+// ── Reachability check ──────────────────────────────────────────────
+// Verifies that interactive HTML files in content folders (instapquiz,
+// redeneer-spel, youtube-videos, etc.) are linked from their paragraph's
+// index.html. Catches the case where a file exists but no user can reach it.
+
+function checkReachability() {
+    let reachErrors = 0;
+
+    // Find all interactive HTML files in paragraph subfolders
+    const interactiveFiles = findHtmlFiles(MODULE_ROOT).filter(f => {
+        const rel = path.relative(MODULE_ROOT, f);
+        const name = path.basename(f);
+        // Skip index.html files and navigation pages
+        if (name === 'index.html') return false;
+        // Only check files inside numbered paragraph folders (e.g. "3.1.1 ...")
+        return /\d+\.\d+\.\d+/.test(rel) && !rel.includes('node_modules');
+    });
+
+    for (const file of interactiveFiles) {
+        const fileName = path.basename(file);
+        const fileDir = path.dirname(file);
+
+        // Walk up to find the paragraph index.html
+        // Interactive files are in subfolders like "1. Voorbereiden/", "3. Oefenen/", etc.
+        const parDir = path.dirname(fileDir); // go up from e.g. "3. Oefenen" to paragraph root
+        const parIndex = path.join(parDir, 'index.html');
+
+        if (!fs.existsSync(parIndex)) continue; // no index.html to check against
+
+        const indexContent = fs.readFileSync(parIndex, 'utf8');
+
+        // Check if the file is referenced anywhere in the index.
+        // Links use URL-encoding: spaces → %20, en-dash → %E2%80%93, etc.
+        const fullyEncoded = encodeURIComponent(fileName);
+        const found = indexContent.includes(fullyEncoded)
+            || indexContent.includes(fileName)
+            || indexContent.includes(fileName.replace(/ /g, '%20'));
+        if (!found) {
+            const rel = path.relative(MODULE_ROOT, file);
+            const indexRel = path.relative(MODULE_ROOT, parIndex);
+            console.error(`  ✗ UNREACHABLE: ${rel}`);
+            console.error(`    Not linked from: ${indexRel}`);
+            console.error(`    Users cannot navigate to this file.`);
+            reachErrors++;
+        }
+    }
+
+    return reachErrors;
+}
+
 // Main
 console.log('Checking local file references in all HTML files...\n');
 
@@ -70,8 +120,21 @@ console.log(`\nChecked ${checked} references across ${htmlFiles.length} files.`)
 
 if (errors > 0) {
     console.error(`\n✗ Found ${errors} broken references.`);
+}
+
+// Run reachability check
+console.log('\nChecking reachability of interactive files...\n');
+const reachErrors = checkReachability();
+
+if (reachErrors > 0) {
+    console.error(`\n✗ Found ${reachErrors} unreachable file(s). Add links from the paragraph index.html.`);
+}
+
+const totalErrors = errors + reachErrors;
+if (totalErrors > 0) {
     process.exit(1);
 } else {
     console.log('\n✓ All local references are valid.');
+    console.log('✓ All interactive files are reachable from navigation.');
     process.exit(0);
 }
