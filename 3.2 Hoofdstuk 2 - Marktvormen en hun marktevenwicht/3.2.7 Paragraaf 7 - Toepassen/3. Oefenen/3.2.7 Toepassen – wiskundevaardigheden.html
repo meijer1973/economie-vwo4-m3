@@ -183,7 +183,6 @@ const GEN = {
 
   B4: (stars) => {
     // Collectieve aanbodfunctie opstellen via horizontaal optellen
-    // Kies a1, a2 zodat 1/a1 en 1/a2 nette getallen zijn
     const a1 = pick([1, 2]), c1 = ri(4, 12);
     const a2 = pick([1, 2]), c2 = ri(4, 12);
     // Qa = (1/a1)P − c1/a1,  Qb = (1/a2)P − c2/a2
@@ -194,9 +193,12 @@ const GEN = {
     return {
       context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nStel de collectieve aanbodfunctie op.`,
       steps: [
-        { q:`Herschrijf het aanbod van A naar Qa = …P − … Wat is de coëfficiënt van P?`, a: coefA, hint:`P = ${a1}Qa + ${c1} → ${a1}Qa = P − ${c1} → Qa = (1/${a1})P − ${c1}/${a1}`, expl:`Qa = ${coefA}P − ${constA}. De coëfficiënt van P is ${coefA}.` },
-        { q:`Herschrijf het aanbod van B naar Qb = …P − … Wat is de coëfficiënt van P?`, a: coefB, hint:`P = ${a2}Qb + ${c2} → Qb = (1/${a2})P − ${c2}/${a2}`, expl:`Qb = ${coefB}P − ${constB}. De coëfficiënt van P is ${coefB}.` },
-        { q:`Horizontaal optellen: Qcol = Qa + Qb. Wat is de coëfficiënt van P in de collectieve aanbodfunctie?`, a: coefCol, hint:`Tel de coëfficiënten op: ${coefA} + ${coefB}`, expl:`Qcol = (${coefA} + ${coefB})P − (${constA} + ${constB}) = ${coefCol}P − ${constCol}` },
+        { q:`Herschrijf het aanbod van A naar Qa = …P − … Wat is de coëfficiënt van P?`, a: coefA, hint:`P = ${a1}Qa + ${c1} → ${a1}Qa = P − ${c1} → deel door ${a1}`, expl:`Qa = ${coefA}P − ${constA}. De coëfficiënt van P is ${coefA}.` },
+        { q:`Wat is de constante in Qa = ${coefA}P − ?`, a: constA, hint:`${c1} ÷ ${a1} = ?`, expl:`Qa = ${coefA}P − ${constA}. De constante is ${constA}.` },
+        { q:`Herschrijf het aanbod van B naar Qb = …P − … Wat is de coëfficiënt van P?`, a: coefB, hint:`P = ${a2}Qb + ${c2} → deel door ${a2}`, expl:`Qb = ${coefB}P − ${constB}. De coëfficiënt van P is ${coefB}.` },
+        { q:`Wat is de constante in Qb = ${coefB}P − ?`, a: constB, hint:`${c2} ÷ ${a2} = ?`, expl:`Qb = ${coefB}P − ${constB}. De constante is ${constB}.` },
+        { q:`Horizontaal optellen: Qcol = Qa + Qb. Coëfficiënt van P: ${coefA} + ${coefB} = ? En constante: ${constA} + ${constB} = ${constCol}. Geef de coëfficiënt van P.`, a: coefCol, hint:`Tel de coëfficiënten op: ${coefA} + ${coefB}`, expl:`Coëfficiënt = ${coefCol}, constante = ${constCol}.` },
+        { q:`Qcol = ${coefCol}P − ${constCol}. Controleer: vul P = ${c1 > c2 ? c1 + a1*2 : c2 + a2*2} in. Qcol = ?`, a: round1(coefCol * (c1 > c2 ? c1 + a1*2 : c2 + a2*2) - constCol), hint:`${coefCol} × ${c1 > c2 ? c1 + a1*2 : c2 + a2*2} − ${constCol}`, expl:`Qcol = ${round1(coefCol * (c1 > c2 ? c1 + a1*2 : c2 + a2*2) - constCol)}` },
       ]
     };
   },
