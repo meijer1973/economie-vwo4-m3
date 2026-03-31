@@ -191,20 +191,20 @@ const GEN = {
     // Collectieve aanbodfunctie opstellen via horizontaal optellen
     const a1 = pick([1, 2]), c1 = ri(4, 12);
     const a2 = pick([1, 2]), c2 = ri(4, 12);
-    // Qa = (1/a1)P − c1/a1,  Qb = (1/a2)P − c2/a2
-    const coefA = round2(1/a1), constA = round2(c1/a1);
-    const coefB = round2(1/a2), constB = round2(c2/a2);
+    // Qa = (1/a1)P + (-c1/a1),  Qb = (1/a2)P + (-c2/a2)
+    const coefA = round2(1/a1), constA = round2(-c1/a1);
+    const coefB = round2(1/a2), constB = round2(-c2/a2);
     const coefCol = round2(coefA + coefB);
     const constCol = round2(constA + constB);
     return {
       context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nStel de collectieve aanbodfunctie op.`,
       steps: [
-        { q:`Herschrijf het aanbod van A naar Qa = …P − … Wat is de coëfficiënt van P?`, a: coefA, hint:`P = ${a1}Qa + ${c1} → ${a1}Qa = P − ${c1} → deel door ${a1}`, expl:`Qa = ${coefA}P − ${constA}. De coëfficiënt van P is ${coefA}.` },
-        { q:`Wat is de constante in Qa = ${coefA}P − ?`, a: constA, hint:`${c1} ÷ ${a1} = ?`, expl:`Qa = ${coefA}P − ${constA}. De constante is ${constA}.` },
-        { q:`Herschrijf het aanbod van B naar Qb = …P − … Wat is de coëfficiënt van P?`, a: coefB, hint:`P = ${a2}Qb + ${c2} → deel door ${a2}`, expl:`Qb = ${coefB}P − ${constB}. De coëfficiënt van P is ${coefB}.` },
-        { q:`Wat is de constante in Qb = ${coefB}P − ?`, a: constB, hint:`${c2} ÷ ${a2} = ?`, expl:`Qb = ${coefB}P − ${constB}. De constante is ${constB}.` },
+        { q:`Herschrijf het aanbod van A naar Qa = …P + … Wat is de coëfficiënt van P?`, a: coefA, hint:`P = ${a1}Qa + ${c1} → ${a1}Qa = P − ${c1} → deel door ${a1}`, expl:`Qa = ${coefA}P + (${constA}). De coëfficiënt van P is ${coefA}.` },
+        { q:`Wat is de constante in Qa = ${coefA}P + ?`, a: constA, hint:`−${c1} ÷ ${a1} = ? (let op het minteken!)`, expl:`Qa = ${coefA}P + (${constA}). De constante is ${constA}.` },
+        { q:`Herschrijf het aanbod van B naar Qb = …P + … Wat is de coëfficiënt van P?`, a: coefB, hint:`P = ${a2}Qb + ${c2} → deel door ${a2}`, expl:`Qb = ${coefB}P + (${constB}). De coëfficiënt van P is ${coefB}.` },
+        { q:`Wat is de constante in Qb = ${coefB}P + ?`, a: constB, hint:`−${c2} ÷ ${a2} = ? (let op het minteken!)`, expl:`Qb = ${coefB}P + (${constB}). De constante is ${constB}.` },
         { q:`Tel de coëfficiënten van P op voor de collectieve aanbodfunctie. Wat is de coëfficiënt van P in Qcol?`, a: coefCol, hint:`Coëfficiënt A was ${coefA}, coëfficiënt B was ${coefB}. Tel op.`, expl:`${coefA} + ${coefB} = ${coefCol}` },
-        { q:`Wat is de constante in de collectieve aanbodfunctie Qcol = ${coefCol}P − ?`, a: constCol, hint:`Constante A was ${constA}, constante B was ${constB}. Tel op.`, expl:`${constA} + ${constB} = ${constCol}. De collectieve aanbodfunctie is Qcol = ${coefCol}P − ${constCol}.` },
+        { q:`Wat is de constante in Qcol = ${coefCol}P + ?`, a: constCol, hint:`Constante A was ${constA}, constante B was ${constB}. Tel op.`, expl:`${constA} + (${constB}) = ${constCol}. De collectieve aanbodfunctie is Qcol = ${coefCol}P + (${constCol}).` },
       ]
     };
   },
