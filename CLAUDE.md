@@ -322,6 +322,17 @@ Each quiz HTML file is a thin shell (~70 lines) that loads:
 
 ## Testing & Verification (ALWAYS follow)
 
+### CRITICAL: Verify before claiming done
+
+**Never claim something works without actually testing it.** Passing tests and link checks are necessary but NOT sufficient. For any HTML file that runs in the browser:
+
+1. **Babel/JSX files**: Run the Babel transformation in Node.js to verify the code compiles without syntax errors
+2. **Generated HTML**: Verify the generated code evaluates correctly (e.g., skill counts, function calls)
+3. **If browser-automation is available**: Use Puppeteer/Playwright to verify the page renders
+4. **If not**: At minimum, verify the HTML parses, scripts transform, and key functions execute in Node.js
+
+A white screen in the browser = the task is NOT done, regardless of what tests say.
+
 ### Before pushing (if quiz files were modified):
 ```bash
 npm test                          # Run all unit tests (quiz + reasoning)
@@ -429,3 +440,63 @@ Each reasoning game HTML file lives in `3. Oefenen/` and is named:
 2. Run `npm test` — all tests must pass
 3. Test in browser locally (all 5 modes)
 4. Push and verify deployment
+
+---
+
+## Skill Tree (Reken-spel) Architecture
+
+The 20 reken-spel HTML files use a shared skill tree architecture:
+
+```
+shared/
+  skilltree-engine.js         ← Pure game logic (UMD, testable in Node.js + browser)
+  skilltree-ui.js             ← DOM binding layer (browser only)
+  skilltree.css               ← Shared styles with CSS custom properties (--st-*)
+  skilltree/
+    base-elements.js          ← Pool of all 41 exercise generators
+    3.1.1.js ... 3.4.6.js    ← Per-paragraph data files (20 total)
+  tests/
+    skilltree-engine.test.js  ← Engine unit tests
+    skilltree-data.test.js    ← Data validation tests
+```
+
+Each reken-spel HTML file is a thin shell in `3. Oefenen/` that loads:
+1. `shared/skilltree/base-elements.js` → sets `window.SKILL_TREE_ELEMENTS`
+2. `shared/skilltree/X.Y.Z.js` → sets `window.SKILL_TREE_DATA`
+3. `shared/skilltree-engine.js` → `SkillTreeEngine` class
+4. `shared/skilltree-ui.js` → IIFE, wires engine to DOM
+
+### 41 base elements across 4 layers
+
+| Layer | Name | Count | Description |
+|-------|------|-------|-------------|
+| 0 | Fundament | 9 | Pure math, always visible |
+| 1 | Bouwstenen | 11 | Economic context + 1-2 L0 skills |
+| 2 | Samengesteld | 14 | Multi-step, includes simplified versions of L3 skills |
+| 3 | Eindbazen | 7 | Full exam-level problems |
+
+### Build scripts for reken-spel
+
+| Script | Purpose |
+|--------|---------|
+| `build-scripts/build-skilltree-shells.js` | Generate HTML shells for all paragraphs with data files |
+| `build-scripts/build-skilltree-scaffold.js` | Scaffold new per-paragraph data file |
+
+### Adding a new reken-spel paragraph:
+1. Run: `node build-scripts/build-skilltree-scaffold.js X.Y.Z elementId1,elementId2,...`
+2. Review and customize the generated data file
+3. Run: `node build-scripts/build-skilltree-shells.js` to generate HTML shell
+4. Run `npm test` to validate
+5. Add link in paragraph `index.html`
+
+### Modifying skill tree engine:
+1. Edit `shared/skilltree-engine.js`
+2. Run `npm test` — all tests must pass
+3. Test in browser locally
+4. Push and verify deployment
+
+### Adding a new base element:
+1. Add generator to `shared/skilltree/base-elements.js`
+2. Run `npm test` — generator stress tests will automatically include it
+3. Add the element to relevant paragraph data files
+4. Run `npm test` again to validate data files
