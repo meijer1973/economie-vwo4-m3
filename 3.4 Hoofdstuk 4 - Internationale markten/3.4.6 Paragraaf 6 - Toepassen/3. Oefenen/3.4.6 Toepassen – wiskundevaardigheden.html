@@ -105,8 +105,8 @@ const GEN = {
     return {
       context: `Schrijf om: Qv = ${a} − ${b}P  →  P = ?`,
       steps: [
-        { q:`Isoleer ${b}P: ${b}P = ${a} − Q. Deel alles door ${b}. Wat wordt de constante?`, a: aOver, hint:`${a} ÷ ${b} = ?`, expl:`${a} ÷ ${b} = ${aOver}` },
-        { q:`P = ${aOver} + ? × Q. Wat is de coëfficiënt van Q? (let op het teken!)`, a: -coefQ, hint:`Je deelt −Q door ${b}. Het wordt negatief.`, expl:`P = ${aOver} − ${coefQ}Q, dus de coëfficiënt is −${coefQ}.` },
+        { q:`Herschrijf naar P = … Wat is de constante term?`, a: aOver, hint:`Isoleer ${b}P aan één kant en deel alles door ${b}.`, expl:`${b}P = ${a} − Q → P = ${a}/${b} − Q/${b} → constante = ${aOver}` },
+        { q:`Wat is de coëfficiënt van Q? (let op het teken!)`, a: -coefQ, hint:`Je deelt −Q door ${b}. Let op: het teken blijft negatief.`, expl:`P = ${aOver} − ${coefQ}Q, dus de coëfficiënt is −${coefQ}.` },
       ]
     };
   },
@@ -129,8 +129,8 @@ const GEN = {
     return {
       context: `Bereken de oppervlakte van een driehoek met basis = ${base} en hoogte = ${height}.`,
       steps: [
-        { q:`Formule: ½ × basis × hoogte. Bereken basis × hoogte.`, a: base*height, hint:`${base} × ${height} = ?`, expl:`${base} × ${height} = ${base*height}` },
-        { q:`Deel door 2. Oppervlakte = ?`, a: area, hint:`${base*height} ÷ 2 = ?`, expl:`Oppervlakte = ½ × ${base} × ${height} = ${area}` },
+        { q:`Bereken basis × hoogte.`, a: base*height, hint:`${base} × ${height} = ?`, expl:`${base} × ${height} = ${base*height}` },
+        { q:`Bereken de oppervlakte.`, a: area, hint:`De oppervlakte van een driehoek is de helft van basis × hoogte.`, expl:`Oppervlakte = ½ × ${base*height} = ${area}` },
       ]
     };
   },
@@ -140,9 +140,9 @@ const GEN = {
     return {
       context: `Bepaal de afgeleide van f(Q) = ${a}Q² + ${b}Q + ${c}.`,
       steps: [
-        { q:`Afgeleide van ${a}Q²: breng de macht naar voren. ? × Q`, a: 2*a, hint:`Macht (2) × coëfficiënt (${a}) = ?`, expl:`${a}Q² → ${2*a}Q` },
-        { q:`Afgeleide van ${b}Q = ?`, a: b, hint:`De afgeleide van bQ is gewoon b.`, expl:`${b}Q → ${b}` },
-        { q:`Afgeleide van de constante ${c} = ?`, a: 0, hint:`Een constante verdwijnt bij differentiëren.`, expl:`De afgeleide van een constante is 0.` },
+        { q:`Wat is de afgeleide van ${a}Q²? Geef de coëfficiënt van Q.`, a: 2*a, hint:`Bij differentiëren: vermenigvuldig de coëfficiënt met de macht.`, expl:`${a}Q² → ${2*a}Q` },
+        { q:`Wat is de afgeleide van ${b}Q?`, a: b, hint:`De afgeleide van bQ is gewoon b.`, expl:`${b}Q → ${b}` },
+        { q:`Wat is de afgeleide van de constante ${c}?`, a: 0, hint:`Wat gebeurt er met een constante bij differentiëren?`, expl:`De afgeleide van een constante is 0.` },
       ]
     };
   },
@@ -181,8 +181,8 @@ const GEN = {
     return {
       context: `TK = ${a}Q² + ${b}Q + ${c}`,
       steps: [
-        { q:`Wat zijn de vaste kosten (kosten als Q = 0)?`, a: c, hint:`Vul Q = 0 in.`, expl:`TK(0) = ${c}, dus de vaste kosten = ${c}.` },
-        { q:`Bereken de variabele kosten bij Q = ${Q}: ${a}×${Q}² + ${b}×${Q} = ?`, a: vk, hint:`${a}×${Q*Q} + ${b}×${Q} = ?`, expl:`${a}×${Q*Q} + ${b*Q} = ${vk}` },
+        { q:`Wat zijn de vaste kosten?`, a: c, hint:`De vaste kosten zijn de kosten als er niets geproduceerd wordt (Q = 0).`, expl:`TK(0) = ${c}, dus de vaste kosten = ${c}.` },
+        { q:`Bereken de variabele kosten bij Q = ${Q}.`, a: vk, hint:`De variabele kosten zijn TK minus de vaste kosten. Of: de termen mét Q.`, expl:`TVK = ${a}×${Q*Q} + ${b}×${Q} = ${vk}` },
       ]
     };
   },
@@ -212,17 +212,17 @@ const GEN = {
   B5: (stars) => {
     const a = ri(30, 80), b = ri(1, 4);
     return { context: `TO = ${a}Q − ${b}Q². Bepaal de MO-functie (= afgeleide van TO).`, steps: [
-      { q:`Wat is de constante term in MO?`, a: a, hint:`Afgeleide van ${a}Q is ${a}.`, expl:`MO begint met ${a}` },
-      { q:`Wat is de coëfficiënt van Q in MO? (met teken)`, a: -(2*b), hint:`Afgeleide van −${b}Q² = −${2*b}Q`, expl:`MO = ${a} − ${2*b}Q` },
-      { q:`Bij welke Q is MO = 0?`, a: round1(a/(2*b)), hint:`${a} = ${2*b}Q → Q = ?`, expl:`Q = ${a} ÷ ${2*b} = ${round1(a/(2*b))}` },
+      { q:`Wat is de constante term in MO?`, a: a, hint:`MO is de afgeleide van TO naar Q. Wat is de afgeleide van ${a}Q?`, expl:`MO begint met ${a}` },
+      { q:`Wat is de coëfficiënt van Q in MO? (met teken)`, a: -(2*b), hint:`Wat is de afgeleide van −${b}Q²? Let op het teken.`, expl:`MO = ${a} − ${2*b}Q` },
+      { q:`Bij welke Q is MO = 0?`, a: round1(a/(2*b)), hint:`Stel MO = 0 en los op naar Q.`, expl:`Q = ${a} ÷ ${2*b} = ${round1(a/(2*b))}` },
     ]};
   },
 
   B6: (stars) => {
     const a = round1(pick([0.5, 1, 1.5, 2])), b = ri(5, 20), c = ri(50, 200);
     return { context: `TK = ${a}Q² + ${b}Q + ${c}. Bepaal de MK-functie.`, steps: [
-      { q:`MK is de afgeleide van TK. Wat is de coëfficiënt van Q in MK?`, a: round1(2*a), hint:`Afgeleide van ${a}Q² = ${round1(2*a)}Q`, expl:`${a}Q² → ${round1(2*a)}Q` },
-      { q:`Wat is de constante in MK?`, a: b, hint:`Afgeleide van ${b}Q = ${b}`, expl:`MK = ${round1(2*a)}Q + ${b}` },
+      { q:`Wat is de coëfficiënt van Q in MK?`, a: round1(2*a), hint:`MK is de afgeleide van TK. Wat is de afgeleide van ${a}Q²?`, expl:`${a}Q² → ${round1(2*a)}Q` },
+      { q:`Wat is de constante in MK?`, a: b, hint:`Wat is de afgeleide van ${b}Q?`, expl:`MK = ${round1(2*a)}Q + ${b}` },
     ]};
   },
 
@@ -234,8 +234,8 @@ const GEN = {
     return {
       context: `TK = ${a}Q² + ${b}Q + ${c}. Bereken GTK bij Q = ${Q}.`,
       steps: [
-        { q:`Bereken TK bij Q = ${Q}: ${a}×${Q}² + ${b}×${Q} + ${c} = ?`, a: tk, hint:`${a}×${Q*Q} + ${b*Q} + ${c}`, expl:`TK = ${a}×${Q*Q} + ${b*Q} + ${c} = ${tk}` },
-        { q:`GTK = TK ÷ Q = ${tk} ÷ ${Q} = ?`, a: gtk, hint:`Deel ${tk} door ${Q}.`, expl:`GTK = ${tk} ÷ ${Q} = ${gtk}` },
+        { q:`Bereken eerst TK bij Q = ${Q}.`, a: tk, hint:`Vul Q = ${Q} in de kostenfunctie in en reken stap voor stap uit.`, expl:`TK = ${a}×${Q*Q} + ${b*Q} + ${c} = ${tk}` },
+        { q:`Bereken nu GTK.`, a: gtk, hint:`GTK = TK gedeeld door Q.`, expl:`GTK = ${tk} ÷ ${Q} = ${gtk}` },
       ]
     };
   },
@@ -251,8 +251,8 @@ const GEN = {
     const pIntercept = round1(alpha / b);
     const cs = round1(0.5 * Qs * (pIntercept - Ps));
     return { context: `Qv = ${alpha} − ${b}P en Qa = −${c} + ${d}P.\nEvenwicht: P* = ${Ps}, Q* = ${Qs}.\nBereken het consumentensurplus.`, steps: [
-      { q:`Snijpunt vraaglijn met P-as (Q=0): ${alpha} ÷ ${b} = ?`, a: pIntercept, hint:`Vul Q = 0 in bij Qv: ${alpha} = ${b}P`, expl:`Pmax = ${pIntercept}` },
-      { q:`CS = ½ × Q* × (Pmax − P*) = ½ × ${Qs} × (${pIntercept} − ${Ps}) = ?`, a: cs, hint:`½ × ${Qs} × ${round1(pIntercept - Ps)}`, expl:`CS = ${cs}` },
+      { q:`Bepaal het snijpunt van de vraaglijn met de P-as.`, a: pIntercept, hint:`Het snijpunt met de P-as vind je door Q = 0 in te vullen.`, expl:`Qv = 0 → ${alpha} = ${b}P → Pmax = ${pIntercept}` },
+      { q:`Bereken het consumentensurplus.`, a: cs, hint:`CS is een driehoek met basis Q* en hoogte Pmax − P*.`, expl:`CS = ½ × ${Qs} × (${pIntercept} − ${Ps}) = ${cs}` },
     ]};
   },
 
@@ -276,9 +276,9 @@ const GEN = {
     return {
       context: `TO = ${a}Q − ${b}Q² en TK = ${tkA}Q² + ${tkB}Q + ${tkC}.\nBereken de winst bij Q = ${Q}.`,
       steps: [
-        { q:`Bereken TO bij Q = ${Q}: ${a}×${Q} − ${b}×${Q}² = ?`, a: to, hint:`${a*Q} − ${b*Q*Q}`, expl:`TO = ${a*Q} − ${b*Q*Q} = ${to}` },
-        { q:`Bereken TK bij Q = ${Q}: ${tkA}×${Q}² + ${tkB}×${Q} + ${tkC} = ?`, a: tk, hint:`${tkA*Q*Q} + ${tkB*Q} + ${tkC}`, expl:`TK = ${tk}` },
-        { q:`Winst = TO − TK = ${to} − ${tk} = ?`, a: winst, hint:`Trek TK af van TO.`, expl:`Winst = ${to} − ${tk} = ${winst}` },
+        { q:`Bereken TO bij Q = ${Q}.`, a: to, hint:`TO = ${a}Q − ${b}Q². Vul Q = ${Q} in.`, expl:`TO = ${a}×${Q} − ${b}×${Q*Q} = ${to}` },
+        { q:`Bereken TK bij Q = ${Q}.`, a: tk, hint:`Vul Q = ${Q} in de kostenfunctie in.`, expl:`TK = ${tkA}×${Q*Q} + ${tkB}×${Q} + ${tkC} = ${tk}` },
+        { q:`Bereken de winst.`, a: winst, hint:`Winst = TO − TK.`, expl:`Winst = ${to} − ${tk} = ${winst}` },
       ]
     };
   },
@@ -298,9 +298,9 @@ const GEN = {
     return {
       context: `TO = ${P}Q en TK = ${a}Q² + ${b}Q + ${c}.\nBij welke hoeveelheden is er break-even?`,
       steps: [
-        { q:`Stel TO = TK: ${P}Q = ${a}Q² + ${b}Q + ${c}. Herschrijf: ${a}Q² + ?Q + ${c} = 0. Coëfficiënt van Q = ?`, a: round1(b - P), hint:`${b} − ${P} = ?`, expl:`${b} − ${P} = ${round1(b-P)}` },
-        { q:`Eerste break-even hoeveelheid (de kleinste Q) = ?`, a: Q1, hint:`Los de kwadratische vergelijking op, of gebruik de abc-formule.`, expl:`Q₁ = ${Q1}` },
-        { q:`Tweede break-even hoeveelheid = ?`, a: Q2, hint:`De grotere oplossing.`, expl:`Q₂ = ${Q2}. Tussen Q=${Q1} en Q=${Q2} maakt het bedrijf winst.` },
+        { q:`Stel TO = TK en herschrijf naar de vorm …Q² + …Q + … = 0. Wat is de coëfficiënt van Q?`, a: round1(b - P), hint:`${P}Q = ${a}Q² + ${b}Q + ${c}. Breng alles naar één kant.`, expl:`${a}Q² + (${b} − ${P})Q + ${c} = 0 → coëfficiënt = ${round1(b-P)}` },
+        { q:`Bereken de kleinste break-even hoeveelheid.`, a: Q1, hint:`Los de kwadratische vergelijking op met de abc-formule.`, expl:`Q₁ = ${Q1}` },
+        { q:`Bereken de grootste break-even hoeveelheid.`, a: Q2, hint:`De tweede oplossing van dezelfde vergelijking.`, expl:`Q₂ = ${Q2}. Tussen Q=${Q1} en Q=${Q2} maakt het bedrijf winst.` },
       ]
     };
   },
@@ -321,9 +321,9 @@ const GEN = {
     return {
       context: `Qv = ${alpha} − ${b}P en Qa = −${c} + ${d}P.\nDe overheid heft €${heffing} per stuk bij de producent.\nBereken het nieuwe evenwicht.`,
       steps: [
-        { q:`Nieuwe aanbod: producent ontvangt P − ${heffing}. Nieuwe constante in Qa: ${c} + ${d}×${heffing} = ?`, a: newC, hint:`De "drempel" verschuift met ${d}×${heffing}.`, expl:`Nieuwe Qa = −${newC} + ${d}P` },
-        { q:`Nieuw evenwicht: ${alpha} − ${b}P = −${newC} + ${d}P. P* = ?`, a: newPs, hint:`${alpha} + ${newC} = ${b+d}P`, expl:`P* = ${alpha + newC} ÷ ${b+d} = ${newPs}` },
-        { q:`Nieuwe Q*: ${alpha} − ${b} × ${newPs} = ?`, a: newQs, hint:`Vul de nieuwe P* in.`, expl:`Q* = ${newQs}` },
+        { q:`Wat is de nieuwe constante in de aanbodfunctie na de heffing?`, a: newC, hint:`De producent ontvangt P − ${heffing}. Vul dat in bij Qa.`, expl:`Qa = −${c} + ${d}(P − ${heffing}) = −${newC} + ${d}P` },
+        { q:`Bereken de nieuwe evenwichtsprijs.`, a: newPs, hint:`Stel de nieuwe Qa gelijk aan Qv en los op naar P.`, expl:`${alpha} − ${b}P = −${newC} + ${d}P → P* = ${newPs}` },
+        { q:`Bereken de nieuwe evenwichtshoeveelheid.`, a: newQs, hint:`Vul de nieuwe P* in bij Qv.`, expl:`Q* = ${alpha} − ${b}×${newPs} = ${newQs}` },
       ]
     };
   },
@@ -339,9 +339,9 @@ const GEN = {
     return {
       context: `${n} identieke bedrijven, elk met individueel aanbod: P = ${aInd}Qi + ${cInd}.\nBepaal het collectieve aanbod.`,
       steps: [
-        { q:`Schrijf om naar Qi: Qi = (P − ${cInd}) / ${aInd}. Vanaf welke P wordt er aangeboden?`, a: cInd, hint:`Qi ≥ 0 als P ≥ ?`, expl:`Minimumprijs = ${cInd}` },
-        { q:`Bij P = ${testP}: Qi per bedrijf = (${testP} − ${cInd}) / ${aInd} = ?`, a: qInd, hint:`Vul in en reken uit.`, expl:`Qi = ${qInd}` },
-        { q:`Collectief: Qcol = ${n} × ${qInd} = ?`, a: qCol, hint:`Vermenigvuldig met het aantal bedrijven.`, expl:`Qcol = ${n} × ${qInd} = ${qCol}` },
+        { q:`Vanaf welke prijs wordt er aangeboden?`, a: cInd, hint:`Schrijf om naar Qi als functie van P. Bij welke P is Qi = 0?`, expl:`Qi = (P − ${cInd}) / ${aInd}. Minimumprijs = ${cInd}` },
+        { q:`Bereken Qi per bedrijf bij P = ${testP}.`, a: qInd, hint:`Vul P = ${testP} in bij Qi = (P − ${cInd}) / ${aInd}.`, expl:`Qi = (${testP} − ${cInd}) / ${aInd} = ${qInd}` },
+        { q:`Bereken het collectieve aanbod bij P = ${testP}.`, a: qCol, hint:`Er zijn ${n} identieke bedrijven.`, expl:`Qcol = ${n} × ${qInd} = ${qCol}` },
       ]
     };
   },
@@ -360,10 +360,10 @@ const GEN = {
     return {
       context: `Een producent verkoopt voor P = ${P}.\nTK = ${a}Q² + ${b}Q + ${c}.\nVoer een volledige break-even analyse uit.`,
       steps: [
-        { q:`TO = ${P}Q. Stel TO = TK en herschrijf naar de vorm ${a}Q² + ?Q + ${c} = 0. Coëfficiënt van Q = ?`, a: round1(b-P), hint:`Alle Q-termen naar links: ${a}Q² + ${b}Q − ${P}Q + ${c} = 0. Coëfficiënt = ${b} − ${P}`, expl:`${b} − ${P} = ${round1(b-P)}` },
-        { q:`Eerste break-even (kleinste Q)?`, a: Q1, hint:`Gebruik de abc-formule.`, expl:`Q₁ = ${Q1}` },
-        { q:`Tweede break-even (grootste Q)?`, a: Q2, hint:`De tweede oplossing.`, expl:`Q₂ = ${Q2}` },
-        { q:`Bereken de winst bij Q = ${Qmid} (tussen de break-evens): TO − TK = ?`, a: winstMid, hint:`TO = ${P*Qmid}, TK = ${round1(a*Qmid*Qmid + b*Qmid + c)}`, expl:`Winst = ${P*Qmid} − ${round1(a*Qmid*Qmid+b*Qmid+c)} = ${winstMid}` },
+        { q:`Stel TO = TK en herschrijf naar …Q² + …Q + … = 0. Wat is de coëfficiënt van Q?`, a: round1(b-P), hint:`${P}Q = ${a}Q² + ${b}Q + ${c}. Breng alles naar één kant.`, expl:`${a}Q² + (${b} − ${P})Q + ${c} = 0 → coëfficiënt = ${round1(b-P)}` },
+        { q:`Bereken de kleinste break-even hoeveelheid.`, a: Q1, hint:`Gebruik de abc-formule.`, expl:`Q₁ = ${Q1}` },
+        { q:`Bereken de grootste break-even hoeveelheid.`, a: Q2, hint:`De tweede oplossing van dezelfde vergelijking.`, expl:`Q₂ = ${Q2}` },
+        { q:`Bereken de winst bij Q = ${Qmid}.`, a: winstMid, hint:`Winst = TO − TK. Bereken beide bij Q = ${Qmid}.`, expl:`TO = ${P*Qmid}, TK = ${round1(a*Qmid*Qmid+b*Qmid+c)}, Winst = ${winstMid}` },
       ]
     };
   },
@@ -380,10 +380,10 @@ const GEN = {
     const pMax = round1(alpha / b);
     const cs = round1(0.5 * Qs * (pMax - Ps));
     return { context: `Qv = ${alpha} − ${b}P en Qa = −${c} + ${d}P.\nBereken het consumentensurplus volledig.`, steps: [
-      { q:`Bereken het evenwicht. P* = ?`, a: Ps, hint:`Qv = Qa → ${alpha+c} ÷ ${b+d}`, expl:`P* = ${Ps}` },
-      { q:`Q* = ?`, a: Qs, hint:`${alpha} − ${b}×${Ps}`, expl:`Q* = ${Qs}` },
-      { q:`Snijpunt vraaglijn met P-as (Q=0): ${alpha}/${b} = ?`, a: pMax, hint:`Stel Q = 0 in de vraaglijn.`, expl:`Pmax = ${pMax}` },
-      { q:`CS = ½ × Q* × (Pmax − P*) = ?`, a: cs, hint:`½ × ${Qs} × ${round1(pMax-Ps)}`, expl:`CS = ${cs}` },
+      { q:`Bereken de evenwichtsprijs.`, a: Ps, hint:`Stel Qv = Qa en los op naar P.`, expl:`P* = (${alpha}+${c}) ÷ ${b+d} = ${Ps}` },
+      { q:`Bereken de evenwichtshoeveelheid.`, a: Qs, hint:`Vul P* in bij Qv of Qa.`, expl:`Q* = ${alpha} − ${b}×${Ps} = ${Qs}` },
+      { q:`Bepaal het snijpunt van de vraaglijn met de P-as.`, a: pMax, hint:`Bij welke prijs is de gevraagde hoeveelheid nul?`, expl:`Q = 0 → ${alpha} = ${b}P → Pmax = ${pMax}` },
+      { q:`Bereken het consumentensurplus.`, a: cs, hint:`CS is een driehoek met basis Q* en hoogte Pmax − P*.`, expl:`CS = ½ × ${Qs} × (${pMax} − ${Ps}) = ${cs}` },
     ]};
   },
 
@@ -398,10 +398,10 @@ const GEN = {
     return {
       context: `Groep A: ${n1} bedrijven, elk P = ${a1}Q + ${c1}\nGroep B: ${n2} bedrijf(ven), elk P = ${a2}Q + ${c2}\nBepaal het collectieve aanbod.`,
       steps: [
-        { q:`Groep A: Qi = (P−${c1})/${a1}. Per bedrijf bij P=${testP}: Qa = ?`, a: q1, hint:`(${testP}−${c1})/${a1}`, expl:`Qa = ${q1}` },
-        { q:`Totaal groep A: ${n1} × ${q1} = ?`, a: round1(n1*q1), hint:`Vermenigvuldig.`, expl:`${n1} × ${q1} = ${round1(n1*q1)}` },
-        { q:`Groep B: per bedrijf bij P=${testP}: Qb = (${testP}−${c2})/${a2} = ?`, a: q2, hint:`Vul in.`, expl:`Qb = ${q2}` },
-        { q:`Totaal collectief bij P=${testP}: ${n1}×${q1} + ${n2}×${q2} = ?`, a: qTot, hint:`Tel alle individuele hoeveelheden op.`, expl:`Qcol = ${qTot}` },
+        { q:`Bereken het aanbod per bedrijf van groep A bij P = ${testP}.`, a: q1, hint:`Schrijf om: Qa = (P − ${c1}) / ${a1}. Vul P in.`, expl:`Qa = (${testP} − ${c1}) / ${a1} = ${q1}` },
+        { q:`Bereken het totale aanbod van groep A.`, a: round1(n1*q1), hint:`Er zijn ${n1} bedrijven in groep A.`, expl:`${n1} × ${q1} = ${round1(n1*q1)}` },
+        { q:`Bereken het aanbod per bedrijf van groep B bij P = ${testP}.`, a: q2, hint:`Schrijf om: Qb = (P − ${c2}) / ${a2}. Vul P in.`, expl:`Qb = (${testP} − ${c2}) / ${a2} = ${q2}` },
+        { q:`Bereken het totale collectieve aanbod.`, a: qTot, hint:`Tel het totale aanbod van beide groepen op.`, expl:`Qcol = ${round1(n1*q1)} + ${round1(n2*q2)} = ${qTot}` },
       ]
     };
   },
@@ -421,12 +421,12 @@ const GEN = {
     if (Qn <= 0) return GEN.E4(stars);
     const dwl = round1(0.5 * (Qs - Qn) * heffing);
     return { context: `Qv = ${alpha} − ${b}P, Qa = −${c} + ${d}P.\nHeffing: €${heffing}/stuk.\nBereken het welvaartsverlies.`, steps: [
-      { q:`Oud evenwicht: P* = ?`, a: Ps, hint:`Qv = Qa → (${alpha}+${c}) ÷ ${b+d}`, expl:`P* = ${Ps}` },
-      { q:`Oude Q* = ?`, a: Qs, hint:`${alpha} − ${b}×${Ps}`, expl:`Q* = ${Qs}` },
-      { q:`Nieuwe constante in Qa na heffing: ${c} + ${d}×${heffing} = ?`, a: newC, hint:`Verschuiving = ${d}×${heffing}`, expl:`Nieuwe constante = ${newC}` },
-      { q:`Nieuw evenwicht: P_nieuw = ?`, a: Pn, hint:`(${alpha}+${newC}) ÷ ${b+d}`, expl:`P_nieuw = ${Pn}` },
-      { q:`Nieuwe Q = ?`, a: Qn, hint:`${alpha} − ${b}×${Pn}`, expl:`Q_nieuw = ${Qn}` },
-      { q:`Welvaartsverlies = ½ × (${Qs}−${round1(Qn)}) × ${heffing} = ?`, a: dwl, hint:`Driehoek: ½ × ΔQ × heffing`, expl:`DWL = ½ × ${round1(Qs-Qn)} × ${heffing} = ${dwl}` },
+      { q:`Bereken de oude evenwichtsprijs.`, a: Ps, hint:`Stel Qv = Qa en los op naar P.`, expl:`P* = (${alpha}+${c}) ÷ ${b+d} = ${Ps}` },
+      { q:`Bereken de oude evenwichtshoeveelheid.`, a: Qs, hint:`Vul P* in bij Qv.`, expl:`Q* = ${alpha} − ${b}×${Ps} = ${Qs}` },
+      { q:`Wat is de nieuwe constante in Qa na de heffing?`, a: newC, hint:`De producent ontvangt P − ${heffing}. Vul dat in.`, expl:`Qa = −${c} + ${d}(P − ${heffing}) → constante = ${newC}` },
+      { q:`Bereken de nieuwe evenwichtsprijs.`, a: Pn, hint:`Stel de nieuwe Qa gelijk aan Qv en los op.`, expl:`P_nieuw = (${alpha}+${newC}) ÷ ${b+d} = ${Pn}` },
+      { q:`Bereken de nieuwe evenwichtshoeveelheid.`, a: Qn, hint:`Vul de nieuwe P* in bij Qv.`, expl:`Q_nieuw = ${alpha} − ${b}×${Pn} = ${Qn}` },
+      { q:`Bereken het welvaartsverlies.`, a: dwl, hint:`Het welvaartsverlies is een driehoek. Wat zijn de basis en hoogte?`, expl:`DWL = ½ × (${Qs} − ${round1(Qn)}) × ${heffing} = ${dwl}` },
     ]};
   },
 
@@ -443,11 +443,11 @@ const GEN = {
     return {
       context: `Marktprijs P = ${P} (volledige mededinging).\nTK = ${a}Q² + ${bk}Q + ${ck}.\nBepaal de optimale productie en winst.`,
       steps: [
-        { q:`MK = ${round1(2*a)}Q + ${bk}. Stel P = MK: ${P} = ${round1(2*a)}Q + ${bk}. Q* = ?`, a: Qs, hint:`(${P} − ${bk}) ÷ ${round1(2*a)}`, expl:`Q* = ${round1(P - bk)} ÷ ${round1(2*a)} = ${Qs}` },
-        { q:`Bereken TK bij Q* = ${Qs}: ?`, a: tk, hint:`${a}×${Qs}² + ${bk}×${Qs} + ${ck}`, expl:`TK = ${tk}` },
-        { q:`GTK = TK/Q = ${tk}/${Qs} = ?`, a: gtk, hint:`Deel TK door Q.`, expl:`GTK = ${gtk}` },
-        { q:`Winst per stuk = P − GTK = ${P} − ${gtk} = ?`, a: winstPerStuk, hint:`Trek GTK af van de prijs.`, expl:`Winst/stuk = ${winstPerStuk}` },
-        { q:`Totale winst = ${winstPerStuk} × ${Qs} = ?`, a: totWinst, hint:`Vermenigvuldig.`, expl:`Totale winst = ${totWinst}` },
+        { q:`Bepaal de optimale productiehoeveelheid Q*.`, a: Qs, hint:`Bij volledige mededinging geldt: P = MK. Bepaal eerst MK.`, expl:`MK = ${round1(2*a)}Q + ${bk}. P = MK → Q* = (${P} − ${bk}) ÷ ${round1(2*a)} = ${Qs}` },
+        { q:`Bereken TK bij de optimale hoeveelheid.`, a: tk, hint:`Vul Q* = ${Qs} in de kostenfunctie in.`, expl:`TK = ${a}×${Qs}² + ${bk}×${Qs} + ${ck} = ${tk}` },
+        { q:`Bereken GTK bij de optimale hoeveelheid.`, a: gtk, hint:`GTK = TK gedeeld door Q.`, expl:`GTK = ${tk} ÷ ${Qs} = ${gtk}` },
+        { q:`Bereken de winst per stuk.`, a: winstPerStuk, hint:`Winst per stuk = prijs minus gemiddelde kosten.`, expl:`Winst/stuk = ${P} − ${gtk} = ${winstPerStuk}` },
+        { q:`Bereken de totale winst.`, a: totWinst, hint:`Totale winst = winst per stuk × hoeveelheid.`, expl:`Totale winst = ${winstPerStuk} × ${Qs} = ${totWinst}` },
       ]
     };
   },
@@ -470,12 +470,12 @@ const GEN = {
     return {
       context: `Qv = ${a} − ${b}P, Qa = −${c} + ${d}P.\nWereldmarktprijs Pw = ${Pw}. Invoerrecht: €${importR}/stuk.\nAnalyseer de effecten.`,
       steps: [
-        { q:`Bij Pw = ${Pw}: binnenlandse vraag Qd = ${a} − ${b}×${Pw} = ?`, a: Qd, hint:`Vul Pw in bij Qv.`, expl:`Qd = ${Qd}` },
-        { q:`Bij Pw = ${Pw}: binnenlands aanbod Qs = −${c} + ${d}×${Pw} = ?`, a: Qsup, hint:`Vul Pw in bij Qa.`, expl:`Qs = ${Qsup}` },
-        { q:`Import zonder heffing = Qd − Qs = ?`, a: Qd - Qsup, hint:`Vraag − aanbod.`, expl:`Import = ${Qd - Qsup}` },
-        { q:`Met invoerrecht: nieuwe prijs = ${Pw} + ${importR} = ?`, a: Pw + importR, hint:`Tel het invoerrecht op.`, expl:`P_nieuw = ${Pw + importR}` },
-        { q:`Nieuwe import = ${QdNew} − ${QsupNew} = ?`, a: QdNew - QsupNew, hint:`Nieuwe vraag − nieuw aanbod.`, expl:`Import = ${QdNew - QsupNew}` },
-        { q:`Overheidsinkomsten = ${importR} × ${QdNew - QsupNew} = ?`, a: govRev, hint:`Heffing × import.`, expl:`Overheidsinkomsten = ${govRev}` },
+        { q:`Bereken de binnenlandse vraag bij de wereldmarktprijs.`, a: Qd, hint:`Vul Pw = ${Pw} in bij Qv.`, expl:`Qd = ${a} − ${b}×${Pw} = ${Qd}` },
+        { q:`Bereken het binnenlandse aanbod bij de wereldmarktprijs.`, a: Qsup, hint:`Vul Pw = ${Pw} in bij Qa.`, expl:`Qs = −${c} + ${d}×${Pw} = ${Qsup}` },
+        { q:`Hoeveel wordt er geïmporteerd zonder invoerrecht?`, a: Qd - Qsup, hint:`Import = binnenlandse vraag − binnenlands aanbod.`, expl:`Import = ${Qd} − ${Qsup} = ${Qd - Qsup}` },
+        { q:`Wat is de nieuwe binnenlandse prijs na het invoerrecht?`, a: Pw + importR, hint:`Het invoerrecht wordt opgeteld bij de wereldmarktprijs.`, expl:`P_nieuw = ${Pw} + ${importR} = ${Pw + importR}` },
+        { q:`Hoeveel wordt er geïmporteerd mét invoerrecht?`, a: QdNew - QsupNew, hint:`Bereken vraag en aanbod bij de nieuwe prijs en trek af.`, expl:`Import = ${QdNew} − ${QsupNew} = ${QdNew - QsupNew}` },
+        { q:`Bereken de overheidsinkomsten uit het invoerrecht.`, a: govRev, hint:`Overheidsinkomsten = tarief × geïmporteerde hoeveelheid.`, expl:`${importR} × ${QdNew - QsupNew} = ${govRev}` },
       ]
     };
   },
@@ -490,11 +490,11 @@ const GEN = {
     const TK = round1(aTK * Qs * Qs + bTK * Qs + cTK);
     const winst = round1(TO - TK);
     return { context: `Monopolist: P = ${aP} − ${bP}Q.\nTK = ${aTK}Q² + ${bTK}Q + ${cTK}.\nBepaal de maximale winst.`, steps: [
-      { q:`MO = ${aP} − ${2*bP}Q en MK = ${round1(2*aTK)}Q + ${bTK}. Stel MO = MK. Q* = ?`, a: Qs, hint:`${aP} − ${bTK} = (${2*bP} + ${round1(2*aTK)})Q`, expl:`Q* = ${round1(aP-bTK)} ÷ ${round1(2*bP+2*aTK)} = ${Qs}` },
-      { q:`P* = ${aP} − ${bP} × ${Qs} = ?`, a: Pstar, hint:`Vul Q* in de vraaglijn.`, expl:`P* = ${Pstar}` },
-      { q:`TO = P* × Q* = ?`, a: TO, hint:`${Pstar} × ${Qs}`, expl:`TO = ${TO}` },
-      { q:`TK bij Q* = ${Qs}: ?`, a: TK, hint:`${aTK}×${Qs}² + ${bTK}×${Qs} + ${cTK}`, expl:`TK = ${TK}` },
-      { q:`Winst = TO − TK = ?`, a: winst, hint:`${TO} − ${TK}`, expl:`Winst = ${winst}` },
+      { q:`Bepaal de winstmaximaliserende hoeveelheid Q*.`, a: Qs, hint:`Stel MO = MK. Bepaal eerst MO en MK uit de gegeven functies.`, expl:`MO = ${aP} − ${2*bP}Q, MK = ${round1(2*aTK)}Q + ${bTK}. MO = MK → Q* = ${Qs}` },
+      { q:`Bereken de prijs die de monopolist vraagt.`, a: Pstar, hint:`Vul Q* in de vraaglijn (P = …).`, expl:`P* = ${aP} − ${bP}×${Qs} = ${Pstar}` },
+      { q:`Bereken de totale opbrengst.`, a: TO, hint:`TO = P* × Q*.`, expl:`TO = ${Pstar} × ${Qs} = ${TO}` },
+      { q:`Bereken de totale kosten bij Q*.`, a: TK, hint:`Vul Q* in de kostenfunctie.`, expl:`TK = ${aTK}×${Qs}² + ${bTK}×${Qs} + ${cTK} = ${TK}` },
+      { q:`Bereken de maximale winst.`, a: winst, hint:`Winst = TO − TK.`, expl:`Winst = ${TO} − ${TK} = ${winst}` },
     ]};
   },
 
@@ -511,13 +511,13 @@ const GEN = {
     const winst2 = round1((P2 - mk) * Q2);
     const totWinst = round1(winst1 + winst2);
     return { context: `Prijsdiscriminatie. MK = ${mk} (constant).\nMarkt 1: P₁ = ${a1} − ${b1}Q₁\nMarkt 2: P₂ = ${a2} − ${b2}Q₂`, steps: [
-      { q:`Markt 1: MO₁ = MK. Q₁ = ?`, a: Q1, hint:`(${a1}−${mk}) ÷ ${2*b1}`, expl:`Q₁ = ${Q1}` },
-      { q:`P₁ = ${a1} − ${b1}×${Q1} = ?`, a: P1, hint:`Vul Q₁ in.`, expl:`P₁ = ${P1}` },
-      { q:`Markt 2: MO₂ = MK. Q₂ = ?`, a: Q2, hint:`(${a2}−${mk}) ÷ ${2*b2}`, expl:`Q₂ = ${Q2}` },
-      { q:`P₂ = ${a2} − ${b2}×${Q2} = ?`, a: P2, hint:`Vul Q₂ in.`, expl:`P₂ = ${P2}` },
-      { q:`Winst markt 1: (P₁ − MK) × Q₁ = ?`, a: winst1, hint:`(${P1}−${mk})×${Q1}`, expl:`Winst₁ = ${winst1}` },
-      { q:`Winst markt 2: (P₂ − MK) × Q₂ = ?`, a: winst2, hint:`(${P2}−${mk})×${Q2}`, expl:`Winst₂ = ${winst2}` },
-      { q:`Totale winst = ?`, a: totWinst, hint:`${winst1} + ${winst2}`, expl:`Totaal = ${totWinst}` },
+      { q:`Bepaal de optimale hoeveelheid op markt 1.`, a: Q1, hint:`Stel MO₁ = MK en los op. MO₁ is de afgeleide van TO₁.`, expl:`MO₁ = ${a1} − ${2*b1}Q₁ = ${mk} → Q₁ = ${Q1}` },
+      { q:`Welke prijs vraagt de monopolist op markt 1?`, a: P1, hint:`Vul Q₁ in de vraagfunctie van markt 1.`, expl:`P₁ = ${a1} − ${b1}×${Q1} = ${P1}` },
+      { q:`Bepaal de optimale hoeveelheid op markt 2.`, a: Q2, hint:`Stel MO₂ = MK en los op.`, expl:`MO₂ = ${a2} − ${2*b2}Q₂ = ${mk} → Q₂ = ${Q2}` },
+      { q:`Welke prijs vraagt de monopolist op markt 2?`, a: P2, hint:`Vul Q₂ in de vraagfunctie van markt 2.`, expl:`P₂ = ${a2} − ${b2}×${Q2} = ${P2}` },
+      { q:`Bereken de winst op markt 1.`, a: winst1, hint:`Winst = (prijs − MK) × hoeveelheid.`, expl:`Winst₁ = (${P1} − ${mk}) × ${Q1} = ${winst1}` },
+      { q:`Bereken de winst op markt 2.`, a: winst2, hint:`Winst = (prijs − MK) × hoeveelheid.`, expl:`Winst₂ = (${P2} − ${mk}) × ${Q2} = ${winst2}` },
+      { q:`Bereken de totale winst.`, a: totWinst, hint:`Tel de winst van beide markten op.`, expl:`Totaal = ${winst1} + ${winst2} = ${totWinst}` },
     ]};
   },
 };
