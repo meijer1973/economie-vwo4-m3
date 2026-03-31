@@ -162,16 +162,20 @@ const GEN = {
   },
 
   B4: (stars) => {
-    const a1 = ri(1, 3), c1 = ri(4, 12), a2 = ri(1, 3), c2 = ri(4, 12);
+    const a1 = pick([1, 2]), c1 = ri(4, 10), a2 = pick([1, 2, 3]), c2 = ri(4, 10);
     // P = a1*Qa + c1, P = a2*Qb + c2 → Qa = (P-c1)/a1, Qb = (P-c2)/a2
-    // For clean numbers, use a1=a2=1 sometimes
     const minP = Math.max(c1, c2);
+    const testP = minP + pick([2, 4, 6]); // prijs waarbij beide aanbieden
+    const qa = round1((testP - c1) / a1);
+    const qb = round1((testP - c2) / a2);
+    const qTot = round1(qa + qb);
+    if (qa <= 0 || qb <= 0) return GEN.B4(stars);
     return {
-      context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nBepaal het collectieve aanbod.`,
+      context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nBepaal het collectieve aanbod bij P = ${testP}.`,
       steps: [
-        { q:`Schrijf Qa als functie van P: Qa = (P − ${c1}) / ${a1}. Vanaf welke prijs biedt A aan?`, a: c1, hint:`Qa ≥ 0 als P ≥ ?`, expl:`A biedt aan vanaf P = ${c1}.` },
-        { q:`Vanaf welke prijs biedt B aan?`, a: c2, hint:`Qb ≥ 0 als P ≥ ?`, expl:`B biedt aan vanaf P = ${c2}.` },
-        { q:`Bij P = ${minP + a1*a2*2}: Qa = (${minP + a1*a2*2} − ${c1})/${a1} = ?`, a: round1((minP+a1*a2*2-c1)/a1), hint:`Vul P in en reken uit.`, expl:`Qa = ${round1((minP+a1*a2*2-c1)/a1)}` },
+        { q:`Schrijf Qa als functie van P en bereken bij P = ${testP}: Qa = (${testP} − ${c1}) / ${a1} = ?`, a: qa, hint:`Qa = (P − ${c1}) / ${a1}. Vul P = ${testP} in.`, expl:`Qa = (${testP} − ${c1}) / ${a1} = ${qa}` },
+        { q:`Schrijf Qb als functie van P en bereken bij P = ${testP}: Qb = (${testP} − ${c2}) / ${a2} = ?`, a: qb, hint:`Qb = (P − ${c2}) / ${a2}. Vul P = ${testP} in.`, expl:`Qb = (${testP} − ${c2}) / ${a2} = ${qb}` },
+        { q:`Collectief aanbod = Qa + Qb = ${qa} + ${qb} = ?`, a: qTot, hint:`Tel de individuele hoeveelheden op bij dezelfde prijs.`, expl:`Qcol = ${qa} + ${qb} = ${qTot}. Dit is horizontaal optellen: bij dezelfde prijs de Q-waarden optellen.` },
       ]
     };
   },
