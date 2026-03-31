@@ -13,12 +13,12 @@ const SKILLS = [
   { id:"F2", name:"Vergelijking oplossen", layer:0, needs:[] },
   { id:"F3", name:"Functie omschrijven (P↔Q)", layer:0, needs:[] },
   { id:"F4", name:"Substitueren", layer:0, needs:[] },
-  { id:"F5", name:"Oppervlakte driehoek", layer:0, needs:[] },
-  { id:"F6", name:"Afgeleide bepalen", layer:0, needs:[] },
   { id:"B1", name:"Evenwichtsprijs & -hoeveelheid", layer:1, needs:["F1","F2"] },
   { id:"B2", name:"TO-functie opstellen", layer:1, needs:["F1","F3"] },
   { id:"B3", name:"TK-functie herkennen", layer:1, needs:["F1"] },
   { id:"B4", name:"Horizontaal optellen", layer:1, needs:["F3"] },
+  { id:"F5", name:"Oppervlakte driehoek", layer:1, needs:["F4"] },
+  { id:"F6", name:"Afgeleide bepalen", layer:1, needs:["F1"] },
   { id:"B5", name:"MO bepalen", layer:1, needs:["F6","B2"] },
   { id:"B6", name:"MK bepalen", layer:1, needs:["F6","B3"] },
   { id:"B7", name:"GTK bepalen", layer:1, needs:["B3"] },
@@ -40,10 +40,10 @@ const SKILLS = [
 
 const LAYER_NAMES = ["Fundament","Bouwstenen","Samengesteld","Eindbazen"];
 const LAYER_COLORS = [
-  { bg:"#1e3a5f", text:"#93c5fd", glow:"rgba(59,130,246,0.3)" },
-  { bg:"#2d2250", text:"#c4b5fd", glow:"rgba(139,92,246,0.3)" },
-  { bg:"#1a3a2a", text:"#86efac", glow:"rgba(52,211,153,0.3)" },
-  { bg:"#4a1a1a", text:"#fca5a5", glow:"rgba(248,113,113,0.3)" },
+  { bg:"#1a3353", text:"#7cb9e8", glow:"rgba(26,82,118,0.35)" },
+  { bg:"#2a1f4e", text:"#b8a9e8", glow:"rgba(136,78,160,0.3)" },
+  { bg:"#1a3a2a", text:"#7dcea0", glow:"rgba(30,132,73,0.3)" },
+  { bg:"#4a2a1a", text:"#f0b27a", glow:"rgba(230,126,34,0.3)" },
 ];
 
 /* ── exercise generators ─────────────────────────────────── */
@@ -623,7 +623,7 @@ export default function EconGame() {
   if (showStarAnim > 0) {
     return (
       <div style={{
-        minHeight:"100vh", background:"#0a0a1a",
+        minHeight:"100vh", background:"#0f1729",
         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
         animation:"fadeIn 0.5s ease"
       }}>
@@ -659,7 +659,7 @@ export default function EconGame() {
     const lc = LAYER_COLORS[activeSkill.layer];
 
     return (
-      <div style={{ minHeight:"100vh", background:"#0a0a1a", padding:"16px", fontFamily:"'DM Sans', system-ui, sans-serif" }}>
+      <div style={{ minHeight:"100vh", background:"#0f1729", padding:"16px", fontFamily:"'DM Sans', system-ui, sans-serif" }}>
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
           <button onClick={() => setView("tree")} style={{
@@ -819,7 +819,7 @@ export default function EconGame() {
 
   // Skill tree view
   return (
-    <div style={{ minHeight:"100vh", background:"#0a0a1a", fontFamily:"'DM Sans', system-ui, sans-serif" }}>
+    <div style={{ minHeight:"100vh", background:"#0f1729", fontFamily:"'DM Sans', system-ui, sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono&display=swap');
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
@@ -836,7 +836,7 @@ export default function EconGame() {
           fontSize:"1.5rem", fontWeight:700, color:"#f8fafc",
           letterSpacing:"-0.02em", margin:0
         }}>
-          Economie Skill Tree
+          Wiskundevaardigheden
         </h1>
         <p style={{ color:"#64748b", fontSize:"0.8rem", marginTop:4 }}>
           Verdien sterren en bouw je vaardigheden op

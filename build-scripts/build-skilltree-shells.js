@@ -17,27 +17,30 @@ const JSX_PATH = path.join(MODULE_ROOT, 'economie-skill-tree.jsx');
 
 // ── Paragraph definitions ──────────────────────────────────────────
 
+// F5 (oppervlakte driehoek) en F6 (afgeleide) zijn nu laag 1.
+// F5 wordt alleen toegevoegd bij paragrafen met surplus (S1).
+// F6 wordt alleen toegevoegd bij paragrafen met MO/MK (B5/B6).
 const PARAGRAPHS = [
-    { parNr:'3.1.1', name:'Markt en marktstructuur', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.1.2', name:'Marktvormen', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.1.3', name:'Toepassen', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.2.1', name:'Marktevenwicht', skills:['F1','F2','F3','F4','F5','F6','B1','S1'] },
+    { parNr:'3.1.1', name:'Markt en marktstructuur', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.1.2', name:'Marktvormen', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.1.3', name:'Toepassen', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.2.1', name:'Marktevenwicht', skills:['F1','F2','F3','F4','F5','B1','S1'] },
     { parNr:'3.2.2', name:'Volkomen concurrentie', skills:['F1','F2','F3','F4','F5','F6','B1','B2','B3','B4','B5','B6','B7','S1','S2','S3','S4','E5'] },
     { parNr:'3.2.3', name:'Monopolie', skills:['F1','F2','F3','F4','F5','F6','B1','B2','B3','B5','B6','S1','S2','S3','E7'] },
-    { parNr:'3.2.4', name:'Oligopolie', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.2.5', name:'Monopolistische concurrentie', skills:['F1','F2','F3','F4','F5','F6','B1','B2','B3','B5','B6','B7','S2','S3','S4','E1','E5'] },
+    { parNr:'3.2.4', name:'Oligopolie', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.2.5', name:'Monopolistische concurrentie', skills:['F1','F2','F3','F4','F6','B2','B3','B5','B6','B7','S2','S3','S4','E1','E5'] },
     { parNr:'3.2.6', name:'Marktvormen en hun economische doelmatigheid', skills:['F1','F2','F3','F4','F5','F6','B1','B2','B3','B5','B6','B7','S1','S2','S3','S4','E1','E2','E5','E7'] },
     { parNr:'3.2.7', name:'Toepassen', skills:null }, // all skills
-    { parNr:'3.3.1', name:'De rol van de overheid', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.3.2', name:'Overheidsbeleid', skills:['F1','F2','F3','F4','F5','F6','B1','S1','S5','E4'] },
-    { parNr:'3.3.3', name:'Collectieve goederen', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.3.4', name:'Toepassen', skills:['F1','F2','F3','F4','F5','F6','B1','S1','S5','E4','E6'] },
-    { parNr:'3.4.1', name:'Internationale handel', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.4.2', name:'Inter-industri\u00EBle handel', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.4.3', name:'Intra-industri\u00EBle handel', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.4.4', name:'Internationale productieketens', skills:['F1','F2','F3','F4','F5','F6'] },
-    { parNr:'3.4.5', name:'Internationaal handelsbeleid', skills:['F1','F2','F3','F4','F5','F6','B1','S1','S5','E4','E6'] },
-    { parNr:'3.4.6', name:'Toepassen', skills:['F1','F2','F3','F4','F5','F6','B1','S1','S5','E4','E6'] },
+    { parNr:'3.3.1', name:'De rol van de overheid', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.3.2', name:'Overheidsbeleid', skills:['F1','F2','F3','F4','F5','B1','S1','S5','E4'] },
+    { parNr:'3.3.3', name:'Collectieve goederen', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.3.4', name:'Toepassen', skills:['F1','F2','F3','F4','F5','B1','S1','S5','E4','E6'] },
+    { parNr:'3.4.1', name:'Internationale handel', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.4.2', name:'Inter-industri\u00EBle handel', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.4.3', name:'Intra-industri\u00EBle handel', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.4.4', name:'Internationale productieketens', skills:['F1','F2','F3','F4'] },
+    { parNr:'3.4.5', name:'Internationaal handelsbeleid', skills:['F1','F2','F3','F4','F5','B1','S1','S5','E4','E6'] },
+    { parNr:'3.4.6', name:'Toepassen', skills:['F1','F2','F3','F4','F5','B1','S1','S5','E4','E6'] },
 ];
 
 // ── Find paragraph directory ───────────────────────────────────────
@@ -124,7 +127,7 @@ function generateHTML(parNr, parName, jsxCode) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${parNr} ${parName} \u2013 Reken-spel</title>
+    <title>${parNr} ${parName} \u2013 Wiskundevaardigheden</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -172,7 +175,7 @@ function main() {
             const storageKey = 'skilltree_' + par.parNr;
             const jsxCode = transformJSX(jsxSource, par.skills, storageKey);
             const html = generateHTML(par.parNr, par.name, jsxCode);
-            const outPath = path.join(oefenDir, par.parNr + ' ' + par.name + ' \u2013 reken-spel.html');
+            const outPath = path.join(oefenDir, par.parNr + ' ' + par.name + ' \u2013 wiskundevaardigheden.html');
             fs.writeFileSync(outPath, html, 'utf8');
 
             const size = fs.statSync(outPath).size;
