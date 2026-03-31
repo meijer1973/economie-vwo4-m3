@@ -188,20 +188,21 @@ const GEN = {
   },
 
   B4: (stars) => {
-    const a1 = pick([1, 2]), c1 = ri(4, 10), a2 = pick([1, 2, 3]), c2 = ri(4, 10);
-    // P = a1*Qa + c1, P = a2*Qb + c2 → Qa = (P-c1)/a1, Qb = (P-c2)/a2
-    const minP = Math.max(c1, c2);
-    const testP = minP + pick([2, 4, 6]); // prijs waarbij beide aanbieden
-    const qa = round1((testP - c1) / a1);
-    const qb = round1((testP - c2) / a2);
-    const qTot = round1(qa + qb);
-    if (qa <= 0 || qb <= 0) return GEN.B4(stars);
+    // Collectieve aanbodfunctie opstellen via horizontaal optellen
+    // Kies a1, a2 zodat 1/a1 en 1/a2 nette getallen zijn
+    const a1 = pick([1, 2]), c1 = ri(4, 12);
+    const a2 = pick([1, 2]), c2 = ri(4, 12);
+    // Qa = (1/a1)P − c1/a1,  Qb = (1/a2)P − c2/a2
+    const coefA = round2(1/a1), constA = round2(c1/a1);
+    const coefB = round2(1/a2), constB = round2(c2/a2);
+    const coefCol = round2(coefA + coefB);
+    const constCol = round2(constA + constB);
     return {
-      context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nBepaal het collectieve aanbod bij P = ${testP}.`,
+      context: `Bedrijf A: P = ${a1}Qa + ${c1}\nBedrijf B: P = ${a2}Qb + ${c2}\nStel de collectieve aanbodfunctie op.`,
       steps: [
-        { q:`Schrijf Qa als functie van P en bereken bij P = ${testP}: Qa = (${testP} − ${c1}) / ${a1} = ?`, a: qa, hint:`Qa = (P − ${c1}) / ${a1}. Vul P = ${testP} in.`, expl:`Qa = (${testP} − ${c1}) / ${a1} = ${qa}` },
-        { q:`Schrijf Qb als functie van P en bereken bij P = ${testP}: Qb = (${testP} − ${c2}) / ${a2} = ?`, a: qb, hint:`Qb = (P − ${c2}) / ${a2}. Vul P = ${testP} in.`, expl:`Qb = (${testP} − ${c2}) / ${a2} = ${qb}` },
-        { q:`Collectief aanbod = Qa + Qb = ${qa} + ${qb} = ?`, a: qTot, hint:`Tel de individuele hoeveelheden op bij dezelfde prijs.`, expl:`Qcol = ${qa} + ${qb} = ${qTot}. Dit is horizontaal optellen: bij dezelfde prijs de Q-waarden optellen.` },
+        { q:`Herschrijf het aanbod van A naar Qa = …P − … Wat is de coëfficiënt van P?`, a: coefA, hint:`P = ${a1}Qa + ${c1} → ${a1}Qa = P − ${c1} → Qa = (1/${a1})P − ${c1}/${a1}`, expl:`Qa = ${coefA}P − ${constA}. De coëfficiënt van P is ${coefA}.` },
+        { q:`Herschrijf het aanbod van B naar Qb = …P − … Wat is de coëfficiënt van P?`, a: coefB, hint:`P = ${a2}Qb + ${c2} → Qb = (1/${a2})P − ${c2}/${a2}`, expl:`Qb = ${coefB}P − ${constB}. De coëfficiënt van P is ${coefB}.` },
+        { q:`Horizontaal optellen: Qcol = Qa + Qb. Wat is de coëfficiënt van P in de collectieve aanbodfunctie?`, a: coefCol, hint:`Tel de coëfficiënten op: ${coefA} + ${coefB}`, expl:`Qcol = (${coefA} + ${coefB})P − (${constA} + ${constB}) = ${coefCol}P − ${constCol}` },
       ]
     };
   },
