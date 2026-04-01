@@ -112,9 +112,9 @@ var QUIZ_DATA = {
       "q": "Wat is een sluitingspunt?",
       "options": [
         "Waar P = minimale GVK; beneden dit punt produceert het bedrijf niets",
-        "Waar P = GTK",
-        "Waar het bedrijf maximale winst maakt",
-        "Waar alle bedrijven verdwijnen"
+        "Waar P = minimale GTK; beneden dit punt maakt het bedrijf verlies maar produceert nog",
+        "Waar MO = MK; op dit punt maximaliseert het bedrijf zijn winst of minimaliseert verlies",
+        "Waar alle bedrijven de markt verlaten doordat P onder de lange-termijn evenwichtsprijs zakt"
       ],
       "answer": 0,
       "rationale": "Het sluitingspunt: P < minimale GVK betekent dat elke eenheid verlies oplevert. Producent stopt (Q = 0)."
@@ -203,9 +203,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: P = 30, GTK_min = 20 op Q = 50. Een bedrijf heeft MK = 30 op alle output. Lang termijn?",
       "options": [
         "Bedrijf maakt winst (30 eenheden), zal toetreding aantrekken tot P = 20",
-        "Bedrijf verliest onmiddellijk",
-        "Markt is reeds in lange-termijn evenwicht",
-        "GTK stijgt"
+        "Bedrijf maakt verlies (P < GTK), zal uittreding veroorzaken tot P stijgt naar 30",
+        "Markt is reeds in lange-termijn evenwicht, want MK = P = 30 op Q = 50",
+        "GTK stijgt door nieuwe toetreding waardoor het bedrijf alsnog verlies gaat maken"
       ],
       "answer": 0,
       "rationale": "P = 30 > GTK = 20 betekent winst. Bedrijven treden toe, collectief aanbod stijgt, P daalt naar 20 (nulwinst evenwicht)."
@@ -216,9 +216,9 @@ var QUIZ_DATA = {
       "q": "Waarom is GTK = P in lange-termijn volkomen concurrentie NIET dezelfde als korte-termijn?",
       "options": [
         "Lange termijn: bedrijven treden toe/uit tot nulwinst; korte termijn: productie kan anders zijn",
-        "Er is geen verschil",
-        "Lange termijn heeft hogere kosten",
-        "Korte termijn heeft altijd verlies"
+        "Er is geen verschil: in beide gevallen geldt P = GTK met dezelfde winstuitkomst",
+        "Lange termijn heeft hogere kosten doordat bedrijven meer vaste factoren inzetten",
+        "Korte termijn heeft altijd verlies omdat bedrijven hun schaal niet kunnen aanpassen"
       ],
       "answer": 0,
       "rationale": "Lange termijn: vrije toe/uittreding, P = minimale GTK (nulwinst schaal). Korte termijn: vaste factoren, P kan ≠ GTK."
@@ -229,9 +229,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: Markt Qv = 1000 - 5P. 100 identieke bedrijven met MK = 0,2Q + 10. Collectief aanbod?",
       "options": [
         "Qa = 100 × individuele aanbod = 5000 - 250P (omgekeerd: P = 2 + 0,05Q)",
-        "Qa = 1000 - 5P",
-        "Qa = 100 × MK",
-        "Dit kan niet berekend worden"
+        "Qa = 1000 - 5P (de marktvraag is gelijk aan het collectief aanbod in evenwicht)",
+        "Qa = 100 × (0,2Q + 10) = 20Q + 1000 (vermenigvuldig de MK-functie met 100)",
+        "Dit kan niet berekend worden zonder de GVK-functie van elk bedrijf te kennen"
       ],
       "answer": 0,
       "rationale": "Per bedrijf: MK = P → 0,2Q + 10 = P → Q = 5P - 50. Collectief: Qa = 100(5P - 50) = 500P - 5000."

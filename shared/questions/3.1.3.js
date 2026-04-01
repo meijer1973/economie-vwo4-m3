@@ -76,9 +76,9 @@ var QUIZ_DATA = {
       "q": "In Nederland zijn er ongeveer 50 winkels die hetzelfde merk kaas verkopen. Dit markt is:",
       "options": [
         "Volkomen concurrentie (veel aanbieders, homogeen product)",
-        "Monopolie",
-        "Oligopolie",
-        "Monopolistische concurrentie"
+        "Monopolie (één aanbieder met volledige prijszetting)",
+        "Oligopolie (enkele grote aanbieders die de markt domineren)",
+        "Monopolistische concurrentie (veel aanbieders, heterogeen product)"
       ],
       "answer": 0,
       "rationale": "Veel kleine winkels, hetzelfde product (kaas), vrij lage toetredingsdrempel - dit is volkomen concurrentie."
@@ -89,9 +89,9 @@ var QUIZ_DATA = {
       "q": "De markt voor snelstromend internet in een stad wordt gedomineerd door twee bedrijven. Dit is:",
       "options": [
         "Oligopolie (duopolie) met hoge toetredingsdrempels",
-        "Volkomen concurrentie",
-        "Monopolie",
-        "Monopolistische concurrentie"
+        "Volkomen concurrentie (veel kleine aanbieders, vrije toetreding)",
+        "Monopolie (één aanbieder met wettelijke bescherming)",
+        "Monopolistische concurrentie (veel aanbieders met lichte merkverschillen)"
       ],
       "answer": 0,
       "rationale": "Twee dominante bedrijven, hoge investeringen nodig, veel marktmacht - dit is duopolie (speciale oligopolie)."
@@ -102,9 +102,9 @@ var QUIZ_DATA = {
       "q": "Een stad heeft één waterleidingbedrijf. Dit is een:",
       "options": [
         "Monopolie, vaak natuurlijk vanwege netwerkstructuur",
-        "Oligopolie",
-        "Volkomen concurrentie",
-        "Monopolistische concurrentie"
+        "Oligopolie (enkele aanbieders die onderling concurreren)",
+        "Volkomen concurrentie (veel aanbieders met identiek product)",
+        "Monopolistische concurrentie (veel aanbieders met eigen merk)"
       ],
       "answer": 0,
       "rationale": "Water is een natuurlijk monopolie - concurrentie zou inefficiënt zijn met dubbele leidingen."
@@ -115,9 +115,9 @@ var QUIZ_DATA = {
       "q": "Een online marktplaats heeft honderden kleine verkopers, elk met eigen stijl kleding. Dit is:",
       "options": [
         "Monopolistische concurrentie (veel bedrijven, iets andere producten)",
-        "Volkomen concurrentie",
-        "Oligopolie",
-        "Monopolie"
+        "Volkomen concurrentie (veel bedrijven met identieke producten)",
+        "Oligopolie (enkele grote bedrijven die de markt domineren)",
+        "Monopolie (één platform dat alle handel controleert)"
       ],
       "answer": 0,
       "rationale": "Veel aanbieders maar elk met unieke stijl/merknaam - consumenten kiezen op basis van voorkeur, niet alleen prijs."
@@ -128,9 +128,9 @@ var QUIZ_DATA = {
       "q": "De markt voor voetbalschoenen (Nike, Adidas, Puma, New Balance) heeft ongeveer 4 grote bedrijven met elk 20-25% aandeel en duidelijke merkverschillen. Dit is:",
       "options": [
         "Heterogene oligopolie - enkele bedrijven met verschillende merken",
-        "Volkomen concurrentie",
-        "Homogene oligopolie",
-        "Monopolie"
+        "Volkomen concurrentie (veel kleine aanbieders zonder merkverschillen)",
+        "Homogene oligopolie (enkele bedrijven met identieke producten)",
+        "Monopolie (één bedrijf dat de gehele markt controleert)"
       ],
       "answer": 0,
       "rationale": "Vier grote bedrijven, duidelijke produktdifferentiatie (merken), hoge toetredingsdrempels (kapitaal, marketing) - heterogene oligopolie."
@@ -206,9 +206,9 @@ var QUIZ_DATA = {
       "q": "Een markt heeft 100 bedrijven, maar 5 bedrijven hebben tezamen 60% marktaandeel. Wat soort markt is dit?",
       "options": [
         "Oligopolistische markt (5 grote + veel kleine bedrijven)",
-        "Volkomen concurrentie",
-        "Monopolie",
-        "Volledig gelijk verdeelde markt"
+        "Volkomen concurrentie (100 bedrijven met elk gelijk marktaandeel)",
+        "Monopolie (het grootste bedrijf domineert de gehele markt alleen)",
+        "Monopolistische concurrentie (100 bedrijven met elk een uniek product)"
       ],
       "answer": 0,
       "rationale": "Concentratie bij enkele bedrijven met veel kleine spelers = oligopolistische marktstructuur."
@@ -388,9 +388,9 @@ var QUIZ_DATA = {
       "q": "De prijs van melk stijgt van 1 euro naar 1,20 euro per liter. % prijsstijging = ?",
       "options": [
         "20% ((1,20-1)/1 × 100)",
-        "1,20%",
-        "0,20%",
-        "120%"
+        "1,20% ((1,20/100) × 100 — deelt door 100 i.p.v. oude prijs)",
+        "0,20% ((1,20-1)/100 × 100 — deelt verschil door 100)",
+        "120% ((1,20/1) × 100 — vergeet verschil te nemen)"
       ],
       "answer": 0,
       "rationale": "Prijsverandering % = (nieuw - oud) / oud × 100 = (0,20 / 1) × 100 = 20%."
@@ -401,9 +401,9 @@ var QUIZ_DATA = {
       "q": "Vraag naar appels daalt van 100 ton naar 85 ton. % vraagdaling = ?",
       "options": [
         "15% ((100-85)/100 × 100)",
-        "85%",
-        "1,5%",
-        "0,15%"
+        "85% ((85/100) × 100 — deelt nieuw door oud i.p.v. verschil)",
+        "1,5% ((100-85)/1000 × 100 — deelt door 1000 i.p.v. 100)",
+        "17,6% ((100-85)/85 × 100 — deelt door nieuw i.p.v. oud)"
       ],
       "answer": 0,
       "rationale": "Verandering % = (nieuw - oud) / oud × 100 = (-15 / 100) × 100 = -15%."
@@ -414,9 +414,9 @@ var QUIZ_DATA = {
       "q": "Prijs melk stijgt 20%, vraag daalt 10%. Bereken prijselasticiteit.",
       "options": [
         "Elasticiteit = -10% / 20% = -0,5 (inelastisch)",
-        "0,5",
-        "2,0",
-        "-2,0"
+        "Elasticiteit = 20% / -10% = -2,0 (omgekeerde breuk, fout elastisch)",
+        "Elasticiteit = -10% × 20% = -200 (vermenigvuldigt i.p.v. deelt)",
+        "Elasticiteit = (-10% + 20%) / 2 = 5,0 (neemt gemiddelde i.p.v. breuk)"
       ],
       "answer": 0,
       "rationale": "Elasticiteit = % vraagverandering / % prijsverandering = -10% / 20% = -0,5."
@@ -427,9 +427,9 @@ var QUIZ_DATA = {
       "q": "Een markt heeft 5 bedrijven: A=30%, B=25%, C=20%, D=15%, E=10%. Herfindahl-index = ?",
       "options": [
         "HHI = 30² + 25² + 20² + 15² + 10² = 2.050 (concentratie)",
-        "100",
-        "1.000",
-        "5.000"
+        "HHI = 30 + 25 + 20 + 15 + 10 = 100 (telt aandelen op i.p.v. kwadraten)",
+        "HHI = (30+25+20+15+10)² / 5 = 2.000 (kwadrateert het gemiddelde)",
+        "HHI = 30² + 25² + 20² + 15² + 10² = 5.000 (rekenfout bij kwadrateren)"
       ],
       "answer": 0,
       "rationale": "HHI = 900 + 625 + 400 + 225 + 100 = 2.250. (Rekenfouten in de vraag, maar concept klopt.)"
@@ -440,9 +440,9 @@ var QUIZ_DATA = {
       "q": "Een boer oogst 100 ton graan. De marktprijs is 200 per ton. Door ziekte oogst hij volgende jaar 60 ton. Prijs stijgt naar 250 per ton. Verandering inkomsten?",
       "options": [
         "Vorig jaar: 20.000; Dit jaar: 15.000. Inkomsten dalen met 25% ondanks prijs↑",
-        "Inkomsten stijgen",
-        "Inkomsten blijven gelijk",
-        "Dit kan niet berekend worden"
+        "Vorig jaar: 20.000; Dit jaar: 60 × 250 = 15.000. Inkomsten stijgen door hogere prijs per ton",
+        "Vorig jaar: 20.000; Dit jaar: 20.000. Inkomsten blijven gelijk (prijs compenseert volume)",
+        "Vorig jaar: 20.000; Dit jaar: (100-60) × 250 = 10.000. Inkomsten dalen met 50%"
       ],
       "answer": 0,
       "rationale": "Vorig jaar opbrengst = 100 × 200 = 20.000. Dit jaar = 60 × 250 = 15.000. Daling van 25% (inelastische vraag compenseert niet)."
@@ -453,9 +453,9 @@ var QUIZ_DATA = {
       "q": "Je weet dat een markt volkomen concurrentie is. Wat voorspel je?",
       "options": [
         "Lage prijzen, veel aanbieders, makkelijke toetreding, geen bedrijf domineert",
-        "Hoge prijzen",
-        "Één groot bedrijf",
-        "Geen concurrentie"
+        "Hoge prijzen, weinig aanbieders, sterke merkloyaliteit en productdifferentiatie",
+        "Één groot bedrijf dat de prijs bepaalt en toetreding blokkeert",
+        "Geen prijsconcurrentie, bedrijven spreken onderling prijzen af"
       ],
       "answer": 0,
       "rationale": "Volkomen concurrentie impliceert automatisch laag prijsniveau door veel aanbod en vrije toetreding."
@@ -466,9 +466,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: heterogene oligopolie. Hoe concurreren bedrijven NIET?",
       "options": [
         "Ze vermijden actief prijsconcurrentie (parallel of gewone prijsstelling)",
-        "Ze innoveren wel",
-        "Ze adverteren veel",
-        "Ze maken merkverschillen"
+        "Ze innoveren voortdurend om zich te onderscheiden van concurrenten",
+        "Ze adverteren intensief om merkloyaliteit bij consumenten op te bouwen",
+        "Ze creëren merkverschillen door design, kwaliteit en imago"
       ],
       "answer": 0,
       "rationale": "Oligopolisten vermijden prijsconflict omdat iedereen erop verliest - ze kiezen niet-prijsconcurrentie."
@@ -479,9 +479,9 @@ var QUIZ_DATA = {
       "q": "Een markt evolueert: eerst 5 bedrijven (oligopolie) → nu 500 kleine online verkopers. Effect?",
       "options": [
         "Prijzen dalen, marktmacht verdwijnt, concurrentie stijgt naar quasi-volkomen concurrentie",
-        "Prijzen stijgen",
-        "Marktmacht stijgt",
-        "Geen verandering"
+        "Prijzen stijgen doordat meer bedrijven hogere totale kosten met zich meebrengen",
+        "Marktmacht stijgt omdat de oorspronkelijke bedrijven samen sterker worden",
+        "Geen verandering in prijs of marktmacht, alleen meer variatie in aanbod"
       ],
       "answer": 0,
       "rationale": "Meer aanbieders en makkelijkere toetreding = verschuiving naar meer competitieve markt."
@@ -492,9 +492,9 @@ var QUIZ_DATA = {
       "q": "In homogene oligopolie kunnen bedrijven niet differentiiëren. Hoe voorkomen zij prijsoorlogen?",
       "options": [
         "Stilzwijgende prijsafspraken/parallelgedrag - iedereen kiest dezelfde prijs",
-        "Door te fuseren",
-        "Door innovatie",
-        "Dit kan niet"
+        "Door te fuseren tot één groot bedrijf en zo monopolie te vormen",
+        "Door productinnovatie waarmee ze zich onderscheiden van concurrenten",
+        "Dit kan niet voorkomen worden; prijsoorlogen zijn onvermijdelijk bij homogeen aanbod"
       ],
       "answer": 0,
       "rationale": "Zonder productdifferentiatie is prijsstabilisatie via parallelgedrag de enige optie."
@@ -505,9 +505,9 @@ var QUIZ_DATA = {
       "q": "Waarom werken grote platforms (Amazon, eBay) als monopolistische concurrentie voordeel in voor kleine sellers?",
       "options": [
         "Veel kleine verkopers, elk met unieke assortiment, lage toetreding - vergelijkbaar met monopolistische concurrentie",
-        "Ze zijn monopolies",
-        "Ze zijn volkomen concurrentie",
-        "Dit begrijpen we niet"
+        "Ze zijn monopolies omdat het platform zelf alle prijzen bepaalt en concurrentie blokkeert",
+        "Ze zijn volkomen concurrentie omdat alle verkopers exact dezelfde producten aanbieden",
+        "Ze zijn oligopolies omdat slechts enkele grote verkopers de omzet op het platform domineren"
       ],
       "answer": 0,
       "rationale": "Digitale platforms maken monopolistische concurrentie schaal bereiken door toetreding nul te maken."
@@ -518,9 +518,9 @@ var QUIZ_DATA = {
       "q": "Hoe kunnen kleine bedrijven in oligopolie overleven tegen grote spelers?",
       "options": [
         "Door zich te differentiiëren, niches te vullen, of zeer efficiënt te opereren (niet prijsconcurrentie)",
-        "Door prijzen te verlagen",
-        "Door dezelfde prijs te kiezen",
-        "Dit kunnen zij niet"
+        "Door prijzen structureel te verlagen en de grote spelers in een prijsoorlog te dwingen",
+        "Door dezelfde prijs te kiezen als de grote spelers en parallelgedrag te volgen",
+        "Dit kunnen zij niet; kleine bedrijven worden altijd verdreven door schaalvoordelen"
       ],
       "answer": 0,
       "rationale": "Kleine spelers overleven op niches en differentsiatie, niet op prijsstrijden ze verliezen."
@@ -531,9 +531,9 @@ var QUIZ_DATA = {
       "q": "Waarom gebruiken supermarkten 'loss leaders' (producten onder kostprijs) bij essentiële goederen met lage elasticiteit?",
       "options": [
         "Omdat inelastische vraag + lage prijs trekt klanten voor totale mand (waar margins hoger zijn)",
-        "Om geld te verliezen",
-        "Omdat het efficiënt is",
-        "Dit doen zij niet"
+        "Om concurrenten failliet te laten gaan door onder kostprijs te verkopen (roofprijzen)",
+        "Omdat het wettelijk verplicht is om basisproducten onder kostprijs aan te bieden",
+        "Omdat elastische vraag zorgt dat het lagere prijsverlies ruim wordt gecompenseerd door volume"
       ],
       "answer": 0,
       "rationale": "Klanten komen voor goedkope melk maar kopen ook dure producten - totale mand winstgevend."
@@ -544,9 +544,9 @@ var QUIZ_DATA = {
       "q": "Een markt heeft veel bedrijven maar 3 domineren 80% van vraag. Merken zijn verschillend. Dit is:",
       "options": [
         "Heterogene oligopolie met concurrentie van periferie",
-        "Volkomen concurrentie",
-        "Monopolie",
-        "Homogene oligopolie"
+        "Volkomen concurrentie (veel bedrijven met gelijke marktaandelen)",
+        "Monopolie (één bedrijf met volledige marktcontrole)",
+        "Homogene oligopolie (enkele bedrijven met identieke producten)"
       ],
       "answer": 0,
       "rationale": "Dominantie van enkele met veel kleine spelers en differentsiatie = oligopolie, niet monopolie."
@@ -557,9 +557,9 @@ var QUIZ_DATA = {
       "q": "Waarom geven regeringen subsidies aan boeren zelfs als consumenten die niet betalen (belastingen betalen)?",
       "options": [
         "Omdat landbouwmarkten lage elasticiteit hebben en prijzen fragiel zijn - stabilisatie beschermt boeren en voedselzekerheid",
-        "Omdat subsidies gratis zijn",
-        "Omdat landbouw winstgevend is",
-        "Dit doen zij niet"
+        "Omdat subsidies de exportpositie versterken en zo de handelsbalans verbeteren voor het land",
+        "Omdat landbouw al zeer winstgevend is en subsidies die winsten eerlijk verdelen over boeren",
+        "Omdat zonder subsidies de voedselprijzen zouden dalen en consumenten te veel gaan kopen"
       ],
       "answer": 0,
       "rationale": "Landbouw is onbetrouwbaar (weer, ziekten) en politiek belangrijk - subsidies stabiliseren sector."
@@ -570,9 +570,9 @@ var QUIZ_DATA = {
       "q": "Een markt heeft veel aanbieders, lage toetredingsdrempels, en homogeen product. Longterm verwachting?",
       "options": [
         "Prijzen dalen naar marginale kosten, winsten naar nul (volkomen concurrentie dynamiek)",
-        "Prijzen stijgen",
-        "Één bedrijf overneemt alles",
-        "Onveranderd"
+        "Prijzen stijgen doordat bedrijven samenwerken en afspraken maken over productie",
+        "Één bedrijf overneemt alle concurrenten dankzij schaalvoordelen en wordt monopolist",
+        "Prijzen en winsten blijven onveranderd omdat vraag en aanbod stabiel zijn"
       ],
       "answer": 0,
       "rationale": "Vrije toetreding in volkomen concurrentie leidt tot 'contestable market' met lage lange-termijn winsten."
@@ -583,9 +583,9 @@ var QUIZ_DATA = {
       "q": "Markt: vorig jaar 1000M euro, dit jaar 1200M. Waarvan bedrijf X: vorig 100M, dit jaar 110M. Aandeel verandering?",
       "options": [
         "Vorig 10%, dit 9,17% - aandeel daalde (markt groeit sneller dan bedrijf)",
-        "Aandeel steeg",
-        "Aandeel gelijk",
-        "Dit kan niet berekend worden"
+        "Vorig 10%, dit 11% - aandeel steeg (110M/1000M × 100, vergeet nieuwe marktomvang)",
+        "Vorig 10%, dit 10% - aandeel bleef gelijk (omzet steeg evenredig met markt)",
+        "Vorig 10%, dit 9,17% - maar aandeel steeg omdat bedrijf X in absolute euro's groeide"
       ],
       "answer": 0,
       "rationale": "Aandeel X: vorig=100/1000=10%, dit=110/1200=9,17%. Bedrijf groeit traag, markt snel - aandeel daalt."
@@ -596,9 +596,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: een e-commerce marktplaats met duizenden verkopers, elk met unieke producten, veel toetreding. Dit is:",
       "options": [
         "Monopolistische concurrentie - veel bedrijven, product-differentiatie",
-        "Volkomen concurrentie",
-        "Oligopolie",
-        "Monopolie"
+        "Volkomen concurrentie (veel verkopers met identieke, inwisselbare producten)",
+        "Oligopolie (enkele grote verkopers domineren de marktplaats)",
+        "Monopolie (het platform zelf is de enige aanbieder van alle producten)"
       ],
       "answer": 0,
       "rationale": "Vele kleine verkopers, differentiatie door product (niet alleen prijs) = monopolistische concurrentie."
@@ -609,9 +609,9 @@ var QUIZ_DATA = {
       "q": "Een markt groeit snel. Veel nieuwkomers toetreden. Dit suggereert:",
       "options": [
         "Lage toetredingsdrempels, rendabel voor entrants, waarschijnlijk meer concurrentie",
-        "Hoge toetredingsdrempels",
-        "Monopolie",
-        "Volkomen concurrentie al bestaande"
+        "Hoge toetredingsdrempels die alleen grote bedrijven met veel kapitaal kunnen overwinnen",
+        "Monopolievorming doordat het snelst groeiende bedrijf alle concurrenten verdringt",
+        "Volkomen concurrentie bestond al; nieuwkomers veranderen niets aan de marktstructuur"
       ],
       "answer": 0,
       "rationale": "Veel toetreding = aantrekkelijk = lage drempels of hoge winsten in monopolistische situatie."
@@ -622,9 +622,9 @@ var QUIZ_DATA = {
       "q": "Een luxe artikel (elastisch) ziet prijsstijging van 20%. Wat gebeurt met totale opbrengst?",
       "options": [
         "Opbrengst daalt: vraag daalt veel meer dan 20% (elastisch)",
-        "Opbrengst stijgt",
-        "Opbrengst blijft gelijk",
-        "Dit hangt af van kosten"
+        "Opbrengst stijgt: de hogere prijs compenseert de daling in verkochte hoeveelheid",
+        "Opbrengst blijft gelijk: prijsstijging en vraagdaling heffen elkaar precies op",
+        "Opbrengst hangt af van de productiekosten, niet van de prijselasticiteit"
       ],
       "answer": 0,
       "rationale": "Elastisch product: prijs × hoeveelheid daalt als prijs stijgt (vraag veel elastisch)."
@@ -635,9 +635,9 @@ var QUIZ_DATA = {
       "q": "Waarom hebben veel boeren schulden ondanks dat voedsel nodig is (inelastisch)?",
       "options": [
         "Omdat lage elasticiteit + veel aanbod = prijsval, schulden opstapelen, geen exit",
-        "Omdat boeren duur investeren",
-        "Omdat voedsel gratis zou moeten zijn",
-        "Dit begrijpen we niet"
+        "Omdat boeren steeds duurdere machines kopen maar de opbrengstprijzen niet meestijgen",
+        "Omdat consumenten verwachten dat voedsel goedkoop is en weigeren meer te betalen",
+        "Omdat hoge elasticiteit ervoor zorgt dat consumenten snel minder kopen bij prijsstijging"
       ],
       "answer": 0,
       "rationale": "Landbouwparadox: veel producenten voedsel (inelastisch) leidt tot prijsdepressie en schuld-spiraal."
@@ -648,9 +648,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: WiFi was (2000) nog schaars en duur (monopolie). Nu overal goedkoop (volkomen concurrentie). Dit is gevolg van:",
       "options": [
         "Technologieverbetering (lagere kosten), schaalgroei, veel toetreding",
-        "Regering maakte het gratis",
-        "Consumenten willen niet betalen",
-        "Dit is niet waar"
+        "De overheid heeft WiFi als publiek goed geclassificeerd en gratis gemaakt voor iedereen",
+        "Consumenten weigerden te betalen waardoor aanbieders de prijs moesten verlagen",
+        "Eén groot telecombedrijf werd monopolist en verlaagde de prijs om marktaandeel te winnen"
       ],
       "answer": 0,
       "rationale": "Technologische doorbraak = lagere kosten = lage prijs = volkomen concurrentie markt ontstaat."
@@ -661,9 +661,9 @@ var QUIZ_DATA = {
       "q": "Een markt met twee even grote fabrikanten die identieke auto's maken is:",
       "options": [
         "Homogene duopolie (speciale vorm van oligopolie)",
-        "Volkomen concurrentie",
-        "Monopolie",
-        "Monopolistische concurrentie"
+        "Volkomen concurrentie (twee aanbieders is voldoende voor volledige mededinging)",
+        "Monopolie (twee bedrijven die samenwerken functioneren als één aanbieder)",
+        "Monopolistische concurrentie (twee bedrijven met identieke producten maar eigen merknaam)"
       ],
       "answer": 0,
       "rationale": "Twee aanbieders + homogeen product = homogene duopolie/oligopolie."
@@ -674,9 +674,9 @@ var QUIZ_DATA = {
       "q": "Voedsel heeft lage prijselasticiteit. Betekent dit dat prijzenstijging = meer inkomsten voor boeren?",
       "options": [
         "Ja, meestal - inelastische vraag betekent minder volume verlies dan prijsstijging",
-        "Nee, altijd minder inkomsten",
-        "Dit hangt af van kosten",
-        "Dit is niet waar"
+        "Nee, bij inelastische vraag daalt het volume evenredig mee met de prijsstijging, dus de totale omzet blijft gelijk of daalt",
+        "Dat hangt volledig af van de productiekosten: alleen als de kosten dalen kan de omzet stijgen bij een hogere prijs",
+        "Prijselasticiteit zegt niets over omzet, want omzet wordt uitsluitend bepaald door de hoeveelheid die wordt verkocht"
       ],
       "answer": 0,
       "rationale": "Inelastisch: prijs omhoog, vraag weinig omlaag = opbrengst = P × Q stijgt."
@@ -700,9 +700,9 @@ var QUIZ_DATA = {
       "q": "Een markt groeit maar bedrijf aandelen concentreren (meer naar top). Dit duidt op:",
       "options": [
         "Schaalvoordelen en mogelijk minder toetreding - concentratie stijgt ondanks groei",
-        "Meer concurrentie",
-        "Volkomen concurrentie",
-        "Dit is onmogelijk"
+        "Meer concurrentie doordat nieuwe toetreders de groeiende markt betreden en marktaandeel afsnoepen van gevestigde bedrijven",
+        "Volkomen concurrentie, want in een groeiende markt worden producten steeds homogener en dalen toetredingsdrempels",
+        "Een rekenfout in de concentratieratio: als de markt groeit nemen de absolute aandelen van alle bedrijven evenredig toe"
       ],
       "answer": 0,
       "rationale": "Groei + concentratie = grote bedrijven profiteren meer dan kleine - schaaleffect dominant."
@@ -726,9 +726,9 @@ var QUIZ_DATA = {
       "q": "Waarom gebruiken supermarkten soms prijsdiscriminatie (verschillende prijzen voor identieke producten)?",
       "options": [
         "Om elasticiteitsverschillen uit te buiten - inelastische segmenten betalen meer",
-        "Omdat het goedkoper is",
-        "Dit is illegaal",
-        "Dit doen zij niet"
+        "Omdat het goedkoper is om verschillende prijzen te hanteren dan één uniforme lage prijs",
+        "Dit is illegaal onder de mededingingswet en wordt bestraft door de ACM",
+        "Supermarkten doen dit niet; alle klanten betalen altijd dezelfde prijs voor hetzelfde product"
       ],
       "answer": 0,
       "rationale": "Prijsdiscriminatie maximaliseert winsten: minder prijsgevoelige klanten betalen meer."
@@ -739,9 +739,9 @@ var QUIZ_DATA = {
       "q": "Markt omvang 500M, drie bedrijven met 50%, 30%, 20% aandeel. Wat is waarde van kleinste bedrijf (aandeel van markt)?",
       "options": [
         "100M (20% van 500M)",
-        "150M",
-        "300M",
-        "Dit kan niet berekend worden"
+        "150M (30% van 500M — verwisselt aandeel met het middelste bedrijf)",
+        "250M (50% van 500M — verwisselt aandeel met het grootste bedrijf)",
+        "20M (20% van 100M — rekent met 100M i.p.v. de totale marktomvang)"
       ],
       "answer": 0,
       "rationale": "Bedrijf C waarde = 20% × 500M = 100M euro (marktwaarde × aandeel)."
@@ -752,9 +752,9 @@ var QUIZ_DATA = {
       "q": "Een markt transformeert van monopolie (1 bedrijf, prijs 100) → duopolie (2 bedrijven, prijs 80) → veel kleine (veel bedrijven, prijs 40). Waarom daalt prijs?",
       "options": [
         "Meer concurrentie = minder marktmacht = lagere prijzen progressief naar marginale kosten",
-        "Kwaliteit daalt",
-        "Consumenten willen minder betalen",
-        "Dit is altijd zo"
+        "De kwaliteit van het product daalt doordat meer bedrijven goedkopere varianten op de markt brengen",
+        "Consumenten krijgen meer onderhandelingsmacht naarmate er meer keuze is en dwingen lagere prijzen af via collectief koopgedrag",
+        "De totale vraag in de markt neemt af doordat consumenten het product minder nodig hebben bij meer aanbieders"
       ],
       "answer": 0,
       "rationale": "Concurrentieintensiteit bepaalt prijs: meer aanbieders = lagere prijzen door druk."
@@ -765,9 +765,9 @@ var QUIZ_DATA = {
       "q": "Waarom hebben boeren uit te kampen met 'cobweb' cyclus (prijs omhoog → veel produceren → prijs omlaag → faillissementen)?",
       "options": [
         "Inelastische vraag + lange productietijd = prijsvolatiliteit (overproductie na prijsspike)",
-        "Boeren zijn dwaas",
-        "Voedsel is niet nodig",
-        "Dit begrijpen we niet"
+        "Elastische vraag naar voedsel zorgt ervoor dat kleine prijsdalingen leiden tot enorme volumestijgingen die de markt destabiliseren",
+        "Seizoensgebonden weersomstandigheden zijn de enige oorzaak: in goede jaren is er overproductie en in slechte jaren schaarste",
+        "De overheid veroorzaakt de cyclus door subsidieregelingen die boeren stimuleren om meer te produceren dan de markt vraagt"
       ],
       "answer": 0,
       "rationale": "Cobweb: lage elasticiteit + vertragen in productie = prijs schommelt wild (klassieke landbouwcrisis)."

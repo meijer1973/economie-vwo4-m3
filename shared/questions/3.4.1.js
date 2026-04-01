@@ -677,10 +677,10 @@ var QUIZ_DATA = {
       "difficulty": 2,
       "q": "Handelsbalans vorige drie jaren: -€10, -€5, +€5 miljard. Wat is de trend?",
       "options": [
-        "Verslechterende",
+        "Verslechterende (richting tekort)",
         "Verbeterende (richting overschot)",
-        "Stabiel",
-        "Onbepaald"
+        "Stabiel (schommelt rond nulpunt)",
+        "Onbepaald (te weinig datapunten)"
       ],
       "answer": 1,
       "rationale": "Reeks -€10 → -€5 → +€5 miljard laat duidelijke verbetering zien van tekort naar overschot."

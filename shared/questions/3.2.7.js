@@ -418,9 +418,9 @@ var QUIZ_DATA = {
       "q": "Bertrand duopolie homogeen: beide bedrijven MC = 10. Evenwichtsprijs = ?",
       "options": [
         "P = 10 (prijsoorlog tot MC)",
-        "P = 20",
-        "P = 50",
-        "P = nul"
+        "P = 20 (beide delen de markt op MC + marge)",
+        "P = 50 (beide zetten monopolieprijs neer)",
+        "P = 0 (prijsoorlog gaat door tot nul)"
       ],
       "answer": 0,
       "rationale": "Bertrand homogeen: prijsoorlog ondercut tot P = MC = 10."
@@ -431,9 +431,9 @@ var QUIZ_DATA = {
       "q": "Volkomen concurrentie vs Monopolie: welke markt heeft MEER consumentensurplus?",
       "options": [
         "Volkomen concurrentie (P = MC laag)",
-        "Monopolie (P >> MC hoog)",
-        "Gelijk",
-        "Hangt af van elasticiteit"
+        "Monopolie (P > MC, hogere winst)",
+        "Gelijk, want CS hangt niet af van marktvorm",
+        "Hangt af van de prijselasticiteit van de vraag"
       ],
       "answer": 0,
       "rationale": "VC: P laag, hoog CS. Monopolie: P hoog, laag CS."
@@ -444,9 +444,9 @@ var QUIZ_DATA = {
       "q": "Verschil (CS_monopolie - CS_competitie) is negatief omdat...?",
       "options": [
         "Monopolie prijs hoger, consumenten kopen minder, minder voordeel",
-        "Monopolie kosten hoger",
-        "Consumenten sterker",
-        "Niet altijd waar"
+        "Monopolie heeft hogere productiekosten door inefficiëntie",
+        "Consumenten hebben meer onderhandelingsmacht bij monopolie",
+        "Het verschil is niet altijd negatief, het hangt af van de kostenfunctie"
       ],
       "answer": 0,
       "rationale": "Monopolie: hoger prijs, lagere Q → minder CS totaal. Verschil negatief."
@@ -497,8 +497,8 @@ var QUIZ_DATA = {
       "options": [
         "Verschuift naar boven (meer opbrengsten per eenheid)",
         "Verschuift naar beneden (minder opbrengsten per eenheid)",
-        "Steiler (meer reageren op output-verandering)",
-        "Geen effect"
+        "Wordt steiler (sterker reagerend op output-verandering)",
+        "Blijft onveranderd (elasticiteit beïnvloedt alleen vraag)"
       ],
       "answer": 0,
       "rationale": "MR = P × (1 + 1/ε). Meer elastische vraag (hoger ε) → MR daalt (naar beneden). Output toeneemt richting VC."
@@ -509,9 +509,9 @@ var QUIZ_DATA = {
       "q": "Gegeven Π = P × Q - TC. Als P = 50, Q = 10, TC = 300. Π = ?",
       "options": [
         "Π = 200",
-        "Π = 500",
-        "Π = -300",
-        "Π = 200"
+        "Π = 500 (fout: alleen TO berekend, TC niet afgetrokken)",
+        "Π = −300 (fout: TC als negatieve winst genomen zonder TO erbij op te tellen)",
+        "Π = 550 (fout: P × Q + P in plaats van P × Q − TC)"
       ],
       "answer": 0,
       "rationale": "Π = 50 × 10 - 300 = 500 - 300 = 200."
@@ -587,9 +587,9 @@ var QUIZ_DATA = {
       "q": "Oligopolie Stackelberg: leider Q_L, volger reageert. Output leider > volger?",
       "options": [
         "Ja, leider meer (eerste-mover voordeel)",
-        "Nee, volger meer",
-        "Gelijk",
-        "Hangt af van kosten"
+        "Nee, volger produceert meer (reactie-voordeel)",
+        "Gelijk, beide kiezen dezelfde optimale output",
+        "Hangt af van kostenverschillen tussen bedrijven"
       ],
       "answer": 0,
       "rationale": "Stackelberg leider: kiest eerst, volger reageert met minder. Leider output groter."
@@ -600,9 +600,9 @@ var QUIZ_DATA = {
       "q": "Oligopolie kartel: bedrijf A en B, beide willen meer produceren dan kartel-afspraak. Dit is...?",
       "options": [
         "Stabiel kartel (alle gelukkig)",
-        "Instabiel kartel (incentive afwijken)",
-        "Cartel sterker worden",
-        "Kartel automatisch blijven"
+        "Instabiel kartel (incentive om af te wijken van de afspraak)",
+        "Het kartel wordt sterker doordat beide meer produceren",
+        "Het kartel blijft automatisch bestaan ondanks afwijkingen"
       ],
       "answer": 0,
       "rationale": "Kartel-instabiliteit: elk bedrijf wil meer produceren (meer marktaandeel) dan afgesproken hoeveelheid, gegeven anderen houden zich aan afspraak."
@@ -613,9 +613,9 @@ var QUIZ_DATA = {
       "q": "Kartel output: Q_kartel ≈ Q_monopolie. CS kartel vs CS competitie: kartel CS...?",
       "options": [
         "Groter (lagere prijs door meer output)",
-        "Kleiner (hogere prijs door kartel)",
-        "Gelijk",
-        "Kan niet bepaald worden"
+        "Kleiner (hogere prijs, lagere output door kartel)",
+        "Gelijk (kartel en competitie geven zelfde CS)",
+        "Kan niet bepaald worden zonder kostengegevens"
       ],
       "answer": 0,
       "rationale": "Kartel: Q lager, P hoger → CS lager dan competitie."
@@ -626,9 +626,9 @@ var QUIZ_DATA = {
       "q": "Grafiek volkomen concurrentie lange termijn: bedrijf opereren waar...?",
       "options": [
         "P = MC, op minimale GTC",
-        "P > MC, grote winst",
-        "P = GTC, nul winst op minimum GTC",
-        "P = GTC maar niet minimum, schaalverlies"
+        "P > MC, met aanzienlijke economische winst",
+        "P = GTC, nul winst maar op minimum GTC",
+        "P = GTC maar niet op minimum, dus schaalverlies"
       ],
       "answer": 0,
       "rationale": "Volkomen concurrentie lange termijn: P = MC en bedrijven op minimum GTC (schaaloptimaal, efficiënt)."
@@ -652,9 +652,9 @@ var QUIZ_DATA = {
       "q": "Gegeven elasticiteit ε = -1.5 en P = 50. Hoeveelheid als P stijgt naar 55?",
       "options": [
         "Q daalt proportioneel; ΔQ/Q ≈ -1.5 × 0.1 = -15%",
-        "Q stijgt",
-        "Q constant",
-        "ε bepaalt niet exacte Q"
+        "Q stijgt proportioneel; ΔQ/Q ≈ +1.5 × 0.1 = +15%",
+        "Q blijft constant; elasticiteit geldt alleen bij grote prijsveranderingen",
+        "Q daalt minimaal; ΔQ/Q ≈ -0.1 / 1.5 = -6,7%"
       ],
       "answer": 0,
       "rationale": "ε = (ΔQ/Q) / (ΔP/P). ΔP/P = 5/50 = 10%. ΔQ/Q = ε × 10% = -1.5 × 10% = -15%. Q daalt ~15%."
@@ -665,9 +665,9 @@ var QUIZ_DATA = {
       "q": "GTC = 20 + 100/Q. Minimale GTC bij Q = ?",
       "options": [
         "Q = 5",
-        "Q = 10",
-        "Q = 7",
-        "Q = 15"
+        "Q = 10 (fout: stelt 100/Q = 10 → Q = 10, maar dat minimaliseert GTC niet)",
+        "Q = 7 (fout: schat het minimum halverwege tussen 5 en 10)",
+        "Q = 15 (fout: neemt aan dat een hogere Q altijd een lagere GTC geeft)"
       ],
       "answer": 0,
       "rationale": "dGTC/dQ = -100/Q² = 0 geeft Q → ∞. Herbereken: d(20 + 100/Q)/dQ = -100/Q² = 0 → geen minimum (monotoon dalend). Dit klopt niet; eigenlijk: GTC dalend; min bij Q → ∞ niet praktisch. Antwoord: Q ~ 5."
@@ -678,9 +678,9 @@ var QUIZ_DATA = {
       "q": "Wat kenmerkt perfecte concurrentie?",
       "options": [
         "Veel kleine aanbieders, homogeen product, vrije toe-/uittreding, prijsnemer",
-        "Enkele grote aanbieders, homogeen product",
-        "Één aanbod",
-        "Veel aanbieders, heterogeen product"
+        "Enkele grote aanbieders met een homogeen product en hoge toetredingsbarrières",
+        "Eén aanbieder die de volledige markt bedient zonder concurrentie",
+        "Veel aanbieders met een heterogeen product en enige productdifferentiatie"
       ],
       "answer": 0,
       "rationale": "Volkomen concurrentie: veel bedrijven (geen marktmacht), homogeen product, vrije toetreding, bedrijven zijn prijsnemer."
@@ -743,9 +743,9 @@ var QUIZ_DATA = {
       "q": "Monopolie: MR = 50, MC = 50. Output waar winstmaximaal?",
       "options": [
         "MR = MC = 50, dus Q daar winstmaximaal (geen verdere info Q-niveau)",
-        "Q = 0",
-        "Q = infiniet",
-        "MR ≠ MC dus niet optimaal"
+        "Q = 0, want de monopolist moet stoppen met produceren als MR = MC",
+        "Q = oneindig, want zolang MR = MC kan je blijven produceren",
+        "MR ≠ MC bij dit punt, dus het bedrijf is niet optimaal aan het produceren"
       ],
       "answer": 0,
       "rationale": "Winstmaximalisatie: altijd waar MR = MC. Als beide 50, Q waar beide gelijk (MR-curve = MC-curve snijpunt)."

@@ -535,9 +535,9 @@ var QUIZ_DATA = {
       "q": "Wat gebeurt met reactielinnen als de kosten van Bedrijf A dalen?",
       "options": [
         "Reactielijn A verschuift naar rechts/omhoog (meer output gegeven B's hoeveelheid)",
-        "Reactielijn A verschuift naar links/omlaag",
-        "Reactielijn B verandert ook",
-        "Er gebeurt niets"
+        "Reactielijn A verschuift naar links/omlaag (lagere kosten betekent minder produceren)",
+        "Reactielijn B verandert ook mee omdat B reageert op de kostendaling van A",
+        "Er gebeurt niets omdat reactielijnen alleen verschuiven bij vraagveranderingen"
       ],
       "answer": 0,
       "rationale": "Lagere kosten = hogere optimale output gegeven B's hoeveelheid. Reactielijn verschuift omhoog/naar rechts."

@@ -106,9 +106,9 @@ var QUIZ_DATA = {
       "q": "Wat gebeurt er met het marktevenwicht als het aanbod afneemt?",
       "options": [
         "Evenwichtsprijs stijgt en evenwichtshoeveelheid daalt",
-        "Beide dalen",
-        "De vraag neemt ook af",
-        "Niets verandert aan de prijs"
+        "Evenwichtsprijs daalt en evenwichtshoeveelheid daalt ook, omdat minder aanbod lagere prijzen veroorzaakt",
+        "De vraagcurve verschuift mee naar links, waardoor prijs en hoeveelheid gelijk blijven",
+        "De evenwichtsprijs blijft gelijk maar de evenwichtshoeveelheid stijgt door substitutiemogelijkheden"
       ],
       "answer": 0,
       "rationale": "Lagere aanbod betekent een verschuiving van de aanbodfunctie naar links. Dit leidt tot een lager evenwichtspunt: hogere prijs maar lagere hoeveelheid."
@@ -288,9 +288,9 @@ var QUIZ_DATA = {
       "q": "Welke vorm heeft de marginale opbrengst in volkomen concurrentie?",
       "options": [
         "Horizontaal (constant, gelijk aan prijs)",
-        "Stijgend",
-        "Dalend (omlaag lopend)",
-        "In zigzag"
+        "Stijgend, omdat elke extra eenheid meer opbrengt naarmate de productie groeit",
+        "Dalend, omdat de producent de prijs moet verlagen om meer te verkopen",
+        "Eerst dalend en daarna stijgend, met een minimum bij de evenwichtshoeveelheid"
       ],
       "answer": 0,
       "rationale": "In volkomen concurrentie is de marktprijs voor de individuele producent vast. MO = P en is dus een horizontale lijn."
@@ -353,9 +353,9 @@ var QUIZ_DATA = {
       "q": "Een monopolist heeft MO = 30 - Q. Waarom kan MO ≠ P in monopolie?",
       "options": [
         "Omdat de monopolist de prijs kan zetten en moet prijzen dalen voor meer verkoop",
-        "Omdat monopolisten altijd minder inkomsten hebben",
-        "Omdat MO automatisch gelijk is aan MK",
-        "Dit is onmogelijk"
+        "Omdat de monopolist zoveel marktmacht heeft dat de totale opbrengst altijd lager uitvalt dan bij concurrentie",
+        "Omdat MO per definitie gelijk is aan MK op elk productiepunt, ongeacht de marktvorm",
+        "MO is altijd gelijk aan P, want elke extra verkochte eenheid levert precies de marktprijs op"
       ],
       "answer": 0,
       "rationale": "Een monopolist is prijszetter. Voor meer verkoop moet hij de prijs verlagen, dus MO < P. MO volgt uit de vraagfunctie."
@@ -392,9 +392,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: TK = 2Q² + 5Q + 100 en P = 125 (volkomen concurrentie). Bereken de winstmaximaliserende Q.",
       "options": [
         "Q = 30",
-        "Q = 20",
-        "Q = 15",
-        "Q = 25"
+        "Q = 20 (fout: MK = 2Q + 5 i.p.v. 4Q + 5 → 125 = 2Q + 5 → Q = 60, afgerond naar 20)",
+        "Q = 15 (fout: MO = MK met MK = 8Q + 5 → 125 = 8Q + 5 → Q ≈ 15)",
+        "Q = 25 (fout: vergelijking 125 = 5Q + 5 i.p.v. 4Q + 5 → Q = 24, afgerond naar 25)"
       ],
       "answer": 0,
       "rationale": "MO = P = 125. MK = dTK/dQ = 4Q + 5. MO = MK → 125 = 4Q + 5 → Q = 30."
@@ -418,9 +418,9 @@ var QUIZ_DATA = {
       "q": "Als de vaste kosten stijgen van 1000 naar 2000, wat gebeurt er met het winstmaximalisatieplan?",
       "options": [
         "Q verandert niet; MO = MK regel hangt niet af van vaste kosten",
-        "Q stijgt fors",
-        "Q daalt naar nul",
-        "De prijs moet omhoog"
+        "Q stijgt omdat het bedrijf meer moet verkopen om de hogere vaste kosten te dekken via schaalvoordelen",
+        "Q daalt naar nul omdat de hogere vaste kosten de productie per eenheid onrendabel maken",
+        "De prijs moet omhoog om de extra vaste kosten door te berekenen aan de consument via een hogere marge"
       ],
       "answer": 0,
       "rationale": "Vaste kosten (FK) beïnvloeden niet MK of MO. De optimale Q blijft hetzelfde. Echter, totale winst daalt door hogere FK."
@@ -457,9 +457,9 @@ var QUIZ_DATA = {
       "q": "Wat is een normale goed?",
       "options": [
         "Een goed waarvan de vraag stijgt als inkomens stijgen",
-        "Een goed dat altijd beschikbaar is",
-        "Een goed dat geen vervangers heeft",
-        "Een goed dat door de staat wordt geproduceerd"
+        "Een goed waarvan de vraag daalt als inkomens stijgen, omdat consumenten overstappen op betere alternatieven",
+        "Een goed waarvan de gevraagde hoeveelheid niet verandert bij prijswijzigingen, ongeacht het inkomen",
+        "Een goed waarvan de vraag alleen stijgt als de prijs van het goed zelf daalt"
       ],
       "answer": 0,
       "rationale": "Normale goederen zijn producten waarvan mensen meer willen kopen naarmate ze rijker worden (hogere inkomens → hogere vraag)."
@@ -496,9 +496,9 @@ var QUIZ_DATA = {
       "q": "Waardoor verschuift de aanbodfunctie naar links?",
       "options": [
         "Door stijgende productiekosten; producenten bieden minder aan dezelfde prijs",
-        "Door lagere prijzen",
-        "Door hogere vraag",
-        "Door meer concurrentie"
+        "Door lagere marktprijzen: als de prijs daalt bewegen producenten langs de aanbodcurve naar een lager punt",
+        "Door hogere vraag van consumenten: meer vraag trekt het aanbod mee naar links omdat voorraden opraken",
+        "Door meer concurrenten op de markt: extra aanbieders verdelen het bestaande aanbod waardoor de individuele curve krimpt"
       ],
       "answer": 0,
       "rationale": "Stijgende kosten (lonen, grondstof, energie) maken productie minder winstgevend. Producenten bieden minder aan (verschuiving naar links)."
@@ -509,9 +509,9 @@ var QUIZ_DATA = {
       "q": "Als twee goederen substituten zijn, wat gebeurt er met de vraag naar goed A als de prijs van goed B stijgt?",
       "options": [
         "De vraag naar A stijgt omdat consumenten naar het goedkopere alternatief gaan",
-        "De vraag naar A daalt",
-        "Niets verandert",
-        "De prijs van A zal ook stijgen"
+        "De vraag naar A daalt omdat consumenten bij hogere prijzen in het algemeen minder kopen van alle goederen",
+        "Niets verandert, want substituten reageren alleen op elkaars hoeveelheid, niet op elkaars prijs",
+        "De prijs van A stijgt automatisch mee omdat producenten van A hun prijzen afstemmen op concurrent B"
       ],
       "answer": 0,
       "rationale": "Substituten zijn vervangbare goederen. Stijgt prijs B, dan gaan consumenten naar A (goedkoper). Vraag naar A stijgt (verschuiving naar rechts)."
@@ -561,9 +561,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: Qv = 500 - 3P en Qa = 100 + 2P. De vraag verschuift naar Qv_nieuw = 600 - 3P. Bereken het prisverandering percentage.",
       "options": [
         "Prijs stijgt van 80 naar 100; +25%",
-        "Prijs stijgt van 80 naar 90; +12,5%",
-        "Prijs daalt met 20%",
-        "Prijs blijft gelijk"
+        "Prijs stijgt van 80 naar 90; +12,5% (fout: deelt verschuiving 100 door 5P i.p.v. door 5)",
+        "Prijs daalt van 80 naar 64; −20% (fout: trekt de vraagverschuiving af in plaats van op te tellen)",
+        "Prijs blijft op 80; 0% (fout: gaat ervan uit dat aanbod meeschuift met de vraag)"
       ],
       "answer": 0,
       "rationale": "Eerst: 500 - 3P = 100 + 2P → P = 80. Daarna: 600 - 3P = 100 + 2P → P = 100. Verandering: (100-80)/80 = 25%."
@@ -574,9 +574,9 @@ var QUIZ_DATA = {
       "q": "In een markt stijgt het inkomen van consumenten. Beschrijf het effect op evenwicht als het goed inferieur is.",
       "options": [
         "Vraag daalt (naar links), P en Q dalen allebei",
-        "Vraag stijgt, P stijgt",
-        "Niets verandert",
-        "Aanbod moet afnemen"
+        "Vraag stijgt (naar rechts) en zowel prijs als hoeveelheid stijgen, net als bij een normaal goed",
+        "De vraagcurve blijft gelijk omdat inkomen geen effect heeft op de gevraagde hoeveelheid",
+        "De aanbodcurve verschuift naar links, waardoor de prijs stijgt en de hoeveelheid daalt"
       ],
       "answer": 0,
       "rationale": "Inferieur goed: hoger inkomen → lagere vraag. Vraagcurve verschuift links. Nieuw evenwicht: P en Q beide lager."
@@ -587,9 +587,9 @@ var QUIZ_DATA = {
       "q": "Qv = 1000 - 5P; Qa = 200 + 8P. Aanbod stijgt met 50 eenheden bij elke prijs (Qa_nieuw = 250 + 8P). Bereken effect op evenwichtsprijs.",
       "options": [
         "Prijs daalt van ongeveer 114,3 naar 107,1; daling van ~6,3%",
-        "Prijs stijgt",
-        "Geen verandering in prijs",
-        "Prijs wordt negatief"
+        "Prijs stijgt van 114,3 naar 121,5 omdat extra aanbod de concurrentie verhoogt en producenten hogere marges vragen",
+        "Prijs blijft 114,3 omdat de extra 50 eenheden precies worden geabsorbeerd door de bestaande vraag",
+        "Prijs daalt van 114,3 naar 57,7 omdat het aanbod verdubbelt en de prijs dus halveert"
       ],
       "answer": 0,
       "rationale": "Eerst: 1000 - 5P = 200 + 8P → P ≈ 114,3. Daarna: 1000 - 5P = 250 + 8P → P ≈ 107,1. Daling ≈ 6,3%."
@@ -600,9 +600,9 @@ var QUIZ_DATA = {
       "q": "Hoe wordt evenwicht op de arbeidsmarkt bepaald?",
       "options": [
         "Waar aanbod van arbeid gelijk is aan vraag naar arbeid (aantal werknemers gewenst)",
-        "Door de regering",
-        "Waar iedereen even veel verdient",
-        "Door de grootste werkgever"
+        "Door de regering, die het loon vaststelt op basis van de gemiddelde productiviteit van werknemers in de economie",
+        "Op het punt waar alle werknemers precies evenveel verdienen, ongeacht hun productiviteit of sector",
+        "Door de grootste werkgever in de markt, die als prijszetter het loon bepaalt voor alle andere bedrijven"
       ],
       "answer": 0,
       "rationale": "Op de arbeidsmarkt bepaald evenwicht waar arbeidsaanbod = vraag naar arbeid. Dit leidt tot het evenwichtsloon."
@@ -639,9 +639,9 @@ var QUIZ_DATA = {
       "q": "Als lonen stijgen, wat gebeurt er met het arbeidsaanbod?",
       "options": [
         "Het aanbod stijgt; mensen willen meer arbeidsuren leveren",
-        "Het aanbod daalt",
-        "Niets verandert",
-        "Iedereen stopt met werken"
+        "Het aanbod daalt, want hogere lonen maken vrije tijd relatief aantrekkelijker (inkomenseffect)",
+        "Het aanbod blijft gelijk, omdat het aantal werknemers op de arbeidsmarkt vaststaat",
+        "Het aanbod stijgt eerst maar daalt daarna altijd, ongeacht het loonniveau"
       ],
       "answer": 0,
       "rationale": "Hoger loon betekent meer compensatie per uur. Over het algemeen willen meer mensen werken bij hoger loon (stijgend arbeidsaanbod)."
@@ -652,9 +652,9 @@ var QUIZ_DATA = {
       "q": "Wat is de beroepsbevolking?",
       "options": [
         "Iedereen die werk heeft of werk zoekt",
-        "Alle mensen in het land",
-        "Alleen werkende mensen",
-        "Alleen werkgevers"
+        "Alle inwoners van een land, inclusief kinderen, gepensioneerden en niet-werkenden",
+        "Alleen mensen die op dit moment daadwerkelijk een betaalde baan hebben",
+        "Alleen zelfstandigen en werkgevers die personeel in dienst hebben"
       ],
       "answer": 0,
       "rationale": "De beroepsbevolking (arbeidsaanbod) bestaat uit werkenden + werklozen die actief werk zoeken. Dit is het totale arbeidsaanbod."
@@ -678,9 +678,9 @@ var QUIZ_DATA = {
       "q": "Wat gebeurt er met het evenwichtsloon als de vraag naar arbeid stijgt (meer bedrijven openen)?",
       "options": [
         "Loon stijgt; bedrijven concurreren om werknemers en bieden meer",
-        "Loon daalt",
-        "Loon blijft gelijk",
-        "Werkloosheid stijgt"
+        "Loon daalt omdat meer bedrijven betekent dat het beschikbare budget per werknemer wordt verdeeld over meer werkgevers",
+        "Loon blijft gelijk omdat het arbeidsaanbod zich automatisch aanpast aan de hogere vraag door instroom van nieuwe werknemers",
+        "Werkloosheid stijgt omdat nieuwe bedrijven bestaande werknemers wegkapen en oude bedrijven met vacatures achterblijven"
       ],
       "answer": 0,
       "rationale": "Hogere vraag naar arbeid verschuift de vraagcurve naar rechts. Nieuw evenwicht: hoger loon en meer werkgelegenheid."
@@ -691,9 +691,9 @@ var QUIZ_DATA = {
       "q": "In welk geval ontstaat werkloosheid door een minimumloon boven het evenwicht?",
       "options": [
         "Werkgevers willen minder mensen inhuren (minder vraag), terwijl aanbod gelijk blijft. Ontstaat overschot",
-        "Het minimumloon heeft nooit effect",
-        "Werkloosheid daalt altijd",
-        "Het aanbod daalt automatisch"
+        "Het minimumloon heeft nooit effect op werkloosheid omdat werkgevers altijd evenveel personeel nodig hebben, ongeacht het loonniveau",
+        "Werkloosheid daalt altijd bij een hoger minimumloon omdat werknemers gemotiveerder zijn en de productiviteit stijgt",
+        "Het arbeidsaanbod daalt automatisch mee met het hogere loon omdat minder mensen hoeven te werken om rond te komen"
       ],
       "answer": 0,
       "rationale": "Minimumloon boven evenwicht: werkgevers inhuren minder mensen (movimento langs vraagcurve naar beneden), maar arbeidsaanbod blijft hoog. Werkloosheid stijgt."
@@ -704,9 +704,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: arbeidsaanbod stijgt door immigratie. Wat gebeurt er met evenwicht?",
       "options": [
         "Aanbod verschuift rechts: loon daalt, werkgelegenheid stijgt",
-        "Loon stijgt",
-        "Werkgelegenheid daalt",
-        "Niets verandert"
+        "Loon stijgt omdat immigranten hogere looneisen stellen en zo het gemiddelde loon in de markt omhoog duwen",
+        "Werkgelegenheid daalt omdat immigranten bestaande werknemers verdringen en bedrijven minder vacatures openstellen",
+        "Niets verandert omdat het extra aanbod precies wordt gecompenseerd door extra vraag die immigranten zelf genereren"
       ],
       "answer": 0,
       "rationale": "Meer arbeidsaanbod (rechts shift) leidt tot nieuw evenwicht: lager loon, hogere werkgelegenheid (meer mensen werken)."
@@ -769,9 +769,9 @@ var QUIZ_DATA = {
       "q": "Als P = 20 en Q = 100, bereken de totale opbrengst (TO).",
       "options": [
         "TO = 2000",
-        "TO = 120",
-        "TO = 80",
-        "TO = 5"
+        "TO = 120 (fout: P + Q in plaats van P × Q)",
+        "TO = 80 (fout: Q − P in plaats van P × Q)",
+        "TO = 5 (fout: Q / P in plaats van P × Q)"
       ],
       "answer": 0,
       "rationale": "Totale opbrengst = Prijs × Hoeveelheid = 20 × 100 = 2000."
@@ -782,9 +782,9 @@ var QUIZ_DATA = {
       "q": "Gegeven: TO = 500, Q = 25. Bereken de prijs.",
       "options": [
         "P = 20",
-        "P = 500",
-        "P = 25",
-        "P = 475"
+        "P = 500 (fout: TO zelf als prijs genomen in plaats van TO / Q)",
+        "P = 25 (fout: Q als prijs genomen in plaats van TO / Q)",
+        "P = 475 (fout: TO − Q in plaats van TO / Q)"
       ],
       "answer": 0,
       "rationale": "TO = P × Q → P = TO/Q = 500/25 = 20."
@@ -795,9 +795,9 @@ var QUIZ_DATA = {
       "q": "Als TK = 3000 en Q = 50, bereken de gemiddelde totale kosten (GTK).",
       "options": [
         "GTK = 60",
-        "GTK = 50",
-        "GTK = 3000",
-        "GTK = 0,06"
+        "GTK = 50 (fout: Q als GTK genomen in plaats van TK / Q)",
+        "GTK = 3000 (fout: TK zelf als GTK genomen in plaats van TK / Q)",
+        "GTK = 0,017 (fout: Q / TK berekend in plaats van TK / Q)"
       ],
       "answer": 0,
       "rationale": "GTK = TK/Q = 3000/50 = 60."

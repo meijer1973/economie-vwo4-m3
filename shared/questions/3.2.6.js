@@ -236,9 +236,9 @@ var QUIZ_DATA = {
       "q": "Welke marktvormen bereiken productieve efficiëntie?",
       "options": [
         "Volkomen concurrentie (lange termijn P = GTC minimum) en sterke schaalmogelijkheden",
-        "Alleen monopolie",
-        "Alle marktvormen gelijk",
-        "Geen enkele markt volledig productief efficiënt"
+        "Alleen monopolie (schaalvoordelen zorgen dat de monopolist op het laagste kostenpunt produceert)",
+        "Alle marktvormen bereiken productieve efficiëntie zolang bedrijven winstmaximalisatie nastreven",
+        "Geen enkele marktvorm is volledig productief efficiënt door steeds veranderende marktomstandigheden"
       ],
       "answer": 0,
       "rationale": "Volkomen concurrentie lange termijn: bedrijven opereren op minimum GTC. Monopolie: zelden op minimum GTC."
@@ -431,9 +431,9 @@ var QUIZ_DATA = {
       "q": "Waarom is Harbergerdriehoek klein in oligopolie maar groot in monopolie?",
       "options": [
         "Omdat oligopolie meer bedrijven = meer concurrentie = prijs dichter bij MC",
-        "Omdat monopolie monopolist meer marktmacht = hogere prijs-markup = groter DWL",
-        "Beide waar",
-        "Oligopolie heeft meer DWL"
+        "Omdat de monopolist hogere vaste kosten heeft waardoor het totale welvaartsverlies groter is",
+        "Beide stellingen kloppen: oligopolie heeft meer concurrentie én monopolie heeft meer marktmacht",
+        "Oligopolie heeft juist meer DWL doordat strategisch gedrag tot hogere prijzen leidt dan monopolie"
       ],
       "answer": 0,
       "rationale": "Oligopolie: meer bedrijven, P dichter bij MC, kleinere markup, kleinere Harberger-driehoek. Monopolie: P >> MC, groot verlies."

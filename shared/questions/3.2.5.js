@@ -400,9 +400,9 @@ var QUIZ_DATA = {
       "q": "Korte termijn evenwicht: hoe ordenen MC en oligopolie naar winstmarges?",
       "options": [
         "MC winsten > Oligopolie winsten",
-        "Oligopolie winsten > MC winsten (beide kunnen winst hebben; oligopolie meer marktmacht)",
-        "Gelijk",
-        "Kan niet bepaald worden"
+        "Oligopolie winsten > MC winsten",
+        "Gelijk: beide hebben dezelfde marge",
+        "Niet te bepalen zonder kostendata"
       ],
       "answer": 0,
       "rationale": "Oligopolie heeft meer marktmacht dan MC. Daardoor kunnen oligopolisten betere winsten realiseren (minder concurrentie). MC-bedrijven winnen minder snel."
@@ -621,9 +621,9 @@ var QUIZ_DATA = {
       "q": "Outputefficiëntie korte termijn: Monopolistische concurrentie vs Oligopolie?",
       "options": [
         "MC meer output (meer bedrijven, minder marktmacht per bedrijf)",
-        "Oligopolie meer output (machtiger bedrijven)",
-        "Gelijk output",
-        "MC veel minder output"
+        "Oligopolie meer output (grotere bedrijven produceren elk meer eenheden)",
+        "Gelijke output, want het totale marktaanbod hangt alleen af van de marktvraag",
+        "MC veel minder output doordat productdifferentiatie de efficiëntie verlaagt"
       ],
       "answer": 0,
       "rationale": "MC: veel bedrijven, minder marktmacht elk, dus lagere prijzen relatief, meer totale output. Oligopolie: paar bedrijven, meer marktmacht, hoger prijs, minder output."
@@ -634,9 +634,9 @@ var QUIZ_DATA = {
       "q": "Lange termijn: welke heeft betere consumentensurplus (CS)? MC of Oligopolie?",
       "options": [
         "MC heeft betere CS (lagere prijs in lange termijn nulwinst)",
-        "Oligopolie heeft betere CS",
-        "Gelijk CS",
-        "Hangt af van toetredingsbarrières"
+        "Oligopolie heeft betere CS (schaalvoordelen leiden tot lagere prijzen voor consumenten)",
+        "Gelijk CS, want beide marktvormen convergeren naar dezelfde evenwichtsprijs",
+        "Hangt af van toetredingsbarrières: hoge barrières geven oligopolie juist meer CS"
       ],
       "answer": 0,
       "rationale": "MC lange termijn: veel bedrijven, P = GTC (laag). Oligopolie lange termijn: weinig bedrijven, P > MC (hoog). Dus MC-consument beter af."

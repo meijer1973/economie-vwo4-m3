@@ -732,7 +732,7 @@ var QUIZ_DATA = {
         "€30 miljard tekort",
         "€30 miljard overschot",
         "€50 miljard tekort",
-        "€0"
+        "€0 (in evenwicht)"
       ],
       "answer": 0,
       "rationale": "Handelsbalans dit jaar = 420 - 450 = -30 miljard (tekort)."

@@ -713,9 +713,9 @@ var QUIZ_DATA = {
       "q": "In welke marktvormen spreekt men van 'free entry and exit'?",
       "options": [
         "Volkomen concurrentie en monopolistische concurrentie (lage toetredingsdrempels)",
-        "Monopolie en oligopolie",
-        "Alleen volkomen concurrentie",
-        "Geen van allen"
+        "Monopolie en oligopolie (hoge toetredingsdrempels beschermen gevestigde aanbieders)",
+        "Alleen volkomen concurrentie (homogeen product zonder enige marktmacht per bedrijf)",
+        "Geen van allen (elke marktvorm kent een vorm van toetredingsbeperking)"
       ],
       "answer": 0,
       "rationale": "Vrije toetreding is kenmerk van compet itieve vormen, niet van monopolie/oligopolie."
@@ -739,9 +739,9 @@ var QUIZ_DATA = {
       "q": "Als een markt 5 bedrijven heeft met aandelen 40%, 30%, 20%, 5%, 5%, wat is het aandeel van de top 3?",
       "options": [
         "90% (40+30+20)",
-        "75%",
-        "95%",
-        "80%"
+        "75% (40+30+5)",
+        "95% (40+30+20+5)",
+        "80% (40+20+20)"
       ],
       "answer": 0,
       "rationale": "Top 3 aandelen = 40 + 30 + 20 = 90% van markt."

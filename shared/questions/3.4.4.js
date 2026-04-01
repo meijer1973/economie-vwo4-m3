@@ -822,9 +822,9 @@ var QUIZ_DATA = {
       "q": "Handelswaarde in een value chain: €500. Fragmentatie voegt 3 extra grenzen-overgangen toe. Elk grens-paseren telt in handelsgegevens. Impact op handelsstatistieken?",
       "options": [
         "Handelsgegevens tellen nu €500 × 3 = €1500 (drievoudig), geen reflectie werkelijke waarde",
-        "Handelsgegevens blijven €500",
-        "Handelsgegevens worden €500/3",
-        "Onveranderd"
+        "Handelsgegevens blijven €500 omdat alleen de eindwaarde van het product wordt geregistreerd",
+        "Handelsgegevens worden €500/3 ≈ €167 doordat de waarde over drie grenzen wordt verdeeld",
+        "Onveranderd, want handelsstatistieken corrigeren automatisch voor dubbeltellingen bij fragmentatie"
       ],
       "answer": 0,
       "rationale": "Als €500 waarde 3× over grenzen gaat als onderdeel, telt het 3× in export/importstatistieken, terwijl echte waarde slechts €500 is."
@@ -835,9 +835,9 @@ var QUIZ_DATA = {
       "q": "Waarom hebben fabrikanten voorkeur voor leveranciers dicht bij elkaar in dezelfde regio (cluster)?",
       "options": [
         "Makkelijker monitoring, sneller transport, kennis-spillovers, goede suppliers dicht bij elkaar",
-        "Kosten zijn altijd lager ver weg",
-        "Clusters hebben geen voordeel",
-        "Alleen prijs telt"
+        "Kosten zijn altijd lager bij leveranciers ver weg doordat lonen in andere regio's lager liggen",
+        "Clusters hebben geen voordeel ten opzichte van verspreide leveranciers bij gelijke kwaliteit",
+        "Alleen de inkoopprijs telt bij de keuze voor leveranciers, niet de geografische nabijheid"
       ],
       "answer": 0,
       "rationale": "Industriële clusters (bv. auto's in Stuttgart) bieden voordelen: transport kort, vertrouwensrelaties, arbeiders van andere fabrieken, leveranciersnetwerken."
@@ -848,9 +848,9 @@ var QUIZ_DATA = {
       "q": "Een app-ontwikkelaar in Nederland contracterr softwareingenieur in India. Is dit fragmentatie?",
       "options": [
         "Ja, het is geografisch verspreid werk wat gebruik van internationale communicatie vereist, digitale value chain",
-        "Nee, fragmentatie is alleen fysieke goederen",
-        "Nee, alles in een land",
-        "Fragmentatie bestaat niet voor software"
+        "Nee, fragmentatie betreft alleen fysieke goederen die daadwerkelijk over grenzen worden vervoerd",
+        "Nee, er is geen sprake van fragmentatie omdat beide partijen in hetzelfde project werken",
+        "Fragmentatie bestaat niet voor software omdat digitale producten geen fysieke value chain hebben"
       ],
       "answer": 0,
       "rationale": "Fragmentatie is niet exclusief fysieke goederen; ook diensten/software kunnen verspreid over landen gebeuren."

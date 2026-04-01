@@ -314,9 +314,9 @@ var QUIZ_DATA = {
       "q": "Wat is een subsidie?",
       "options": [
         "Een financiële bijdrage van de overheid om bepaalde activiteiten aan te moedigen",
-        "Een belasting op goederen",
-        "Een verbod op productie",
-        "Een monopolie"
+        "Een heffing die de overheid oplegt aan bedrijven om hun productiekosten te verhogen",
+        "Een wettelijk verbod op de productie van goederen die schadelijk zijn voor consumenten",
+        "Een vergunning die bedrijven nodig hebben om op een bepaalde markt actief te mogen zijn"
       ],
       "answer": 0,
       "rationale": "Subsidies zijn betalingen door overheid aan bedrijven of consumenten om gewenste gedrag aan te stimuleren."
@@ -340,9 +340,9 @@ var QUIZ_DATA = {
       "q": "De overheid heft een accijnzen op benzine. Waarom doet zij dit?",
       "options": [
         "Om vervuiling (negatief extern effect) te internaliseren en brandstofgebruik te verminderen",
-        "Om benzine gratis te maken",
-        "Om bedrijven te helpen",
-        "Om prijzen omlaag te brengen"
+        "Om de winstmarges van benzinestations te verhogen zodat zij meer kunnen investeren",
+        "Om binnenlandse oliemaatschappijen te beschermen tegen buitenlandse concurrentie",
+        "Om de consumentenprijs van benzine te verlagen door productiekosten te dekken"
       ],
       "answer": 0,
       "rationale": "Accijnzen op fossiele brandstoffen corrigeren vervuilingsexternaliteiten door kosten te verhogen."
@@ -353,9 +353,9 @@ var QUIZ_DATA = {
       "q": "Stel een subsidie op zonne-energie. Welk effect?",
       "options": [
         "Zonne-energieproductie stijgt; aanbieders krijgen meer inkomsten; consumenten betalen minder",
-        "Energie wordt duurder",
-        "Zonne-energie verdwijnt",
-        "Alle bedrijven worden energiebedrijven"
+        "De elektriciteitsprijs stijgt doordat subsidies via hogere belastingen worden doorberekend",
+        "Fossiele energiebedrijven profiteren omdat zij ook subsidie ontvangen voor hun productie",
+        "Het totale energieaanbod daalt omdat investeerders overstappen naar andere sectoren"
       ],
       "answer": 0,
       "rationale": "Subsidie verhoogt aanbodprofitabiliteit en verlaagt consumentenprijs, dus consumptie stijgt."
@@ -366,9 +366,9 @@ var QUIZ_DATA = {
       "q": "Een overheid wil vervuiling verminderen. Moet zij belasting op vervuiling heffen of vervuiling subsidiëren?",
       "options": [
         "Belasting heffen; dit maakt vervuiling duurder en ontmoedigt het",
-        "Vervuiling subsidiëren zou vervuiling aanmoedigen, niet ontmoedigen",
-        "Beiden hebben hetzelfde effect",
-        "Niets werkt tegen vervuiling"
+        "Subsidie geven aan schone bedrijven zodat vervuilende bedrijven vanzelf verdwijnen door concurrentie",
+        "Vervuiling verbieden via wetgeving is effectiever dan financiële prikkels via belastingen",
+        "Emissierechten gratis uitdelen aan alle bedrijven zodat de markt zelf het optimum bepaalt"
       ],
       "answer": 0,
       "rationale": "Belasting ontmoedigt vervuiling; subsidie zou het aanmoedigen - dus belasting is het juiste instrument."
@@ -379,9 +379,9 @@ var QUIZ_DATA = {
       "q": "De regering heft een belasting op vliegreizen. Dit verhoogt vluchtprijzen. Wat kan het gevolg zijn?",
       "options": [
         "Minder vliegreizen (en dus minder CO₂-uitstoot) als vraag elastisch is; welvaartsverlies kan ontstaan",
-        "Meer vliegmaatschappijen gaan failliet",
-        "Alle mensen stoppen met vliegen",
-        "Het heeft geen effect"
+        "Vliegmaatschappijen verlagen hun ticketprijzen om klanten te behouden ondanks de belasting",
+        "Het aantal vliegreizen stijgt doordat reizigers anticiperen op verdere prijsverhogingen",
+        "De CO₂-uitstoot blijft gelijk omdat vliegmaatschappijen overstappen op zuinigere vliegtuigen"
       ],
       "answer": 0,
       "rationale": "Belasting op vliegreizen reduceert emissies via lagere vraag, maar creëert welvaartsverlies voor consumenten en bedrijven."
@@ -392,9 +392,9 @@ var QUIZ_DATA = {
       "q": "Wat is netwerksectorregulering?",
       "options": [
         "Staatliche controle op monopoliën in netwerksectoren (water, elektriciteit, telecom) om prijzen en kwaliteit te beschermen",
-        "Vrije marktcontrole over alles",
-        "Verbod op alle bedrijven",
-        "Subsidies voor monopolies"
+        "Het privatiseren van overheidsbedrijven zodat marktwerking de prijzen en kwaliteit automatisch bepaalt",
+        "Het opknippen van grote bedrijven in kleinere eenheden om onderlinge concurrentie op de markt te bevorderen",
+        "Het verstrekken van subsidies aan netwerksectoren zodat zij hun diensten goedkoper kunnen aanbieden"
       ],
       "answer": 0,
       "rationale": "Regulering van netwerksectoren stelt eisen aan natuurlijke monopolies om consumentenbelangen te beschermen."
@@ -405,9 +405,9 @@ var QUIZ_DATA = {
       "q": "Waarom worden netwerksectoren gereglementeerd?",
       "options": [
         "Omdat natuurlijke monopolies ontstaan met hoge vaste kosten en lage marginale kosten",
-        "Omdat marktconcurrentie altijd goed is",
-        "Omdat overheid alles het beste weet",
-        "Omdat bedrijven niet winstgevend zijn"
+        "Omdat er te veel concurrerende aanbieders zijn die de prijs te ver omlaag drukken",
+        "Omdat de overheid zelf de netwerken bezit en winst wil maximaliseren op haar investeringen",
+        "Omdat consumenten zonder regulering niet weten welke aanbieder zij moeten kiezen"
       ],
       "answer": 0,
       "rationale": "Netwerksectoren zijn natuurlijke monopolies; regulering voorkomt monopolieprijzen."
@@ -418,9 +418,9 @@ var QUIZ_DATA = {
       "q": "Welk doel heeft regulering van watervoorziening?",
       "options": [
         "Efficiënte waterdistributie en betaalbare prijzen; de watermaatschappij mag niet exploiteren",
-        "Water gratis maken",
-        "Water produceren zonder kosten",
-        "Monopolie vergroten"
+        "Het creëren van concurrentie tussen waterbedrijven zodat de prijs vanzelf daalt",
+        "Het beperken van het waterverbruik door consumenten via rantsoenering en quota",
+        "Het verhogen van de waterkwaliteit door strengere milieunormen voor rivieren en meren"
       ],
       "answer": 0,
       "rationale": "Waterregulering zorgt dat de monopolist geen onevenredige winsten maakt en service level handhaaft."
@@ -431,9 +431,9 @@ var QUIZ_DATA = {
       "q": "Een elektriciteitsbedrijf is monopolist. De regulator stelt maximale prijs op kosten plus 8% winst. Wat is het effect?",
       "options": [
         "Monopolist kan meer verdienen dan perfecte concurrentie, maar minder dan ongeregeld monopolie",
-        "Bedrijf maakt geen winst",
-        "Bedrijf maakt oneindige winst",
-        "Consumen betalen onredelijk hoog"
+        "Het bedrijf verlaagt zijn productie om de winstmarge te maximaliseren binnen de regulering",
+        "Consumenten betalen dezelfde prijs als bij volkomen concurrentie op de vrije markt",
+        "De regulator dwingt het bedrijf om onder de kostprijs te verkopen waardoor het verlies lijdt"
       ],
       "answer": 0,
       "rationale": "Regulering op cost-plus basis geeft zekerheid maar schept minder innovatieprikkels dan vrije markt."
@@ -444,9 +444,9 @@ var QUIZ_DATA = {
       "q": "Een telecommaatschappij dreigt ruwer netwerk buiten steden te bouwen (onrendabel). Hoe reguleert overheid?",
       "options": [
         "Via universal service obligation: verplichting ook onrendabele gebieden te voorzien van diensten",
-        "Alles gratis zetten",
-        "Bedrijf dwingen winstloos te werken",
-        "Geen regulering; alleen stedelijke gebieden krijgen service"
+        "Door het netwerk te nationaliseren zodat de overheid zelf de uitrol naar het platteland verzorgt",
+        "Door een tweede concurrent toe te laten die zich specialiseert in dunbevolkte regio's",
+        "Door de tarieven in steden te verlagen zodat het bedrijf geen middelen overhoudt voor uitbreiding"
       ],
       "answer": 0,
       "rationale": "Universal service obligations zorgen dat essentiële diensten overal beschikbaar zijn, ook in onrendabele gebieden."
@@ -457,9 +457,9 @@ var QUIZ_DATA = {
       "q": "Een regulator zet elektriciteit tarief op kostprijs. Waarom kan dit problematisch zijn?",
       "options": [
         "Bedrijf verliest prikkel om efficiënt te produceren (X-inefficiency); kosten kunnen gaan stijgen",
-        "Tarief wordt te hoog",
-        "Bedrijf maakt oneindige winst",
-        "Consumenten betalen minder"
+        "Het bedrijf gaat failliet doordat het tarief altijd lager is dan de werkelijke productiekosten",
+        "Consumenten profiteren op lange termijn doordat het bedrijf gedwongen wordt te innoveren",
+        "Het bedrijf verlaagt de kwaliteit van de dienstverlening om de winstmarge te verhogen"
       ],
       "answer": 0,
       "rationale": "Strict cost-regulation schept moral hazard: bedrijf kan kosten verhogen omdat deze doorgegeven worden aan consumenten."
@@ -470,9 +470,9 @@ var QUIZ_DATA = {
       "q": "Waarom voert een regering maximumprijs voor huurwoningen in?",
       "options": [
         "Om huren betaalbaar te houden voor lage-inkomensgroepen",
-        "Om huisbazen meer winst te geven",
-        "Om meer huizen te bouwen",
-        "Om markt beter te laten werken"
+        "Om verhuurders te stimuleren meer huurwoningen op de markt te brengen",
+        "Om de woningmarkt volledig vrij te maken van overheidsinmenging",
+        "Om de bouwsector aan te moedigen nieuwe sociale woningen te realiseren"
       ],
       "answer": 0,
       "rationale": "Huurplafond beschermt huurders tegen onredelike stijgingen."
@@ -483,9 +483,9 @@ var QUIZ_DATA = {
       "q": "Huurplafond onder evenwicht leidt tot schaarste. Hoe wordt toegang bepaald?",
       "options": [
         "Via rijen, voorkeur groepen, of informele markten; niet op basis van willingness-to-pay",
-        "Automatisch efficient",
-        "Via prijsmechanisme altijd",
-        "Markt bepaalt"
+        "Via het prijsmechanisme dat de markt vanzelf weer naar evenwicht brengt ondanks het plafond",
+        "Door verhuurders die hun huurprijs verhogen om de schaarste op te vangen via kwaliteit",
+        "Door de overheid die extra woningen bouwt zodat het vraagoverschot direct verdwijnt"
       ],
       "answer": 0,
       "rationale": "Zonder prijs: andere toewijzingsmechanismen (wachtrijen, discriminatie) ontstaan."
@@ -496,9 +496,9 @@ var QUIZ_DATA = {
       "q": "Minimumloon van €15/uur wordt ingesteld. Gevolgen voor laag-skilled werknemers?",
       "options": [
         "Ambigueus: hogere loon voor ingestelden, maar werkloosheid/automatisering risico; elasticiteit bepaalt netto-effect",
-        "Allemaal beter af",
-        "Allemaal slechter af",
-        "Geen effect"
+        "Alle laag-skilled werknemers profiteren doordat hun koopkracht en werkzekerheid tegelijk stijgen",
+        "Werkgevers profiteren doordat productievere werknemers hogere omzet per gewerkt uur opleveren",
+        "Het effect is verwaarloosbaar omdat de meeste werkgevers al boven het minimumloon betalen"
       ],
       "answer": 0,
       "rationale": "Minimumprijs-effect hangt af van vraag-elasticiteit: hoge elasticiteit → veel werkloosheid."
@@ -509,9 +509,9 @@ var QUIZ_DATA = {
       "q": "Prijsplafond op medicijnen: voordeel voor consumenten?",
       "options": [
         "Ja, medicijnen worden goedkoper (aanvankelijk)",
-        "Nee, medicijnen worden duurder",
-        "Geen effect",
-        "Altijd slecht"
+        "Nee, de consumentenprijs stijgt doordat farmaceuten de belasting doorberekenen",
+        "De prijs blijft gelijk omdat farmaceuten hun winstmarge verlagen zonder prijswijziging",
+        "Consumenten merken weinig doordat zorgverzekeraars de kosten al volledig dekken"
       ],
       "answer": 0,
       "rationale": "Maximumprijs verlaagt consumentenprijs (korteermijn)."
@@ -522,9 +522,9 @@ var QUIZ_DATA = {
       "q": "Prijsplafond op medicijnen: lang-termijn gevolg?",
       "options": [
         "Onderinvestering in R&D; farmaceuten verdienen minder, dus minder innovatie; schade voor patiënten morgen",
-        "Farmaceuten winnen meer",
-        "Meer geneesmiddelen beschikbaar",
-        "Geen langetermijn effect"
+        "Farmaceuten verhogen hun winst doordat zij hun productie efficiënter organiseren onder het plafond",
+        "Het aanbod van geneesmiddelen stijgt doordat nieuwe bedrijven toetreden tot de markt",
+        "De kwaliteit van medicijnen verbetert doordat bedrijven concurreren op effectiviteit in plaats van prijs"
       ],
       "answer": 0,
       "rationale": "Prijs-controle kan innovatieprikkels ondermijnen."
@@ -535,9 +535,9 @@ var QUIZ_DATA = {
       "q": "Waarom heft de overheid accijnzen op alcohol?",
       "options": [
         "Pigouviaanse belasting: internaliseer externe kosten (ziektekosten, ongevallen); ontmoedig overconsumptie",
-        "Inkomsten genereren altijd",
-        "Alcohol duurder maakt",
-        "Bedrijven helpen"
+        "Om de winstgevendheid van binnenlandse brouwerijen en distilleerderijen te vergroten",
+        "Om de concurrentiepositie van alcoholvrije dranken op de markt te verzwakken",
+        "Om de kwaliteit van alcoholische dranken te verhogen via strengere productienormen"
       ],
       "answer": 0,
       "rationale": "Accijns corrigeert negatieve externaliteiten van alcohol-consumptie."
@@ -548,9 +548,9 @@ var QUIZ_DATA = {
       "q": "Stel accijns op benzine = €1/liter. Verwacht effect als vraag stijf (inelastisch)?",
       "options": [
         "Vraag daalt weinig; consument betaalt bijna hele belasting; kleine deadweight loss",
-        "Vraag daalt veel",
-        "Prijs daalt",
-        "Geen effect"
+        "Vraag daalt sterk; producenten dragen het grootste deel van de belasting via lagere marges",
+        "De consumentenprijs daalt doordat benzinestations hun winstmarge verlagen om klanten te houden",
+        "Het welvaartsverlies is groot doordat consumenten massaal overstappen op alternatief vervoer"
       ],
       "answer": 0,
       "rationale": "Inelastische vraag: consument draagt belasting voluit; minimale hoeveelheidsaanpassuing."
@@ -561,9 +561,9 @@ var QUIZ_DATA = {
       "q": "Subsidie op zonnepanelen: doel?",
       "options": [
         "Internaliseer positief extern effect (schone energie); stimuleer investering naar optimaal niveau",
-        "Opbrengsten bedrijven",
-        "Huizen duurder maken",
-        "Geen speciaal doel"
+        "De winstgevendheid van installatiebedrijven verhogen zodat zij meer personeel aannemen",
+        "De woningwaarde verhogen waardoor huiseigenaren meer vermogensbelasting gaan betalen",
+        "De afhankelijkheid van buitenlandse energieleveranciers vergroten via importsubstitutie"
       ],
       "answer": 0,
       "rationale": "Subsidie corrigeert onderinvestering door positieve externaliteit."
@@ -574,9 +574,9 @@ var QUIZ_DATA = {
       "q": "Waarom worden watermaatschappijen gereglementeerd?",
       "options": [
         "Natuurlijk monopolie met essentiële diensten; regulering beschermt consumenten tegen uitbuiting",
-        "Water is gratis altijd",
-        "Regulering maakt waterbedrijf onrendabel",
-        "Geen specifieke reden"
+        "Er zijn te veel concurrenten op de watermarkt waardoor de kwaliteit achteruitgaat",
+        "De overheid wil waterbedrijven dwingen hun winst volledig af te dragen aan de schatkist",
+        "Zonder regulering zou het waterverbruik te laag zijn doordat consumenten water te duur vinden"
       ],
       "answer": 0,
       "rationale": "Essentiële diensten netwerk-monopolie → regulering beschermt publiek belang."
@@ -587,9 +587,9 @@ var QUIZ_DATA = {
       "q": "Regulator stelt elektriciteitsprijs = gemiddelde kostprijzen + 5% winst. Voordeel?",
       "options": [
         "Bedrijf verdient redelijk; consumenten betalen eerlijk; markt blijft stabiel",
-        "Bedrijf maakt geen winst",
-        "Consumenten betalen te veel",
-        "Geen voordeel"
+        "Het bedrijf verlaagt de kwaliteit van de dienstverlening om kosten te besparen binnen de marge",
+        "Consumenten betalen meer dan bij volkomen concurrentie doordat de winstmarge gegarandeerd is",
+        "De regulator verliest controle doordat het bedrijf de werkelijke kosten kan manipuleren"
       ],
       "answer": 0,
       "rationale": "Cost-plus regulering: balans tussen efficientie en eerlijke verdeling."
@@ -600,9 +600,9 @@ var QUIZ_DATA = {
       "q": "Overheid voert voedsel-maximumprijs in vanwege acute schaarste. Gevolgen?",
       "options": [
         "Korte termijn relief maar lange-termijn schaarste; producenten investeren niet, zwarte markten ontstaan; uiteindelijk slechter af",
-        "Altijd goed voor armen",
-        "Prijs blijft normaal",
-        "Markt werkt perfect"
+        "Voedselproducenten verhogen hun productie om de lagere prijs te compenseren met hoger volume; aanbod stijgt dus",
+        "De prijzen blijven stabiel doordat producenten hun winstmarges flexibel aanpassen aan het maximumplafond",
+        "De markt herstelt zichzelf doordat consumenten minder gaan kopen en producenten meer gaan aanbieden"
       ],
       "answer": 0,
       "rationale": "Capped-prijs zonder structurele oorzaak-adressering → nieuw marktfalen."
@@ -613,9 +613,9 @@ var QUIZ_DATA = {
       "q": "Open-Access regulering telecom: concurrenten kunnen op netwerk van dominante speler. Effect?",
       "options": [
         "Voordelig (meer concurrentie) maar schept coördinatie-problemen; dubbele investeringen inefficiënt; balans moeilijk",
-        "Altijd perfect",
-        "Altijd inefficiënt",
-        "Geen effect"
+        "De dominante speler profiteert doordat concurrenten meebetalen aan het onderhoud van het netwerk",
+        "Consumenten merken geen verschil doordat alle aanbieders dezelfde tarieven hanteren op het netwerk",
+        "Het leidt altijd tot lagere prijzen doordat het netwerk efficiënter benut wordt door meer partijen"
       ],
       "answer": 0,
       "rationale": "Open access-regulering: tradeoff tussen concurrentie en netwerk-efficiëntie."
@@ -626,9 +626,9 @@ var QUIZ_DATA = {
       "q": "Waarom voert regering minimumloon in?",
       "options": [
         "Bescherm werknemers tegen uitbuiting; garanteer levensstandaard",
-        "Werknemers willen laag loon altijd",
-        "Bedrijven moeten winnen meer",
-        "Geen reden"
+        "Om de arbeidsproductiviteit te verhogen doordat werknemers harder werken voor meer loon",
+        "Om werkgevers te stimuleren meer personeel aan te nemen via lagere loonkosten",
+        "Om de concurrentiepositie van binnenlandse bedrijven op de wereldmarkt te versterken"
       ],
       "answer": 0,
       "rationale": "Minimumloon beschermt arbeid tegen marktmacht werkgevers (monopsonie-risico)."
@@ -639,9 +639,9 @@ var QUIZ_DATA = {
       "q": "Huurplafond dynamisch: prijs mag stijgen met inflatie maar niet meer. Effect?",
       "options": [
         "Beter dan statisch plafond (stimuleert onderhoudinvesteringen) maar risico schaarste blijft als inflatie-indexing onvoldoende",
-        "Altijd beter",
-        "Nooit beter dan statisch",
-        "Geen verschil"
+        "Slechter dan een statisch plafond doordat verhuurders de inflatie-indexering gebruiken om huren te maximaliseren",
+        "Gelijkwaardig aan een statisch plafond doordat de inflatie op lange termijn altijd naar nul convergeert",
+        "Het dynamisch plafond lost de schaarste volledig op doordat het aanbod meestijgt met de huurprijs"
       ],
       "answer": 0,
       "rationale": "Dynamische regulering: meer flexibiliteit maar risico van verstilde waarde nog."
@@ -652,9 +652,9 @@ var QUIZ_DATA = {
       "q": "Belasting op vervuiling creëert deadweight loss. Waarom accepteert economisch beleid dit?",
       "options": [
         "Deadweight loss van belasting < deadweight loss van niet-corrigeerde externaliteit; netto voordeel maatschappij",
-        "Geen deadweight loss bestaat",
-        "Belasting slecht altijd",
-        "Markt perfect"
+        "De belastingopbrengst compenseert het welvaartsverlies volledig waardoor er geen netto kosten zijn",
+        "Een belasting op vervuiling veroorzaakt altijd meer welvaartsverlies dan de externaliteit zelf",
+        "De markt corrigeert vervuiling vanzelf via concurrentie zodat overheidsingrijpen overbodig is"
       ],
       "answer": 0,
       "rationale": "Second-best analysis: belasting-DWL < externality-DWL; netto positief."
@@ -665,9 +665,9 @@ var QUIZ_DATA = {
       "q": "Maximumprijs op elektriciteit: wie profiteert korteermijn?",
       "options": [
         "Consumenten (lagere rekening)",
-        "Energiebedrijf (hoger volume)",
-        "Overheid (meer inkomsten)",
-        "Niemand"
+        "Het energiebedrijf doordat het hogere volumes verkoopt tegen de maximumprijs",
+        "De overheid doordat zij meer belastinginkomsten ontvangt over het hogere verbruik",
+        "Geen enkele partij doordat de lagere prijs precies gecompenseerd wordt door lager aanbod"
       ],
       "answer": 0,
       "rationale": "Maximumprijs: goedkoper voor consument; bedrijf verdient minder."
@@ -678,9 +678,9 @@ var QUIZ_DATA = {
       "q": "Minimumprijs op boterham (regeeringssteun bakkers): gevolg?",
       "options": [
         "Aanbodoverschot: bakkers willen meer produceren dan consumenten willen kopen; boterhammen bederven; inefficiënt",
-        "Consumenten betalen minder",
-        "Aanbod daalt",
-        "Markt perfect"
+        "Consumenten profiteren doordat bakkers de kwaliteit verhogen om de hogere prijs te rechtvaardigen",
+        "Het aanbod daalt doordat bakkers hun productie verlagen om de prijs hoog te houden",
+        "De markt bereikt snel een nieuw evenwicht doordat consumenten wennen aan de hogere prijs"
       ],
       "answer": 0,
       "rationale": "Minimumprijs boven evenwicht: overschot."
@@ -691,9 +691,9 @@ var QUIZ_DATA = {
       "q": "Subsidie op elektrische auto's: doel?",
       "options": [
         "Internaliseer positief extern effect (lage emissies); stimuleer shift naar groen transport",
-        "Bedrijven verrijken",
-        "Auto's duurder maken",
-        "Geen speciaal doel"
+        "De winstgevendheid van autofabrikanten verhogen zodat zij meer banen creëren in de industrie",
+        "De verkoopprijs van conventionele auto's verhogen zodat consumenten gedwongen worden elektrisch te rijden",
+        "De belastinginkomsten uit wegenbelasting verhogen doordat meer auto's op de weg komen"
       ],
       "answer": 0,
       "rationale": "EV-subsidie: negatieve externaliteit internaliseren."
@@ -704,9 +704,9 @@ var QUIZ_DATA = {
       "q": "Waarom reguleer je telecommunicatie-tarief?",
       "options": [
         "Natuurlijk monopolie met essentiële dienst; zonder regulering: monopolie-prijzen; omgekeerd",
-        "Telecom altijd voordelig",
-        "Regulering maakt duur",
-        "Geen reden"
+        "Er zijn te veel telecombedrijven waardoor de markt inefficiënt wordt door overmatige concurrentie",
+        "De overheid wil telecombedrijven dwingen gratis diensten aan te bieden aan alle huishoudens",
+        "Zonder regulering investeren telecombedrijven te veel in nieuwe technologieën die consumenten niet willen"
       ],
       "answer": 0,
       "rationale": "Telecom-netwerk: natuurlijk monopolie → regulering beschermt consumenten."
@@ -717,9 +717,9 @@ var QUIZ_DATA = {
       "q": "Waarom stelt regering maximumprijs op brandstof in crisissituatie?",
       "options": [
         "Korte-termijn inflatie-controle; beschermen lage-inkomensgroepen; maar lange-termijn schaarste-risico",
-        "Brand stof gratis altijd",
-        "Prijs stijgt altijd",
-        "Markt bepaalt"
+        "Om de winstmarges van oliemaatschappijen te verhogen zodat zij meer kunnen investeren in productie",
+        "Om het brandstofverbruik te stimuleren zodat de economische activiteit op peil blijft",
+        "Om de marktprijs geleidelijk te laten stijgen zodat consumenten tijd hebben om zich aan te passen"
       ],
       "answer": 0,
       "rationale": "Crisissituatie: overheid maxprijs om inflatie in te perken; maar niet duurzaam."
@@ -730,9 +730,9 @@ var QUIZ_DATA = {
       "q": "Luchtvaartmaatschappijen: waarom limiteren overheden slots op luchthavens?",
       "options": [
         "Congestie voorkomen (niet-rivaliteit air space); veiligheid; luchthaveninfra-limiet; inefficiëntie vouorkomen",
-        "Vliegen gratis altijd",
-        "Niemand wil vliegen",
-        "Markt perfect"
+        "Om de winst van luchtvaartmaatschappijen te maximaliseren door het aanbod kunstmatig te beperken",
+        "Om de ticketprijzen te verlagen zodat meer consumenten zich een vliegreis kunnen veroorloven",
+        "Om concurrentie tussen luchtvaartmaatschappijen te elimineren en een eerlijke marktverdeling te creëren"
       ],
       "answer": 0,
       "rationale": "Airport capacity: slot-limitering voorkomen congestie."
@@ -743,9 +743,9 @@ var QUIZ_DATA = {
       "q": "Waarom subsidieert overheid lokaal openbaar vervoer?",
       "options": [
         "Positief extern effect (minder files, vervuiling, gezondheid); onderinvestering markt; subsidie optimaliseert",
-        "Bussen altijd onderhoud",
-        "Mensen willen niet reizen",
-        "Markt goed"
+        "Om vervoersbedrijven winstgevend te maken zodat zij hogere lonen aan chauffeurs kunnen betalen",
+        "Om het autogebruik te stimuleren doordat reizigers het openbaar vervoer als alternatief zien",
+        "Om de infrastructuurkosten van wegenbouw te verlagen door minder verkeer op de snelwegen"
       ],
       "answer": 0,
       "rationale": "OV: externe voordelen → subsidie stimuleert."
@@ -756,9 +756,9 @@ var QUIZ_DATA = {
       "q": "Stel minimumloon wordt ingesteld. Welke groep wordt meest geraakt?",
       "options": [
         "Lage-skill werknemers (risico werkloosheid stijgt bij bindend minimum)",
-        "Hoog-skill werknemers",
-        "Bedrijven altijd",
-        "Consumenten"
+        "Hoogopgeleide werknemers doordat hun relatieve loonvoordeel kleiner wordt",
+        "Grote bedrijven doordat zij het meeste personeel in dienst hebben op minimumloonniveau",
+        "Consumenten doordat alle productprijzen evenredig stijgen met de loonkostenstijging"
       ],
       "answer": 0,
       "rationale": "Lage-skill: meest elastische groep voor werkloosheidsrisico."
@@ -769,9 +769,9 @@ var QUIZ_DATA = {
       "q": "Huurplafond onder marktprijs. Eigenaren minderen investeringen. Gevolg?",
       "options": [
         "Huisjesvoorraat degradeert; onderhoud achterblijft; long-termijn schaarste verergert",
-        "Huizen beter geïnvesteerd",
-        "Eigenaren meer geld",
-        "Markt verbetert"
+        "Eigenaren investeren meer in onderhoud om hun woningen aantrekkelijker te maken voor huurders",
+        "Eigenaren profiteren doordat zij de lagere huurinkomsten fiscaal kunnen aftrekken van de belasting",
+        "De woningmarkt herstelt zich doordat nieuwe bouwprojecten het tekort aan huurwoningen opvangen"
       ],
       "answer": 0,
       "rationale": "Huurplafond → underinvestment onderhoud → voorraat-achteruitgang."
@@ -782,9 +782,9 @@ var QUIZ_DATA = {
       "q": "Elektriciteits-tariefdaling: consument blij. Wat kan bedrijf risico?",
       "options": [
         "Als tarief onder kosten valt: bedrijf kan niet investeren in netwerk-upgrades; lange-termijn problemen",
-        "Bedrijf wint veel winst",
-        "Consumenten betalen altijd minder",
-        "Geen risico"
+        "Het bedrijf verhoogt zijn winst doordat het meer klanten aantrekt met de lagere tarieven",
+        "Consumenten besparen structureel doordat het bedrijf efficiënter gaat werken onder prijsdruk",
+        "De kwaliteit van de dienstverlening verbetert doordat het bedrijf investeert in klanttevredenheid"
       ],
       "answer": 0,
       "rationale": "Price-capping: kan investmentincentives ondermijnen."

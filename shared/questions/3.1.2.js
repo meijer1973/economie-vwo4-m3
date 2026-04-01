@@ -401,9 +401,9 @@ var QUIZ_DATA = {
       "q": "Telefoonnetwerken in Nederland (KPN, Vodafone, T-Mobile) vormen een:",
       "options": [
         "Oligopolie - enkele grote providers domineren",
-        "Monopolie",
-        "Volkomen concurrentie",
-        "Monopolistische concurrentie"
+        "Monopolie (één aanbieder met volledige prijszetting en geen concurrentie)",
+        "Volkomen concurrentie (veel aanbieders met identieke producten en vrije toetreding)",
+        "Monopolistische concurrentie (veel aanbieders met licht gedifferentieerde producten)"
       ],
       "answer": 0,
       "rationale": "Drie grote providers delen de markt - klassieke oligopolie met hoge toetredingsdrempels."
@@ -427,9 +427,9 @@ var QUIZ_DATA = {
       "q": "Elektriciteitsproductie wordt in veel landen beheerd door één bedrijf. Dit is een:",
       "options": [
         "Natuurlijk monopolie (netwerk-effect, hoge infrastructuur)",
-        "Volkomen concurrentie",
-        "Oligopolie",
-        "Monopolistische concurrentie"
+        "Volkomen concurrentie (veel producenten die stroom tegen dezelfde marktprijs leveren)",
+        "Oligopolie (enkele grote producenten die onderling de energiemarkt verdelen)",
+        "Monopolistische concurrentie (veel producenten met elk een uniek energieproduct)"
       ],
       "answer": 0,
       "rationale": "Elektriciteit is een natuurlijk monopolie - concurrentie zou inefficiënt zijn (dubbele leidingen)."
