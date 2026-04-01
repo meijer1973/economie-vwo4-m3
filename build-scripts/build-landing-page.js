@@ -24,8 +24,12 @@ const path = require("path");
 
 const MODULE_BASE = path.join(__dirname, "..");
 
-const ONLY_ID = null;
+const ONLY_ID = "3.2.4"; // Test single paragraaf first; set to null for all
 const DRY_RUN = false;
+
+// Temporarily hide the task rows (basisopgaven, middenopgaven, verrijkingsopgaven)
+// Set to false to show them again
+const HIDE_TASK_ROWS = true;
 
 const PARAGRAAF_DATA = [
   { id: "3.1.1", name: "Markt en marktstructuur", chapter: "3.1", chapterName: "Markten", chapterFull: "Hoofdstuk 1 \u2013 Markten", domain: "teal" },
@@ -142,37 +146,57 @@ function scanFiles(paragraafPath) {
   const result = {
     voorbereiden: { instapquiz: null, voorkennis: null, leesdit: null },
     leren: { presentatie: null, vaardigheden: null, youtube: null, nieuws: null, samenvatting: null },
-    oefenen: { begeleide: null, basis: null, midden: null, verrijking: null },
+    oefenen: { redeneerSpel: null, wiskundevaardigheden: null, begeleide: null, basis: null, midden: null, verrijking: null },
   };
   const vDir = path.join(paragraafPath, "1. Voorbereiden");
   const lDir = path.join(paragraafPath, "2. Leren");
   const oDir = path.join(paragraafPath, "3. Oefenen");
 
   if (fs.existsSync(vDir)) {
-    for (const f of fs.readdirSync(vDir)) {
+    const vFiles = fs.readdirSync(vDir);
+    for (const f of vFiles) {
       if (/instapquiz\.html$/i.test(f)) result.voorbereiden.instapquiz = f;
-      else if (/uitleg voorkennis\.docx$/i.test(f)) result.voorbereiden.voorkennis = f;
+      else if (/uitleg voorkennis\.html$/i.test(f)) result.voorbereiden.voorkennis = f;
       else if (/^Lees dit/i.test(f)) result.voorbereiden.leesdit = f;
+    }
+    // Fallback to .docx if no .html version found
+    if (!result.voorbereiden.voorkennis) {
+      const docx = vFiles.find(f => /uitleg voorkennis\.docx$/i.test(f));
+      if (docx) result.voorbereiden.voorkennis = docx;
     }
   }
   if (fs.existsSync(lDir)) {
-    for (const f of fs.readdirSync(lDir)) {
+    const lFiles = fs.readdirSync(lDir);
+    for (const f of lFiles) {
       if (/presentatie\.pptx$/i.test(f)) result.leren.presentatie = f;
-      else if (/uitleg vaardigheden\.docx$/i.test(f)) result.leren.vaardigheden = f;
+      else if (/uitleg vaardigheden\.html$/i.test(f)) result.leren.vaardigheden = f;
       else if (/youtube.videos\.html$/i.test(f)) result.leren.youtube = f;
       else if (/nieuws met visual\.docx$/i.test(f)) result.leren.nieuws = f;
       else if (/samenvatting\.docx$/i.test(f)) result.leren.samenvatting = f;
     }
+    // Fallback to .docx if no .html version found
+    if (!result.leren.vaardigheden) {
+      const docx = lFiles.find(f => /uitleg vaardigheden\.docx$/i.test(f));
+      if (docx) result.leren.vaardigheden = docx;
+    }
   }
   if (fs.existsSync(oDir)) {
+    // Scan for interactive exercise HTML files directly in the oefenen dir
+    for (const f of fs.readdirSync(oDir)) {
+      if (/redeneer-spel\.html$/i.test(f)) result.oefenen.redeneerSpel = f;
+      else if (/wiskundevaardigheden\.html$/i.test(f)) result.oefenen.wiskundevaardigheden = f;
+    }
+
     const scanExerciseDir = (subDir) => {
       const full = path.join(oDir, subDir);
       if (!fs.existsSync(full)) return null;
-      const files = fs.readdirSync(full).filter(f => f.endsWith(".docx"));
-      const vragen = files.find(f => /vragen\.docx$/i.test(f) && !/antwoorden/i.test(f));
-      const antwoorden = files.find(f => /antwoorden\.docx$/i.test(f));
-      if (!vragen && !antwoorden) return null;
-      return { dir: subDir, vragen, antwoorden };
+      const files = fs.readdirSync(full);
+      const docxFiles = files.filter(f => f.endsWith(".docx"));
+      const vragen = docxFiles.find(f => /vragen\.docx$/i.test(f) && !/antwoorden/i.test(f));
+      const antwoorden = docxFiles.find(f => /antwoorden\.docx$/i.test(f));
+      const interactief = files.find(f => /\.html$/i.test(f));
+      if (!vragen && !antwoorden && !interactief) return null;
+      return { dir: subDir, vragen, antwoorden, interactief };
     };
     result.oefenen.begeleide = scanExerciseDir("begeleide inoefening");
     result.oefenen.basis = scanExerciseDir("basisopgaven");
@@ -540,6 +564,8 @@ const ICONS = {
   star1:     '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none"/><polygon points="12 5 13.85 9.26 18.5 9.85 15.25 12.93 16.05 17.55 12 15.36 7.95 17.55 8.75 12.93 5.5 9.85 10.15 9.26 12 5" fill="currentColor" stroke="none"/>',
   star2:     '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/>',
   hamburger: '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',
+  puzzle:    '<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44A2.5 2.5 0 0 1 2 17.5v-1A2.5 2.5 0 0 1 6.44 14H12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44A2.5 2.5 0 0 0 22 17.5v-1a2.5 2.5 0 0 0-4.44-2.5H12" fill="none" stroke="currentColor" stroke-width="2"/>',
+  layers:    '<path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/>',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -748,26 +774,77 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
 
   const vP = "1. Voorbereiden", lP = "2. Leren", oP = "3. Oefenen";
 
+  // Helper to detect file type from extension
+  const ext = (f) => f ? f.split(".").pop().toLowerCase() : "docx";
+
   const voorbereidenCards = [
     files.voorbereiden.instapquiz ? card(encPath([vP, files.voorbereiden.instapquiz]), ICONS.quiz, "Instapquiz", "Test wat je al weet over deze stof", "html") : "",
-    files.voorbereiden.voorkennis ? card(encPath([vP, files.voorbereiden.voorkennis]), ICONS.book, "Voorkennis", "Herhaal wat je nodig hebt voor deze les", "docx") : "",
+    files.voorbereiden.voorkennis ? card(encPath([vP, files.voorbereiden.voorkennis]), ICONS.book, "Voorkennis", "Herhaal wat je nodig hebt voor deze les", ext(files.voorbereiden.voorkennis)) : "",
     files.voorbereiden.leesdit ? card(encPath([vP, files.voorbereiden.leesdit]), ICONS.info, "Hoe begin ik?", "Wegwijzer als je niet weet waar je moet starten", "docx", "card-guide") : "",
   ].filter(Boolean).join("\n");
 
   const lerenCards = [
     files.leren.presentatie ? card(encPath([lP, files.leren.presentatie]), ICONS.monitor, "Presentatie", "De les-presentatie met kernpunten", "pptx") : "",
-    files.leren.vaardigheden ? card(encPath([lP, files.leren.vaardigheden]), ICONS.doc, "Uitleg vaardigheden", "Stap-voor-stap uitleg van de lesstof", "docx") : "",
+    files.leren.vaardigheden ? card(encPath([lP, files.leren.vaardigheden]), ICONS.doc, "Uitleg vaardigheden", "Stap-voor-stap uitleg van de lesstof", ext(files.leren.vaardigheden)) : "",
     files.leren.youtube ? card(encPath([lP, files.leren.youtube]), ICONS.play, "YouTube-video\u2019s", "Video-uitleg bij de stof", "html") : "",
     files.leren.nieuws ? card(encPath([lP, files.leren.nieuws]), ICONS.newspaper, "Nieuws", "Actueel artikel met verwerkingsvragen", "docx") : "",
     files.leren.samenvatting ? card(encPath([lP, files.leren.samenvatting]), ICONS.check, "Samenvatting", "Overzicht van deze paragraaf", "docx") : "",
   ].filter(Boolean).join("\n");
 
-  const oefenenCards = [
-    exerciseCard(files.oefenen.begeleide, oP, ICONS.users, "Begeleide inoefening", "Oefenen met denkstappen en hints", "card-exercise"),
+  // Interactive exercise cards (full-width flex row)
+  function interactiveCard(href, icon, title, desc) {
+    return `
+        <div class="card card-exercise" style="flex: 1; border-left-color: var(--ch-color, ${dc.main});">
+          <div class="card-icon"><svg viewBox="0 0 24 24">${icon}</svg></div>
+          <div class="card-body"><h3>${title}</h3><p>${desc}</p>
+            <div class="sub-links"><a class="sub-link" href="${href}">Spelen</a></div>
+          </div>
+        </div>`;
+  }
+
+  function begeleidCard(data) {
+    if (!data) return "";
+    const links = [];
+    if (data.interactief) links.push(`<a class="sub-link" href="${encPath([oP, data.dir, data.interactief])}">Interactief</a>`);
+    if (data.vragen) links.push(`<a class="sub-link" href="${encPath([oP, data.dir, data.vragen])}">Vragen (docx)</a>`);
+    if (data.antwoorden) links.push(`<a class="sub-link" href="${encPath([oP, data.dir, data.antwoorden])}">Antwoorden (docx)</a>`);
+    if (!links.length) return "";
+    return `
+        <div class="card card-exercise" style="flex: 1;">
+          <div class="card-icon"><svg viewBox="0 0 24 24">${ICONS.users}</svg></div>
+          <div class="card-body"><h3>Begeleide inoefening</h3><p>Oefenen met denkstappen en hints</p>
+            <div class="sub-links">${links.join("")}</div>
+          </div>
+        </div>`;
+  }
+
+  const interactiveRow = [];
+  if (files.oefenen.redeneerSpel) interactiveRow.push(interactiveCard(encPath([oP, files.oefenen.redeneerSpel]), ICONS.puzzle, "Redeneer-spel", "Train je redeneervaardigheid met 5 spelmodi"));
+  if (files.oefenen.wiskundevaardigheden) interactiveRow.push(interactiveCard(encPath([oP, files.oefenen.wiskundevaardigheden]), ICONS.layers, "Wiskundevaardigheden", "Oefen de wiskundevaardigheden voor deze paragraaf"));
+  const begeleidHTML = begeleidCard(files.oefenen.begeleide);
+  if (begeleidHTML) interactiveRow.push(begeleidHTML);
+
+  const interactiveRowHTML = interactiveRow.length > 0
+    ? `\n      <div style="grid-column: 1 / -1; display: flex; gap: 0.85rem;">${interactiveRow.join("")}\n      </div>`
+    : "";
+
+  // Task rows (basis/midden/verrijking) — can be hidden via HIDE_TASK_ROWS flag
+  const taskCards = [
     exerciseCard(files.oefenen.basis, oP, ICONS.star0, "Basisopgaven", "Standaard opgaven", "card-exercise-normal"),
     exerciseCard(files.oefenen.midden, oP, ICONS.star1, "Middenopgaven", "Kortere set, meer zelfstandig", "card-exercise-normal"),
     exerciseCard(files.oefenen.verrijking, oP, ICONS.star2, "Verrijkingsopgaven", "Extra uitdaging", "card-exercise-normal"),
   ].filter(Boolean).join("\n");
+
+  let taskRowsHTML = "";
+  if (taskCards.trim().length > 0) {
+    if (HIDE_TASK_ROWS) {
+      taskRowsHTML = `\n      <!-- task-rows-hidden: set HIDE_TASK_ROWS = false in build-landing-page.js to restore -->\n      <div style="display:none" class="task-rows-hidden">${taskCards}\n      </div>`;
+    } else {
+      taskRowsHTML = taskCards;
+    }
+  }
+
+  const oefenenCards = [interactiveRowHTML, taskRowsHTML].filter(s => s.trim().length > 0).join("\n");
 
   const hasV = voorbereidenCards.trim().length > 0;
   const hasL = lerenCards.trim().length > 0;
@@ -790,18 +867,19 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
     <div class="card-grid">${voorbereidenCards}</div>
   </div>`;
 
-  if (hasL) bodyHTML += `
-  <div class="section">
-    <div class="section-header"><span class="step-number">2</span><h2>Leren</h2></div>
-    <p class="section-hint">De les doorwerken: presentatie, uitleg en video\u2019s</p>
-    <div class="card-grid">${lerenCards}</div>
-  </div>`;
-
+  // Section order: Oefenen (2) before Leren (3) — students prefer to practice first
   if (hasO) bodyHTML += `
   <div class="section">
-    <div class="section-header"><span class="step-number">3</span><h2>Oefenen</h2></div>
+    <div class="section-header"><span class="step-number">2</span><h2>Oefenen</h2></div>
     <p class="section-hint">Kies het niveau dat bij je past</p>
     <div class="card-grid">${oefenenCards}</div>
+  </div>`;
+
+  if (hasL) bodyHTML += `
+  <div class="section">
+    <div class="section-header"><span class="step-number">3</span><h2>Leren</h2></div>
+    <p class="section-hint">De les doorwerken: presentatie, uitleg en video\u2019s</p>
+    <div class="card-grid">${lerenCards}</div>
   </div>`;
 
   bodyHTML += `
