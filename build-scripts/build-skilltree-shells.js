@@ -31,15 +31,15 @@ const PARAGRAPHS = [
     { parNr:'3.2.6', name:'Marktvormen en hun economische doelmatigheid', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B5','B6','B7','B8','B9','B10','S1','S2','S3','S4','E1','E2','E5','E7'] },
     { parNr:'3.2.7', name:'Toepassen', skills:null }, // all skills
     { parNr:'3.3.1', name:'De rol van de overheid', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.3.2', name:'Overheidsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','E4'] },
+    { parNr:'3.3.2', name:'Overheidsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','S7','S8','S9','E4'] },
     { parNr:'3.3.3', name:'Collectieve goederen', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.3.4', name:'Toepassen', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','E4','E6'] },
-    { parNr:'3.4.1', name:'Internationale handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.4.2', name:'Inter-industri\u00EBle handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.4.3', name:'Intra-industri\u00EBle handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.4.4', name:'Internationale productieketens', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
-    { parNr:'3.4.5', name:'Internationaal handelsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','E4','E6'] },
-    { parNr:'3.4.6', name:'Toepassen', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','E4','E6'] },
+    { parNr:'3.3.4', name:'Toepassen', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','S7','S8','S9','E4','E6'] },
+    { parNr:'3.4.1', name:'Internationale handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10','B11'] },
+    { parNr:'3.4.2', name:'Inter-industri\u00EBle handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10','B11'] },
+    { parNr:'3.4.3', name:'Intra-industri\u00EBle handel', skills:['F1','F2','F3','F4','F7','B8','B9','B10','B11'] },
+    { parNr:'3.4.4', name:'Internationale productieketens', skills:['F1','F2','F3','F4','F7','B8','B9','B10','B11'] },
+    { parNr:'3.4.5', name:'Internationaal handelsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','B11','S1','S5','E4','E6'] },
+    { parNr:'3.4.6', name:'Toepassen', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','B11','S1','S5','E4','E6'] },
 ];
 
 // ── Find paragraph directory ───────────────────────────────────────

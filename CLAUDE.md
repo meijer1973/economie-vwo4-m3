@@ -471,7 +471,7 @@ shared/
   skilltree-ui.js             ← DOM binding layer (browser only)
   skilltree.css               ← Shared styles with CSS custom properties (--st-*)
   skilltree/
-    base-elements.js          ← Pool of all 31 exercise generators
+    base-elements.js          ← Pool of all 35 exercise generators
     3.1.1.js ... 3.4.6.js    ← Per-paragraph data files (20 total)
   tests/
     skilltree-engine.test.js  ← Engine unit tests
@@ -484,13 +484,13 @@ Each reken-spel HTML file is a thin shell in `3. Oefenen/` that loads:
 3. `shared/skilltree-engine.js` → `SkillTreeEngine` class
 4. `shared/skilltree-ui.js` → IIFE, wires engine to DOM
 
-### 31 base elements across 4 layers
+### 35 base elements across 4 layers
 
 | Layer | Name | Count | Skills | Description |
 |-------|------|-------|--------|-------------|
 | 0 | Fundament | 5 | F1–F4, F7 | Pure math, always visible |
-| 1 | Bouwstenen | 12 | B1–B10, F5, F6 | Economic context + L0 prerequisites |
-| 2 | Samengesteld | 6 | S1–S6 | Multi-step, combining L1 skills |
+| 1 | Bouwstenen | 13 | B1–B11, F5, F6 | Economic context + L0 prerequisites |
+| 2 | Samengesteld | 9 | S1–S9 | Multi-step, combining L1 skills |
 | 3 | Eindbazen | 8 | E1–E8 | Full exam-level problems |
 
 ### Global progress

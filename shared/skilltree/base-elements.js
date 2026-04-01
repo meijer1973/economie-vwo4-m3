@@ -1,5 +1,5 @@
 /**
- * SkillTree Base Elements — All 31 exercise generators.
+ * SkillTree Base Elements — All 35 exercise generators.
  * UMD module: sets window.SKILL_TREE_ELEMENTS in browser, module.exports in Node.js.
  */
 (function (root, factory) {
@@ -36,12 +36,16 @@
         { id:'B8', name:'Prijselasticiteit van de vraag', layer:1, needs:['F4'] },
         { id:'B9', name:'Kruiselasticiteit', layer:1, needs:[] },
         { id:'B10', name:'Inkomenselasticiteit', layer:1, needs:[] },
+        { id:'B11', name:'Comparatief voordeel bepalen', layer:1, needs:[] },
         { id:'S1', name:'Surplus berekenen (CS/PS)', layer:2, needs:['B1','F5'] },
         { id:'S2', name:'MO = MK oplossen', layer:2, needs:['B5','B6','F2'] },
         { id:'S3', name:'Winst = TO − TK', layer:2, needs:['B2','B3','F4'] },
         { id:'S4', name:'Break-even (TO = TK)', layer:2, needs:['B2','B3','F2'] },
         { id:'S5', name:'Evenwicht met heffing', layer:2, needs:['B1','F1'] },
         { id:'S6', name:'Collectief aanbod bepalen', layer:2, needs:['B4','F3'] },
+        { id:'S7', name:'Minimumprijs analyseren', layer:2, needs:['B1'] },
+        { id:'S8', name:'Maximumprijs analyseren', layer:2, needs:['B1'] },
+        { id:'S9', name:'Subsidie analyseren', layer:2, needs:['B1','F1'] },
         { id:'E1', name:'Break-even analyse', layer:3, needs:['S4'] },
         { id:'E2', name:'Consumentensurplus', layer:3, needs:['S1'] },
         { id:'E3', name:'Individueel → collectief aanbod', layer:3, needs:['S6'] },
@@ -421,6 +425,112 @@
                 { q: 'Vanaf welke prijs wordt er aangeboden?', a: cInd, hint: 'Schrijf om naar Qi als functie van P. Bij welke P is Qi = 0?', expl: 'Qi = (P \u2212 ' + cInd + ') / ' + aInd + '. Minimumprijs = ' + cInd },
                 { q: 'Bereken Qi per bedrijf bij P = ' + testP + '.', a: qInd, hint: 'Vul P = ' + testP + ' in bij Qi = (P \u2212 ' + cInd + ') / ' + aInd + '.', expl: 'Qi = (' + testP + ' \u2212 ' + cInd + ') / ' + aInd + ' = ' + qInd },
                 { q: 'Bereken het collectieve aanbod bij P = ' + testP + '.', a: qCol, hint: 'Er zijn ' + n + ' identieke bedrijven.', expl: 'Qcol = ' + n + ' \u00D7 ' + qInd + ' = ' + qCol }
+            ]
+        };
+    };
+
+    GEN.S7 = function () {
+        var b = ri(2, 5), d = ri(1, 4), Ps = ri(8, 20);
+        var maxC = Math.min(d * Ps - 1, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 2) return GEN.S7();
+        var c = ri(2, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.S7();
+        var Pmin = Ps + ri(2, 6);
+        var QvMin = alpha - b * Pmin;
+        var QaMin = -c + d * Pmin;
+        if (QvMin <= 0 || QaMin <= 0) return GEN.S7();
+        var overschot = QaMin - QvMin;
+        if (overschot <= 0) return GEN.S7();
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid stelt een minimumprijs van \u20AC' + Pmin + '.\nAnalyseer het effect.',
+            steps: [
+                { q: 'Bereken de evenwichtsprijs zonder overheidsingrijpen.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
+                { q: 'Bereken de gevraagde hoeveelheid bij de minimumprijs.', a: QvMin, hint: 'Vul P = ' + Pmin + ' in bij Qv.', expl: 'Qv = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pmin + ' = ' + QvMin },
+                { q: 'Bereken de aangeboden hoeveelheid bij de minimumprijs.', a: QaMin, hint: 'Vul P = ' + Pmin + ' in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '\u00D7' + Pmin + ' = ' + QaMin },
+                { q: 'Bereken het overschot op de markt.', a: overschot, hint: 'Overschot = aanbod \u2212 vraag.', expl: 'Overschot = ' + QaMin + ' \u2212 ' + QvMin + ' = ' + overschot }
+            ]
+        };
+    };
+
+    GEN.S8 = function () {
+        var b = ri(2, 5), d = ri(1, 4), Ps = ri(10, 25);
+        var maxC = Math.min(d * Ps - 1, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 2) return GEN.S8();
+        var c = ri(2, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.S8();
+        var Pmax = Ps - ri(2, Math.min(6, Ps - 2));
+        if (Pmax <= 0) return GEN.S8();
+        var QvMax = alpha - b * Pmax;
+        var QaMax = -c + d * Pmax;
+        if (QaMax <= 0) return GEN.S8();
+        var tekort = QvMax - QaMax;
+        if (tekort <= 0) return GEN.S8();
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid stelt een maximumprijs van \u20AC' + Pmax + '.\nAnalyseer het effect.',
+            steps: [
+                { q: 'Bereken de evenwichtsprijs zonder overheidsingrijpen.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
+                { q: 'Bereken de gevraagde hoeveelheid bij de maximumprijs.', a: QvMax, hint: 'Vul P = ' + Pmax + ' in bij Qv.', expl: 'Qv = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pmax + ' = ' + QvMax },
+                { q: 'Bereken de aangeboden hoeveelheid bij de maximumprijs.', a: QaMax, hint: 'Vul P = ' + Pmax + ' in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '\u00D7' + Pmax + ' = ' + QaMax },
+                { q: 'Bereken het tekort op de markt.', a: tekort, hint: 'Tekort = vraag \u2212 aanbod.', expl: 'Tekort = ' + QvMax + ' \u2212 ' + QaMax + ' = ' + tekort }
+            ]
+        };
+    };
+
+    GEN.S9 = function () {
+        var b = ri(2, 5), d = ri(1, 4), Ps = ri(10, 25);
+        var maxC = Math.min(d * Ps - 1, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 3) return GEN.S9();
+        var c = ri(3, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.S9();
+        var subsidie = ri(2, 8);
+        var newC = c - d * subsidie;
+        var newPs = round1((alpha + newC) / (b + d));
+        var newQs = round1(alpha - b * newPs);
+        if (newQs <= 0 || newPs <= 0) return GEN.S9();
+        var totaalSubsidie = round1(subsidie * newQs);
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid geeft een subsidie van \u20AC' + subsidie + ' per stuk aan de producent.\nBereken het nieuwe evenwicht.',
+            steps: [
+                { q: 'Wat is de nieuwe constante in de aanbodfunctie na de subsidie?', a: newC, hint: 'De producent ontvangt P + ' + subsidie + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P + ' + subsidie + ') = ' + newC + ' + ' + d + 'P' },
+                { q: 'Bereken de nieuwe evenwichtsprijs.', a: newPs, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op naar P.', expl: alpha + ' \u2212 ' + b + 'P = ' + newC + ' + ' + d + 'P \u2192 P* = ' + newPs },
+                { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: newQs, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + newPs + ' = ' + newQs },
+                { q: 'Bereken de totale subsidie-uitgaven van de overheid.', a: totaalSubsidie, hint: 'Totale subsidie = subsidie per stuk \u00D7 hoeveelheid.', expl: 'Totaal = ' + subsidie + ' \u00D7 ' + newQs + ' = ' + totaalSubsidie }
+            ]
+        };
+    };
+
+    GEN.B11 = function () {
+        var landen = [
+            ['Nederland', 'Duitsland'], ['Frankrijk', 'Spanje'],
+            ['Japan', 'Zuid-Korea'], ['Belgi\u00EB', 'Denemarken']
+        ];
+        var producten = [
+            ['kaas', 'wijn'], ['auto\u2019s', 'kleding'],
+            ['elektronica', 'textiel'], ['machines', 'voedsel']
+        ];
+        var landPaar = pick(landen);
+        var prodPaar = pick(producten);
+        // Land 1 can produce maxA1 of product A or maxB1 of product B
+        var maxA1 = ri(3, 12) * 10, maxB1 = ri(3, 12) * 10;
+        var maxA2 = ri(3, 12) * 10, maxB2 = ri(3, 12) * 10;
+        // Alternatieve kosten product A = hoeveel B je opgeeft per eenheid A
+        var akA1 = round2(maxB1 / maxA1);
+        var akA2 = round2(maxB2 / maxA2);
+        // Ensure different comparative advantages (not equal)
+        if (akA1 === akA2) return GEN.B11();
+        var laagsteAK = akA1 < akA2 ? akA1 : akA2;
+        return {
+            context: landPaar[0] + ' kan ' + maxA1 + ' ' + prodPaar[0] + ' of ' + maxB1 + ' ' + prodPaar[1] + ' produceren.\n' + landPaar[1] + ' kan ' + maxA2 + ' ' + prodPaar[0] + ' of ' + maxB2 + ' ' + prodPaar[1] + ' produceren.\nBepaal het comparatief voordeel bij ' + prodPaar[0] + '.',
+            steps: [
+                { q: 'Bereken de alternatieve kosten van ' + prodPaar[0] + ' voor ' + landPaar[0] + ' (in eenheden ' + prodPaar[1] + ').', a: akA1, hint: 'Hoeveel ' + prodPaar[1] + ' geeft ' + landPaar[0] + ' op per eenheid ' + prodPaar[0] + '? Deel ' + maxB1 + ' door ' + maxA1 + '.', expl: 'AK = ' + maxB1 + ' / ' + maxA1 + ' = ' + akA1 + ' ' + prodPaar[1] + ' per ' + prodPaar[0] },
+                { q: 'Bereken de alternatieve kosten van ' + prodPaar[0] + ' voor ' + landPaar[1] + ' (in eenheden ' + prodPaar[1] + ').', a: akA2, hint: 'Hoeveel ' + prodPaar[1] + ' geeft ' + landPaar[1] + ' op per eenheid ' + prodPaar[0] + '? Deel ' + maxB2 + ' door ' + maxA2 + '.', expl: 'AK = ' + maxB2 + ' / ' + maxA2 + ' = ' + akA2 + ' ' + prodPaar[1] + ' per ' + prodPaar[0] },
+                { q: 'Wat zijn de laagste alternatieve kosten? (het land met comparatief voordeel)', a: laagsteAK, hint: 'Vergelijk de twee alternatieve kosten. De laagste wint.', expl: 'Laagste AK = ' + laagsteAK + ', dus ' + (akA1 < akA2 ? landPaar[0] : landPaar[1]) + ' heeft het comparatief voordeel bij ' + prodPaar[0] + '.' }
             ]
         };
     };
