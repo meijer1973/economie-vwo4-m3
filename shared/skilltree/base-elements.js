@@ -1,5 +1,5 @@
 /**
- * SkillTree Base Elements — All 27 exercise generators.
+ * SkillTree Base Elements — All 31 exercise generators.
  * UMD module: sets window.SKILL_TREE_ELEMENTS in browser, module.exports in Node.js.
  */
 (function (root, factory) {
@@ -23,15 +23,19 @@
         { id:'F2', name:'Vergelijking oplossen', layer:0, needs:[] },
         { id:'F3', name:'Functie omschrijven (P↔Q)', layer:0, needs:[] },
         { id:'F4', name:'Substitueren', layer:0, needs:[] },
+        { id:'F7', name:'Snijpunt met P-as berekenen', layer:0, needs:[] },
         { id:'B1', name:'Evenwichtsprijs & -hoeveelheid', layer:1, needs:['F1','F2'] },
         { id:'B2', name:'TO-functie opstellen', layer:1, needs:['F1','F3'] },
         { id:'B3', name:'TK-functie herkennen', layer:1, needs:['F1'] },
-        { id:'B4', name:'Horizontaal optellen', layer:1, needs:['F3'] },
+        { id:'B4', name:'Collectief aanbod', layer:1, needs:['F3'] },
         { id:'F5', name:'Oppervlakte driehoek', layer:1, needs:['F4'] },
         { id:'F6', name:'Afgeleide bepalen', layer:1, needs:['F1'] },
         { id:'B5', name:'MO bepalen', layer:1, needs:['F6','B2'] },
         { id:'B6', name:'MK bepalen', layer:1, needs:['F6','B3'] },
         { id:'B7', name:'GTK bepalen', layer:1, needs:['B3'] },
+        { id:'B8', name:'Prijselasticiteit van de vraag', layer:1, needs:['F4'] },
+        { id:'B9', name:'Kruiselasticiteit', layer:1, needs:[] },
+        { id:'B10', name:'Inkomenselasticiteit', layer:1, needs:[] },
         { id:'S1', name:'Surplus berekenen (CS/PS)', layer:2, needs:['B1','F5'] },
         { id:'S2', name:'MO = MK oplossen', layer:2, needs:['B5','B6','F2'] },
         { id:'S3', name:'Winst = TO − TK', layer:2, needs:['B2','B3','F4'] },
@@ -114,8 +118,7 @@
         return {
             context: 'Bereken de oppervlakte van een driehoek met basis = ' + base + ' en hoogte = ' + height + '.',
             steps: [
-                { q: 'Bereken basis \u00D7 hoogte.', a: base * height, hint: base + ' \u00D7 ' + height + ' = ?', expl: base + ' \u00D7 ' + height + ' = ' + (base * height) },
-                { q: 'Bereken de oppervlakte.', a: area, hint: 'De oppervlakte van een driehoek is de helft van basis \u00D7 hoogte.', expl: 'Oppervlakte = \u00BD \u00D7 ' + (base * height) + ' = ' + area }
+                { q: 'Bereken de oppervlakte (\u00BD \u00D7 basis \u00D7 hoogte).', a: area, hint: 'Oppervlakte = \u00BD \u00D7 ' + base + ' \u00D7 ' + height, expl: 'Oppervlakte = \u00BD \u00D7 ' + base + ' \u00D7 ' + height + ' = ' + area }
             ]
         };
     };
@@ -128,6 +131,18 @@
                 { q: 'Wat is de afgeleide van ' + a + 'Q\u00B2? Geef de co\u00EBffici\u00EBnt van Q.', a: 2 * a, hint: 'Bij differenti\u00EBren: vermenigvuldig de co\u00EBffici\u00EBnt met de macht.', expl: a + 'Q\u00B2 \u2192 ' + (2 * a) + 'Q' },
                 { q: 'Wat is de afgeleide van ' + b + 'Q?', a: b, hint: 'De afgeleide van bQ is gewoon b.', expl: b + 'Q \u2192 ' + b },
                 { q: 'Wat is de afgeleide van de constante ' + c + '?', a: 0, hint: 'Wat gebeurt er met een constante bij differenti\u00EBren?', expl: 'De afgeleide van een constante is 0.' }
+            ]
+        };
+    };
+
+    GEN.F7 = function () {
+        var b = pick([2, 3, 4, 5]), alphaDiv = ri(8, 25), alpha = b * alphaDiv;
+        var d = pick([1, 2, 3, 4]), cDiv = ri(3, 12), c = d * cDiv;
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nBepaal de snijpunten met de P-as.',
+            steps: [
+                { q: 'Bij welke prijs is de gevraagde hoeveelheid nul? (snijpunt vraaglijn met P-as)', a: alphaDiv, hint: 'Vul Qv = 0 in en los op naar P.', expl: '0 = ' + alpha + ' \u2212 ' + b + 'P \u2192 P = ' + alpha + '/' + b + ' = ' + alphaDiv },
+                { q: 'Bij welke prijs begint het aanbod? (snijpunt aanbodlijn met P-as)', a: cDiv, hint: 'Vul Qa = 0 in en los op naar P.', expl: '0 = \u2212' + c + ' + ' + d + 'P \u2192 P = ' + c + '/' + d + ' = ' + cDiv }
             ]
         };
     };
@@ -228,6 +243,79 @@
             steps: [
                 { q: 'Bereken eerst TK bij Q = ' + Q + '.', a: tk, hint: 'Vul Q = ' + Q + ' in de kostenfunctie in en reken stap voor stap uit.', expl: 'TK = ' + a + '\u00D7' + (Q * Q) + ' + ' + (b * Q) + ' + ' + c + ' = ' + tk },
                 { q: 'Bereken nu GTK.', a: gtk, hint: 'GTK = TK gedeeld door Q.', expl: 'GTK = ' + tk + ' \u00F7 ' + Q + ' = ' + gtk }
+            ]
+        };
+    };
+
+    GEN.B8 = function () {
+        var P1 = pick([5, 8, 10, 12, 15, 20, 25, 40, 50]);
+        var pctP = pick([5, 10, 20, 25, 50]);
+        var deltaP = P1 * pctP / 100;
+        if (deltaP < 1 || deltaP % 1 !== 0) return GEN.B8();
+        var P2 = P1 + deltaP;
+        var Q1 = pick([40, 50, 60, 80, 100, 120, 150, 200]);
+        var pctQ = pick([-5, -10, -15, -20, -25, -30, -40, -50]);
+        var deltaQ = Q1 * pctQ / 100;
+        if (deltaQ % 1 !== 0) return GEN.B8();
+        var Q2 = Q1 + deltaQ;
+        if (Q2 <= 0) return GEN.B8();
+        var Ev = round2(pctQ / pctP);
+        return {
+            context: 'De prijs stijgt van \u20AC' + P1 + ' naar \u20AC' + P2 + '.\nDe gevraagde hoeveelheid daalt van ' + Q1 + ' naar ' + Q2 + '.\nBereken de prijselasticiteit van de vraag.',
+            steps: [
+                { q: 'Bereken de procentuele verandering van de prijs (%\u0394P).', a: pctP, hint: '%\u0394P = (\u0394P / P\u2081) \u00D7 100 = (' + deltaP + ' / ' + P1 + ') \u00D7 100', expl: '%\u0394P = (' + deltaP + ' / ' + P1 + ') \u00D7 100 = ' + pctP + '%' },
+                { q: 'Bereken de procentuele verandering van de vraag (%\u0394Q). Let op het teken!', a: pctQ, hint: '%\u0394Q = ((Q\u2082 \u2212 Q\u2081) / Q\u2081) \u00D7 100 = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
+                { q: 'Bereken de prijselasticiteit (Ev = %\u0394Q / %\u0394P).', a: Ev, hint: 'Deel de procentuele verandering van Q door die van P.', expl: 'Ev = ' + pctQ + ' / ' + pctP + ' = ' + Ev }
+            ]
+        };
+    };
+
+    GEN.B9 = function () {
+        var Pb1 = pick([5, 8, 10, 15, 20, 25]);
+        var pctPb = pick([-20, -10, 10, 20, 25, 50]);
+        var deltaPb = Pb1 * pctPb / 100;
+        if (deltaPb % 1 !== 0 || deltaPb === 0) return GEN.B9();
+        var Pb2 = Pb1 + deltaPb;
+        if (Pb2 <= 0) return GEN.B9();
+        var Qa1 = pick([40, 50, 60, 80, 100, 120, 200]);
+        var pctQa = pick([-20, -10, -5, 5, 10, 15, 20, 25]);
+        var deltaQa = Qa1 * pctQa / 100;
+        if (deltaQa % 1 !== 0 || deltaQa === 0) return GEN.B9();
+        var Qa2 = Qa1 + deltaQa;
+        if (Qa2 <= 0) return GEN.B9();
+        var Ekr = round2(pctQa / pctPb);
+        var goodA = pick(['brood', 'koffie', 'fietsen', 'laptops', 'boeken', 'schoenen']);
+        var goodB = pick(['boter', 'thee', 'auto\u2019s', 'tablets', 'e-readers', 'laarzen']);
+        return {
+            context: 'De prijs van ' + goodB + ' verandert van \u20AC' + Pb1 + ' naar \u20AC' + Pb2 + '.\nDe gevraagde hoeveelheid ' + goodA + ' verandert van ' + Qa1 + ' naar ' + Qa2 + '.\nBereken de kruiselasticiteit.',
+            steps: [
+                { q: 'Bereken de procentuele prijsverandering van ' + goodB + ' (%\u0394Pb).', a: pctPb, hint: '%\u0394Pb = ((' + Pb2 + ' \u2212 ' + Pb1 + ') / ' + Pb1 + ') \u00D7 100', expl: '%\u0394Pb = (' + deltaPb + ' / ' + Pb1 + ') \u00D7 100 = ' + pctPb + '%' },
+                { q: 'Bereken de procentuele hoeveelheidsverandering van ' + goodA + ' (%\u0394Qa).', a: pctQa, hint: '%\u0394Qa = ((' + Qa2 + ' \u2212 ' + Qa1 + ') / ' + Qa1 + ') \u00D7 100', expl: '%\u0394Qa = (' + deltaQa + ' / ' + Qa1 + ') \u00D7 100 = ' + pctQa + '%' },
+                { q: 'Bereken de kruiselasticiteit (Ekr = %\u0394Qa / %\u0394Pb).', a: Ekr, hint: 'Deel %\u0394Qa door %\u0394Pb.', expl: 'Ekr = ' + pctQa + ' / ' + pctPb + ' = ' + Ekr }
+            ]
+        };
+    };
+
+    GEN.B10 = function () {
+        var Y1 = pick([1500, 2000, 2500, 3000, 4000, 5000]);
+        var pctY = pick([5, 10, 20, 25]);
+        var deltaY = Y1 * pctY / 100;
+        if (deltaY % 1 !== 0) return GEN.B10();
+        var Y2 = Y1 + deltaY;
+        var Q1 = pick([40, 50, 60, 80, 100, 120, 200]);
+        var pctQ = pick([-10, -5, 5, 10, 15, 20, 25, 30, 40]);
+        var deltaQ = Q1 * pctQ / 100;
+        if (deltaQ % 1 !== 0 || deltaQ === 0) return GEN.B10();
+        var Q2 = Q1 + deltaQ;
+        if (Q2 <= 0) return GEN.B10();
+        var Ey = round2(pctQ / pctY);
+        var good = pick(['bioscoopkaartjes', 'brood', 'tweedehands kleding', 'restaurantbezoeken', 'luxe horloges', 'biologische groenten']);
+        return {
+            context: 'Het inkomen stijgt van \u20AC' + Y1 + ' naar \u20AC' + Y2 + ' per maand.\nDe gevraagde hoeveelheid ' + good + ' verandert van ' + Q1 + ' naar ' + Q2 + '.\nBereken de inkomenselasticiteit.',
+            steps: [
+                { q: 'Bereken de procentuele inkomensverandering (%\u0394Y).', a: pctY, hint: '%\u0394Y = (\u0394Y / Y\u2081) \u00D7 100 = (' + deltaY + ' / ' + Y1 + ') \u00D7 100', expl: '%\u0394Y = (' + deltaY + ' / ' + Y1 + ') \u00D7 100 = ' + pctY + '%' },
+                { q: 'Bereken de procentuele hoeveelheidsverandering (%\u0394Q).', a: pctQ, hint: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = (' + deltaQ + ' / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
+                { q: 'Bereken de inkomenselasticiteit (Ey = %\u0394Q / %\u0394Y).', a: Ey, hint: 'Deel %\u0394Q door %\u0394Y.', expl: 'Ey = ' + pctQ + ' / ' + pctY + ' = ' + Ey }
             ]
         };
     };

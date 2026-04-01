@@ -19,7 +19,7 @@ function makeStorage(initial) {
 function createEngine(overrides) {
     const defaults = {
         elements: elements,
-        data: { parNr: '3.2.1', activeSkills: ['F1', 'F2', 'F3', 'F4', 'F5', 'B1', 'S1'] },
+        data: { parNr: '3.2.1', activeSkills: ['F1', 'F2', 'F3', 'F4', 'F7', 'F5', 'B1', 'B8', 'B9', 'B10', 'S1'] },
         storage: makeStorage()
     };
     return new SkillTreeEngine(Object.assign(defaults, overrides));
@@ -247,12 +247,21 @@ describe('finishExercise', () => {
         return engine.finishExercise();
     }
 
-    test('awards 3 stars for no errors/hints', () => {
+    test('awards 3 stars for no errors/hints (additive)', () => {
         const engine = createEngine();
         const result = completeExercise(engine, 'F1');
         expect(result.earned).toBe(3);
+        expect(result.newTotal).toBe(3);
         expect(result.improved).toBe(true);
         expect(engine.getSkillStars('F1')).toBe(3);
+    });
+
+    test('additive stars: second perfect run reaches 5', () => {
+        const engine = createEngine();
+        completeExercise(engine, 'F1'); // 0 → 3
+        const result2 = completeExercise(engine, 'F1'); // 3 → 5 (3+3=6, capped at 5)
+        expect(result2.newTotal).toBe(5);
+        expect(engine.getSkillStars('F1')).toBe(5);
     });
 
     test('awards 2 stars for 1-2 penalties', () => {
@@ -285,13 +294,13 @@ describe('finishExercise', () => {
         expect(result.earned).toBe(1);
     });
 
-    test('does not downgrade existing higher stars', () => {
+    test('additive stars cap at 5', () => {
         const storage = makeStorage({
-            'skilltree_global_stars': JSON.stringify({ F1: 3 })
+            'skilltree_global_stars': JSON.stringify({ F1: 5 })
         });
         const engine = createEngine({ storage });
         engine.startExercise('F1');
-        // Intentionally get lots of errors
+        // Even with errors, earned >= 1, but 5+1 caps at 5
         for (let i = 0; i < 5; i++) engine.checkAnswer(99999);
         const state = engine.getExerciseState();
         for (let i = 0; i < state.totalSteps; i++) {
@@ -301,8 +310,9 @@ describe('finishExercise', () => {
         }
         const result = engine.finishExercise();
         expect(result.earned).toBe(1);
+        expect(result.newTotal).toBe(5); // already at max
         expect(result.improved).toBe(false);
-        expect(engine.getSkillStars('F1')).toBe(3); // stays at 3
+        expect(engine.getSkillStars('F1')).toBe(5);
     });
 
     test('saves to storage after earning stars', () => {
@@ -371,8 +381,8 @@ describe('getProgress', () => {
         const p = engine.getProgress();
         expect(p.mastered).toBe(0);
         expect(p.totalStars).toBe(0);
-        expect(p.total).toBe(7); // 3.2.1 has 7 skills
-        expect(p.maxStars).toBe(21);
+        expect(p.total).toBe(11); // 3.2.1 now has 11 skills (added F7, B8, B9, B10)
+        expect(p.maxStars).toBe(55);
     });
 
     test('reports correct progress after earning stars', () => {

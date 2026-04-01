@@ -349,10 +349,11 @@
         var totalPenalty = this._errors + this._hints;
         var earned = totalPenalty === 0 ? 3 : totalPenalty <= 2 ? 2 : 1;
         var prev = this._stars[this._activeSkill.id] || 0;
-        var improved = earned > prev;
+        var newTotal = Math.min(5, prev + earned);
+        var improved = newTotal > prev;
 
         if (improved) {
-            this._stars[this._activeSkill.id] = earned;
+            this._stars[this._activeSkill.id] = newTotal;
             this._saveStars();
         }
 
@@ -360,6 +361,7 @@
             skillId: this._activeSkill.id,
             earned: earned,
             previous: prev,
+            newTotal: newTotal,
             improved: improved,
             errors: this._errors,
             hints: this._hints
@@ -394,7 +396,7 @@
             mastered: mastered,
             total: visible.length,
             totalStars: totalStars,
-            maxStars: visible.length * 3
+            maxStars: visible.length * 5
         };
     };
 

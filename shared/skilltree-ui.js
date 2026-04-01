@@ -21,26 +21,23 @@
 
     // ── SVG Icons ─────────────────────────────────────────────
     function iconArrowLeft() { return '<span class="st-icon"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></span>'; }
-    function iconTrophy()    { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></span>'; }
     function iconLightbulb() { return '<span class="st-icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>'; }
     function iconReset()     { return '<span class="st-icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>'; }
+    function iconRefresh()   { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg></span>'; }
 
     // ── State ─────────────────────────────────────────────────
-    var view = 'tree'; // 'tree' | 'exercise' | 'star-anim'
+    var view = 'tree'; // 'tree' | 'exercise'
     var feedback = null; // null | 'correct' | 'wrong'
     var inputValue = '';
     var showHint = false;
     var showExpl = false;
-    var starAnimEarned = 0;
-    var starAnimErrors = 0;
-    var starAnimHints = 0;
+    var finishResult = null; // set when exercise is completed (last answer correct)
     var advanceTimer = null;
+    var lastFinishedSkillId = null; // for "opnieuw oefenen"
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
-        if (view === 'star-anim') {
-            renderStarAnim();
-        } else if (view === 'exercise') {
+        if (view === 'exercise') {
             renderExercise();
         } else {
             renderTree();
@@ -54,9 +51,10 @@
         return d.innerHTML;
     }
 
-    function starsHTML(count) {
+    function starsHTML(count, max) {
+        max = max || 5;
         var h = '';
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < max; i++) {
             h += '<span class="' + (i < count ? 'st-star-on' : 'st-star-off') + '">\u2605</span>';
         }
         return h;
@@ -103,10 +101,10 @@
 
                 var classes = 'st-skill-card';
                 if (!ready && starCount === 0) classes += ' st-locked';
-                if (starCount === 3) classes += ' st-mastered-3';
+                if (starCount === 5) classes += ' st-mastered-5';
 
                 var boxShadow = starCount >= 1 ? '0 0 12px ' + lc.glow : 'none';
-                var borderStyle = starCount === 3 ? '2px solid #fbbf24' : '1px solid ' + lc.text + '40';
+                var borderStyle = starCount === 5 ? '2px solid #fbbf24' : '1px solid ' + lc.text + '40';
 
                 html += '<button class="' + classes + '"';
                 html += ' data-skill="' + skill.id + '"';
@@ -143,18 +141,7 @@
         for (var m = 0; m < cards.length; m++) {
             cards[m].addEventListener('click', function () {
                 var sid = this.getAttribute('data-skill');
-                if (engine.hasGenerator(sid)) {
-                    var ex = engine.startExercise(sid);
-                    if (ex) {
-                        view = 'exercise';
-                        feedback = null;
-                        inputValue = '';
-                        showHint = false;
-                        showExpl = false;
-                        render();
-                        focusInput();
-                    }
-                }
+                startSkill(sid);
             });
         }
 
@@ -169,8 +156,29 @@
         }
     }
 
+    function startSkill(skillId) {
+        if (!engine.hasGenerator(skillId)) return;
+        var ex = engine.startExercise(skillId);
+        if (!ex) return;
+        view = 'exercise';
+        feedback = null;
+        inputValue = '';
+        showHint = false;
+        showExpl = false;
+        finishResult = null;
+        lastFinishedSkillId = null;
+        render();
+        focusInput();
+    }
+
     // ── Exercise view ─────────────────────────────────────────
     function renderExercise() {
+        // If exercise finished (finishResult set), show completed view
+        if (finishResult) {
+            renderCompleted();
+            return;
+        }
+
         var state = engine.getExerciseState();
         if (!state) { view = 'tree'; render(); return; }
 
@@ -218,13 +226,9 @@
         html += '<button class="st-minus-btn" id="st-toggle-minus"' + (feedback === 'correct' ? ' disabled' : '') + '>\u00B1</button>';
         html += '<input class="st-answer-input" id="st-input" type="text" inputmode="decimal" value="' + esc(inputValue) + '"' + (feedback === 'correct' ? ' disabled' : '') + ' placeholder="Antwoord (gebruik \u00B1 voor negatief)">';
 
-        if (!(feedback === 'correct' && state.isLastStep)) {
-            var btnBg = feedback === 'correct' ? '#166534' : lc.bg;
-            var btnColor = feedback === 'correct' ? '#dcfce7' : lc.text;
-            html += '<button class="st-check-btn" id="st-check" style="background:' + btnBg + ';color:' + btnColor + '"' + (feedback === 'correct' ? ' disabled' : '') + '>Check</button>';
-        } else {
-            html += '<button class="st-finish-btn" id="st-finish">Klaar ' + iconTrophy() + '</button>';
-        }
+        var btnBg = feedback === 'correct' ? '#166534' : lc.bg;
+        var btnColor = feedback === 'correct' ? '#dcfce7' : lc.text;
+        html += '<button class="st-check-btn" id="st-check" style="background:' + btnBg + ';color:' + btnColor + '"' + (feedback === 'correct' ? ' disabled' : '') + '>Check</button>';
         html += '</div>';
 
         // Feedback
@@ -248,12 +252,13 @@
         html += '</div>'; // end step card
 
         // Score tracker
-        var scoreClass = state.errors + state.hints === 0 ? 'st-score-perfect' : '';
-        var starPreview = state.errors + state.hints === 0 ? '\u2605\u2605\u2605' : state.errors + state.hints <= 2 ? '\u2605\u2605\u2606' : '\u2605\u2606\u2606';
+        var penalty = state.errors + state.hints;
+        var previewStars = penalty === 0 ? 3 : penalty <= 2 ? 2 : 1;
+        var scoreClass = penalty === 0 ? 'st-score-perfect' : '';
         html += '<div class="st-score-tracker">';
         html += '<span>Fouten: ' + state.errors + '</span>';
         html += '<span>Hints: ' + state.hints + '</span>';
-        html += '<span class="' + scoreClass + '">' + starPreview + '</span>';
+        html += '<span class="' + scoreClass + '">+' + previewStars + ' \u2605</span>';
         html += '</div>';
 
         html += '</div>'; // end exercise
@@ -274,14 +279,7 @@
             if (feedback === 'wrong') feedback = null;
         });
         inp.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                var st = engine.getExerciseState();
-                if (feedback === 'correct' && st && st.isLastStep) {
-                    doFinish();
-                } else {
-                    doCheck();
-                }
-            }
+            if (e.key === 'Enter') doCheck();
         });
 
         var toggleBtn = document.getElementById('st-toggle-minus');
@@ -297,11 +295,6 @@
         var checkBtn = document.getElementById('st-check');
         if (checkBtn) {
             checkBtn.addEventListener('click', doCheck);
-        }
-
-        var finishBtn = document.getElementById('st-finish');
-        if (finishBtn) {
-            finishBtn.addEventListener('click', doFinish);
         }
 
         var hintBtn = document.getElementById('st-hint');
@@ -321,9 +314,18 @@
         if (result.correct) {
             feedback = 'correct';
             showExpl = true;
-            var state = engine.getExerciseState();
-            // Auto-advance for non-last steps
-            if (state && !state.isLastStep) {
+
+            if (result.isLastStep) {
+                // Last step correct — finish immediately, show result inline
+                var fr = engine.finishExercise();
+                if (fr) {
+                    lastFinishedSkillId = fr.skillId;
+                    finishResult = fr;
+                }
+                render();
+            } else {
+                // Auto-advance for non-last steps
+                render();
                 if (advanceTimer) clearTimeout(advanceTimer);
                 advanceTimer = setTimeout(function () {
                     advanceTimer = null;
@@ -336,7 +338,6 @@
                     focusInput();
                 }, 1200);
             }
-            render();
         } else {
             feedback = 'wrong';
             render();
@@ -344,56 +345,78 @@
         }
     }
 
-    function doFinish() {
-        var result = engine.finishExercise();
-        if (!result) return;
-        starAnimEarned = result.earned;
-        starAnimErrors = result.errors;
-        starAnimHints = result.hints;
-        view = 'star-anim';
-        render();
-
-        // Animate stars sequentially
-        setTimeout(function () {
-            var stars = root.querySelectorAll('.st-star-anim');
-            for (var i = 0; i < stars.length; i++) {
-                if (i < starAnimEarned) {
-                    (function (el, delay) {
-                        setTimeout(function () {
-                            el.classList.add('st-earned');
-                            el.style.animation = 'starPop 0.4s ease both';
-                        }, delay);
-                    })(stars[i], i * 300);
-                }
-            }
-        }, 100);
-
-        setTimeout(function () {
-            view = 'tree';
-            render();
-        }, 2500);
-    }
-
-    // ── Star animation overlay ────────────────────────────────
-    function renderStarAnim() {
-        var msg = starAnimEarned === 3 ? 'Perfect! \uD83C\uDFAF' : starAnimEarned === 2 ? 'Goed gedaan!' : 'Gehaald!';
+    // ── Completed view (inline, no overlay) ───────────────────
+    function renderCompleted() {
+        var fr = finishResult;
+        var msg = fr.earned === 3 ? 'Perfect! \uD83C\uDFAF' : fr.earned === 2 ? 'Goed gedaan!' : 'Gehaald!';
         var details = '';
-        if (starAnimErrors > 0) details += starAnimErrors + ' fout' + (starAnimErrors > 1 ? 'en' : '');
-        if (starAnimErrors > 0 && starAnimHints > 0) details += ', ';
-        if (starAnimHints > 0) details += starAnimHints + ' hint' + (starAnimHints > 1 ? 's' : '') + ' gebruikt';
-        if (starAnimErrors === 0 && starAnimHints === 0) details = 'Zonder fouten of hints!';
+        if (fr.errors > 0) details += fr.errors + ' fout' + (fr.errors > 1 ? 'en' : '');
+        if (fr.errors > 0 && fr.hints > 0) details += ', ';
+        if (fr.hints > 0) details += fr.hints + ' hint' + (fr.hints > 1 ? 's' : '') + ' gebruikt';
+        if (fr.errors === 0 && fr.hints === 0) details = 'Zonder fouten of hints!';
 
-        var html = '<div class="st-star-overlay">';
-        html += '<div class="st-star-row">';
-        for (var i = 0; i < 3; i++) {
-            html += '<span class="st-star-anim">\u2605</span>';
+        var html = '<div class="st-exercise">';
+
+        // Result card
+        html += '<div class="st-result-card">';
+
+        // Star display
+        html += '<div class="st-result-stars">';
+        html += starsHTML(fr.newTotal, 5);
+        html += '</div>';
+
+        // Message
+        html += '<p class="st-result-message">' + esc(msg) + '</p>';
+
+        // Details
+        html += '<p class="st-result-details">' + esc(details) + '</p>';
+
+        // Progress info
+        if (fr.improved) {
+            html += '<p class="st-result-progress">+' + fr.earned + ' \u2605 \u2192 ' + fr.newTotal + '/5 sterren</p>';
+        } else {
+            html += '<p class="st-result-progress">' + fr.newTotal + '/5 sterren (al behaald)</p>';
+        }
+
+        // Navigation buttons
+        html += '<div class="st-result-buttons">';
+        html += '<button class="st-btn-back" id="st-result-back">' + iconArrowLeft() + ' Terug naar overzicht</button>';
+        if (fr.newTotal < 5) {
+            html += '<button class="st-btn-retry" id="st-result-retry">' + iconRefresh() + ' Opnieuw oefenen</button>';
         }
         html += '</div>';
-        html += '<p class="st-star-message">' + esc(msg) + '</p>';
-        html += '<p class="st-star-details">' + esc(details) + '</p>';
-        html += '</div>';
+
+        html += '</div>'; // end result card
+        html += '</div>'; // end exercise
 
         root.innerHTML = html;
+
+        // Animate stars
+        setTimeout(function () {
+            var starEls = root.querySelectorAll('.st-result-stars .st-star-on');
+            for (var i = 0; i < starEls.length; i++) {
+                (function (el, delay) {
+                    setTimeout(function () {
+                        el.style.animation = 'starPop 0.4s ease both';
+                    }, delay);
+                })(starEls[i], i * 150);
+            }
+        }, 50);
+
+        // Wire events
+        document.getElementById('st-result-back').addEventListener('click', function () {
+            finishResult = null;
+            view = 'tree';
+            render();
+        });
+
+        var retryBtn = document.getElementById('st-result-retry');
+        if (retryBtn) {
+            retryBtn.addEventListener('click', function () {
+                finishResult = null;
+                startSkill(lastFinishedSkillId);
+            });
+        }
     }
 
     // ── Focus helper ──────────────────────────────────────────

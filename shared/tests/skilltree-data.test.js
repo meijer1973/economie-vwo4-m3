@@ -8,8 +8,8 @@ const elements = require('../skilltree/base-elements');
 // ── Base elements validation ──────────────────────────────────────
 
 describe('base-elements', () => {
-    test('exports SKILLS array with 27 entries', () => {
-        expect(elements.SKILLS).toHaveLength(27);
+    test('exports SKILLS array with 31 entries', () => {
+        expect(elements.SKILLS).toHaveLength(31);
     });
 
     test('exports LAYER_NAMES with 4 entries', () => {
@@ -25,8 +25,8 @@ describe('base-elements', () => {
         }
     });
 
-    test('exports GEN object with 27 generators', () => {
-        expect(Object.keys(elements.GEN)).toHaveLength(27);
+    test('exports GEN object with 31 generators', () => {
+        expect(Object.keys(elements.GEN)).toHaveLength(31);
     });
 
     test('all skill IDs are unique', () => {
@@ -78,10 +78,10 @@ describe('base-elements', () => {
         }
     });
 
-    test('layer counts: L0=4, L1=9, L2=6, L3=8', () => {
+    test('layer counts: L0=5, L1=12, L2=6, L3=8', () => {
         const counts = [0, 0, 0, 0];
         for (const s of elements.SKILLS) counts[s.layer]++;
-        expect(counts).toEqual([4, 9, 6, 8]);
+        expect(counts).toEqual([5, 12, 6, 8]);
     });
 });
 

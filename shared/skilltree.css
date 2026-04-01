@@ -113,7 +113,7 @@ body {
 .st-skill-card.st-locked {
     opacity: 0.7;
 }
-.st-skill-card.st-mastered-3 {
+.st-skill-card.st-mastered-5 {
     border: 2px solid #fbbf24 !important;
 }
 .st-skill-card .st-skill-id {
@@ -358,37 +358,68 @@ body {
     color: #fbbf24;
 }
 
-/* ── Star animation overlay ─────────────────────────────────── */
-.st-star-overlay {
-    min-height: 100vh;
-    background: #0f1729;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+/* ── Result card (inline, replaces star overlay) ────────────── */
+.st-result-card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin: 40px auto;
+    max-width: 400px;
+    text-align: center;
     animation: fadeIn 0.5s ease;
 }
-.st-star-row {
-    font-size: 3rem;
-    margin-bottom: 16px;
+.st-result-stars {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    letter-spacing: 4px;
 }
-.st-star-row .st-star-anim {
+.st-result-stars .st-star-on {
     display: inline-block;
-    margin: 0 4px;
-    color: #334155;
-    transition: color 0.3s ease;
 }
-.st-star-row .st-star-anim.st-earned {
-    color: #fbbf24;
+.st-result-message {
+    color: #f8fafc;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
-.st-star-overlay .st-star-message {
-    color: #94a3b8;
-    font-size: 1rem;
-}
-.st-star-overlay .st-star-details {
-    color: #475569;
+.st-result-details {
+    color: #64748b;
     font-size: 0.8rem;
-    margin-top: 8px;
+    margin-bottom: 4px;
+}
+.st-result-progress {
+    color: #fbbf24;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+.st-result-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.st-btn-back, .st-btn-retry {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    border: none;
+}
+.st-btn-back {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+.st-btn-retry {
+    background: #166534;
+    color: #dcfce7;
 }
 
 /* ── Reset button ───────────────────────────────────────────── */

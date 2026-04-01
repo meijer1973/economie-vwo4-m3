@@ -471,7 +471,7 @@ shared/
   skilltree-ui.js             ← DOM binding layer (browser only)
   skilltree.css               ← Shared styles with CSS custom properties (--st-*)
   skilltree/
-    base-elements.js          ← Pool of all 27 exercise generators
+    base-elements.js          ← Pool of all 31 exercise generators
     3.1.1.js ... 3.4.6.js    ← Per-paragraph data files (20 total)
   tests/
     skilltree-engine.test.js  ← Engine unit tests
@@ -484,12 +484,12 @@ Each reken-spel HTML file is a thin shell in `3. Oefenen/` that loads:
 3. `shared/skilltree-engine.js` → `SkillTreeEngine` class
 4. `shared/skilltree-ui.js` → IIFE, wires engine to DOM
 
-### 27 base elements across 4 layers
+### 31 base elements across 4 layers
 
 | Layer | Name | Count | Skills | Description |
 |-------|------|-------|--------|-------------|
-| 0 | Fundament | 4 | F1–F4 | Pure math, always visible |
-| 1 | Bouwstenen | 9 | B1–B7, F5, F6 | Economic context + L0 prerequisites |
+| 0 | Fundament | 5 | F1–F4, F7 | Pure math, always visible |
+| 1 | Bouwstenen | 12 | B1–B10, F5, F6 | Economic context + L0 prerequisites |
 | 2 | Samengesteld | 6 | S1–S6 | Multi-step, combining L1 skills |
 | 3 | Eindbazen | 8 | E1–E8 | Full exam-level problems |
 
@@ -499,6 +499,11 @@ Stars are stored globally in a single `localStorage` key (`skilltree_global_star
 When a student earns stars for F1 in paragraph 3.1.1, those stars are visible in all other paragraphs.
 On first load, the engine automatically migrates any old per-paragraph keys (`skilltree_3.X.Y`) and
 the legacy `econ-game-stars` key into the global store (highest value wins).
+
+**5-star additive system:** Each skill can earn up to 5 stars. Stars are additive — each attempt adds
+1–3 stars to the total (0 penalties = +3, ≤2 = +2, else +1), capped at 5. Students need at least 2
+attempts to reach the maximum. Stars are awarded immediately when the last answer is correct (no
+separate animation screen).
 
 ### Build scripts for reken-spel
 
