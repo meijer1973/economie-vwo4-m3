@@ -11,6 +11,27 @@ Reusable PptxGenJS code for building professional, visually consistent economics
 
 ---
 
+## MANDATORY: GRAPHS IN EVERY PRESENTATION
+
+**Grafieken zijn een essentieel onderdeel van economieonderwijs.** Ze zijn abstract en moeilijk voor leerlingen, dus hoe vaker ze worden getoond, hoe beter. Bij het maken van elke presentatie MOET je actief controleren waar grafieken kunnen worden toegevoegd.
+
+**Regels:**
+- Analyseer bij elke presentatie welke economische concepten baat hebben bij een grafiek (V/A-diagrammen, kostencurves, surplusgebieden, verschuivingen, monopoliegrafieken, etc.)
+- Voeg grafiekdia's toe op eigen dia's — proppen op bestaande dia's maakt het te druk
+- Gebruik de `economic-graph` skill voor SVG-specificaties en de SVG → Sharp → PNG pipeline
+- Patroon: eerst de tekstdia met uitleg, dan een aparte dia met de grafiek die het concept visualiseert
+- Splits liever een dia in twee (tekst + grafiek apart) dan dat je een grafiek weglaat
+- Je hebt GEEN extra prompt van de gebruiker nodig om grafieken toe te voegen — dit is standaard
+
+**Typische grafieken per onderwerp:**
+- Marktevenwicht: V/A-diagram met evenwichtspunt
+- Volkomen concurrentie: kostencurves (MK, GTK) met prijslijn, winstrechthoek, CS/PS driehoeken
+- Monopolie: V + MO (dubbele helling) + MK, p* op vraaglijn, winstrechthoek + CS
+- Arbeidsmarkt: V/A met loon/arbeid assen, verschuivingen
+- Internationale handel: comparatief voordeel, PPF, handelswinsten
+
+---
+
 ## DESIGN SYSTEM: SHARED WITH WORD TEMPLATES
 
 The core principle is **visual unity** — a student should recognise the same color system, the same box types, and the same domain groupings whether they open a Word document or a PowerPoint slide.
