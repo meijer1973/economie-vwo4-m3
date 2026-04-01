@@ -24,7 +24,7 @@ const path = require("path");
 
 const MODULE_BASE = path.join(__dirname, "..");
 
-const ONLY_ID = "3.2.4"; // Test single paragraaf first; set to null for all
+const ONLY_ID = null;
 const DRY_RUN = false;
 
 // Temporarily hide the task rows (basisopgaven, middenopgaven, verrijkingsopgaven)

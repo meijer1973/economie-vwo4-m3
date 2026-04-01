@@ -51,6 +51,24 @@ Aanvullend (op moduleniveau):
 - `masterprompt taken.docx` — Instructie voor het sequentieel uitvoeren van taken
 - `Praktische Economie 2020 antwoorden VWO M3 gestructureerd.docx` — Bronantwoorden
 
+### Sectievolgorde op paragraafpagina's
+
+De paragraaf-indexpagina's (`index.html`) tonen drie secties in deze volgorde:
+
+| Positie | Sectie | Toelichting |
+|---------|--------|-------------|
+| 1 | Voorbereiden | Instapquiz, voorkennis, wegwijzer |
+| 2 | **Oefenen** | Interactieve oefeningen (redeneer-spel, wiskundevaardigheden, begeleide inoefening) + opgaven |
+| 3 | **Leren** | Presentatie, uitleg vaardigheden, video's, nieuws, samenvatting |
+
+> **Let op:** De sectievolgorde (Voorbereiden → Oefenen → Leren) wijkt bewust af van de mapnummering (`1. Voorbereiden/`, `2. Leren/`, `3. Oefenen/`). Leerlingen gaan liever direct aan het werk en zoeken pas dingen na als ze vastlopen. De mapnamen zijn niet gewijzigd om bestaande links intact te houden.
+
+### Tijdelijk verborgen: opgavenrijen
+
+De drie opgavenkaarten (Basisopgaven, Middenopgaven, Verrijkingsopgaven) zijn **tijdelijk verborgen** op alle paragraafpagina's. De HTML-structuur en links blijven intact (`display:none` wrapper met class `task-rows-hidden`).
+
+**Weer zichtbaar maken:** Zet `HIDE_TASK_ROWS = false` in `build-scripts/build-landing-page.js` en draai het build script opnieuw.
+
 ### Naamconventies
 
 **Universeel patroon:** `3.X.Y [Naam] – [bestandstype].ext`
