@@ -1,0 +1,532 @@
+/**
+ * SkillTree Base Elements — All 27 exercise generators.
+ * UMD module: sets window.SKILL_TREE_ELEMENTS in browser, module.exports in Node.js.
+ */
+(function (root, factory) {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.SKILL_TREE_ELEMENTS = factory();
+    }
+})(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
+
+    /* ── helpers ─────────────────────────────────────────────── */
+    var ri = function (a, b) { return a + Math.floor(Math.random() * (b - a + 1)); };
+    var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
+    var round1 = function (n) { return Math.round(n * 10) / 10; };
+    var round2 = function (n) { return Math.round(n * 100) / 100; };
+
+    /* ── skill definitions ───────────────────────────────────── */
+    var SKILLS = [
+        { id:'F1', name:'Lineaire functie opstellen', layer:0, needs:[] },
+        { id:'F2', name:'Vergelijking oplossen', layer:0, needs:[] },
+        { id:'F3', name:'Functie omschrijven (P↔Q)', layer:0, needs:[] },
+        { id:'F4', name:'Substitueren', layer:0, needs:[] },
+        { id:'B1', name:'Evenwichtsprijs & -hoeveelheid', layer:1, needs:['F1','F2'] },
+        { id:'B2', name:'TO-functie opstellen', layer:1, needs:['F1','F3'] },
+        { id:'B3', name:'TK-functie herkennen', layer:1, needs:['F1'] },
+        { id:'B4', name:'Horizontaal optellen', layer:1, needs:['F3'] },
+        { id:'F5', name:'Oppervlakte driehoek', layer:1, needs:['F4'] },
+        { id:'F6', name:'Afgeleide bepalen', layer:1, needs:['F1'] },
+        { id:'B5', name:'MO bepalen', layer:1, needs:['F6','B2'] },
+        { id:'B6', name:'MK bepalen', layer:1, needs:['F6','B3'] },
+        { id:'B7', name:'GTK bepalen', layer:1, needs:['B3'] },
+        { id:'S1', name:'Surplus berekenen (CS/PS)', layer:2, needs:['B1','F5'] },
+        { id:'S2', name:'MO = MK oplossen', layer:2, needs:['B5','B6','F2'] },
+        { id:'S3', name:'Winst = TO − TK', layer:2, needs:['B2','B3','F4'] },
+        { id:'S4', name:'Break-even (TO = TK)', layer:2, needs:['B2','B3','F2'] },
+        { id:'S5', name:'Evenwicht met heffing', layer:2, needs:['B1','F1'] },
+        { id:'S6', name:'Collectief aanbod bepalen', layer:2, needs:['B4','F3'] },
+        { id:'E1', name:'Break-even analyse', layer:3, needs:['S4'] },
+        { id:'E2', name:'Consumentensurplus', layer:3, needs:['S1'] },
+        { id:'E3', name:'Individueel → collectief aanbod', layer:3, needs:['S6'] },
+        { id:'E4', name:'Welvaartsverlies belasting', layer:3, needs:['S1','S5'] },
+        { id:'E5', name:'Optimale productie bij VM', layer:3, needs:['B6','B7','F4'] },
+        { id:'E6', name:'Effecten invoerrecht', layer:3, needs:['S1','S5','B1'] },
+        { id:'E7', name:'Max. winst monopolist', layer:3, needs:['S2','S3','F4'] },
+        { id:'E8', name:'Prijsdiscriminatie', layer:3, needs:['S2','S3'] }
+    ];
+
+    var LAYER_NAMES = ['Fundament', 'Bouwstenen', 'Samengesteld', 'Eindbazen'];
+    var LAYER_COLORS = [
+        { bg:'#1a3353', text:'#7cb9e8', glow:'rgba(26,82,118,0.35)' },
+        { bg:'#2a1f4e', text:'#b8a9e8', glow:'rgba(136,78,160,0.3)' },
+        { bg:'#1a3a2a', text:'#7dcea0', glow:'rgba(30,132,73,0.3)' },
+        { bg:'#4a2a1a', text:'#f0b27a', glow:'rgba(230,126,34,0.3)' }
+    ];
+
+    /* ── exercise generators ─────────────────────────────────── */
+    var GEN = {};
+
+    GEN.F1 = function () {
+        var slope = ri(2, 6), intercept = slope * ri(10, 25);
+        return {
+            context: 'De vraag naar een product daalt met ' + slope + ' stuks per euro prijsverhoging. Bij een prijs van \u20AC0 is de vraag ' + intercept + ' stuks.',
+            steps: [
+                { q: 'Hoeveel is de vraag bij P = 0?', a: intercept, hint: 'Dit staat direct in de opgave.', expl: 'Bij P = 0 is Qv = ' + intercept + '.' },
+                { q: 'Met hoeveel stuks daalt de vraag per euro prijsverhoging?', a: slope, hint: 'Zoek het woord \'daalt\' in de tekst.', expl: 'Per euro stijging daalt de vraag met ' + slope + '.' },
+                { q: 'De vraaglijn is Qv = ' + intercept + ' + ? \u00D7 P. Wat is de co\u00EBffici\u00EBnt van P? (let op het teken!)', a: -slope, hint: 'De vraag daalt, dus de co\u00EBffici\u00EBnt is negatief.', expl: 'Qv = ' + intercept + ' \u2212 ' + slope + 'P, dus de co\u00EBffici\u00EBnt is \u2212' + slope + '.' }
+            ]
+        };
+    };
+
+    GEN.F2 = function () {
+        var Q = ri(5, 20), b = ri(2, 5), d = ri(1, 4);
+        var c = ri(10, 40), a = c + Q * (b + d);
+        return {
+            context: 'Los op: ' + a + ' \u2212 ' + b + 'Q = ' + c + ' + ' + d + 'Q',
+            steps: [
+                { q: 'Breng alle Q-termen naar links. Wat is de co\u00EBffici\u00EBnt van Q?', a: b + d, hint: 'Tel de co\u00EBffici\u00EBnten op: ' + b + ' + ' + d, expl: b + 'Q + ' + d + 'Q = ' + (b + d) + 'Q' },
+                { q: 'Breng de constanten naar rechts: ' + a + ' \u2212 ' + c + ' = ?', a: a - c, hint: 'Trek ' + c + ' af van ' + a + '.', expl: a + ' \u2212 ' + c + ' = ' + (a - c) },
+                { q: 'Los op: ' + (b + d) + 'Q = ' + (a - c) + '. Q = ?', a: Q, hint: 'Deel ' + (a - c) + ' door ' + (b + d) + '.', expl: 'Q = ' + (a - c) + ' \u00F7 ' + (b + d) + ' = ' + Q }
+            ]
+        };
+    };
+
+    GEN.F3 = function () {
+        var b = pick([2, 4, 5]), aOver = ri(10, 30), a = b * aOver;
+        var coefQ = round2(1 / b);
+        return {
+            context: 'Schrijf om: Qv = ' + a + ' \u2212 ' + b + 'P  \u2192  P = ?',
+            steps: [
+                { q: 'Herschrijf naar P = \u2026 Wat is de constante term?', a: aOver, hint: 'Isoleer ' + b + 'P aan \u00E9\u00E9n kant en deel alles door ' + b + '.', expl: b + 'P = ' + a + ' \u2212 Q \u2192 P = ' + a + '/' + b + ' \u2212 Q/' + b + ' \u2192 constante = ' + aOver },
+                { q: 'Wat is de co\u00EBffici\u00EBnt van Q? (let op het teken!)', a: -coefQ, hint: 'Je deelt \u2212Q door ' + b + '. Let op: het teken blijft negatief.', expl: 'P = ' + aOver + ' \u2212 ' + coefQ + 'Q, dus de co\u00EBffici\u00EBnt is \u2212' + coefQ + '.' }
+            ]
+        };
+    };
+
+    GEN.F4 = function () {
+        var a = ri(30, 80), b = pick([2, 3, 4, 5]), Q = ri(3, 15);
+        var ans = a - b * Q;
+        return {
+            context: 'Gegeven: P = ' + a + ' \u2212 ' + b + 'Q. Bereken P als Q = ' + Q + '.',
+            steps: [
+                { q: 'Bereken ' + b + ' \u00D7 ' + Q + ' = ?', a: b * Q, hint: 'Vermenigvuldig ' + b + ' met ' + Q + '.', expl: b + ' \u00D7 ' + Q + ' = ' + (b * Q) },
+                { q: 'P = ' + a + ' \u2212 ' + (b * Q) + ' = ?', a: ans, hint: 'Trek ' + (b * Q) + ' af van ' + a + '.', expl: 'P = ' + a + ' \u2212 ' + (b * Q) + ' = ' + ans }
+            ]
+        };
+    };
+
+    GEN.F5 = function () {
+        var base = ri(4, 20) * 2, height = ri(4, 20) * 2;
+        var area = 0.5 * base * height;
+        return {
+            context: 'Bereken de oppervlakte van een driehoek met basis = ' + base + ' en hoogte = ' + height + '.',
+            steps: [
+                { q: 'Bereken basis \u00D7 hoogte.', a: base * height, hint: base + ' \u00D7 ' + height + ' = ?', expl: base + ' \u00D7 ' + height + ' = ' + (base * height) },
+                { q: 'Bereken de oppervlakte.', a: area, hint: 'De oppervlakte van een driehoek is de helft van basis \u00D7 hoogte.', expl: 'Oppervlakte = \u00BD \u00D7 ' + (base * height) + ' = ' + area }
+            ]
+        };
+    };
+
+    GEN.F6 = function () {
+        var a = ri(1, 4), b = ri(3, 12), c = ri(10, 100);
+        return {
+            context: 'Bepaal de afgeleide van f(Q) = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.',
+            steps: [
+                { q: 'Wat is de afgeleide van ' + a + 'Q\u00B2? Geef de co\u00EBffici\u00EBnt van Q.', a: 2 * a, hint: 'Bij differenti\u00EBren: vermenigvuldig de co\u00EBffici\u00EBnt met de macht.', expl: a + 'Q\u00B2 \u2192 ' + (2 * a) + 'Q' },
+                { q: 'Wat is de afgeleide van ' + b + 'Q?', a: b, hint: 'De afgeleide van bQ is gewoon b.', expl: b + 'Q \u2192 ' + b },
+                { q: 'Wat is de afgeleide van de constante ' + c + '?', a: 0, hint: 'Wat gebeurt er met een constante bij differenti\u00EBren?', expl: 'De afgeleide van een constante is 0.' }
+            ]
+        };
+    };
+
+    GEN.B1 = function () {
+        var b = ri(2, 5), d = ri(1, 4), Ps = ri(8, 25);
+        var maxC = Math.min(50, d * Ps - 1);
+        if (maxC < 2) return GEN.B1();
+        var c = ri(2, maxC);
+        var a = (b + d) * Ps - 2 * c;
+        if (a <= 0) return GEN.B1();
+        var alpha = a + c;
+        var Qs = alpha - b * Ps;
+        if (Qs <= 0) return GEN.B1();
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P  en  Qa = \u2212' + c + ' + ' + d + 'P. Bereken het marktevenwicht.',
+            steps: [
+                { q: 'Stel Qv = Qa en los op. P* = ?', a: Ps, hint: alpha + ' \u2212 ' + b + 'P = \u2212' + c + ' + ' + d + 'P \u2192 ' + (b + d) + 'P = ' + (alpha + c), expl: 'P* = ' + (alpha + c) + ' \u00F7 ' + (b + d) + ' = ' + Ps },
+                { q: 'Q* = ?', a: Qs, hint: 'Vul P* in bij Qv: ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps, expl: 'Q* = ' + Qs }
+            ]
+        };
+    };
+
+    GEN.B2 = function () {
+        var a = ri(30, 80), b = ri(1, 4);
+        return {
+            context: 'De vraaglijn is P = ' + a + ' \u2212 ' + b + 'Q. Stel de TO-functie op (TO = P \u00D7 Q).',
+            steps: [
+                { q: 'TO = P \u00D7 Q = (' + a + ' \u2212 ' + b + 'Q) \u00D7 Q. Werk de haakjes uit. Wat is de co\u00EBffici\u00EBnt van Q?', a: a, hint: a + ' \u00D7 Q \u2192 co\u00EBffici\u00EBnt is ' + a + '.', expl: 'De eerste term is ' + a + 'Q.' },
+                { q: 'Wat is de co\u00EBffici\u00EBnt van Q\u00B2? (let op het teken!)', a: -b, hint: '\u2212' + b + 'Q \u00D7 Q = \u2212' + b + 'Q\u00B2. De co\u00EBffici\u00EBnt is negatief.', expl: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2, dus de co\u00EBffici\u00EBnt van Q\u00B2 is \u2212' + b + '.' }
+            ]
+        };
+    };
+
+    GEN.B3 = function () {
+        var a = round1(ri(1, 5) * 0.5), b = ri(5, 20), c = ri(50, 300);
+        var Q = ri(5, 15);
+        var vk = round1(a * Q * Q + b * Q);
+        return {
+            context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c,
+            steps: [
+                { q: 'Wat zijn de vaste kosten?', a: c, hint: 'De vaste kosten zijn de kosten als er niets geproduceerd wordt (Q = 0).', expl: 'TK(0) = ' + c + ', dus de vaste kosten = ' + c + '.' },
+                { q: 'Bereken de variabele kosten bij Q = ' + Q + '.', a: vk, hint: 'De variabele kosten zijn TK minus de vaste kosten. Of: de termen m\u00E9t Q.', expl: 'TVK = ' + a + '\u00D7' + (Q * Q) + ' + ' + b + '\u00D7' + Q + ' = ' + vk }
+            ]
+        };
+    };
+
+    GEN.B4 = function () {
+        var a1 = pick([1, 2]), c1 = ri(4, 12);
+        var a2 = pick([1, 2]), c2 = ri(4, 12);
+        var coefA = round2(1 / a1), constA = round2(-c1 / a1);
+        var coefB = round2(1 / a2), constB = round2(-c2 / a2);
+        var coefCol = round2(coefA + coefB);
+        var constCol = round2(constA + constB);
+        return {
+            context: 'Bedrijf A: P = ' + a1 + 'Qa + ' + c1 + '\nBedrijf B: P = ' + a2 + 'Qb + ' + c2 + '\nStel de collectieve aanbodfunctie op.',
+            steps: [
+                { q: 'Herschrijf het aanbod van A naar Qa = \u2026P + \u2026 Wat is de co\u00EBffici\u00EBnt van P?', a: coefA, hint: 'P = ' + a1 + 'Qa + ' + c1 + ' \u2192 ' + a1 + 'Qa = P \u2212 ' + c1 + ' \u2192 deel door ' + a1, expl: 'Qa = ' + coefA + 'P + (' + constA + '). De co\u00EBffici\u00EBnt van P is ' + coefA + '.' },
+                { q: 'Wat is de constante in Qa = ' + coefA + 'P + ?', a: constA, hint: '\u2212' + c1 + ' \u00F7 ' + a1 + ' = ? (let op het minteken!)', expl: 'Qa = ' + coefA + 'P + (' + constA + '). De constante is ' + constA + '.' },
+                { q: 'Herschrijf het aanbod van B naar Qb = \u2026P + \u2026 Wat is de co\u00EBffici\u00EBnt van P?', a: coefB, hint: 'P = ' + a2 + 'Qb + ' + c2 + ' \u2192 deel door ' + a2, expl: 'Qb = ' + coefB + 'P + (' + constB + '). De co\u00EBffici\u00EBnt van P is ' + coefB + '.' },
+                { q: 'Wat is de constante in Qb = ' + coefB + 'P + ?', a: constB, hint: '\u2212' + c2 + ' \u00F7 ' + a2 + ' = ? (let op het minteken!)', expl: 'Qb = ' + coefB + 'P + (' + constB + '). De constante is ' + constB + '.' },
+                { q: 'Tel de co\u00EBffici\u00EBnten van P op voor de collectieve aanbodfunctie. Wat is de co\u00EBffici\u00EBnt van P in Qcol?', a: coefCol, hint: 'Co\u00EBffici\u00EBnt A was ' + coefA + ', co\u00EBffici\u00EBnt B was ' + coefB + '. Tel op.', expl: coefA + ' + ' + coefB + ' = ' + coefCol },
+                { q: 'Wat is de constante in Qcol = ' + coefCol + 'P + ?', a: constCol, hint: 'Constante A was ' + constA + ', constante B was ' + constB + '. Tel op.', expl: constA + ' + (' + constB + ') = ' + constCol + '. De collectieve aanbodfunctie is Qcol = ' + coefCol + 'P + (' + constCol + ').' }
+            ]
+        };
+    };
+
+    GEN.B5 = function () {
+        var a = ri(30, 80), b = ri(1, 4);
+        return {
+            context: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2. Bepaal de MO-functie (= afgeleide van TO).',
+            steps: [
+                { q: 'Wat is de constante term in MO?', a: a, hint: 'MO is de afgeleide van TO naar Q. Wat is de afgeleide van ' + a + 'Q?', expl: 'MO begint met ' + a },
+                { q: 'Wat is de co\u00EBffici\u00EBnt van Q in MO? (met teken)', a: -(2 * b), hint: 'Wat is de afgeleide van \u2212' + b + 'Q\u00B2? Let op het teken.', expl: 'MO = ' + a + ' \u2212 ' + (2 * b) + 'Q' },
+                { q: 'Bij welke Q is MO = 0?', a: round1(a / (2 * b)), hint: 'Stel MO = 0 en los op naar Q.', expl: 'Q = ' + a + ' \u00F7 ' + (2 * b) + ' = ' + round1(a / (2 * b)) }
+            ]
+        };
+    };
+
+    GEN.B6 = function () {
+        var a = round1(pick([0.5, 1, 1.5, 2])), b = ri(5, 20), c = ri(50, 200);
+        return {
+            context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Bepaal de MK-functie.',
+            steps: [
+                { q: 'Wat is de co\u00EBffici\u00EBnt van Q in MK?', a: round1(2 * a), hint: 'MK is de afgeleide van TK. Wat is de afgeleide van ' + a + 'Q\u00B2?', expl: a + 'Q\u00B2 \u2192 ' + round1(2 * a) + 'Q' },
+                { q: 'Wat is de constante in MK?', a: b, hint: 'Wat is de afgeleide van ' + b + 'Q?', expl: 'MK = ' + round1(2 * a) + 'Q + ' + b }
+            ]
+        };
+    };
+
+    GEN.B7 = function () {
+        var a = pick([0.5, 1, 2]), b = ri(5, 15), c = ri(50, 200);
+        var Q = ri(5, 20);
+        var tk = round1(a * Q * Q + b * Q + c);
+        var gtk = round2(tk / Q);
+        return {
+            context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Bereken GTK bij Q = ' + Q + '.',
+            steps: [
+                { q: 'Bereken eerst TK bij Q = ' + Q + '.', a: tk, hint: 'Vul Q = ' + Q + ' in de kostenfunctie in en reken stap voor stap uit.', expl: 'TK = ' + a + '\u00D7' + (Q * Q) + ' + ' + (b * Q) + ' + ' + c + ' = ' + tk },
+                { q: 'Bereken nu GTK.', a: gtk, hint: 'GTK = TK gedeeld door Q.', expl: 'GTK = ' + tk + ' \u00F7 ' + Q + ' = ' + gtk }
+            ]
+        };
+    };
+
+    GEN.S1 = function () {
+        var b = ri(2, 4), d = ri(1, 3), Ps = ri(10, 20);
+        var maxC = Math.min(d * Ps - 1, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 2) return GEN.S1();
+        var c = ri(2, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.S1();
+        var pIntercept = round1(alpha / b);
+        var cs = round1(0.5 * Qs * (pIntercept - Ps));
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nEvenwicht: P* = ' + Ps + ', Q* = ' + Qs + '.\nBereken het consumentensurplus.',
+            steps: [
+                { q: 'Bepaal het snijpunt van de vraaglijn met de P-as.', a: pIntercept, hint: 'Het snijpunt met de P-as vind je door Q = 0 in te vullen.', expl: 'Qv = 0 \u2192 ' + alpha + ' = ' + b + 'P \u2192 Pmax = ' + pIntercept },
+                { q: 'Bereken het consumentensurplus.', a: cs, hint: 'CS is een driehoek met basis Q* en hoogte Pmax \u2212 P*.', expl: 'CS = \u00BD \u00D7 ' + Qs + ' \u00D7 (' + pIntercept + ' \u2212 ' + Ps + ') = ' + cs }
+            ]
+        };
+    };
+
+    GEN.S2 = function () {
+        var bMO = ri(2, 6), bMK = ri(1, 4);
+        var totalB = bMO + bMK;
+        var Qs = ri(3, 15);
+        var aMK = ri(5, 20);
+        var aMO = aMK + totalB * Qs;
+        return {
+            context: 'MO = ' + aMO + ' \u2212 ' + bMO + 'Q en MK = ' + aMK + ' + ' + bMK + 'Q.\nBij welke Q is de winst maximaal?',
+            steps: [
+                { q: 'Stel MO = MK en los op. Q* = ?', a: Qs, hint: aMO + ' \u2212 ' + bMO + 'Q = ' + aMK + ' + ' + bMK + 'Q \u2192 ' + totalB + 'Q = ' + (aMO - aMK), expl: 'Q* = ' + (aMO - aMK) + ' \u00F7 ' + totalB + ' = ' + Qs }
+            ]
+        };
+    };
+
+    GEN.S3 = function () {
+        var a = ri(40, 80), b = ri(1, 3), tkA = pick([0.5, 1, 2]), tkB = ri(5, 15), tkC = ri(50, 200);
+        var Q = ri(5, 15);
+        var to = round1(a * Q - b * Q * Q);
+        var tk = round1(tkA * Q * Q + tkB * Q + tkC);
+        var winst = round1(to - tk);
+        return {
+            context: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2 en TK = ' + tkA + 'Q\u00B2 + ' + tkB + 'Q + ' + tkC + '.\nBereken de winst bij Q = ' + Q + '.',
+            steps: [
+                { q: 'Bereken TO bij Q = ' + Q + '.', a: to, hint: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2. Vul Q = ' + Q + ' in.', expl: 'TO = ' + a + '\u00D7' + Q + ' \u2212 ' + b + '\u00D7' + (Q * Q) + ' = ' + to },
+                { q: 'Bereken TK bij Q = ' + Q + '.', a: tk, hint: 'Vul Q = ' + Q + ' in de kostenfunctie in.', expl: 'TK = ' + tkA + '\u00D7' + (Q * Q) + ' + ' + tkB + '\u00D7' + Q + ' + ' + tkC + ' = ' + tk },
+                { q: 'Bereken de winst.', a: winst, hint: 'Winst = TO \u2212 TK.', expl: 'Winst = ' + to + ' \u2212 ' + tk + ' = ' + winst }
+            ]
+        };
+    };
+
+    GEN.S4 = function () {
+        var P = ri(30, 60);
+        var a = pick([0.5, 1, 2]);
+        var Q1 = ri(3, 8), Q2 = ri(Q1 + 4, Q1 + 12);
+        var b = round1(P - a * (Q1 + Q2));
+        var c = round1(a * Q1 * Q2);
+        if (b < 0) return GEN.S4();
+        return {
+            context: 'TO = ' + P + 'Q en TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.\nBij welke hoeveelheden is er break-even?',
+            steps: [
+                { q: 'Stel TO = TK en herschrijf naar de vorm \u2026Q\u00B2 + \u2026Q + \u2026 = 0. Wat is de co\u00EBffici\u00EBnt van Q?', a: round1(b - P), hint: P + 'Q = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Breng alles naar \u00E9\u00E9n kant.', expl: a + 'Q\u00B2 + (' + b + ' \u2212 ' + P + ')Q + ' + c + ' = 0 \u2192 co\u00EBffici\u00EBnt = ' + round1(b - P) },
+                { q: 'Bereken de kleinste break-even hoeveelheid.', a: Q1, hint: 'Los de kwadratische vergelijking op met de abc-formule.', expl: 'Q\u2081 = ' + Q1 },
+                { q: 'Bereken de grootste break-even hoeveelheid.', a: Q2, hint: 'De tweede oplossing van dezelfde vergelijking.', expl: 'Q\u2082 = ' + Q2 + '. Tussen Q=' + Q1 + ' en Q=' + Q2 + ' maakt het bedrijf winst.' }
+            ]
+        };
+    };
+
+    GEN.S5 = function () {
+        var b = ri(2, 5), d = ri(1, 4), Ps = ri(10, 25);
+        var maxC = Math.min(d * Ps - 1, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 3) return GEN.S5();
+        var c = ri(3, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.S5();
+        var heffing = ri(2, 8);
+        var newC = c + d * heffing;
+        var newPs = round1((alpha + newC) / (b + d));
+        var newQs = round1(alpha - b * newPs);
+        if (newQs <= 0) return GEN.S5();
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid heft \u20AC' + heffing + ' per stuk bij de producent.\nBereken het nieuwe evenwicht.',
+            steps: [
+                { q: 'Wat is de nieuwe constante in de aanbodfunctie na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') = \u2212' + newC + ' + ' + d + 'P' },
+                { q: 'Bereken de nieuwe evenwichtsprijs.', a: newPs, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op naar P.', expl: alpha + ' \u2212 ' + b + 'P = \u2212' + newC + ' + ' + d + 'P \u2192 P* = ' + newPs },
+                { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: newQs, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + newPs + ' = ' + newQs }
+            ]
+        };
+    };
+
+    GEN.S6 = function () {
+        var n = ri(2, 4);
+        var aInd = ri(1, 3), cInd = ri(4, 10);
+        var testP = cInd + aInd * ri(2, 6);
+        var qInd = (testP - cInd) / aInd;
+        var qCol = n * qInd;
+        return {
+            context: n + ' identieke bedrijven, elk met individueel aanbod: P = ' + aInd + 'Qi + ' + cInd + '.\nBepaal het collectieve aanbod.',
+            steps: [
+                { q: 'Vanaf welke prijs wordt er aangeboden?', a: cInd, hint: 'Schrijf om naar Qi als functie van P. Bij welke P is Qi = 0?', expl: 'Qi = (P \u2212 ' + cInd + ') / ' + aInd + '. Minimumprijs = ' + cInd },
+                { q: 'Bereken Qi per bedrijf bij P = ' + testP + '.', a: qInd, hint: 'Vul P = ' + testP + ' in bij Qi = (P \u2212 ' + cInd + ') / ' + aInd + '.', expl: 'Qi = (' + testP + ' \u2212 ' + cInd + ') / ' + aInd + ' = ' + qInd },
+                { q: 'Bereken het collectieve aanbod bij P = ' + testP + '.', a: qCol, hint: 'Er zijn ' + n + ' identieke bedrijven.', expl: 'Qcol = ' + n + ' \u00D7 ' + qInd + ' = ' + qCol }
+            ]
+        };
+    };
+
+    /* ── Eindbazen ──────────────────────────────────────────── */
+
+    GEN.E1 = function () {
+        var P = ri(40, 70);
+        var a = pick([0.5, 1, 2]);
+        var Q1 = ri(3, 8), Q2 = ri(Q1 + 5, Q1 + 15);
+        var b = round1(P - a * (Q1 + Q2));
+        var c = round1(a * Q1 * Q2);
+        if (b < 0) return GEN.E1();
+        var Qmid = Math.round((Q1 + Q2) / 2);
+        var winstMid = round1(P * Qmid - (a * Qmid * Qmid + b * Qmid + c));
+        return {
+            context: 'Een producent verkoopt voor P = ' + P + '.\nTK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.\nVoer een volledige break-even analyse uit.',
+            steps: [
+                { q: 'Stel TO = TK en herschrijf naar \u2026Q\u00B2 + \u2026Q + \u2026 = 0. Wat is de co\u00EBffici\u00EBnt van Q?', a: round1(b - P), hint: P + 'Q = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Breng alles naar \u00E9\u00E9n kant.', expl: a + 'Q\u00B2 + (' + b + ' \u2212 ' + P + ')Q + ' + c + ' = 0 \u2192 co\u00EBffici\u00EBnt = ' + round1(b - P) },
+                { q: 'Bereken de kleinste break-even hoeveelheid.', a: Q1, hint: 'Gebruik de abc-formule.', expl: 'Q\u2081 = ' + Q1 },
+                { q: 'Bereken de grootste break-even hoeveelheid.', a: Q2, hint: 'De tweede oplossing van dezelfde vergelijking.', expl: 'Q\u2082 = ' + Q2 },
+                { q: 'Bereken de winst bij Q = ' + Qmid + '.', a: winstMid, hint: 'Winst = TO \u2212 TK. Bereken beide bij Q = ' + Qmid + '.', expl: 'TO = ' + (P * Qmid) + ', TK = ' + round1(a * Qmid * Qmid + b * Qmid + c) + ', Winst = ' + winstMid }
+            ]
+        };
+    };
+
+    GEN.E2 = function () {
+        var b = ri(2, 5), d = ri(1, 4);
+        var Ps = ri(8, 20);
+        var maxC = Math.min(d * Ps - 2, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 2) return GEN.E2();
+        var c = ri(2, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 2) return GEN.E2();
+        var pMax = round1(alpha / b);
+        var cs = round1(0.5 * Qs * (pMax - Ps));
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nBereken het consumentensurplus volledig.',
+            steps: [
+                { q: 'Bereken de evenwichtsprijs.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
+                { q: 'Bereken de evenwichtshoeveelheid.', a: Qs, hint: 'Vul P* in bij Qv of Qa.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps + ' = ' + Qs },
+                { q: 'Bepaal het snijpunt van de vraaglijn met de P-as.', a: pMax, hint: 'Bij welke prijs is de gevraagde hoeveelheid nul?', expl: 'Q = 0 \u2192 ' + alpha + ' = ' + b + 'P \u2192 Pmax = ' + pMax },
+                { q: 'Bereken het consumentensurplus.', a: cs, hint: 'CS is een driehoek met basis Q* en hoogte Pmax \u2212 P*.', expl: 'CS = \u00BD \u00D7 ' + Qs + ' \u00D7 (' + pMax + ' \u2212 ' + Ps + ') = ' + cs }
+            ]
+        };
+    };
+
+    GEN.E3 = function () {
+        var n1 = ri(2, 3), n2 = ri(1, 2);
+        var a1 = pick([1, 2]), c1 = ri(4, 10);
+        var a2 = pick([1, 2, 3]), c2 = ri(6, 14);
+        var testP = Math.max(c1, c2) + ri(4, 10);
+        var q1 = round1((testP - c1) / a1);
+        var q2 = round1((testP - c2) / a2);
+        var qTot = round1(n1 * q1 + (testP >= c2 ? n2 * q2 : 0));
+        return {
+            context: 'Groep A: ' + n1 + ' bedrijven, elk P = ' + a1 + 'Q + ' + c1 + '\nGroep B: ' + n2 + ' bedrijf(ven), elk P = ' + a2 + 'Q + ' + c2 + '\nBepaal het collectieve aanbod.',
+            steps: [
+                { q: 'Bereken het aanbod per bedrijf van groep A bij P = ' + testP + '.', a: q1, hint: 'Schrijf om: Qa = (P \u2212 ' + c1 + ') / ' + a1 + '. Vul P in.', expl: 'Qa = (' + testP + ' \u2212 ' + c1 + ') / ' + a1 + ' = ' + q1 },
+                { q: 'Bereken het totale aanbod van groep A.', a: round1(n1 * q1), hint: 'Er zijn ' + n1 + ' bedrijven in groep A.', expl: n1 + ' \u00D7 ' + q1 + ' = ' + round1(n1 * q1) },
+                { q: 'Bereken het aanbod per bedrijf van groep B bij P = ' + testP + '.', a: q2, hint: 'Schrijf om: Qb = (P \u2212 ' + c2 + ') / ' + a2 + '. Vul P in.', expl: 'Qb = (' + testP + ' \u2212 ' + c2 + ') / ' + a2 + ' = ' + q2 },
+                { q: 'Bereken het totale collectieve aanbod.', a: qTot, hint: 'Tel het totale aanbod van beide groepen op.', expl: 'Qcol = ' + round1(n1 * q1) + ' + ' + round1(n2 * q2) + ' = ' + qTot }
+            ]
+        };
+    };
+
+    GEN.E4 = function () {
+        var b = ri(2, 4), d = ri(1, 3);
+        var Ps = ri(10, 20), heffing = ri(3, 8);
+        var maxC = Math.min(d * Ps - 2, Math.floor((b + d) * Ps / 2) - 1);
+        if (maxC < 3) return GEN.E4();
+        var c = ri(3, maxC);
+        var alpha = (b + d) * Ps - c;
+        var Qs = d * Ps - c;
+        if (Qs <= 5) return GEN.E4();
+        var newC = c + d * heffing;
+        var Pn = round1((alpha + newC) / (b + d));
+        var Qn = round1(alpha - b * Pn);
+        if (Qn <= 0) return GEN.E4();
+        var dwl = round1(0.5 * (Qs - Qn) * heffing);
+        return {
+            context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P, Qa = \u2212' + c + ' + ' + d + 'P.\nHeffing: \u20AC' + heffing + '/stuk.\nBereken het welvaartsverlies.',
+            steps: [
+                { q: 'Bereken de oude evenwichtsprijs.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
+                { q: 'Bereken de oude evenwichtshoeveelheid.', a: Qs, hint: 'Vul P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps + ' = ' + Qs },
+                { q: 'Wat is de nieuwe constante in Qa na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') \u2192 constante = ' + newC },
+                { q: 'Bereken de nieuwe evenwichtsprijs.', a: Pn, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op.', expl: 'P_nieuw = (' + alpha + '+' + newC + ') \u00F7 ' + (b + d) + ' = ' + Pn },
+                { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: Qn, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q_nieuw = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pn + ' = ' + Qn },
+                { q: 'Bereken het welvaartsverlies.', a: dwl, hint: 'Het welvaartsverlies is een driehoek. Wat zijn de basis en hoogte?', expl: 'DWL = \u00BD \u00D7 (' + Qs + ' \u2212 ' + round1(Qn) + ') \u00D7 ' + heffing + ' = ' + dwl }
+            ]
+        };
+    };
+
+    GEN.E5 = function () {
+        var P = ri(25, 50);
+        var a = pick([0.5, 1, 1.5, 2]), bk = ri(3, 12), ck = ri(50, 200);
+        var Qs = round1((P - bk) / (2 * a));
+        if (Qs <= 0 || Qs !== Math.round(Qs * 10) / 10) return GEN.E5();
+        var tk = round1(a * Qs * Qs + bk * Qs + ck);
+        var gtk = round2(tk / Qs);
+        var winstPerStuk = round2(P - gtk);
+        var totWinst = round1(winstPerStuk * Qs);
+        return {
+            context: 'Marktprijs P = ' + P + ' (volledige mededinging).\nTK = ' + a + 'Q\u00B2 + ' + bk + 'Q + ' + ck + '.\nBepaal de optimale productie en winst.',
+            steps: [
+                { q: 'Bepaal de optimale productiehoeveelheid Q*.', a: Qs, hint: 'Bij volledige mededinging geldt: P = MK. Bepaal eerst MK.', expl: 'MK = ' + round1(2 * a) + 'Q + ' + bk + '. P = MK \u2192 Q* = (' + P + ' \u2212 ' + bk + ') \u00F7 ' + round1(2 * a) + ' = ' + Qs },
+                { q: 'Bereken TK bij de optimale hoeveelheid.', a: tk, hint: 'Vul Q* = ' + Qs + ' in de kostenfunctie in.', expl: 'TK = ' + a + '\u00D7' + Qs + '\u00B2 + ' + bk + '\u00D7' + Qs + ' + ' + ck + ' = ' + tk },
+                { q: 'Bereken GTK bij de optimale hoeveelheid.', a: gtk, hint: 'GTK = TK gedeeld door Q.', expl: 'GTK = ' + tk + ' \u00F7 ' + Qs + ' = ' + gtk },
+                { q: 'Bereken de winst per stuk.', a: winstPerStuk, hint: 'Winst per stuk = prijs minus gemiddelde kosten.', expl: 'Winst/stuk = ' + P + ' \u2212 ' + gtk + ' = ' + winstPerStuk },
+                { q: 'Bereken de totale winst.', a: totWinst, hint: 'Totale winst = winst per stuk \u00D7 hoeveelheid.', expl: 'Totale winst = ' + winstPerStuk + ' \u00D7 ' + Qs + ' = ' + totWinst }
+            ]
+        };
+    };
+
+    GEN.E6 = function () {
+        var b = ri(2, 4), d = ri(1, 3);
+        var Ps = ri(15, 25);
+        var c = ri(5, d * Ps - 2);
+        var a = (b + d) * Ps + c;
+        var Qs = a - b * Ps;
+        var Pw = Ps - ri(3, 7);
+        var Qd = a - b * Pw;
+        var Qsup = Math.max(0, -c + d * Pw);
+        var importR = ri(2, 5);
+        var QdNew = a - b * (Pw + importR);
+        var QsupNew = Math.max(0, -c + d * (Pw + importR));
+        var govRev = round1(importR * (QdNew - QsupNew));
+        if (Qsup < 0 || QsupNew < 0 || QdNew <= QsupNew) return GEN.E6();
+        return {
+            context: 'Qv = ' + a + ' \u2212 ' + b + 'P, Qa = \u2212' + c + ' + ' + d + 'P.\nWereldmarktprijs Pw = ' + Pw + '. Invoerrecht: \u20AC' + importR + '/stuk.\nAnalyseer de effecten.',
+            steps: [
+                { q: 'Bereken de binnenlandse vraag bij de wereldmarktprijs.', a: Qd, hint: 'Vul Pw = ' + Pw + ' in bij Qv.', expl: 'Qd = ' + a + ' \u2212 ' + b + '\u00D7' + Pw + ' = ' + Qd },
+                { q: 'Bereken het binnenlandse aanbod bij de wereldmarktprijs.', a: Qsup, hint: 'Vul Pw = ' + Pw + ' in bij Qa.', expl: 'Qs = \u2212' + c + ' + ' + d + '\u00D7' + Pw + ' = ' + Qsup },
+                { q: 'Hoeveel wordt er ge\u00EFmporteerd zonder invoerrecht?', a: Qd - Qsup, hint: 'Import = binnenlandse vraag \u2212 binnenlands aanbod.', expl: 'Import = ' + Qd + ' \u2212 ' + Qsup + ' = ' + (Qd - Qsup) },
+                { q: 'Wat is de nieuwe binnenlandse prijs na het invoerrecht?', a: Pw + importR, hint: 'Het invoerrecht wordt opgeteld bij de wereldmarktprijs.', expl: 'P_nieuw = ' + Pw + ' + ' + importR + ' = ' + (Pw + importR) },
+                { q: 'Hoeveel wordt er ge\u00EFmporteerd m\u00E9t invoerrecht?', a: QdNew - QsupNew, hint: 'Bereken vraag en aanbod bij de nieuwe prijs en trek af.', expl: 'Import = ' + QdNew + ' \u2212 ' + QsupNew + ' = ' + (QdNew - QsupNew) },
+                { q: 'Bereken de overheidsinkomsten uit het invoerrecht.', a: govRev, hint: 'Overheidsinkomsten = tarief \u00D7 ge\u00EFmporteerde hoeveelheid.', expl: importR + ' \u00D7 ' + (QdNew - QsupNew) + ' = ' + govRev }
+            ]
+        };
+    };
+
+    GEN.E7 = function () {
+        var aP = ri(60, 120), bP = ri(1, 4);
+        var aTK = pick([0.5, 1, 2]), bTK = ri(5, 20), cTK = ri(50, 200);
+        var Qs = round1((aP - bTK) / (2 * bP + 2 * aTK));
+        if (Qs <= 0 || Qs !== Math.round(Qs * 10) / 10) return GEN.E7();
+        var Pstar = round1(aP - bP * Qs);
+        var TO = round1(Pstar * Qs);
+        var TK = round1(aTK * Qs * Qs + bTK * Qs + cTK);
+        var winst = round1(TO - TK);
+        return {
+            context: 'Monopolist: P = ' + aP + ' \u2212 ' + bP + 'Q.\nTK = ' + aTK + 'Q\u00B2 + ' + bTK + 'Q + ' + cTK + '.\nBepaal de maximale winst.',
+            steps: [
+                { q: 'Bepaal de winstmaximaliserende hoeveelheid Q*.', a: Qs, hint: 'Stel MO = MK. Bepaal eerst MO en MK uit de gegeven functies.', expl: 'MO = ' + aP + ' \u2212 ' + (2 * bP) + 'Q, MK = ' + round1(2 * aTK) + 'Q + ' + bTK + '. MO = MK \u2192 Q* = ' + Qs },
+                { q: 'Bereken de prijs die de monopolist vraagt.', a: Pstar, hint: 'Vul Q* in de vraaglijn (P = \u2026).', expl: 'P* = ' + aP + ' \u2212 ' + bP + '\u00D7' + Qs + ' = ' + Pstar },
+                { q: 'Bereken de totale opbrengst.', a: TO, hint: 'TO = P* \u00D7 Q*.', expl: 'TO = ' + Pstar + ' \u00D7 ' + Qs + ' = ' + TO },
+                { q: 'Bereken de totale kosten bij Q*.', a: TK, hint: 'Vul Q* in de kostenfunctie.', expl: 'TK = ' + aTK + '\u00D7' + Qs + '\u00B2 + ' + bTK + '\u00D7' + Qs + ' + ' + cTK + ' = ' + TK },
+                { q: 'Bereken de maximale winst.', a: winst, hint: 'Winst = TO \u2212 TK.', expl: 'Winst = ' + TO + ' \u2212 ' + TK + ' = ' + winst }
+            ]
+        };
+    };
+
+    GEN.E8 = function () {
+        var a1 = ri(60, 100), b1 = ri(1, 3);
+        var a2 = ri(80, 140), b2 = ri(2, 5);
+        var mk = ri(10, 25);
+        var Q1 = round1((a1 - mk) / (2 * b1));
+        var Q2 = round1((a2 - mk) / (2 * b2));
+        if (Q1 <= 0 || Q2 <= 0) return GEN.E8();
+        var P1 = round1(a1 - b1 * Q1);
+        var P2 = round1(a2 - b2 * Q2);
+        var winst1 = round1((P1 - mk) * Q1);
+        var winst2 = round1((P2 - mk) * Q2);
+        var totWinst = round1(winst1 + winst2);
+        return {
+            context: 'Prijsdiscriminatie. MK = ' + mk + ' (constant).\nMarkt 1: P\u2081 = ' + a1 + ' \u2212 ' + b1 + 'Q\u2081\nMarkt 2: P\u2082 = ' + a2 + ' \u2212 ' + b2 + 'Q\u2082',
+            steps: [
+                { q: 'Bepaal de optimale hoeveelheid op markt 1.', a: Q1, hint: 'Stel MO\u2081 = MK en los op. MO\u2081 is de afgeleide van TO\u2081.', expl: 'MO\u2081 = ' + a1 + ' \u2212 ' + (2 * b1) + 'Q\u2081 = ' + mk + ' \u2192 Q\u2081 = ' + Q1 },
+                { q: 'Welke prijs vraagt de monopolist op markt 1?', a: P1, hint: 'Vul Q\u2081 in de vraagfunctie van markt 1.', expl: 'P\u2081 = ' + a1 + ' \u2212 ' + b1 + '\u00D7' + Q1 + ' = ' + P1 },
+                { q: 'Bepaal de optimale hoeveelheid op markt 2.', a: Q2, hint: 'Stel MO\u2082 = MK en los op.', expl: 'MO\u2082 = ' + a2 + ' \u2212 ' + (2 * b2) + 'Q\u2082 = ' + mk + ' \u2192 Q\u2082 = ' + Q2 },
+                { q: 'Welke prijs vraagt de monopolist op markt 2?', a: P2, hint: 'Vul Q\u2082 in de vraagfunctie van markt 2.', expl: 'P\u2082 = ' + a2 + ' \u2212 ' + b2 + '\u00D7' + Q2 + ' = ' + P2 },
+                { q: 'Bereken de winst op markt 1.', a: winst1, hint: 'Winst = (prijs \u2212 MK) \u00D7 hoeveelheid.', expl: 'Winst\u2081 = (' + P1 + ' \u2212 ' + mk + ') \u00D7 ' + Q1 + ' = ' + winst1 },
+                { q: 'Bereken de winst op markt 2.', a: winst2, hint: 'Winst = (prijs \u2212 MK) \u00D7 hoeveelheid.', expl: 'Winst\u2082 = (' + P2 + ' \u2212 ' + mk + ') \u00D7 ' + Q2 + ' = ' + winst2 },
+                { q: 'Bereken de totale winst.', a: totWinst, hint: 'Tel de winst van beide markten op.', expl: 'Totaal = ' + winst1 + ' + ' + winst2 + ' = ' + totWinst }
+            ]
+        };
+    };
+
+    return {
+        SKILLS: SKILLS,
+        LAYER_NAMES: LAYER_NAMES,
+        LAYER_COLORS: LAYER_COLORS,
+        GEN: GEN,
+        helpers: { ri: ri, pick: pick, round1: round1, round2: round2 }
+    };
+});

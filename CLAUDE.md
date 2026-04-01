@@ -471,7 +471,7 @@ shared/
   skilltree-ui.js             ← DOM binding layer (browser only)
   skilltree.css               ← Shared styles with CSS custom properties (--st-*)
   skilltree/
-    base-elements.js          ← Pool of all 41 exercise generators
+    base-elements.js          ← Pool of all 27 exercise generators
     3.1.1.js ... 3.4.6.js    ← Per-paragraph data files (20 total)
   tests/
     skilltree-engine.test.js  ← Engine unit tests
@@ -484,26 +484,31 @@ Each reken-spel HTML file is a thin shell in `3. Oefenen/` that loads:
 3. `shared/skilltree-engine.js` → `SkillTreeEngine` class
 4. `shared/skilltree-ui.js` → IIFE, wires engine to DOM
 
-### 41 base elements across 4 layers
+### 27 base elements across 4 layers
 
-| Layer | Name | Count | Description |
-|-------|------|-------|-------------|
-| 0 | Fundament | 9 | Pure math, always visible |
-| 1 | Bouwstenen | 11 | Economic context + 1-2 L0 skills |
-| 2 | Samengesteld | 14 | Multi-step, includes simplified versions of L3 skills |
-| 3 | Eindbazen | 7 | Full exam-level problems |
+| Layer | Name | Count | Skills | Description |
+|-------|------|-------|--------|-------------|
+| 0 | Fundament | 4 | F1–F4 | Pure math, always visible |
+| 1 | Bouwstenen | 9 | B1–B7, F5, F6 | Economic context + L0 prerequisites |
+| 2 | Samengesteld | 6 | S1–S6 | Multi-step, combining L1 skills |
+| 3 | Eindbazen | 8 | E1–E8 | Full exam-level problems |
+
+### Global progress
+
+Stars are stored globally in a single `localStorage` key (`skilltree_global_stars`), not per-paragraph.
+When a student earns stars for F1 in paragraph 3.1.1, those stars are visible in all other paragraphs.
+On first load, the engine automatically migrates any old per-paragraph keys (`skilltree_3.X.Y`) and
+the legacy `econ-game-stars` key into the global store (highest value wins).
 
 ### Build scripts for reken-spel
 
 | Script | Purpose |
 |--------|---------|
-| `build-scripts/build-skilltree-shells.js` | Generate HTML shells for all paragraphs with data files |
-| `build-scripts/build-skilltree-scaffold.js` | Scaffold new per-paragraph data file |
+| `build-scripts/build-skilltree-shells.js` | Generate HTML shells + per-paragraph data files for all 20 paragraphs |
 
 ### Adding a new reken-spel paragraph:
-1. Run: `node build-scripts/build-skilltree-scaffold.js X.Y.Z elementId1,elementId2,...`
-2. Review and customize the generated data file
-3. Run: `node build-scripts/build-skilltree-shells.js` to generate HTML shell
+1. Add the paragraph to the `PARAGRAPHS` array in `build-scripts/build-skilltree-shells.js`
+2. Run: `node build-scripts/build-skilltree-shells.js` to generate data file + HTML shell
 4. Run `npm test` to validate
 5. Add link in paragraph `index.html`
 

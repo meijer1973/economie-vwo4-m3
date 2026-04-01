@@ -2,9 +2,9 @@
 /**
  * build-skilltree-shells.js
  *
- * Generates reken-spel HTML files from the original economie-skill-tree.jsx.
- * Each paragraph gets its own HTML with React via CDN + the JSX component,
- * filtered to show only the relevant skills for that paragraph.
+ * Generates thin HTML shells for the reken-spel (wiskundevaardigheden).
+ * Each shell loads shared scripts from ../../shared/ (or deeper).
+ * Also generates per-paragraph data files in shared/skilltree/.
  *
  * Run: node build-scripts/build-skilltree-shells.js
  */
@@ -13,7 +13,6 @@ const fs = require('fs');
 const path = require('path');
 
 const MODULE_ROOT = path.resolve(__dirname, '..');
-const JSX_PATH = path.join(MODULE_ROOT, 'economie-skill-tree.jsx');
 
 // ── Paragraph definitions ──────────────────────────────────────────
 
@@ -62,85 +61,37 @@ function findParagraphDir(parNr) {
     return walk(MODULE_ROOT);
 }
 
-// ── Transform JSX for browser ──────────────────────────────────────
+// ── Compute relative path to shared/ ──────────────────────────────
 
-function transformJSX(jsxSource, skillIds, storageKey) {
-    let code = jsxSource;
-
-    // Remove ES module imports
-    code = code.replace(/^import\s+\{[^}]+\}\s+from\s+["'][^"']+["'];?\s*$/gm, '');
-
-    // Replace React hooks with React.xxx
-    code = code.replace(/\buseState\b/g, 'React.useState');
-    code = code.replace(/\buseEffect\b/g, 'React.useEffect');
-    code = code.replace(/\buseCallback\b/g, 'React.useCallback');
-    code = code.replace(/\buseRef\b/g, 'React.useRef');
-
-    // Replace lucide-react icons with simple SVG components
-    const iconDefs = `
-const ArrowLeft = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>;
-const Trophy = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>;
-const Lightbulb = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>;
-const RotateCcw = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>;
-`;
-
-    // Replace the entire Load progress useEffect block
-    code = code.replace(
-        /\/\/ Load progress\s*\n\s*(?:React\.)?useEffect\(\(\) => \{\s*\(async \(\) => \{\s*try \{\s*const res = await window\.storage\.get\("econ-game-stars"\);\s*if \(res\?\.value\) setStars\(JSON\.parse\(res\.value\)\);\s*\} catch\(e\) \{\}\s*setLoaded\(true\);\s*\}\)\(\);\s*\}, \[\]\);/,
-        `// Load progress\n  React.useEffect(() => {\n    try {\n      const saved = localStorage.getItem("${storageKey}");\n      if (saved) setStars(JSON.parse(saved));\n    } catch(e) {}\n    setLoaded(true);\n  }, []);`
-    );
-    // Replace the entire Save progress useEffect block
-    code = code.replace(
-        /\/\/ Save progress\s*\n\s*(?:React\.)?useEffect\(\(\) => \{\s*if \(!loaded\) return;\s*\(async \(\) => \{\s*try \{ await window\.storage\.set\("econ-game-stars", JSON\.stringify\(stars\)\); \} catch\(e\) \{\}\s*\}\)\(\);\s*\}, \[stars, loaded\]\);/,
-        `// Save progress\n  React.useEffect(() => {\n    if (!loaded) return;\n    try { localStorage.setItem("${storageKey}", JSON.stringify(stars)); } catch(e) {}\n  }, [stars, loaded]);`
-    );
-
-    // Replace export default
-    code = code.replace('export default function EconGame()', 'function EconGame()');
-
-    // Filter SKILLS if needed
-    if (skillIds) {
-        // First do the replacements in the component body (before inserting the filter block)
-        // Only replace standalone SKILLS references, not ALL_SKILLS
-        code = code.replace(/\bSKILLS\.filter\b/g, 'FILTERED_SKILLS.filter');
-        code = code.replace(/\bSKILLS\.length\b/g, 'FILTERED_SKILLS.length');
-
-        // Now insert the filter block (after replacements, so ALL_SKILLS.filter stays intact)
-        const filterBlock = `
-const ALL_SKILLS = SKILLS;
-const ACTIVE_IDS = new Set(${JSON.stringify(skillIds)});
-const FILTERED_SKILLS = ALL_SKILLS.filter(s => ACTIVE_IDS.has(s.id)).map(s => ({
-    ...s, needs: s.needs.filter(n => ACTIVE_IDS.has(n))
-}));
-`;
-        code = code.replace('const LAYER_NAMES', filterBlock + 'const LAYER_NAMES');
-    }
-
-    return iconDefs + '\n' + code;
+function relativeToShared(fromDir) {
+    const sharedDir = path.join(MODULE_ROOT, 'shared');
+    return path.relative(fromDir, sharedDir).replace(/\\/g, '/');
 }
 
-// ── Generate HTML ──────────────────────────────────────────────────
+// ── Generate per-paragraph data file ──────────────────────────────
 
-function generateHTML(parNr, parName, jsxCode) {
+function generateDataFile(par) {
+    const activeSkills = par.skills ? JSON.stringify(par.skills) : 'null';
+    return `/**\n * Skill Tree data for ${par.parNr} ${par.name}\n * activeSkills: null = all skills visible\n */\nwindow.SKILL_TREE_DATA = {\n    parNr: "${par.parNr}",\n    parName: "${par.name}",\n    activeSkills: ${activeSkills}\n};\n`;
+}
+
+// ── Generate HTML shell ───────────────────────────────────────────
+
+function generateHTML(parNr, parName, sharedPath) {
     return `<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${parNr} ${parName} \u2013 Wiskundevaardigheden</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>* { margin:0; padding:0; box-sizing:border-box; }</style>
+    <link rel="stylesheet" href="${sharedPath}/skilltree.css">
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
-${jsxCode}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<EconGame />);
-    </script>
+    <div id="skilltree-app"></div>
+    <script src="${sharedPath}/skilltree/base-elements.js"></script>
+    <script src="${sharedPath}/skilltree/${parNr}.js"></script>
+    <script src="${sharedPath}/skilltree-engine.js"></script>
+    <script src="${sharedPath}/skilltree-ui.js"></script>
 </body>
 </html>`;
 }
@@ -148,18 +99,23 @@ ReactDOM.createRoot(document.getElementById('root')).render(<EconGame />);
 // ── Main ───────────────────────────────────────────────────────────
 
 function main() {
-    console.log('Generating reken-spel HTML files from economie-skill-tree.jsx...\\n');
+    console.log('Generating reken-spel HTML shells + data files...\n');
 
-    if (!fs.existsSync(JSX_PATH)) {
-        console.error('ERROR: ' + JSX_PATH + ' not found');
-        process.exit(1);
+    const dataDir = path.join(MODULE_ROOT, 'shared', 'skilltree');
+    if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
     }
 
-    const jsxSource = fs.readFileSync(JSX_PATH, 'utf8');
     let success = 0, errCount = 0;
 
     for (const par of PARAGRAPHS) {
         try {
+            // Generate data file
+            const dataContent = generateDataFile(par);
+            const dataPath = path.join(dataDir, par.parNr + '.js');
+            fs.writeFileSync(dataPath, dataContent, 'utf8');
+
+            // Find paragraph directory and generate HTML shell
             const parDir = findParagraphDir(par.parNr);
             if (!parDir) {
                 console.error('  SKIP: No directory for ' + par.parNr);
@@ -172,9 +128,8 @@ function main() {
                 fs.mkdirSync(oefenDir, { recursive: true });
             }
 
-            const storageKey = 'skilltree_' + par.parNr;
-            const jsxCode = transformJSX(jsxSource, par.skills, storageKey);
-            const html = generateHTML(par.parNr, par.name, jsxCode);
+            const sharedPath = relativeToShared(oefenDir);
+            const html = generateHTML(par.parNr, par.name, sharedPath);
             const outPath = path.join(oefenDir, par.parNr + ' ' + par.name + ' \u2013 wiskundevaardigheden.html');
             fs.writeFileSync(outPath, html, 'utf8');
 
@@ -188,7 +143,7 @@ function main() {
         }
     }
 
-    console.log('\\nDone: ' + success + ' files generated, ' + errCount + ' errors.');
+    console.log('\nDone: ' + success + ' HTML shells + data files generated, ' + errCount + ' errors.');
 }
 
 main();
