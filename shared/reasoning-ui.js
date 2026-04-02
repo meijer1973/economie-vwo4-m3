@@ -28,6 +28,47 @@
         roundsPerGame: 5
     });
 
+    // ── Progress tracking ───────────────────────────────────────────
+    var STORAGE_KEY = 'reasoning_global_progress';
+    var catData = window.REASONING_CATEGORIES || null;
+
+    function loadProgress() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+        catch (e) { return {}; }
+    }
+
+    function saveProgress(progress) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
+        catch (e) { /* silent */ }
+    }
+
+    function getMasteryLevel(correct) {
+        if (correct >= 10) return { label: 'Expert', color: '#f59e0b' };
+        if (correct >= 6)  return { label: 'Gevorderd', color: '#22c55e' };
+        if (correct >= 3)  return { label: 'Onderweg', color: '#3b82f6' };
+        return { label: 'Beginner', color: '#94a3b8' };
+    }
+
+    function getCategoryId(parNr, structureType) {
+        if (!catData) return null;
+        return catData.mapping[parNr + '-' + structureType] || null;
+    }
+
+    function getLocalCategories() {
+        if (!catData) return [];
+        var types = engine.getStructureTypes();
+        var seen = {};
+        var result = [];
+        for (var i = 0; i < types.length; i++) {
+            var catId = getCategoryId(meta.parNr, types[i].type);
+            if (catId && !seen[catId]) {
+                seen[catId] = true;
+                result.push(catId);
+            }
+        }
+        return result;
+    }
+
     // ── Mode icons and descriptions ─────────────────────────────────
     var MODE_ICONS = ['\uD83D\uDD22', '\u2753', '\uD83D\uDD0D', '\uD83D\uDCC8', '\uD83E\uDDE9'];
     var MODE_DESCS = [
@@ -114,6 +155,29 @@
         }
         infoHtml += '</ul>';
         els.structureInfo.innerHTML = infoHtml;
+
+        // ── Progress dashboard ──────────────────────────────────────
+        var dashEl = document.getElementById('r-progress-dashboard');
+        if (dashEl && catData) {
+            var localCats = getLocalCategories();
+            var progress = loadProgress();
+            var dashHtml = '<h4>Jouw redeneervaardigheden</h4>';
+            for (var ci = 0; ci < localCats.length; ci++) {
+                var cid = localCats[ci];
+                var cat = catData.categories[cid];
+                var prog = progress[cid] || { correct: 0, total: 0 };
+                var lvl = getMasteryLevel(prog.correct);
+                var pct = prog.total > 0 ? Math.round((prog.correct / prog.total) * 100) : 0;
+                dashHtml += '<div class="r-cat-row">'
+                    + '<span class="r-cat-icon">' + cat.icon + '</span>'
+                    + '<span class="r-cat-name">' + esc(cat.name) + '</span>'
+                    + '<div class="r-cat-bar"><div class="r-cat-fill" style="width:' + pct + '%;background:' + cat.color + '"></div></div>'
+                    + '<span class="r-cat-level" style="color:' + lvl.color + '">' + esc(lvl.label) + '</span>'
+                    + '<span class="r-cat-count">' + prog.correct + '/' + prog.total + '</span>'
+                    + '</div>';
+            }
+            dashEl.innerHTML = dashHtml;
+        }
 
         // Bind mode buttons
         var btns = els.modeBtns.querySelectorAll('.r-mode-btn');
@@ -600,8 +664,57 @@
         var pct = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
         els.progressFill.style.width = '0%';
         showScreen('results');
-        // Animate progress bar
         setTimeout(function () { els.progressFill.style.width = pct + '%'; }, 100);
+
+        // ── Save progress & render session breakdown ────────────
+        var breakdownEl = document.getElementById('r-session-breakdown');
+        if (!breakdownEl || !catData) return;
+
+        var progress = loadProgress();
+        var sessionCats = {};  // catId → { correct, total, prevCorrect }
+
+        // Aggregate per-type results into categories
+        for (var type in result.perType) {
+            if (!result.perType.hasOwnProperty(type)) continue;
+            var catId = getCategoryId(meta.parNr, type);
+            if (!catId) continue;
+            var pt = result.perType[type];
+            if (!sessionCats[catId]) {
+                var prev = progress[catId] || { correct: 0, total: 0 };
+                sessionCats[catId] = { correct: pt.correct, total: pt.total, prevCorrect: prev.correct };
+            } else {
+                sessionCats[catId].correct += pt.correct;
+                sessionCats[catId].total += pt.total;
+            }
+        }
+
+        // Update global progress
+        for (var cid in sessionCats) {
+            if (!sessionCats.hasOwnProperty(cid)) continue;
+            if (!progress[cid]) progress[cid] = { correct: 0, total: 0 };
+            progress[cid].correct += sessionCats[cid].correct;
+            progress[cid].total += sessionCats[cid].total;
+        }
+        saveProgress(progress);
+
+        // Render breakdown
+        var html = '<div class="r-session-divider">Deze sessie</div>';
+        for (var catId2 in sessionCats) {
+            if (!sessionCats.hasOwnProperty(catId2)) continue;
+            var cat = catData.categories[catId2];
+            var sc = sessionCats[catId2];
+            var prevLevel = getMasteryLevel(sc.prevCorrect);
+            var newLevel = getMasteryLevel(progress[catId2].correct);
+            var levelUp = newLevel.label !== prevLevel.label;
+            var rowClass = levelUp ? 'r-session-row r-level-up' : 'r-session-row';
+            var levelText = levelUp ? ('\u2192 ' + newLevel.label + '!') : newLevel.label;
+            var levelColor = levelUp ? newLevel.color : '#64748b';
+            html += '<div class="' + rowClass + '">'
+                + '<span>' + cat.icon + ' ' + esc(cat.name) + ': ' + sc.correct + '/' + sc.total + ' goed</span>'
+                + '<span class="r-session-level" style="color:' + levelColor + '">' + esc(levelText) + '</span>'
+                + '</div>';
+        }
+        breakdownEl.innerHTML = html;
     }
 
     // ── Utility ─────────────────────────────────────────────────────

@@ -402,3 +402,105 @@ describe('edge cases', () => {
         expect(() => engine.startGame(-1)).toThrow('Invalid mode');
     });
 });
+
+// ── Progress tracking ──────────────────────────────────────────────
+
+describe('Progress tracking (perType & getCurrentStructureType)', () => {
+    test('startGame initializes empty _roundResults', () => {
+        const engine = createEngine();
+        engine.startGame(0);
+        expect(engine._roundResults).toEqual([]);
+    });
+
+    test('submitAnswer populates _roundResults', () => {
+        const engine = createEngine();
+        engine.startGame(0);
+        engine.getRound();
+        const labels = engine.problems[engine._rounds[0]].steps.map(s => s.label);
+        engine.submitAnswer(labels);
+        expect(engine._roundResults.length).toBe(1);
+        expect(engine._roundResults[0]).toHaveProperty('structureType');
+        expect(engine._roundResults[0]).toHaveProperty('correct');
+    });
+
+    test('getCurrentStructureType returns type for current round', () => {
+        const engine = createEngine();
+        engine.startGame(0);
+        engine.getRound();
+        const type = engine.getCurrentStructureType();
+        expect(typeof type).toBe('string');
+        expect(type.length).toBeGreaterThan(0);
+    });
+
+    test('getCurrentStructureType returns null after game ends', () => {
+        const engine = createEngine({ roundsPerGame: 1 });
+        engine.startGame(0);
+        engine.getRound();
+        const labels = engine.problems[engine._rounds[0]].steps.map(s => s.label);
+        engine.submitAnswer(labels);
+        engine.nextRound();
+        expect(engine.getCurrentStructureType()).toBeNull();
+    });
+
+    test('getResult includes perType breakdown', () => {
+        const engine = createEngine({ roundsPerGame: 2 });
+        engine.startGame(0);
+
+        // Round 1: correct
+        engine.getRound();
+        const labels1 = engine.problems[engine._rounds[0]].steps.map(s => s.label);
+        engine.submitAnswer(labels1);
+        engine.nextRound();
+
+        // Round 2: wrong
+        engine.getRound();
+        engine.submitAnswer(['wrong1', 'wrong2', 'wrong3']);
+
+        const result = engine.getResult();
+        expect(result).toHaveProperty('perType');
+        expect(typeof result.perType).toBe('object');
+
+        // Should have entries
+        const types = Object.keys(result.perType);
+        expect(types.length).toBeGreaterThan(0);
+
+        // Each entry should have correct and total
+        for (const t of types) {
+            expect(result.perType[t]).toHaveProperty('correct');
+            expect(result.perType[t]).toHaveProperty('total');
+            expect(result.perType[t].total).toBeGreaterThan(0);
+        }
+    });
+
+    test('perType totals match total rounds played', () => {
+        const engine = createEngine({ roundsPerGame: 3 });
+        engine.startGame(0);
+
+        for (let i = 0; i < 3; i++) {
+            engine.getRound();
+            const labels = engine.problems[engine._rounds[engine._roundIdx]].steps.map(s => s.label);
+            engine.submitAnswer(labels);
+            if (i < 2) engine.nextRound();
+        }
+
+        const result = engine.getResult();
+        let totalFromPerType = 0;
+        for (const t in result.perType) {
+            totalFromPerType += result.perType[t].total;
+        }
+        expect(totalFromPerType).toBe(3);
+    });
+
+    test('match mode (mode 4) includes perType', () => {
+        const engine = createEngine();
+        engine.startGame(4);
+        engine.getRound();
+        // Submit wrong pairs to just test perType exists
+        engine.submitAnswer([[1, 2], [3, 4], [5, 6]]);
+        const result = engine.getResult();
+        expect(result).toHaveProperty('perType');
+        // Match mode uses structure types from matched items - perType may be empty
+        // since match mode doesn't track individual problem structure types the same way
+        expect(typeof result.perType).toBe('object');
+    });
+});

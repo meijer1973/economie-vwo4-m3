@@ -319,3 +319,51 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0f172a; }
     .r-flow-bank { gap: 6px; }
     .r-match-card { padding: 12px 14px; font-size: 13px; }
 }
+
+/* ── Progress Dashboard (menu screen) ────────────────────────── */
+
+.r-progress-dashboard { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+.r-progress-dashboard h4 { font-size: 15px; margin-bottom: 12px; color: #475569; }
+.r-cat-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f1f5f9;
+}
+.r-cat-row:last-child { border-bottom: none; }
+.r-cat-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.r-cat-name { font-size: 13px; font-weight: 600; color: #334155; width: 110px; flex-shrink: 0; }
+.r-cat-bar {
+    flex: 1; height: 8px; background: #e2e8f0;
+    border-radius: 4px; overflow: hidden; min-width: 60px;
+}
+.r-cat-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.r-cat-level { font-size: 12px; font-weight: 700; width: 70px; text-align: right; flex-shrink: 0; }
+.r-cat-count { font-size: 12px; color: #94a3b8; width: 40px; text-align: right; flex-shrink: 0; }
+
+/* ── Session Breakdown (results screen) ──────────────────────── */
+
+.r-session-breakdown {
+    margin-top: 20px; text-align: left;
+    max-width: 360px; margin-left: auto; margin-right: auto;
+}
+.r-session-divider {
+    font-size: 12px; color: #94a3b8; text-transform: uppercase;
+    letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px; margin-bottom: 10px; text-align: center;
+}
+.r-session-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 14px; color: #334155;
+}
+.r-session-level { font-weight: 700; font-size: 13px; }
+.r-session-row.r-level-up {
+    background: #fef3c7; border-radius: 6px; padding: 6px 10px;
+    margin: 2px 0;
+}
+.r-session-row.r-level-up .r-session-level { color: #f59e0b; }
+
+@media (max-width: 600px) {
+    .r-cat-name { width: 90px; font-size: 12px; }
+    .r-cat-level { width: 60px; font-size: 11px; }
+    .r-cat-count { width: 35px; font-size: 11px; }
+    .r-session-row { font-size: 13px; }
+}

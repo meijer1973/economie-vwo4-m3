@@ -235,6 +235,7 @@
         this._roundIdx = 0;
         this._answered = false;
         this._matchData = null;
+        this._roundResults = [];
 
         if (modeIndex === 4) {
             // Match mode: single round
@@ -446,6 +447,9 @@
 
         if (result.correct) this._score++;
 
+        var currentProblem = this.problems[this._rounds[this._roundIdx]];
+        this._roundResults.push({ structureType: currentProblem.structureType, correct: result.correct });
+
         return {
             correct: result.correct,
             score: this._score,
@@ -565,6 +569,11 @@
         return this._roundIdx < this._rounds.length;
     };
 
+    ReasoningEngine.prototype.getCurrentStructureType = function () {
+        if (this._roundIdx >= this._rounds.length) return null;
+        return this.problems[this._rounds[this._roundIdx]].structureType;
+    };
+
     // ── Results ─────────────────────────────────────────────────────
 
     ReasoningEngine.prototype.getResult = function () {
@@ -572,12 +581,22 @@
         var score = this._score;
         var ratio = total > 0 ? score / total : 0;
         var emoji = ratio >= 1 ? '\uD83C\uDFC6' : (ratio >= 0.5 ? '\uD83D\uDCC8' : '\uD83D\uDCDA');
+
+        var perType = {};
+        for (var i = 0; i < this._roundResults.length; i++) {
+            var rr = this._roundResults[i];
+            if (!perType[rr.structureType]) perType[rr.structureType] = { correct: 0, total: 0 };
+            perType[rr.structureType].total++;
+            if (rr.correct) perType[rr.structureType].correct++;
+        }
+
         return {
             score: score,
             total: total,
             ratio: ratio,
             emoji: emoji,
-            modeName: MODE_NAMES_NL[this._mode]
+            modeName: MODE_NAMES_NL[this._mode],
+            perType: perType
         };
     };
 
