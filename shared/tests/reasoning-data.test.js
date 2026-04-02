@@ -7,7 +7,7 @@ const path = require('path');
 const REASONING_DIR = path.resolve(__dirname, '..', 'reasoning');
 
 function loadAllReasoningData() {
-    const files = fs.readdirSync(REASONING_DIR).filter(f => f.endsWith('.js')).sort();
+    const files = fs.readdirSync(REASONING_DIR).filter(f => f.endsWith('.js') && f !== 'meta-categories.js').sort();
     const result = [];
     for (const file of files) {
         const content = fs.readFileSync(path.join(REASONING_DIR, file), 'utf8');
