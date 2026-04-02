@@ -826,6 +826,8 @@
     });
 
     // ── Initial render ──────────────────────────────────────────────
+    resetSessionProgress();
+    renderSessionProgress();
     renderMenu();
     showScreen('menu');
 })();
