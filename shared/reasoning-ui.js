@@ -69,6 +69,9 @@
         return result;
     }
 
+    // ── Sidebar reference ────────────────────────────────────────────
+    var sidebarEl = document.getElementById('r-sidebar');
+
     // ── Mode icons and descriptions ─────────────────────────────────
     var MODE_ICONS = ['\uD83D\uDD22', '\u2753', '\uD83D\uDD0D', '\uD83D\uDCC8', '\uD83E\uDDE9'];
     var MODE_DESCS = [
@@ -156,28 +159,8 @@
         infoHtml += '</ul>';
         els.structureInfo.innerHTML = infoHtml;
 
-        // ── Progress dashboard ──────────────────────────────────────
-        var dashEl = document.getElementById('r-progress-dashboard');
-        if (dashEl && catData) {
-            var localCats = getLocalCategories();
-            var progress = loadProgress();
-            var dashHtml = '<h4>Jouw redeneervaardigheden</h4>';
-            for (var ci = 0; ci < localCats.length; ci++) {
-                var cid = localCats[ci];
-                var cat = catData.categories[cid];
-                var prog = progress[cid] || { correct: 0, total: 0 };
-                var lvl = getMasteryLevel(prog.correct);
-                var pct = prog.total > 0 ? Math.round((prog.correct / prog.total) * 100) : 0;
-                dashHtml += '<div class="r-cat-row">'
-                    + '<span class="r-cat-icon">' + cat.icon + '</span>'
-                    + '<span class="r-cat-name">' + esc(cat.name) + '</span>'
-                    + '<div class="r-cat-bar"><div class="r-cat-fill" style="width:' + pct + '%;background:' + cat.color + '"></div></div>'
-                    + '<span class="r-cat-level" style="color:' + lvl.color + '">' + esc(lvl.label) + '</span>'
-                    + '<span class="r-cat-count">' + prog.correct + '/' + prog.total + '</span>'
-                    + '</div>';
-            }
-            dashEl.innerHTML = dashHtml;
-        }
+        // Render sidebar
+        renderSidebar();
 
         // Bind mode buttons
         var btns = els.modeBtns.querySelectorAll('.r-mode-btn');
@@ -191,6 +174,43 @@
     function getModeColor(idx) {
         var colors = ['#e0f2fe', '#fce7f3', '#fee2e2', '#dcfce7', '#fef3c7'];
         return colors[idx] || '#f1f5f9';
+    }
+
+    // ── Sidebar: all 8 categories ──────────────────────────────────
+
+    function renderSidebar() {
+        var dashEl = document.getElementById('r-progress-dashboard');
+        if (!dashEl || !catData || !sidebarEl) return;
+
+        var localCats = getLocalCategories();
+        var progress = loadProgress();
+        var allCatIds = Object.keys(catData.categories);
+        var html = '';
+
+        for (var i = 0; i < allCatIds.length; i++) {
+            var cid = allCatIds[i];
+            var cat = catData.categories[cid];
+            var prog = progress[cid] || { correct: 0, total: 0 };
+            var lvl = getMasteryLevel(prog.correct);
+            var pct = prog.total > 0 ? Math.round((prog.correct / prog.total) * 100) : 0;
+            var isLocal = localCats.indexOf(cid) >= 0;
+            var rowClass = 'r-cat-row' + (isLocal ? ' r-cat-active' : (prog.total > 0 ? '' : ' r-cat-inactive'));
+
+            html += '<div class="' + rowClass + '">'
+                + '<span class="r-cat-icon">' + cat.icon + '</span>'
+                + '<div class="r-cat-detail">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center">'
+                + '<span class="r-cat-name">' + esc(cat.name) + '</span>'
+                + '<span class="r-cat-count">' + prog.correct + '/' + prog.total + '</span>'
+                + '</div>'
+                + '<div class="r-cat-bar"><div class="r-cat-fill" style="width:' + pct + '%;background:' + cat.color + '"></div></div>'
+                + '</div>'
+                + '<span class="r-cat-level" style="color:' + lvl.color + '">' + esc(lvl.label) + '</span>'
+                + '</div>';
+        }
+
+        dashEl.innerHTML = html;
+        sidebarEl.style.display = 'flex';
     }
 
     // ── Start game ──────────────────────────────────────────────────
@@ -696,6 +716,9 @@
             progress[cid].total += sessionCats[cid].total;
         }
         saveProgress(progress);
+
+        // Refresh sidebar with updated progress
+        renderSidebar();
 
         // Render breakdown
         var html = '<div class="r-session-divider">Deze sessie</div>';

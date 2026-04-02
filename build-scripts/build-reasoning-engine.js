@@ -76,6 +76,9 @@ function generateShell(parNr, parName) {
         <h1><span class="par-badge">${escapeHtml(parNr)}</span> ${escapeHtml(parName)} \u2013 Redeneer-spel</h1>
     </div>
 
+    <div class="r-content-layout">
+    <div class="r-main-area">
+
     <!-- Menu Screen -->
     <div id="r-menu" class="r-screen active">
         <h2 class="r-menu-title">${escapeHtml(parName)}</h2>
@@ -109,13 +112,24 @@ function generateShell(parNr, parName) {
         <h2 class="r-results-title" id="r-results-title"></h2>
         <p class="r-results-score" id="r-results-score"></p>
         <div class="r-progress-bar"><div class="r-progress-fill" id="r-progress-fill"></div></div>
+        <div id="r-session-breakdown" class="r-session-breakdown"></div>
         <div class="r-results-btns">
             <button class="r-btn" id="r-replay-btn">Opnieuw (andere opgaven) <i class="fa-solid fa-rotate-right"></i></button>
             <button class="r-btn" id="r-menu-btn" style="background:#64748b">Ander spel \u2192</button>
         </div>
     </div>
+
+    </div><!-- /r-main-area -->
+
+    <div class="r-sidebar" id="r-sidebar">
+        <h3 class="r-sidebar-title"><i class="fa-solid fa-chart-pie"></i> Jouw Voortgang</h3>
+        <div id="r-progress-dashboard" class="r-progress-dashboard"></div>
+    </div>
+
+    </div><!-- /r-content-layout -->
 </div>
 <script src="${sharedPath}/reasoning/${parNr}.js"></script>
+<script src="${sharedPath}/reasoning/meta-categories.js"></script>
 <script src="${sharedPath}/reasoning-engine.js"></script>
 <script src="${sharedPath}/reasoning-ui.js"></script>
 </body>
@@ -127,7 +141,7 @@ function main() {
     console.log('Generating Reasoning Game HTML shells...\n');
 
     const dataFiles = fs.readdirSync(REASONING_DIR)
-        .filter(f => f.endsWith('.js'))
+        .filter(f => f.endsWith('.js') && f !== 'meta-categories.js')
         .map(f => f.replace('.js', ''))
         .sort();
 
