@@ -29,7 +29,7 @@ const DRY_RUN = false;
 
 // Temporarily hide the task rows (basisopgaven, middenopgaven, verrijkingsopgaven)
 // Set to false to show them again
-const HIDE_TASK_ROWS = true;
+const HIDE_TASK_ROWS = false;
 
 const PARAGRAAF_DATA = [
   { id: "3.1.1", name: "Markt en marktstructuur", chapter: "3.1", chapterName: "Markten", chapterFull: "Hoofdstuk 1 \u2013 Markten", domain: "teal" },
@@ -828,23 +828,16 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
     ? `\n      <div style="grid-column: 1 / -1; display: flex; gap: 0.85rem;">${interactiveRow.join("")}\n      </div>`
     : "";
 
-  // Task rows (basis/midden/verrijking) — can be hidden via HIDE_TASK_ROWS flag
+  const oefenenCards = interactiveRowHTML;
+
+  // Task rows (basis/midden/verrijking) — shown as separate section 4 "Opgaven"
+  // Can be hidden entirely via HIDE_TASK_ROWS flag
   const taskCards = [
     exerciseCard(files.oefenen.basis, oP, ICONS.star0, "Basisopgaven", "Standaard opgaven", "card-exercise-normal"),
     exerciseCard(files.oefenen.midden, oP, ICONS.star1, "Middenopgaven", "Kortere set, meer zelfstandig", "card-exercise-normal"),
     exerciseCard(files.oefenen.verrijking, oP, ICONS.star2, "Verrijkingsopgaven", "Extra uitdaging", "card-exercise-normal"),
   ].filter(Boolean).join("\n");
-
-  let taskRowsHTML = "";
-  if (taskCards.trim().length > 0) {
-    if (HIDE_TASK_ROWS) {
-      taskRowsHTML = `\n      <!-- task-rows-hidden: set HIDE_TASK_ROWS = false in build-landing-page.js to restore -->\n      <div style="display:none" class="task-rows-hidden">${taskCards}\n      </div>`;
-    } else {
-      taskRowsHTML = taskCards;
-    }
-  }
-
-  const oefenenCards = [interactiveRowHTML, taskRowsHTML].filter(s => s.trim().length > 0).join("\n");
+  const hasT = !HIDE_TASK_ROWS && taskCards.trim().length > 0;
 
   const hasV = voorbereidenCards.trim().length > 0;
   const hasL = lerenCards.trim().length > 0;
@@ -880,6 +873,13 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
     <div class="section-header"><span class="step-number">3</span><h2>Leren</h2></div>
     <p class="section-hint">De les doorwerken: presentatie, uitleg en video\u2019s</p>
     <div class="card-grid">${lerenCards}</div>
+  </div>`;
+
+  if (hasT) bodyHTML += `
+  <div class="section">
+    <div class="section-header"><span class="step-number">4</span><h2>Opgaven</h2></div>
+    <p class="section-hint">Oefen op je eigen niveau</p>
+    <div class="card-grid">${taskCards}</div>
   </div>`;
 
   bodyHTML += `
