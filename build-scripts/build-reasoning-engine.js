@@ -122,7 +122,9 @@ function generateShell(parNr, parName) {
     </div><!-- /r-main-area -->
 
     <div class="r-sidebar" id="r-sidebar">
-        <h3 class="r-sidebar-title"><i class="fa-solid fa-chart-pie"></i> Jouw Voortgang</h3>
+        <h3 class="r-sidebar-title"><i class="fa-solid fa-gamepad"></i> Deze sessie</h3>
+        <div id="r-session-progress" class="r-session-progress"></div>
+        <h3 class="r-sidebar-title" style="margin-top:20px"><i class="fa-solid fa-chart-pie"></i> Jouw Voortgang</h3>
         <div id="r-progress-dashboard" class="r-progress-dashboard"></div>
     </div>
 

@@ -113,6 +113,53 @@
         progressFill:  document.getElementById('r-progress-fill')
     };
 
+    // ── Session progress per structure type ────────────────────────
+    var sessionProgress = {};  // { "A": { correct: 0, total: 0 }, ... }
+    var MASTERY_THRESHOLD = 3; // correct answers needed to "complete" a type
+
+    function resetSessionProgress() {
+        sessionProgress = {};
+        var types = engine.getStructureTypes();
+        for (var i = 0; i < types.length; i++) {
+            sessionProgress[types[i].type] = { correct: 0, total: 0 };
+        }
+    }
+
+    function updateSessionProgress(structureType, correct) {
+        if (!sessionProgress[structureType]) sessionProgress[structureType] = { correct: 0, total: 0 };
+        sessionProgress[structureType].total++;
+        if (correct) sessionProgress[structureType].correct++;
+    }
+
+    function renderSessionProgress() {
+        var el = document.getElementById('r-session-progress');
+        if (!el) return;
+        var types = engine.getStructureTypes();
+        var html = '';
+        var allDone = true;
+        for (var i = 0; i < types.length; i++) {
+            var t = types[i];
+            var sp = sessionProgress[t.type] || { correct: 0, total: 0 };
+            var steps = Math.min(sp.correct, MASTERY_THRESHOLD);
+            var pct = Math.round((steps / MASTERY_THRESHOLD) * 100);
+            var done = steps >= MASTERY_THRESHOLD;
+            if (!done) allDone = false;
+            var barColor = done ? '#10b981' : 'var(--r-primary)';
+            var statusText = done
+                ? '<i class="fa-solid fa-check-circle" style="color:#10b981"></i> Klaar'
+                : steps + '/' + MASTERY_THRESHOLD + ' goed';
+            var textColor = done ? '#10b981' : '#64748b';
+            html += '<div class="r-session-type">'
+                + '<div class="r-session-type-header">'
+                + '<span class="r-session-type-name">' + esc(t.type) + ': ' + esc(t.label) + '</span>'
+                + '<span class="r-session-type-status" style="color:' + textColor + '">' + statusText + '</span>'
+                + '</div>'
+                + '<div class="r-session-type-bar"><div class="r-session-type-fill" style="width:' + pct + '%;background:' + barColor + '"></div></div>'
+                + '</div>';
+        }
+        el.innerHTML = html;
+    }
+
     // ── Game state ──────────────────────────────────────────────────
     var currentMode = -1;
     var selection = [];      // For modes 0, 1: ordered list of selected items
@@ -217,9 +264,11 @@
 
     function startGame(modeIndex) {
         currentMode = modeIndex;
+        resetSessionProgress();
         var info = engine.startGame(modeIndex);
         els.modeBadge.textContent = info.modeName;
         showScreen('game');
+        renderSessionProgress();
         presentRound();
     }
 
@@ -466,7 +515,10 @@
         selectedErrorIdx = idx;
 
         // Immediately submit
+        var stType = engine.getCurrentStructureType();
         var result = engine.submitAnswer(idx);
+        updateSessionProgress(stType, result.correct);
+        renderSessionProgress();
 
         // Disable all cards
         var cards = document.querySelectorAll('#r-options .r-step-card');
@@ -607,7 +659,10 @@
                 break;
         }
 
+        var stType = engine.getCurrentStructureType();
         var result = engine.submitAnswer(answer);
+        updateSessionProgress(stType, result.correct);
+        renderSessionProgress();
 
         // Disable interaction
         disableAllInteraction();
