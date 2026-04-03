@@ -116,6 +116,9 @@ body {
 .st-skill-card.st-mastered-5 {
     border: 2px solid #fbbf24 !important;
 }
+.st-skill-card.st-new-skill {
+    animation: nodeGlow 2.5s ease-in-out infinite;
+}
 .st-skill-card .st-skill-id {
     font-size: 0.6rem;
     font-weight: 700;

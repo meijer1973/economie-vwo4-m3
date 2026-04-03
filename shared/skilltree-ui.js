@@ -67,6 +67,9 @@
         var layerColors = engine.getLayerColors();
         var visible = engine.getVisibleSkills();
         var stars = engine.getStars();
+        var newSkillSet = {};
+        var newArr = engine.getNewSkills();
+        for (var ni = 0; ni < newArr.length; ni++) newSkillSet[newArr[ni]] = true;
 
         var html = '<div class="st-header">';
         html += '<h1>Wiskundevaardigheden</h1>';
@@ -99,17 +102,22 @@
                 var ready = engine.prereqsDone(skill.id);
                 var missing = engine.getMissingPrereqs(skill.id);
 
+                var isNew = !!newSkillSet[skill.id];
                 var classes = 'st-skill-card';
                 if (!ready && starCount === 0) classes += ' st-locked';
                 if (starCount === 5) classes += ' st-mastered-5';
+                if (isNew && starCount === 0) classes += ' st-new-skill';
 
-                var boxShadow = starCount >= 1 ? '0 0 12px ' + lc.glow : 'none';
-                var borderStyle = starCount === 5 ? '2px solid #fbbf24' : '1px solid ' + lc.text + '40';
+                var boxShadow = starCount >= 1 ? '0 0 12px ' + lc.glow :
+                                isNew ? '0 0 10px ' + lc.glow : 'none';
+                var borderStyle = starCount === 5 ? '2px solid #fbbf24' :
+                                  (isNew && starCount === 0) ? '1.5px solid ' + lc.text :
+                                  '1px solid ' + lc.text + '40';
 
                 html += '<button class="' + classes + '"';
                 html += ' data-skill="' + skill.id + '"';
                 if (!hasGen) html += ' disabled';
-                html += ' style="background:' + lc.bg + ';color:' + lc.text + ';border:' + borderStyle + ';box-shadow:' + boxShadow + '">';
+                html += ' style="background:' + lc.bg + ';color:' + lc.text + ';border:' + borderStyle + ';box-shadow:' + boxShadow + ';--st-glow:' + lc.glow + '">';
 
                 html += '<div class="st-skill-id"><span>' + esc(skill.id) + '</span>';
                 if (!ready && missing.length > 0 && starCount === 0) {

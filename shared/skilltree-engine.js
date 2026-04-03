@@ -104,6 +104,10 @@
         return this._elements.LAYER_COLORS;
     };
 
+    SkillTreeEngine.prototype.getNewSkills = function () {
+        return this._data.newSkills || [];
+    };
+
     // ── Stars / Progress ──────────────────────────────────────
 
     SkillTreeEngine.prototype._loadStars = function () {

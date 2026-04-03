@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const baseElements = require('../shared/skilltree/base-elements');
 
 const MODULE_ROOT = path.resolve(__dirname, '..');
 
@@ -24,11 +25,11 @@ const PARAGRAPHS = [
     { parNr:'3.1.2', name:'Marktvormen', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
     { parNr:'3.1.3', name:'Toepassen', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
     { parNr:'3.2.1', name:'Marktevenwicht', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1'] },
-    { parNr:'3.2.2', name:'Volkomen concurrentie', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B4','B5','B6','B7','B8','B9','B10','S1','S2','S3','S4','E5'] },
+    { parNr:'3.2.2', name:'Volkomen concurrentie', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B4','B5','B6','B7','B8','B9','B10','S1','S2','S3','S4','S10','E5','E9'] },
     { parNr:'3.2.3', name:'Monopolie', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B5','B6','B8','B9','B10','S1','S2','S3','E7'] },
     { parNr:'3.2.4', name:'Oligopolie', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
     { parNr:'3.2.5', name:'Monopolistische concurrentie', skills:['F1','F2','F3','F4','F7','F6','B2','B3','B5','B6','B7','B8','B9','B10','S2','S3','S4','E1','E5'] },
-    { parNr:'3.2.6', name:'Marktvormen en hun economische doelmatigheid', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B5','B6','B7','B8','B9','B10','S1','S2','S3','S4','E1','E2','E5','E7'] },
+    { parNr:'3.2.6', name:'Marktvormen en hun economische doelmatigheid', skills:['F1','F2','F3','F4','F7','F5','F6','B1','B2','B3','B5','B6','B7','B8','B9','B10','S1','S2','S3','S4','S10','E1','E2','E5','E7','E9'] },
     { parNr:'3.2.7', name:'Toepassen', skills:null }, // all skills
     { parNr:'3.3.1', name:'De rol van de overheid', skills:['F1','F2','F3','F4','F7','B8','B9','B10'] },
     { parNr:'3.3.2', name:'Overheidsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','S1','S5','S7','S8','S9','E4'] },
@@ -41,6 +42,21 @@ const PARAGRAPHS = [
     { parNr:'3.4.5', name:'Internationaal handelsbeleid', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','B11','S1','S5','E4','E6'] },
     { parNr:'3.4.6', name:'Toepassen', skills:['F1','F2','F3','F4','F7','F5','B1','B8','B9','B10','B11','S1','S5','E4','E6'] },
 ];
+
+// ── Compute which skills are new per paragraph ───────────────────────
+
+function computeNewSkills() {
+    var allSkillIds = baseElements.SKILLS.map(function (s) { return s.id; });
+    var seen = new Set();
+    for (var i = 0; i < PARAGRAPHS.length; i++) {
+        var par = PARAGRAPHS[i];
+        var active = par.skills ? par.skills : allSkillIds;
+        par.newSkills = active.filter(function (id) { return !seen.has(id); });
+        active.forEach(function (id) { seen.add(id); });
+    }
+}
+
+computeNewSkills();
 
 // ── Find paragraph directory ───────────────────────────────────────
 
@@ -72,7 +88,8 @@ function relativeToShared(fromDir) {
 
 function generateDataFile(par) {
     const activeSkills = par.skills ? JSON.stringify(par.skills) : 'null';
-    return `/**\n * Skill Tree data for ${par.parNr} ${par.name}\n * activeSkills: null = all skills visible\n */\nwindow.SKILL_TREE_DATA = {\n    parNr: "${par.parNr}",\n    parName: "${par.name}",\n    activeSkills: ${activeSkills}\n};\n`;
+    const newSkills = JSON.stringify(par.newSkills || []);
+    return `/**\n * Skill Tree data for ${par.parNr} ${par.name}\n * activeSkills: null = all skills visible\n */\nwindow.SKILL_TREE_DATA = {\n    parNr: "${par.parNr}",\n    parName: "${par.name}",\n    activeSkills: ${activeSkills},\n    newSkills: ${newSkills}\n};\n`;
 }
 
 // ── Generate HTML shell ───────────────────────────────────────────
