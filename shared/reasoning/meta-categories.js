@@ -4,14 +4,14 @@
 
 window.REASONING_CATEGORIES = {
     categories: {
-        "M1": { name: "Marktvormen", icon: "\uD83C\uDFEA", color: "#3b82f6" },
-        "M2": { name: "Marktevenwicht", icon: "\u2696\uFE0F", color: "#06b6d4" },
-        "M3": { name: "Winst & kosten", icon: "\uD83D\uDCB0", color: "#8b5cf6" },
-        "M4": { name: "Strategie", icon: "\uD83C\uDFAF", color: "#f59e0b" },
-        "M5": { name: "Doelmatigheid", icon: "\uD83D\uDCCA", color: "#10b981" },
-        "M6": { name: "Overheid", icon: "\uD83C\uDFDB\uFE0F", color: "#ef4444" },
-        "M7": { name: "Handel", icon: "\uD83C\uDF0D", color: "#0ea5e9" },
-        "M8": { name: "Handelsbeleid", icon: "\uD83D\uDCDC", color: "#ec4899" }
+        "M1": { name: "Marktvormen", icon: "\uD83C\uDFEA", color: "#3b82f6", maxQuestions: 36 },
+        "M2": { name: "Marktevenwicht", icon: "\u2696\uFE0F", color: "#06b6d4", maxQuestions: 21 },
+        "M3": { name: "Winst & kosten", icon: "\uD83D\uDCB0", color: "#8b5cf6", maxQuestions: 30 },
+        "M4": { name: "Strategie", icon: "\uD83C\uDFAF", color: "#f59e0b", maxQuestions: 15 },
+        "M5": { name: "Doelmatigheid", icon: "\uD83D\uDCCA", color: "#10b981", maxQuestions: 21 },
+        "M6": { name: "Overheid", icon: "\uD83C\uDFDB\uFE0F", color: "#ef4444", maxQuestions: 48 },
+        "M7": { name: "Handel", icon: "\uD83C\uDF0D", color: "#0ea5e9", maxQuestions: 39 },
+        "M8": { name: "Handelsbeleid", icon: "\uD83D\uDCDC", color: "#ec4899", maxQuestions: 30 }
     },
     mapping: {
         "3.1.1-A": "M1", "3.1.1-B": "M1", "3.1.1-C": "M1", "3.1.1-D": "M1",

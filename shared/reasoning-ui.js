@@ -268,8 +268,8 @@
             var cat = catData.categories[cid];
             var prog = progress[cid] || { correct: 0, total: 0 };
             var lvl = getMasteryLevel(prog.correct);
-            // Bar shows progress toward Expert (10 correct = 100%)
-            var pct = Math.min(100, Math.round((prog.correct / 10) * 100));
+            var maxQ = cat.maxQuestions || 1;
+            var pct = Math.min(100, Math.round((prog.correct / maxQ) * 100));
             var isLocal = localCats.indexOf(cid) >= 0;
             var rowClass = 'r-cat-row' + (isLocal ? ' r-cat-active' : (prog.total > 0 ? '' : ' r-cat-inactive'));
 
@@ -278,7 +278,7 @@
                 + '<div class="r-cat-detail">'
                 + '<div style="display:flex;justify-content:space-between;align-items:center">'
                 + '<span class="r-cat-name">' + esc(cat.name) + '</span>'
-                + '<span class="r-cat-count">' + prog.correct + '/' + prog.total + '</span>'
+                + '<span class="r-cat-count">' + prog.correct + '/' + maxQ + '</span>'
                 + '</div>'
                 + '<div class="r-cat-bar"><div class="r-cat-fill" style="width:' + pct + '%;background:' + cat.color + '"></div></div>'
                 + '</div>'
