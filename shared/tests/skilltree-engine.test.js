@@ -111,6 +111,77 @@ describe('getMissingPrereqs', () => {
     });
 });
 
+// ── Dependency subgraph ──────────────────────────────────────────
+
+describe('getDependencySubgraph', () => {
+    test('returns null for non-existent skill', () => {
+        const engine = createEngine();
+        expect(engine.getDependencySubgraph('FAKE')).toBeNull();
+    });
+
+    test('returns only root for layer-0 skill (no deps)', () => {
+        const engine = createEngine();
+        const sg = engine.getDependencySubgraph('F1');
+        expect(sg.root).toBe('F1');
+        expect(sg.nodes).toHaveLength(1);
+        expect(sg.nodes[0].id).toBe('F1');
+        expect(sg.edges).toHaveLength(0);
+    });
+
+    test('returns direct prerequisites for layer-1 skill', () => {
+        const engine = createEngine();
+        const sg = engine.getDependencySubgraph('B1');
+        expect(sg.root).toBe('B1');
+        const ids = sg.nodes.map(n => n.id).sort();
+        expect(ids).toEqual(['B1', 'F1', 'F2']);
+        expect(sg.edges).toHaveLength(2);
+        expect(sg.edges).toContainEqual({ from: 'F1', to: 'B1' });
+        expect(sg.edges).toContainEqual({ from: 'F2', to: 'B1' });
+    });
+
+    test('returns transitive closure for deeper skills', () => {
+        // S1 needs B1, F5; B1 needs F1, F2; F5 needs F4
+        const engine = createEngine();
+        const sg = engine.getDependencySubgraph('S1');
+        const ids = sg.nodes.map(n => n.id).sort();
+        expect(ids).toEqual(['B1', 'F1', 'F2', 'F4', 'F5', 'S1']);
+        // Shared nodes appear only once
+        expect(sg.nodes.filter(n => n.id === 'F1')).toHaveLength(1);
+    });
+
+    test('respects visible skill filter (excludes non-active prereqs)', () => {
+        // B1 normally needs F1 and F2, but if only F1 is active, F2 is excluded
+        const engine = createEngine({
+            data: { parNr: 'test', activeSkills: ['F1', 'B1'] }
+        });
+        const sg = engine.getDependencySubgraph('B1');
+        const ids = sg.nodes.map(n => n.id).sort();
+        expect(ids).toEqual(['B1', 'F1']);
+        expect(sg.edges).toHaveLength(1);
+        expect(sg.edges[0]).toEqual({ from: 'F1', to: 'B1' });
+    });
+
+    test('returns null for skill not in visible set', () => {
+        const engine = createEngine({
+            data: { parNr: 'test', activeSkills: ['F1', 'F2'] }
+        });
+        expect(engine.getDependencySubgraph('B1')).toBeNull();
+    });
+
+    test('works with all skills visible', () => {
+        const engine = createEngine({
+            data: { parNr: 'all', activeSkills: null }
+        });
+        const sg = engine.getDependencySubgraph('E7');
+        expect(sg.root).toBe('E7');
+        // E7 has a deep tree: E7 -> S2,S3,F4 -> B5,B6,F2,B2,B3 -> F6,F1,F3
+        expect(sg.nodes.length).toBeGreaterThan(8);
+        // All nodes should be unique
+        const ids = sg.nodes.map(n => n.id);
+        expect(new Set(ids).size).toBe(ids.length);
+    });
+});
+
 // ── Exercise flow ─────────────────────────────────────────────────
 
 describe('startExercise', () => {

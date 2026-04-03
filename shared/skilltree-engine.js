@@ -247,6 +247,54 @@
         return missing;
     };
 
+    // ── Dependency subgraph ─────────────────────────────────────
+
+    SkillTreeEngine.prototype.getDependencySubgraph = function (skillId) {
+        // Build lookup of visible skills
+        var visMap = {};
+        for (var i = 0; i < this._visibleSkills.length; i++) {
+            visMap[this._visibleSkills[i].id] = this._visibleSkills[i];
+        }
+
+        var root = visMap[skillId];
+        if (!root) return null;
+
+        // BFS to collect all transitive prerequisites
+        var visited = {};
+        var queue = [skillId];
+        visited[skillId] = true;
+        var nodes = [];
+        var edges = [];
+
+        while (queue.length > 0) {
+            var current = queue.shift();
+            var skill = visMap[current];
+            if (!skill) continue;
+
+            nodes.push({
+                id: skill.id,
+                name: skill.name,
+                layer: skill.layer,
+                needs: skill.needs.slice()
+            });
+
+            for (var j = 0; j < skill.needs.length; j++) {
+                var prereq = skill.needs[j];
+                edges.push({ from: prereq, to: current });
+                if (!visited[prereq]) {
+                    visited[prereq] = true;
+                    queue.push(prereq);
+                }
+            }
+        }
+
+        return {
+            root: skillId,
+            nodes: nodes,
+            edges: edges
+        };
+    };
+
     // ── Exercise flow ─────────────────────────────────────────
 
     SkillTreeEngine.prototype.hasGenerator = function (skillId) {

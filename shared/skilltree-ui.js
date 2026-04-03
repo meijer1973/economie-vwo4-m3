@@ -24,6 +24,7 @@
     function iconLightbulb() { return '<span class="st-icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>'; }
     function iconReset()     { return '<span class="st-icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>'; }
     function iconRefresh()   { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg></span>'; }
+    function iconTree()      { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/><circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/><path d="M7 15.5v3"/><path d="M17 15.5v3"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>'; }
 
     // ── State ─────────────────────────────────────────────────
     var view = 'tree'; // 'tree' | 'exercise'
@@ -34,6 +35,8 @@
     var finishResult = null; // set when exercise is completed (last answer correct)
     var advanceTimer = null;
     var lastFinishedSkillId = null; // for "opnieuw oefenen"
+    var depSkillId = null;         // which skill's dependency tree is shown (null = hidden)
+    var depSubgraph = null;        // cached result of getDependencySubgraph
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -42,6 +45,7 @@
         } else {
             renderTree();
         }
+        renderDependencyOverlay();
     }
 
     // ── Helpers ────────────────────────────────────────────────
@@ -123,6 +127,9 @@
                 if (!ready && missing.length > 0 && starCount === 0) {
                     html += '<span class="st-prereq-hint" title="Tip: oefen eerst ' + missing.join(', ') + '">\uD83D\uDCA1 ' + missing.join(', ') + '</span>';
                 }
+                if (skill.needs.length > 0) {
+                    html += '<button class="st-dep-btn" data-dep-skill="' + skill.id + '" title="Toon afhankelijkheden">' + iconTree() + '</button>';
+                }
                 html += '</div>';
 
                 html += '<div>' + (li === 3 ? '\uD83C\uDFC6 ' : '') + esc(skill.name) + '</div>';
@@ -150,6 +157,16 @@
             cards[m].addEventListener('click', function () {
                 var sid = this.getAttribute('data-skill');
                 startSkill(sid);
+            });
+        }
+
+        // Wire dependency tree buttons
+        var depBtns = root.querySelectorAll('.st-dep-btn');
+        for (var d = 0; d < depBtns.length; d++) {
+            depBtns[d].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var sid = this.getAttribute('data-dep-skill');
+                openDependencyOverlay(sid);
             });
         }
 
@@ -425,6 +442,223 @@
                 startSkill(lastFinishedSkillId);
             });
         }
+    }
+
+    // ── Dependency tree overlay ─────────────────────────────────
+
+    function openDependencyOverlay(skillId) {
+        depSubgraph = engine.getDependencySubgraph(skillId);
+        if (!depSubgraph) return;
+        depSkillId = skillId;
+        renderDependencyOverlay();
+    }
+
+    function closeDependencyOverlay() {
+        depSkillId = null;
+        depSubgraph = null;
+        var el = document.getElementById('st-dep-overlay');
+        if (el) el.remove();
+    }
+
+    function renderDependencyOverlay() {
+        // Remove existing overlay
+        var existing = document.getElementById('st-dep-overlay');
+        if (existing) existing.remove();
+
+        if (!depSkillId || !depSubgraph || view !== 'tree') return;
+
+        // Refresh subgraph to get current star data
+        depSubgraph = engine.getDependencySubgraph(depSkillId);
+        if (!depSubgraph) { depSkillId = null; return; }
+
+        var layerColors = engine.getLayerColors();
+        var stars = engine.getStars();
+        var nodes = depSubgraph.nodes;
+        var edges = depSubgraph.edges;
+
+        // ── Layout constants ──────────────────────────────────
+        var NODE_W = 130, NODE_H = 52, H_GAP = 16, V_GAP = 50, PAD = 16;
+
+        // ── Group nodes by layer ──────────────────────────────
+        var layerBuckets = {};
+        for (var i = 0; i < nodes.length; i++) {
+            var ly = nodes[i].layer;
+            if (!layerBuckets[ly]) layerBuckets[ly] = [];
+            layerBuckets[ly].push(nodes[i]);
+        }
+
+        // Sort layers descending (root skill's layer at top)
+        var layerOrder = Object.keys(layerBuckets).map(Number).sort(function (a, b) { return b - a; });
+
+        // ── Barycenter ordering (minimize crossings) ──────────
+        var nodePos = {};
+        // First pass: assign initial x positions per layer row
+        for (var li = 0; li < layerOrder.length; li++) {
+            var layer = layerOrder[li];
+            var bucket = layerBuckets[layer];
+            if (li > 0) {
+                // Sort by average x of parents (nodes in higher layers that depend on this node)
+                bucket.sort(function (a, b) {
+                    var avgA = getParentAvgX(a.id, edges, nodePos);
+                    var avgB = getParentAvgX(b.id, edges, nodePos);
+                    return avgA - avgB;
+                });
+            }
+            for (var bi = 0; bi < bucket.length; bi++) {
+                nodePos[bucket[bi].id] = { row: li, col: bi, rowSize: bucket.length };
+            }
+        }
+
+        // ── Compute pixel positions ───────────────────────────
+        var maxCols = 1;
+        for (var key in layerBuckets) {
+            if (layerBuckets[key].length > maxCols) maxCols = layerBuckets[key].length;
+        }
+        var svgW = Math.max(320, maxCols * (NODE_W + H_GAP) - H_GAP + PAD * 2);
+        var svgH = layerOrder.length * (NODE_H + V_GAP) - V_GAP + PAD * 2;
+
+        for (var nid in nodePos) {
+            var np = nodePos[nid];
+            var rowW = np.rowSize * (NODE_W + H_GAP) - H_GAP;
+            var startX = (svgW - rowW) / 2;
+            np.x = startX + np.col * (NODE_W + H_GAP);
+            np.y = PAD + np.row * (NODE_H + V_GAP);
+            np.cx = np.x + NODE_W / 2;
+            np.cy = np.y + NODE_H / 2;
+        }
+
+        // ── Build SVG ─────────────────────────────────────────
+        var svg = '<svg class="st-dep-graph" viewBox="0 0 ' + svgW + ' ' + svgH + '" preserveAspectRatio="xMidYMin meet">';
+
+        // Arrowhead marker
+        svg += '<defs><marker id="dep-arrow" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">';
+        svg += '<path d="M0,0 L6,2 L0,4 Z" fill="#475569"/>';
+        svg += '</marker></defs>';
+
+        // Edges
+        for (var ei = 0; ei < edges.length; ei++) {
+            var fromPos = nodePos[edges[ei].from];
+            var toPos = nodePos[edges[ei].to];
+            if (!fromPos || !toPos) continue;
+
+            // Edge goes from prereq (lower layer = lower row = higher y) UP to dependent (higher layer = higher row = lower y)
+            var x1 = fromPos.cx, y1 = fromPos.y;        // top of prereq node
+            var x2 = toPos.cx, y2 = toPos.y + NODE_H;   // bottom of dependent node
+
+            var cp = V_GAP * 0.45;
+            var d = 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + (y1 - cp) + ' ' + x2 + ',' + (y2 + cp) + ' ' + x2 + ',' + y2;
+
+            var prereqStars = stars[edges[ei].from] || 0;
+            var edgeColor = prereqStars >= 1 ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.25)';
+
+            svg += '<path class="st-dep-edge" d="' + d + '" stroke="' + edgeColor + '" marker-end="url(#dep-arrow)"/>';
+        }
+
+        // Nodes
+        for (var ni = 0; ni < nodes.length; ni++) {
+            var node = nodes[ni];
+            var pos = nodePos[node.id];
+            if (!pos) continue;
+            var lc = layerColors[node.layer] || layerColors[0];
+            var nodeStars = stars[node.id] || 0;
+            var strokeColor = nodeStars === 5 ? '#fbbf24' : lc.text + '60';
+            var strokeWidth = nodeStars === 5 ? 2 : 1;
+            var isRoot = node.id === depSkillId;
+
+            svg += '<g class="st-dep-node" data-skill="' + node.id + '">';
+            svg += '<rect x="' + pos.x + '" y="' + pos.y + '" width="' + NODE_W + '" height="' + NODE_H + '"';
+            svg += ' rx="8" fill="' + lc.bg + '" stroke="' + strokeColor + '" stroke-width="' + strokeWidth + '"';
+            if (isRoot) svg += ' stroke-dasharray=""';
+            svg += '/>';
+
+            // Skill ID badge
+            svg += '<text x="' + (pos.x + 8) + '" y="' + (pos.y + 13) + '" fill="' + lc.text + '" font-size="9" font-weight="700" opacity="0.5" font-family="DM Sans, sans-serif">' + node.id + '</text>';
+
+            // Skill name (truncate if needed)
+            var displayName = node.name.length > 22 ? node.name.substring(0, 20) + '\u2026' : node.name;
+            svg += '<text x="' + pos.cx + '" y="' + (pos.y + 28) + '" fill="' + lc.text + '" font-size="10" font-weight="500" text-anchor="middle" font-family="DM Sans, sans-serif">' + esc(displayName) + '</text>';
+
+            // Stars
+            var starY = pos.y + NODE_H - 8;
+            var starStartX = pos.cx - 20;
+            for (var si = 0; si < 5; si++) {
+                var starColor = si < nodeStars ? '#fbbf24' : '#334155';
+                svg += '<text x="' + (starStartX + si * 10) + '" y="' + starY + '" fill="' + starColor + '" font-size="8" text-anchor="middle">\u2605</text>';
+            }
+
+            svg += '</g>';
+        }
+
+        svg += '</svg>';
+
+        // ── Build overlay HTML ────────────────────────────────
+        var rootNode = null;
+        for (var ri = 0; ri < nodes.length; ri++) {
+            if (nodes[ri].id === depSkillId) { rootNode = nodes[ri]; break; }
+        }
+        var title = rootNode ? rootNode.name : depSkillId;
+
+        var overlayHTML = '<div class="st-dep-overlay" id="st-dep-overlay">';
+        overlayHTML += '<div class="st-dep-container">';
+        overlayHTML += '<div class="st-dep-header">';
+        overlayHTML += '<button class="st-dep-close" id="st-dep-close">' + iconArrowLeft() + '</button>';
+        overlayHTML += '<h2>Afhankelijkheden: ' + esc(title) + '</h2>';
+        overlayHTML += '</div>';
+        overlayHTML += svg;
+        overlayHTML += '<div class="st-dep-legend">';
+        overlayHTML += '<span>\u2500 <span style="color:#22c55e">groen</span> = beheerst</span>';
+        overlayHTML += '<span>\u2500 <span style="color:#ef4444">rood</span> = nog te oefenen</span>';
+        overlayHTML += '<span>Tap een vaardigheid om te oefenen</span>';
+        overlayHTML += '</div>';
+        overlayHTML += '</div></div>';
+
+        // Insert into DOM
+        document.body.insertAdjacentHTML('beforeend', overlayHTML);
+
+        // ── Wire overlay events ───────────────────────────────
+        document.getElementById('st-dep-close').addEventListener('click', closeDependencyOverlay);
+
+        document.getElementById('st-dep-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeDependencyOverlay();
+        });
+
+        var svgNodes = document.querySelectorAll('#st-dep-overlay .st-dep-node');
+        for (var sni = 0; sni < svgNodes.length; sni++) {
+            svgNodes[sni].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var sid = this.getAttribute('data-skill');
+                if (!sid) return;
+                // If it has prerequisites, show its dep tree; otherwise start exercise
+                var sg = engine.getDependencySubgraph(sid);
+                if (sg && sg.nodes.length > 1) {
+                    depSkillId = sid;
+                    renderDependencyOverlay();
+                } else if (engine.hasGenerator(sid)) {
+                    closeDependencyOverlay();
+                    startSkill(sid);
+                }
+            });
+        }
+
+        // Escape key
+        var escHandler = function (e) {
+            if (e.key === 'Escape') {
+                closeDependencyOverlay();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    function getParentAvgX(nodeId, edges, nodePos) {
+        var sum = 0, count = 0;
+        for (var i = 0; i < edges.length; i++) {
+            if (edges[i].from === nodeId && nodePos[edges[i].to]) {
+                sum += nodePos[edges[i].to].cx || 0;
+                count++;
+            }
+        }
+        return count > 0 ? sum / count : 0;
     }
 
     // ── Focus helper ──────────────────────────────────────────
