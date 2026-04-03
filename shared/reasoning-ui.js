@@ -127,14 +127,28 @@
     };
 
     // ── Session progress per structure type ────────────────────────
+    // Session progress is persisted in localStorage so it survives page reloads.
+    var SESSION_PROGRESS_KEY = 'reasoning_session_' + meta.parNr;
     var sessionProgress = {};  // { "A": { correct: 0, total: 0 }, ... }
     var MASTERY_THRESHOLD = 3; // correct answers needed to "complete" a type
 
-    function resetSessionProgress() {
-        sessionProgress = {};
+    function loadSessionProgress() {
+        try { return JSON.parse(localStorage.getItem(SESSION_PROGRESS_KEY)) || {}; }
+        catch (e) { return {}; }
+    }
+
+    function saveSessionProgress() {
+        try { localStorage.setItem(SESSION_PROGRESS_KEY, JSON.stringify(sessionProgress)); }
+        catch (e) { /* silent */ }
+    }
+
+    function initSessionProgress() {
+        var saved = loadSessionProgress();
         var types = engine.getStructureTypes();
+        sessionProgress = {};
         for (var i = 0; i < types.length; i++) {
-            sessionProgress[types[i].type] = { correct: 0, total: 0 };
+            var key = types[i].type;
+            sessionProgress[key] = saved[key] || { correct: 0, total: 0 };
         }
     }
 
@@ -142,6 +156,7 @@
         if (!sessionProgress[structureType]) sessionProgress[structureType] = { correct: 0, total: 0 };
         sessionProgress[structureType].total++;
         if (correct) sessionProgress[structureType].correct++;
+        saveSessionProgress();
     }
 
     function renderSessionProgress() {
@@ -253,7 +268,8 @@
             var cat = catData.categories[cid];
             var prog = progress[cid] || { correct: 0, total: 0 };
             var lvl = getMasteryLevel(prog.correct);
-            var pct = prog.total > 0 ? Math.round((prog.correct / prog.total) * 100) : 0;
+            // Bar shows progress toward Expert (10 correct = 100%)
+            var pct = Math.min(100, Math.round((prog.correct / 10) * 100));
             var isLocal = localCats.indexOf(cid) >= 0;
             var rowClass = 'r-cat-row' + (isLocal ? ' r-cat-active' : (prog.total > 0 ? '' : ' r-cat-inactive'));
 
@@ -278,7 +294,6 @@
 
     function startGame(modeIndex) {
         currentMode = modeIndex;
-        resetSessionProgress();
         progressAtGameStart = loadProgress();  // snapshot for level-up detection
         var info = engine.startGame(modeIndex);
         els.modeBadge.textContent = info.modeName;
@@ -832,7 +847,7 @@
     });
 
     // ── Initial render ──────────────────────────────────────────────
-    resetSessionProgress();
+    initSessionProgress();
     renderSessionProgress();
     renderMenu();
     showScreen('menu');
