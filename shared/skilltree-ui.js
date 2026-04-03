@@ -24,7 +24,7 @@
     function iconLightbulb() { return '<span class="st-icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>'; }
     function iconReset()     { return '<span class="st-icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>'; }
     function iconRefresh()   { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg></span>'; }
-    function iconTree()      { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/><circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/><path d="M7 15.5v3"/><path d="M17 15.5v3"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>'; }
+    function iconTree()      { return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/><circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/><path d="M7 15.5v3"/><path d="M17 15.5v3"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>'; }
 
     // ── State ─────────────────────────────────────────────────
     var view = 'tree'; // 'tree' | 'exercise'
@@ -37,6 +37,7 @@
     var lastFinishedSkillId = null; // for "opnieuw oefenen"
     var depSkillId = null;         // which skill's dependency tree is shown (null = hidden)
     var depSubgraph = null;        // cached result of getDependencySubgraph
+    var depHistory = [];           // navigation stack for back button
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -94,7 +95,7 @@
 
             html += '<div class="st-layer">';
             html += '<div class="st-layer-title" style="color:' + lc.text + '">';
-            if (li === 3) html += '<span>\uD83C\uDFC6</span>';
+            if (li === layerNames.length - 1) html += '<span>\uD83C\uDFC6</span>';
             html += 'Laag ' + (li + 1) + ' \u2014 ' + esc(layerNames[li]);
             html += '</div>';
             html += '<div class="st-layer-grid">';
@@ -124,15 +125,15 @@
                 html += ' style="background:' + lc.bg + ';color:' + lc.text + ';border:' + borderStyle + ';box-shadow:' + boxShadow + ';--st-glow:' + lc.glow + '">';
 
                 html += '<div class="st-skill-id"><span>' + esc(skill.id) + '</span>';
-                if (!ready && missing.length > 0 && starCount === 0) {
-                    html += '<span class="st-prereq-hint" title="Tip: oefen eerst ' + missing.join(', ') + '">\uD83D\uDCA1 ' + missing.join(', ') + '</span>';
-                }
                 if (skill.needs.length > 0) {
-                    html += '<button class="st-dep-btn" data-dep-skill="' + skill.id + '" title="Toon afhankelijkheden">' + iconTree() + '</button>';
+                    html += '<span class="st-dep-btn" data-dep-skill="' + skill.id + '" title="Toon afhankelijkheden">' + iconTree() + '</span>';
                 }
                 html += '</div>';
+                if (!ready && missing.length > 0 && starCount === 0) {
+                    html += '<div class="st-prereq-hint" title="Tip: oefen eerst ' + missing.join(', ') + '">\uD83D\uDCA1 ' + missing.join(', ') + '</div>';
+                }
 
-                html += '<div>' + (li === 3 ? '\uD83C\uDFC6 ' : '') + esc(skill.name) + '</div>';
+                html += '<div>' + (li === layerNames.length - 1 ? '\uD83C\uDFC6 ' : '') + esc(skill.name) + '</div>';
 
                 if (starCount > 0) {
                     html += '<div class="st-stars">' + starsHTML(starCount) + '</div>';
@@ -449,13 +450,28 @@
     function openDependencyOverlay(skillId) {
         depSubgraph = engine.getDependencySubgraph(skillId);
         if (!depSubgraph) return;
+        // Push current view onto history if we're already showing a dep tree
+        if (depSkillId) {
+            depHistory.push(depSkillId);
+        }
         depSkillId = skillId;
         renderDependencyOverlay();
+    }
+
+    function goBackDependency() {
+        if (depHistory.length > 0) {
+            depSkillId = depHistory.pop();
+            depSubgraph = engine.getDependencySubgraph(depSkillId);
+            renderDependencyOverlay();
+        } else {
+            closeDependencyOverlay();
+        }
     }
 
     function closeDependencyOverlay() {
         depSkillId = null;
         depSubgraph = null;
+        depHistory = [];
         var el = document.getElementById('st-dep-overlay');
         if (el) el.remove();
     }
@@ -477,7 +493,7 @@
         var edges = depSubgraph.edges;
 
         // ── Layout constants ──────────────────────────────────
-        var NODE_W = 130, NODE_H = 52, H_GAP = 16, V_GAP = 50, PAD = 16;
+        var NODE_W = 120, NODE_H = 48, H_GAP = 14, V_GAP = 42, PAD = 14;
 
         // ── Group nodes by layer ──────────────────────────────
         var layerBuckets = {};
@@ -572,18 +588,18 @@
             svg += '/>';
 
             // Skill ID badge
-            svg += '<text x="' + (pos.x + 8) + '" y="' + (pos.y + 13) + '" fill="' + lc.text + '" font-size="9" font-weight="700" opacity="0.5" font-family="DM Sans, sans-serif">' + node.id + '</text>';
+            svg += '<text x="' + (pos.x + 7) + '" y="' + (pos.y + 12) + '" fill="' + lc.text + '" font-size="8.5" font-weight="700" opacity="0.5" font-family="DM Sans, sans-serif">' + node.id + '</text>';
 
             // Skill name (truncate if needed)
-            var displayName = node.name.length > 22 ? node.name.substring(0, 20) + '\u2026' : node.name;
-            svg += '<text x="' + pos.cx + '" y="' + (pos.y + 28) + '" fill="' + lc.text + '" font-size="10" font-weight="500" text-anchor="middle" font-family="DM Sans, sans-serif">' + esc(displayName) + '</text>';
+            var displayName = node.name.length > 20 ? node.name.substring(0, 18) + '\u2026' : node.name;
+            svg += '<text x="' + pos.cx + '" y="' + (pos.y + 26) + '" fill="' + lc.text + '" font-size="9.5" font-weight="500" text-anchor="middle" font-family="DM Sans, sans-serif">' + esc(displayName) + '</text>';
 
             // Stars
-            var starY = pos.y + NODE_H - 8;
-            var starStartX = pos.cx - 20;
+            var starY = pos.y + NODE_H - 7;
+            var starStartX = pos.cx - 19;
             for (var si = 0; si < 5; si++) {
                 var starColor = si < nodeStars ? '#fbbf24' : '#334155';
-                svg += '<text x="' + (starStartX + si * 10) + '" y="' + starY + '" fill="' + starColor + '" font-size="8" text-anchor="middle">\u2605</text>';
+                svg += '<text x="' + (starStartX + si * 9.5) + '" y="' + starY + '" fill="' + starColor + '" font-size="7.5" text-anchor="middle">\u2605</text>';
             }
 
             svg += '</g>';
@@ -616,7 +632,7 @@
         document.body.insertAdjacentHTML('beforeend', overlayHTML);
 
         // ── Wire overlay events ───────────────────────────────
-        document.getElementById('st-dep-close').addEventListener('click', closeDependencyOverlay);
+        document.getElementById('st-dep-close').addEventListener('click', goBackDependency);
 
         document.getElementById('st-dep-overlay').addEventListener('click', function (e) {
             if (e.target === this) closeDependencyOverlay();
@@ -631,8 +647,7 @@
                 // If it has prerequisites, show its dep tree; otherwise start exercise
                 var sg = engine.getDependencySubgraph(sid);
                 if (sg && sg.nodes.length > 1) {
-                    depSkillId = sid;
-                    renderDependencyOverlay();
+                    openDependencyOverlay(sid);
                 } else if (engine.hasGenerator(sid)) {
                     closeDependencyOverlay();
                     startSkill(sid);
@@ -643,8 +658,8 @@
         // Escape key
         var escHandler = function (e) {
             if (e.key === 'Escape') {
-                closeDependencyOverlay();
-                document.removeEventListener('keydown', escHandler);
+                goBackDependency();
+                if (!depSkillId) document.removeEventListener('keydown', escHandler);
             }
         };
         document.addEventListener('keydown', escHandler);

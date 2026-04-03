@@ -12,12 +12,12 @@ describe('base-elements', () => {
         expect(elements.SKILLS).toHaveLength(37);
     });
 
-    test('exports LAYER_NAMES with 4 entries', () => {
-        expect(elements.LAYER_NAMES).toHaveLength(4);
+    test('exports LAYER_NAMES with 6 entries', () => {
+        expect(elements.LAYER_NAMES).toHaveLength(6);
     });
 
-    test('exports LAYER_COLORS with 4 entries', () => {
-        expect(elements.LAYER_COLORS).toHaveLength(4);
+    test('exports LAYER_COLORS with 6 entries', () => {
+        expect(elements.LAYER_COLORS).toHaveLength(6);
         for (const lc of elements.LAYER_COLORS) {
             expect(lc.bg).toBeTruthy();
             expect(lc.text).toBeTruthy();
@@ -78,10 +78,10 @@ describe('base-elements', () => {
         }
     });
 
-    test('layer counts: L0=5, L1=13, L2=10, L3=9', () => {
-        const counts = [0, 0, 0, 0];
+    test('layer counts: L0=5, L1=10, L2=3, L3=10, L4=4, L5=5', () => {
+        const counts = [0, 0, 0, 0, 0, 0];
         for (const s of elements.SKILLS) counts[s.layer]++;
-        expect(counts).toEqual([5, 13, 10, 9]);
+        expect(counts).toEqual([5, 10, 3, 10, 4, 5]);
     });
 });
 
