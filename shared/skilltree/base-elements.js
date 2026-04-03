@@ -1,5 +1,5 @@
 /**
- * SkillTree Base Elements — All 35 exercise generators.
+ * SkillTree Base Elements — All 37 exercise generators.
  * UMD module: sets window.SKILL_TREE_ELEMENTS in browser, module.exports in Node.js.
  */
 (function (root, factory) {
@@ -46,6 +46,7 @@
         { id:'S7', name:'Minimumprijs analyseren', layer:2, needs:['B1'] },
         { id:'S8', name:'Maximumprijs analyseren', layer:2, needs:['B1'] },
         { id:'S9', name:'Subsidie analyseren', layer:2, needs:['B1','F1'] },
+        { id:'S10', name:'MK = GTK oplossen', layer:2, needs:['B6','B7'] },
         { id:'E1', name:'Break-even analyse', layer:3, needs:['S4'] },
         { id:'E2', name:'Consumentensurplus', layer:3, needs:['S1'] },
         { id:'E3', name:'Individueel → collectief aanbod', layer:3, needs:['S6'] },
@@ -53,7 +54,8 @@
         { id:'E5', name:'Optimale productie bij VM', layer:3, needs:['B6','B7','F4'] },
         { id:'E6', name:'Effecten invoerrecht', layer:3, needs:['S1','S5','B1'] },
         { id:'E7', name:'Max. winst monopolist', layer:3, needs:['S2','S3','F4'] },
-        { id:'E8', name:'Prijsdiscriminatie', layer:3, needs:['S2','S3'] }
+        { id:'E8', name:'Prijsdiscriminatie', layer:3, needs:['S2','S3'] },
+        { id:'E9', name:'Lange-termijnevenwicht VM', layer:3, needs:['S10'] }
     ];
 
     var LAYER_NAMES = ['Fundament', 'Bouwstenen', 'Samengesteld', 'Eindbazen'];
@@ -505,6 +507,30 @@
         };
     };
 
+    GEN.S10 = function () {
+        // MK = GTK oplossen: find Q where MK equals GTK
+        // TK = aQ² + bQ + c → MK = 2aQ + b, GTK = aQ + b + c/Q
+        // MK = GTK → 2aQ + b = aQ + b + c/Q → aQ = c/Q → Q = √(c/a)
+        // Choose Q first for clean numbers: c = a × Q²
+        var Qstar = ri(5, 15);
+        var a = pick([0.5, 1, 1.5, 2]);
+        var bk = ri(3, 12);
+        var c = round1(a * Qstar * Qstar);
+        // Test value for steps 1 and 2 (different from Qstar)
+        var Qtest = Qstar + pick([-2, -1, 1, 2]);
+        if (Qtest <= 0) Qtest = Qstar + 2;
+        var mkTest = round1(2 * a * Qtest + bk);
+        var gtkTest = round2(a * Qtest + bk + c / Qtest);
+        return {
+            context: 'TK = ' + a + 'Q\u00B2 + ' + bk + 'Q + ' + c + '.\nBij welke hoeveelheid is MK = GTK?',
+            steps: [
+                { q: 'Stel de MK-functie op. Wat is MK bij Q = ' + Qtest + '?', a: mkTest, hint: 'MK is de afgeleide van TK. MK = ' + round1(2 * a) + 'Q + ' + bk + '.', expl: 'MK = ' + round1(2 * a) + '\u00D7' + Qtest + ' + ' + bk + ' = ' + mkTest },
+                { q: 'Stel de GTK-functie op. Wat is GTK bij Q = ' + Qtest + '?', a: gtkTest, hint: 'GTK = TK/Q = ' + a + 'Q + ' + bk + ' + ' + c + '/Q.', expl: 'GTK = ' + a + '\u00D7' + Qtest + ' + ' + bk + ' + ' + c + '/' + Qtest + ' = ' + gtkTest },
+                { q: 'Stel MK = GTK en los Q op.', a: Qstar, hint: round1(2 * a) + 'Q + ' + bk + ' = ' + a + 'Q + ' + bk + ' + ' + c + '/Q. Vereenvoudig: ' + a + 'Q = ' + c + '/Q.', expl: a + 'Q = ' + c + '/Q \u2192 Q\u00B2 = ' + round1(c / a) + ' \u2192 Q = ' + Qstar }
+            ]
+        };
+    };
+
     GEN.B11 = function () {
         var landen = [
             ['Nederland', 'Duitsland'], ['Frankrijk', 'Spanje'],
@@ -716,6 +742,28 @@
                 { q: 'Bereken de winst op markt 1.', a: winst1, hint: 'Winst = (prijs \u2212 MK) \u00D7 hoeveelheid.', expl: 'Winst\u2081 = (' + P1 + ' \u2212 ' + mk + ') \u00D7 ' + Q1 + ' = ' + winst1 },
                 { q: 'Bereken de winst op markt 2.', a: winst2, hint: 'Winst = (prijs \u2212 MK) \u00D7 hoeveelheid.', expl: 'Winst\u2082 = (' + P2 + ' \u2212 ' + mk + ') \u00D7 ' + Q2 + ' = ' + winst2 },
                 { q: 'Bereken de totale winst.', a: totWinst, hint: 'Tel de winst van beide markten op.', expl: 'Totaal = ' + winst1 + ' + ' + winst2 + ' = ' + totWinst }
+            ]
+        };
+    };
+
+    GEN.E9 = function () {
+        // Lange-termijnevenwicht VM: MK = GTK → find Q, then price, verify profit = 0
+        // Same number strategy as S10: Q first, c = a × Q²
+        var Qstar = ri(5, 15);
+        var a = pick([0.5, 1, 1.5, 2]);
+        var bk = ri(3, 12);
+        var c = round1(a * Qstar * Qstar);
+        var mkStar = round1(2 * a * Qstar + bk);
+        var gtkStar = round2(a * Qstar + bk + c / Qstar);
+        // At MK = GTK, price = MK = GTK (by definition), so profit = 0
+        return {
+            context: 'Volkomen mededinging, lange termijn.\nTK = ' + a + 'Q\u00B2 + ' + bk + 'Q + ' + c + '.\nBepaal het lange-termijnevenwicht.',
+            steps: [
+                { q: 'Stel MK = GTK en los Q op.', a: Qstar, hint: 'MK = ' + round1(2 * a) + 'Q + ' + bk + ', GTK = ' + a + 'Q + ' + bk + ' + ' + c + '/Q. Stel gelijk en vereenvoudig.', expl: a + 'Q = ' + c + '/Q \u2192 Q\u00B2 = ' + round1(c / a) + ' \u2192 Q* = ' + Qstar },
+                { q: 'Bereken MK bij Q* = ' + Qstar + '.', a: mkStar, hint: 'MK = ' + round1(2 * a) + 'Q + ' + bk + '. Vul Q* in.', expl: 'MK = ' + round1(2 * a) + '\u00D7' + Qstar + ' + ' + bk + ' = ' + mkStar },
+                { q: 'Wat is de lange-termijn evenwichtsprijs?', a: mkStar, hint: 'Op lange termijn bij VM geldt: P = MK = GTK.', expl: 'P = MK(Q*) = ' + mkStar },
+                { q: 'Bereken GTK bij Q* (ter verificatie).', a: gtkStar, hint: 'GTK = ' + a + 'Q + ' + bk + ' + ' + c + '/Q. Vul Q* = ' + Qstar + ' in.', expl: 'GTK = ' + a + '\u00D7' + Qstar + ' + ' + bk + ' + ' + c + '/' + Qstar + ' = ' + gtkStar + ' \u2248 P \u2713' },
+                { q: 'Wat is de winst per stuk op lange termijn?', a: 0, hint: 'Bij lange-termijnevenwicht bij VM geldt P = GTK.', expl: 'Winst/stuk = P \u2212 GTK = ' + mkStar + ' \u2212 ' + gtkStar + ' \u2248 0 (afrondingsverschil)' }
             ]
         };
     };
