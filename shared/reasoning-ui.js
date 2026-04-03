@@ -42,6 +42,19 @@
         catch (e) { /* silent */ }
     }
 
+    /** Save a single answer's result to global progress immediately */
+    function saveAnswerProgress(structureType, correct) {
+        if (!catData) return;
+        var catId = getCategoryId(meta.parNr, structureType);
+        if (!catId) return;
+        var progress = loadProgress();
+        if (!progress[catId]) progress[catId] = { correct: 0, total: 0 };
+        progress[catId].total++;
+        if (correct) progress[catId].correct++;
+        saveProgress(progress);
+        renderSidebar();
+    }
+
     function getMasteryLevel(correct) {
         if (correct >= 10) return { label: 'Expert', color: '#f59e0b' };
         if (correct >= 6)  return { label: 'Gevorderd', color: '#22c55e' };
@@ -161,6 +174,7 @@
     }
 
     // ── Game state ──────────────────────────────────────────────────
+    var progressAtGameStart = {};  // snapshot of progress when game begins
     var currentMode = -1;
     var selection = [];      // For modes 0, 1: ordered list of selected items
     var selectedErrorIdx = -1; // For mode 2
@@ -265,6 +279,7 @@
     function startGame(modeIndex) {
         currentMode = modeIndex;
         resetSessionProgress();
+        progressAtGameStart = loadProgress();  // snapshot for level-up detection
         var info = engine.startGame(modeIndex);
         els.modeBadge.textContent = info.modeName;
         showScreen('game');
@@ -664,6 +679,9 @@
         updateSessionProgress(stType, result.correct);
         renderSessionProgress();
 
+        // Save progress immediately so it persists even if the user leaves mid-game
+        saveAnswerProgress(stType, result.correct);
+
         // Disable interaction
         disableAllInteraction();
 
@@ -741,39 +759,26 @@
         showScreen('results');
         setTimeout(function () { els.progressFill.style.width = pct + '%'; }, 100);
 
-        // ── Save progress & render session breakdown ────────────
+        // ── Render session breakdown (progress already saved per-answer) ──
         var breakdownEl = document.getElementById('r-session-breakdown');
         if (!breakdownEl || !catData) return;
 
         var progress = loadProgress();
-        var sessionCats = {};  // catId → { correct, total, prevCorrect }
+        var sessionCats = {};  // catId → { correct, total }
 
-        // Aggregate per-type results into categories
+        // Aggregate per-type results into categories for display
         for (var type in result.perType) {
             if (!result.perType.hasOwnProperty(type)) continue;
             var catId = getCategoryId(meta.parNr, type);
             if (!catId) continue;
             var pt = result.perType[type];
             if (!sessionCats[catId]) {
-                var prev = progress[catId] || { correct: 0, total: 0 };
-                sessionCats[catId] = { correct: pt.correct, total: pt.total, prevCorrect: prev.correct };
+                sessionCats[catId] = { correct: pt.correct, total: pt.total };
             } else {
                 sessionCats[catId].correct += pt.correct;
                 sessionCats[catId].total += pt.total;
             }
         }
-
-        // Update global progress
-        for (var cid in sessionCats) {
-            if (!sessionCats.hasOwnProperty(cid)) continue;
-            if (!progress[cid]) progress[cid] = { correct: 0, total: 0 };
-            progress[cid].correct += sessionCats[cid].correct;
-            progress[cid].total += sessionCats[cid].total;
-        }
-        saveProgress(progress);
-
-        // Refresh sidebar with updated progress
-        renderSidebar();
 
         // Render breakdown
         var html = '<div class="r-session-divider">Deze sessie</div>';
@@ -781,7 +786,8 @@
             if (!sessionCats.hasOwnProperty(catId2)) continue;
             var cat = catData.categories[catId2];
             var sc = sessionCats[catId2];
-            var prevLevel = getMasteryLevel(sc.prevCorrect);
+            var prevCorrect = (progressAtGameStart[catId2] || { correct: 0 }).correct;
+            var prevLevel = getMasteryLevel(prevCorrect);
             var newLevel = getMasteryLevel(progress[catId2].correct);
             var levelUp = newLevel.label !== prevLevel.label;
             var rowClass = levelUp ? 'r-session-row r-level-up' : 'r-session-row';
