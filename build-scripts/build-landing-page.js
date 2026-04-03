@@ -31,6 +31,10 @@ const DRY_RUN = false;
 // Set to false to show them again
 const HIDE_TASK_ROWS = false;
 
+// Temporarily hide specific paragrafen from nav, chapter pages, and generation
+// The folder and files remain intact; remove the id from this set to restore
+const HIDDEN_PARAGRAFEN = new Set(["3.2.4"]);
+
 const PARAGRAAF_DATA = [
   { id: "3.1.1", name: "Markt en marktstructuur", chapter: "3.1", chapterName: "Markten", chapterFull: "Hoofdstuk 1 \u2013 Markten", domain: "teal" },
   { id: "3.1.2", name: "Marktvormen", chapter: "3.1", chapterName: "Markten", chapterFull: "Hoofdstuk 1 \u2013 Markten", domain: "teal" },
@@ -220,7 +224,7 @@ function encPath(segments) { return segments.map(s => encodeURIComponent(s)).joi
 function renderNav(resolvedMap, pageType, currentId) {
   const grouped = {};
   for (const ch of CHAPTER_ORDER) {
-    grouped[ch] = PARAGRAAF_DATA.filter(p => p.chapter === ch);
+    grouped[ch] = PARAGRAAF_DATA.filter(p => p.chapter === ch && !HIDDEN_PARAGRAFEN.has(p.id));
   }
 
   function navLink(targetType, targetChapter, targetParagraaf) {
@@ -672,7 +676,7 @@ function renderModulePage(resolvedMap) {
 <main>`;
 
   for (const ch of CHAPTER_ORDER) {
-    const paragrafen = PARAGRAAF_DATA.filter(p => p.chapter === ch);
+    const paragrafen = PARAGRAAF_DATA.filter(p => p.chapter === ch && !HIDDEN_PARAGRAFEN.has(p.id));
     if (!paragrafen.length) continue;
     const first = paragrafen[0];
     const dc2 = DOMAIN_COLORS[first.domain];
@@ -701,7 +705,7 @@ function renderModulePage(resolvedMap) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function renderChapterPage(chapterId, resolvedMap) {
-  const paragrafen = PARAGRAAF_DATA.filter(p => p.chapter === chapterId);
+  const paragrafen = PARAGRAAF_DATA.filter(p => p.chapter === chapterId && !HIDDEN_PARAGRAFEN.has(p.id));
   const first = paragrafen[0];
   const dc = DOMAIN_COLORS[first.domain];
   const chNum = CHAPTER_NUMBERS[chapterId];
@@ -913,6 +917,7 @@ function main() {
   const targets = ONLY_ID ? PARAGRAAF_DATA.filter(p => p.id === ONLY_ID) : PARAGRAAF_DATA;
 
   for (const p of targets) {
+    if (HIDDEN_PARAGRAFEN.has(p.id)) { console.log(`=== ${p.id} ${p.name} === [HIDDEN, skipped]`); continue; }
     const resolved = resolvedMap[p.id];
     if (!resolved) { errors++; continue; }
 
