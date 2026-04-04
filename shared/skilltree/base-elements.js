@@ -165,8 +165,8 @@
         return {
             context: 'Los op: ' + a + ' \u2212 ' + b + 'Q = ' + c + ' + ' + d + 'Q',
             steps: [
-                { q: 'Breng alle Q-termen naar links. Wat is de co\u00EBffici\u00EBnt van Q?', a: b + d, hint: 'Tel de co\u00EBffici\u00EBnten op: ' + b + ' + ' + d, expl: b + 'Q + ' + d + 'Q = ' + (b + d) + 'Q' },
-                { q: 'Breng de constanten naar rechts: ' + a + ' \u2212 ' + c + ' = ?', a: a - c, hint: 'Trek ' + c + ' af van ' + a + '.', expl: a + ' \u2212 ' + c + ' = ' + (a - c) },
+                { q: 'Breng de Q-termen naar \u00E9\u00E9n kant. Tel +' + b + 'Q bij beide kanten op. Hoeveel Q staat er rechts?', a: b + d, hint: 'Rechts stond ' + d + 'Q, daar komt ' + b + 'Q bij: ' + d + ' + ' + b + ' = ' + (b + d) + '.', expl: a + ' = ' + c + ' + ' + d + 'Q + ' + b + 'Q = ' + c + ' + ' + (b + d) + 'Q' },
+                { q: 'Trek ' + c + ' af aan beide kanten: ' + a + ' \u2212 ' + c + ' = ?', a: a - c, hint: 'Trek ' + c + ' af van ' + a + '.', expl: a + ' \u2212 ' + c + ' = ' + (a - c) + ', dus ' + (b + d) + 'Q = ' + (a - c) },
                 { q: 'Los op: ' + (b + d) + 'Q = ' + (a - c) + '. Q = ?', a: Q, hint: 'Deel ' + (a - c) + ' door ' + (b + d) + '.', expl: 'Q = ' + (a - c) + ' \u00F7 ' + (b + d) + ' = ' + Q }
             ]
         };
