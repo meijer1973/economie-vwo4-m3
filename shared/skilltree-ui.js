@@ -210,7 +210,8 @@
                 if (cs.starCount > 0) {
                     html += '<div class="st-stars">' + starsHTML(cs.starCount) + '</div>';
                 } else {
-                    html += '<div class="st-tap-hint">Tap om te oefenen \u2192</div>';
+                    var actionVerb = ('ontouchstart' in window) ? 'Tap' : 'Klik';
+                    html += '<div class="st-tap-hint">' + actionVerb + ' om te oefenen \u2192</div>';
                 }
 
                 html += '</button>';
@@ -1332,9 +1333,24 @@
             }
         }
 
+        html += '<div class="st-expl-fade"></div>';
         html += '</div></div>';
 
         document.body.insertAdjacentHTML('beforeend', html);
+
+        // Scroll-fade: hide gradient when scrolled to bottom
+        var exCont = document.querySelector('.st-expl-container');
+        function checkExplScroll() {
+            if (exCont.scrollTop + exCont.clientHeight >= exCont.scrollHeight - 10) {
+                exCont.classList.add('st-scrolled-bottom');
+            } else {
+                exCont.classList.remove('st-scrolled-bottom');
+            }
+        }
+        if (exCont.scrollHeight <= exCont.clientHeight) {
+            exCont.classList.add('st-scrolled-bottom');
+        }
+        exCont.addEventListener('scroll', checkExplScroll);
 
         document.getElementById('st-expl-close').addEventListener('click', closeExplanationOverlay);
         document.getElementById('st-expl-overlay').addEventListener('click', function (e) {
