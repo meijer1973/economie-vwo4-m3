@@ -693,6 +693,14 @@
         if (!this._exercise) return { valid: false, error: 'No active exercise' };
 
         var step = this._exercise.steps[this._stepIdx];
+        var mode = step.mode || 'numeric';
+
+        // Route to mode-specific validator
+        if (mode === 'mc') return this._checkMC(input, step);
+        if (mode === 'order') return this._checkOrder(input, step);
+        if (mode === 'error') return this._checkError(input, step);
+
+        // Default: numeric (existing logic)
         var cleaned = String(input).replace(',', '.').replace(/\s/g, '').replace(/\u2212/g, '-');
         var userVal = parseFloat(cleaned);
 
@@ -709,6 +717,95 @@
                 q: step.q,
                 a: step.a,
                 userAnswer: userVal
+            });
+            return {
+                correct: true,
+                explanation: step.expl,
+                isLastStep: this._stepIdx + 1 >= this._exercise.steps.length,
+                streak: this._streak
+            };
+        } else {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'wrong_answer' };
+        }
+    };
+
+    SkillTreeEngine.prototype._checkMC = function (input, step) {
+        var selected = parseInt(input, 10);
+        if (isNaN(selected) || selected < 0 || selected >= step.options.length) {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'invalid_choice' };
+        }
+        if (selected === step.correctIdx) {
+            this._streak++;
+            this._completedSteps.push({
+                q: step.q,
+                a: step.options[step.correctIdx],
+                userAnswer: step.options[selected]
+            });
+            return {
+                correct: true,
+                explanation: step.expl,
+                isLastStep: this._stepIdx + 1 >= this._exercise.steps.length,
+                streak: this._streak
+            };
+        } else {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'wrong_answer' };
+        }
+    };
+
+    SkillTreeEngine.prototype._checkOrder = function (input, step) {
+        // input = array of block indices in user's order
+        if (!Array.isArray(input) || input.length !== step.correctOrder.length) {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'incomplete_order' };
+        }
+        var match = true;
+        for (var i = 0; i < step.correctOrder.length; i++) {
+            if (input[i] !== step.correctOrder[i]) { match = false; break; }
+        }
+        if (match) {
+            this._streak++;
+            var ordered = [];
+            for (var j = 0; j < step.correctOrder.length; j++) {
+                ordered.push(step.blocks[step.correctOrder[j]]);
+            }
+            this._completedSteps.push({
+                q: step.q,
+                a: ordered.join(' \u2192 '),
+                userAnswer: ordered.join(' \u2192 ')
+            });
+            return {
+                correct: true,
+                explanation: step.expl,
+                isLastStep: this._stepIdx + 1 >= this._exercise.steps.length,
+                streak: this._streak
+            };
+        } else {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'wrong_order' };
+        }
+    };
+
+    SkillTreeEngine.prototype._checkError = function (input, step) {
+        var selected = parseInt(input, 10);
+        if (isNaN(selected) || selected < 0 || selected >= step.shownSteps.length) {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'invalid_choice' };
+        }
+        if (step.shownSteps[selected].isError) {
+            this._streak++;
+            this._completedSteps.push({
+                q: step.q,
+                a: 'Fout gevonden: ' + step.shownSteps[selected].text,
+                userAnswer: step.shownSteps[selected].text
             });
             return {
                 correct: true,

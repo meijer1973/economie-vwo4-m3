@@ -105,10 +105,28 @@ describe('exercise generators', () => {
 
                 for (const step of ex.steps) {
                     expect(step.q).toBeTruthy();
-                    expect(typeof step.a).toBe('number');
-                    expect(isFinite(step.a)).toBe(true);
                     expect(step.hint).toBeTruthy();
                     expect(step.expl).toBeTruthy();
+                    if (step.mode === 'mc') {
+                        expect(Array.isArray(step.options)).toBe(true);
+                        expect(step.options.length).toBe(4);
+                        expect(typeof step.correctIdx).toBe('number');
+                        expect(step.correctIdx).toBeGreaterThanOrEqual(0);
+                        expect(step.correctIdx).toBeLessThan(step.options.length);
+                    } else if (step.mode === 'order') {
+                        expect(Array.isArray(step.blocks)).toBe(true);
+                        expect(step.blocks.length).toBeGreaterThanOrEqual(3);
+                        expect(Array.isArray(step.correctOrder)).toBe(true);
+                        expect(step.correctOrder.length).toBe(step.blocks.length);
+                    } else if (step.mode === 'error') {
+                        expect(Array.isArray(step.shownSteps)).toBe(true);
+                        expect(step.shownSteps.length).toBeGreaterThanOrEqual(3);
+                        var errorCount = step.shownSteps.filter(function(s) { return s.isError; }).length;
+                        expect(errorCount).toBe(1);
+                    } else {
+                        expect(typeof step.a).toBe('number');
+                        expect(isFinite(step.a)).toBe(true);
+                    }
                 }
             }
         });

@@ -288,7 +288,8 @@ describe('nextStep', () => {
         // Complete all steps
         for (let i = 0; i < ex.totalSteps; i++) {
             const step = engine.getExerciseState().currentStep;
-            engine.checkAnswer(step.a);
+            const answer = step.mode === 'mc' ? step.correctIdx : step.a;
+            engine.checkAnswer(answer);
             if (i < ex.totalSteps - 1) engine.nextStep();
         }
         expect(engine.nextStep()).toBeNull();
@@ -312,7 +313,8 @@ describe('finishExercise', () => {
         const ex = engine.startExercise(skillId);
         for (let i = 0; i < ex.totalSteps; i++) {
             const step = engine.getExerciseState().currentStep;
-            engine.checkAnswer(step.a);
+            const answer = step.mode === 'mc' ? step.correctIdx : step.a;
+            engine.checkAnswer(answer);
             if (i < ex.totalSteps - 1) engine.nextStep();
         }
         return engine.finishExercise();
@@ -342,7 +344,8 @@ describe('finishExercise', () => {
         const ex = engine.getExerciseState();
         for (let i = 0; i < ex.totalSteps; i++) {
             const step = engine.getExerciseState().currentStep;
-            engine.checkAnswer(step.a);
+            const answer = step.mode === 'mc' ? step.correctIdx : step.a;
+            engine.checkAnswer(answer);
             if (i < ex.totalSteps - 1) engine.nextStep();
         }
         const result = engine.finishExercise();
@@ -358,7 +361,8 @@ describe('finishExercise', () => {
         const ex = engine.getExerciseState();
         for (let i = 0; i < ex.totalSteps; i++) {
             const step = engine.getExerciseState().currentStep;
-            engine.checkAnswer(step.a);
+            const answer = step.mode === 'mc' ? step.correctIdx : step.a;
+            engine.checkAnswer(answer);
             if (i < ex.totalSteps - 1) engine.nextStep();
         }
         const result = engine.finishExercise();
@@ -781,5 +785,207 @@ describe('isOnGoalPath', () => {
     test('returns false when no goals set', () => {
         const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
         expect(engine.isOnGoalPath('F1')).toBe(false);
+    });
+});
+
+// ── MC mode validation ───────────────────────────────────────────
+
+describe('checkAnswer MC mode', () => {
+    function createMCEngine() {
+        const storage = makeStorage();
+        const customElements = Object.assign({}, elements, {
+            GEN: Object.assign({}, elements.GEN, {
+                F1: function () {
+                    return {
+                        context: 'MC test context',
+                        steps: [
+                            { q: 'Which is correct?', mode: 'mc', options: ['10', '20', '30', '40'], correctIdx: 1, hint: 'Pick 20', expl: 'Answer is 20' },
+                            { q: 'Numeric follow-up', a: 42, hint: 'Just 42', expl: '42 is the answer' }
+                        ]
+                    };
+                }
+            })
+        });
+        return new SkillTreeEngine({ elements: customElements, data: { parNr: 'test', activeSkills: null }, storage: storage });
+    }
+
+    test('correct MC answer returns correct result', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(1);
+        expect(result.correct).toBe(true);
+        expect(result.explanation).toBe('Answer is 20');
+    });
+
+    test('wrong MC answer returns wrong result', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(0);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('wrong_answer');
+    });
+
+    test('invalid MC index returns error', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(-1);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('invalid_choice');
+    });
+
+    test('MC errors increment error count', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        engine.checkAnswer(0);
+        engine.checkAnswer(3);
+        expect(engine.getExerciseState().errors).toBe(2);
+    });
+
+    test('streak tracks across MC and numeric steps', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        const r1 = engine.checkAnswer(1);
+        expect(r1.streak).toBe(1);
+        engine.nextStep();
+        const r2 = engine.checkAnswer(42);
+        expect(r2.streak).toBe(2);
+    });
+
+    test('mixed-mode exercise awards stars correctly', () => {
+        const engine = createMCEngine();
+        engine.startExercise('F1');
+        engine.checkAnswer(1);
+        engine.nextStep();
+        engine.checkAnswer(42);
+        const fr = engine.finishExercise();
+        expect(fr.errors).toBe(0);
+        expect(fr.earned).toBe(3);
+    });
+
+    test('steps without mode field default to numeric', () => {
+        const engine = createEngine();
+        engine.startExercise('F5');
+        const step = engine.getExerciseState().currentStep;
+        expect(step.mode).toBeUndefined();
+        const result = engine.checkAnswer(step.a);
+        expect(result.correct).toBe(true);
+    });
+});
+
+// ── Order mode validation ────────────────────────────────────────
+
+describe('checkAnswer order mode', () => {
+    function createOrderEngine() {
+        const storage = makeStorage();
+        const customElements = Object.assign({}, elements, {
+            GEN: Object.assign({}, elements.GEN, {
+                F1: function () {
+                    return {
+                        context: 'Order test',
+                        steps: [
+                            { q: 'Zet in volgorde', mode: 'order', blocks: ['Stap A', 'Stap B', 'Stap C'], correctOrder: [1, 2, 0], hint: 'B eerst', expl: 'B, C, A' },
+                            { q: 'Numeric follow-up', a: 10, hint: 'Tien', expl: '10' }
+                        ]
+                    };
+                }
+            })
+        });
+        return new SkillTreeEngine({ elements: customElements, data: { parNr: 'test', activeSkills: null }, storage: storage });
+    }
+
+    test('correct order returns correct', () => {
+        const engine = createOrderEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer([1, 2, 0]);
+        expect(result.correct).toBe(true);
+    });
+
+    test('wrong order returns wrong', () => {
+        const engine = createOrderEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer([0, 1, 2]);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('wrong_order');
+    });
+
+    test('incomplete order returns error', () => {
+        const engine = createOrderEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer([1, 2]);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('incomplete_order');
+    });
+
+    test('order errors increment count', () => {
+        const engine = createOrderEngine();
+        engine.startExercise('F1');
+        engine.checkAnswer([0, 1, 2]); // wrong
+        expect(engine.getExerciseState().errors).toBe(1);
+    });
+
+    test('streak tracks across order and numeric', () => {
+        const engine = createOrderEngine();
+        engine.startExercise('F1');
+        const r1 = engine.checkAnswer([1, 2, 0]);
+        expect(r1.streak).toBe(1);
+        engine.nextStep();
+        const r2 = engine.checkAnswer(10);
+        expect(r2.streak).toBe(2);
+    });
+});
+
+// ── Error mode validation ────────────────────────────────────────
+
+describe('checkAnswer error mode', () => {
+    function createErrorEngine() {
+        const storage = makeStorage();
+        const customElements = Object.assign({}, elements, {
+            GEN: Object.assign({}, elements.GEN, {
+                F1: function () {
+                    return {
+                        context: 'Error test',
+                        steps: [
+                            { q: 'Vind de fout', mode: 'error', shownSteps: [
+                                { text: '10 + 5 = 15', isError: false },
+                                { text: '15 / 3 = 6', isError: true },
+                                { text: '6 × 2 = 12', isError: false }
+                            ], hint: 'Check de deling', expl: '15 / 3 = 5, niet 6' }
+                        ]
+                    };
+                }
+            })
+        });
+        return new SkillTreeEngine({ elements: customElements, data: { parNr: 'test', activeSkills: null }, storage: storage });
+    }
+
+    test('selecting error step returns correct', () => {
+        const engine = createErrorEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(1);
+        expect(result.correct).toBe(true);
+    });
+
+    test('selecting correct step returns wrong', () => {
+        const engine = createErrorEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(0);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('wrong_answer');
+    });
+
+    test('invalid index returns error', () => {
+        const engine = createErrorEngine();
+        engine.startExercise('F1');
+        const result = engine.checkAnswer(5);
+        expect(result.correct).toBe(false);
+        expect(result.error).toBe('invalid_choice');
+    });
+
+    test('error mode increments error count', () => {
+        const engine = createErrorEngine();
+        engine.startExercise('F1');
+        engine.checkAnswer(0); // wrong
+        engine.checkAnswer(2); // wrong
+        expect(engine.getExerciseState().errors).toBe(2);
     });
 });
