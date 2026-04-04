@@ -1161,6 +1161,103 @@ body {
     cursor: default;
 }
 
+/* ── Order mode ──────────────────────────────────────────── */
+.st-order-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    min-height: 44px;
+}
+.st-order-block {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #475569;
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.st-order-block:active {
+    transform: scale(0.97);
+}
+.st-order-block.st-placed {
+    opacity: 0.25;
+    pointer-events: none;
+}
+.st-order-chain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 12px;
+}
+.st-order-placed {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #22c55e;
+    background: #0d1f0d;
+    color: #dcfce7;
+    font-size: 0.85rem;
+    cursor: pointer;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.15s ease;
+}
+.st-order-placed:hover {
+    opacity: 0.8;
+}
+.st-order-arrow {
+    color: #64748b;
+    font-size: 1rem;
+    padding: 2px 0;
+}
+
+/* ── Error mode (find the error) ────────────────────────── */
+.st-error-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.st-error-card {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #475569;
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.st-error-card:active {
+    transform: scale(0.98);
+}
+.st-error-num {
+    font-weight: 700;
+    color: #94a3b8;
+    margin-right: 6px;
+}
+.st-error-card.st-error-found {
+    background: #7f1d1d;
+    border-color: #ef4444;
+    color: #fecaca;
+}
+.st-error-card.st-error-ok {
+    border-color: #22c55e;
+    opacity: 0.6;
+}
+.st-error-card.st-error-wrong {
+    border-color: #ef4444;
+    animation: shake 0.4s ease;
+}
+.st-error-card[data-disabled] {
+    cursor: default;
+}
+
 /* ── Goal achievement celebration ─────────────────────────── */
 .st-goal-achieved-card {
     background: #111827;

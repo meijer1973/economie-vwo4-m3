@@ -162,10 +162,23 @@
     GEN.F2 = function () {
         var Q = ri(5, 20), b = ri(2, 5), d = ri(1, 4);
         var c = ri(10, 40), a = c + Q * (b + d);
+        var orderStep = {
+            q: 'Zet de oplosstappen in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Deel door de co\u00EBffici\u00EBnt van Q',
+                'Breng Q-termen naar \u00E9\u00E9n kant',
+                'Breng constanten naar de andere kant'
+            ],
+            correctOrder: [1, 2, 0],
+            hint: 'Eerst verzamelen, dan isoleren, dan delen.',
+            expl: 'Stap 1: Q-termen verzamelen \u2192 Stap 2: constanten apart \u2192 Stap 3: delen door co\u00EBffici\u00EBnt.'
+        };
         return {
             context: 'Los op: ' + a + ' \u2212 ' + b + 'Q = ' + c + ' + ' + d + 'Q',
             steps: [
-                { q: 'Breng de Q-termen naar \u00E9\u00E9n kant. Tel +' + b + 'Q bij beide kanten op. Hoeveel Q staat er rechts?', a: b + d, hint: 'Rechts stond ' + d + 'Q, daar komt ' + b + 'Q bij: ' + d + ' + ' + b + ' = ' + (b + d) + '.', expl: a + ' = ' + c + ' + ' + d + 'Q + ' + b + 'Q = ' + c + ' + ' + (b + d) + 'Q' },
+                orderStep,
+                { q: 'Tel +' + b + 'Q bij beide kanten op. Hoeveel Q staat er rechts?', a: b + d, hint: 'Rechts stond ' + d + 'Q, daar komt ' + b + 'Q bij: ' + d + ' + ' + b + ' = ' + (b + d) + '.', expl: a + ' = ' + c + ' + ' + d + 'Q + ' + b + 'Q = ' + c + ' + ' + (b + d) + 'Q' },
                 { q: 'Trek ' + c + ' af aan beide kanten: ' + a + ' \u2212 ' + c + ' = ?', a: a - c, hint: 'Trek ' + c + ' af van ' + a + '.', expl: a + ' \u2212 ' + c + ' = ' + (a - c) + ', dus ' + (b + d) + 'Q = ' + (a - c) },
                 { q: 'Los op: ' + (b + d) + 'Q = ' + (a - c) + '. Q = ?', a: Q, hint: 'Deel ' + (a - c) + ' door ' + (b + d) + '.', expl: 'Q = ' + (a - c) + ' \u00F7 ' + (b + d) + ' = ' + Q }
             ]
@@ -361,11 +374,32 @@
             '|Ev| > 1 \u2192 elastisch, |Ev| < 1 \u2192 inelastisch, |Ev| = 1 \u2192 eenheidselastisch.',
             '|Ev| = ' + absEv + (absEv > 1 ? ' > 1 \u2192 elastisch.' : absEv < 1 ? ' < 1 \u2192 inelastisch.' : ' = 1 \u2192 eenheidselastisch.')
         );
+        // Error step: 3 attempts at %ΔQ, one uses wrong base value (P2 instead of Q1)
+        var wrongPctQ = round2(((Q2 - Q1) / P2) * 100);
+        var errorStep = {
+            q: 'E\u00E9n van deze berekeningen van %\u0394Qv bevat een fout. Welke?',
+            mode: 'error',
+            shownSteps: [
+                { text: '%\u0394Qv = (' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ' \u00D7 100 = ' + pctQ + '%', isError: false },
+                { text: '%\u0394Qv = (' + Q2 + ' \u2212 ' + Q1 + ') / ' + P2 + ' \u00D7 100 = ' + wrongPctQ + '%', isError: true },
+                { text: '%\u0394Qv = ' + deltaQ + ' / ' + Q1 + ' \u00D7 100 = ' + pctQ + '%', isError: false }
+            ],
+            hint: 'Bij procentuele verandering deel je altijd door de oorspronkelijke waarde.',
+            expl: 'Stap 2 deelt door ' + P2 + ' (de nieuwe prijs) in plaats van door ' + Q1 + ' (de oorspronkelijke hoeveelheid). Dat is fout!'
+        };
+        // Shuffle error step position so the error isn't always in the middle
+        var errIdx = ri(0, 2);
+        var errSteps = errorStep.shownSteps.slice();
+        var errItem = errSteps.splice(1, 1)[0]; // remove the error from position 1
+        errSteps.splice(errIdx, 0, errItem);     // insert at random position
+        errorStep.shownSteps = errSteps;
+
         return {
             context: 'De prijs stijgt van \u20AC' + P1 + ' naar \u20AC' + P2 + '.\nDe gevraagde hoeveelheid daalt van ' + Q1 + ' naar ' + Q2 + '.\nBereken de prijselasticiteit van de vraag.',
             steps: [
                 { q: 'Bereken de procentuele verandering van de prijs (%\u0394P).', a: pctP, hint: '%\u0394P = (\u0394P / P\u2081) \u00D7 100 = (' + deltaP + ' / ' + P1 + ') \u00D7 100', expl: '%\u0394P = (' + deltaP + ' / ' + P1 + ') \u00D7 100 = ' + pctP + '%' },
-                { q: 'Bereken de procentuele verandering van de vraag (%\u0394Q). Let op het teken!', a: pctQ, hint: '%\u0394Q = ((Q\u2082 \u2212 Q\u2081) / Q\u2081) \u00D7 100 = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
+                errorStep,
+                { q: 'Bereken nu zelf %\u0394Qv.', a: pctQ, hint: '%\u0394Q = ((Q\u2082 \u2212 Q\u2081) / Q\u2081) \u00D7 100 = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
                 { q: 'Bereken de prijselasticiteit (Ev = %\u0394Q / %\u0394P).', a: Ev, hint: 'Deel de procentuele verandering van Q door die van P.', expl: 'Ev = ' + pctQ + ' / ' + pctP + ' = ' + Ev },
                 mcInterp
             ]

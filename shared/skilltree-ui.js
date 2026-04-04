@@ -44,6 +44,8 @@
     var savedDepState = null;      // overlay state saved while doing an exercise
     var goalJustAchieved = null;   // set when a goal is completed during this exercise
     var mcSelected = -1;           // which MC option was clicked (-1 = none)
+    var orderPlaced = [];          // indices of blocks placed in chain (order mode)
+    var errorSelected = -1;        // which error card was clicked (-1 = none)
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -395,6 +397,8 @@
         finishResult = null;
         lastFinishedSkillId = null;
         mcSelected = -1;
+        orderPlaced = [];
+        errorSelected = -1;
         render();
         focusInput();
     }
@@ -469,6 +473,53 @@
                 html += '<button class="' + optClass + '" data-mc-idx="' + oi + '"' + optDisabled + '>' + esc(String(state.currentStep.options[oi])) + '</button>';
             }
             html += '</div>';
+        } else if (stepMode === 'order') {
+            // Order mode: bank of blocks + chain
+            var shuffled = [];
+            for (var si = 0; si < state.currentStep.blocks.length; si++) shuffled.push(si);
+            // Build bank (unplaced blocks)
+            html += '<div class="st-order-bank">';
+            for (var bi = 0; bi < shuffled.length; bi++) {
+                var placed = false;
+                for (var pi = 0; pi < orderPlaced.length; pi++) {
+                    if (orderPlaced[pi] === bi) { placed = true; break; }
+                }
+                var blockClass = 'st-order-block' + (placed ? ' st-placed' : '');
+                html += '<div class="' + blockClass + '" data-block-idx="' + bi + '">' + esc(state.currentStep.blocks[bi]) + '</div>';
+            }
+            html += '</div>';
+            // Build chain (placed blocks)
+            html += '<div class="st-order-chain">';
+            for (var ci = 0; ci < orderPlaced.length; ci++) {
+                if (ci > 0) html += '<div class="st-order-arrow">\u2193</div>';
+                html += '<div class="st-order-placed" data-chain-idx="' + ci + '">' + (ci + 1) + '. ' + esc(state.currentStep.blocks[orderPlaced[ci]]) + '</div>';
+            }
+            html += '</div>';
+            // Check button (only when all blocks placed)
+            if (orderPlaced.length === state.currentStep.blocks.length && feedback !== 'correct') {
+                html += '<button class="st-check-btn" id="st-order-check" style="background:' + lc.bg + ';color:' + lc.text + '">Controleer volgorde</button>';
+            }
+        } else if (stepMode === 'error') {
+            // Error mode: 3 step cards, tap to select the error
+            html += '<div class="st-error-cards">';
+            for (var ei = 0; ei < state.currentStep.shownSteps.length; ei++) {
+                var errClass = 'st-error-card';
+                var errDisabled = '';
+                if (feedback === 'correct') {
+                    if (state.currentStep.shownSteps[ei].isError) {
+                        errClass += ' st-error-found';
+                    } else {
+                        errClass += ' st-error-ok';
+                    }
+                    errDisabled = ' data-disabled="true"';
+                } else if (feedback === 'wrong' && errorSelected === ei) {
+                    errClass += ' st-error-wrong';
+                }
+                html += '<div class="' + errClass + '" data-error-idx="' + ei + '"' + errDisabled + '>';
+                html += '<span class="st-error-num">Stap ' + (ei + 1) + '</span> ' + esc(state.currentStep.shownSteps[ei].text);
+                html += '</div>';
+            }
+            html += '</div>';
         } else {
             // Numeric input row
             html += '<div class="st-input-row">';
@@ -482,7 +533,7 @@
         }
 
         // Feedback (wrong message — only for numeric; MC shows inline via button color)
-        if (feedback === 'wrong' && stepMode !== 'mc') {
+        if (feedback === 'wrong' && stepMode === 'numeric') {
             html += '<p class="st-wrong-msg">\u2717 Niet juist. Probeer het opnieuw' + (!showHint ? ' of gebruik een hint.' : '.') + '</p>';
         }
 
@@ -549,6 +600,47 @@
                 if (feedback === 'correct') return;
                 var idx = parseInt(this.getAttribute('data-mc-idx'), 10);
                 mcSelected = idx;
+                doCheck(idx);
+            });
+        }
+
+        // Order mode: bank click → add to chain
+        var orderBlocks = root.querySelectorAll('.st-order-block:not(.st-placed)');
+        for (var obi = 0; obi < orderBlocks.length; obi++) {
+            orderBlocks[obi].addEventListener('click', function () {
+                if (feedback === 'correct') return;
+                var idx = parseInt(this.getAttribute('data-block-idx'), 10);
+                orderPlaced.push(idx);
+                feedback = null;
+                render();
+            });
+        }
+        // Order mode: chain click → remove from chain
+        var orderChain = root.querySelectorAll('.st-order-placed');
+        for (var oci = 0; oci < orderChain.length; oci++) {
+            orderChain[oci].addEventListener('click', function () {
+                if (feedback === 'correct') return;
+                var ci = parseInt(this.getAttribute('data-chain-idx'), 10);
+                orderPlaced.splice(ci, 1);
+                feedback = null;
+                render();
+            });
+        }
+        // Order mode: check button
+        var orderCheckBtn = document.getElementById('st-order-check');
+        if (orderCheckBtn) {
+            orderCheckBtn.addEventListener('click', function () {
+                doCheck(orderPlaced);
+            });
+        }
+
+        // Error mode: instant submit on tap
+        var errorCards = root.querySelectorAll('.st-error-card:not([data-disabled])');
+        for (var eci = 0; eci < errorCards.length; eci++) {
+            errorCards[eci].addEventListener('click', function () {
+                if (feedback === 'correct') return;
+                var idx = parseInt(this.getAttribute('data-error-idx'), 10);
+                errorSelected = idx;
                 doCheck(idx);
             });
         }
@@ -620,6 +712,8 @@
                     showHint = false;
                     showExpl = false;
                     mcSelected = -1;
+                    orderPlaced = [];
+                    errorSelected = -1;
                     render();
                     focusInput();
                 }, 1200);
