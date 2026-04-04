@@ -693,6 +693,12 @@
         if (!this._exercise) return { valid: false, error: 'No active exercise' };
 
         var step = this._exercise.steps[this._stepIdx];
+        var mode = step.mode || 'numeric';
+
+        // Route to mode-specific validator
+        if (mode === 'mc') return this._checkMC(input, step);
+
+        // Default: numeric (existing logic)
         var cleaned = String(input).replace(',', '.').replace(/\s/g, '').replace(/\u2212/g, '-');
         var userVal = parseFloat(cleaned);
 
@@ -709,6 +715,33 @@
                 q: step.q,
                 a: step.a,
                 userAnswer: userVal
+            });
+            return {
+                correct: true,
+                explanation: step.expl,
+                isLastStep: this._stepIdx + 1 >= this._exercise.steps.length,
+                streak: this._streak
+            };
+        } else {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'wrong_answer' };
+        }
+    };
+
+    SkillTreeEngine.prototype._checkMC = function (input, step) {
+        var selected = parseInt(input, 10);
+        if (isNaN(selected) || selected < 0 || selected >= step.options.length) {
+            this._errors++;
+            this._streak = 0;
+            return { correct: false, error: 'invalid_choice' };
+        }
+        if (selected === step.correctIdx) {
+            this._streak++;
+            this._completedSteps.push({
+                q: step.q,
+                a: step.options[step.correctIdx],
+                userAnswer: step.options[selected]
             });
             return {
                 correct: true,

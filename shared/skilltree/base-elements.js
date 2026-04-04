@@ -17,6 +17,37 @@
     var round1 = function (n) { return Math.round(n * 10) / 10; };
     var round2 = function (n) { return Math.round(n * 100) / 100; };
 
+    /**
+     * Build an MC step from a correct answer and distractor candidates.
+     * Returns { q, mode:'mc', options:[4], correctIdx, hint, expl }.
+     */
+    var mcStep = function (q, correct, distractors, hint, expl) {
+        var pool = [];
+        for (var i = 0; i < distractors.length; i++) {
+            if (distractors[i] !== correct) pool.push(distractors[i]);
+        }
+        // Deduplicate
+        var seen = {};
+        var unique = [];
+        for (var j = 0; j < pool.length; j++) {
+            var key = String(pool[j]);
+            if (!seen[key]) { seen[key] = true; unique.push(pool[j]); }
+        }
+        // Pad if needed
+        while (unique.length < 3) {
+            var offset = ri(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+            var candidate = typeof correct === 'number' ? correct + offset : correct + '*';
+            if (String(candidate) !== String(correct) && !seen[String(candidate)]) {
+                seen[String(candidate)] = true;
+                unique.push(candidate);
+            }
+        }
+        var opts = unique.slice(0, 3);
+        var insertAt = ri(0, 3);
+        opts.splice(insertAt, 0, correct);
+        return { q: q, mode: 'mc', options: opts, correctIdx: insertAt, hint: hint, expl: expl };
+    };
+
     /* ── skill definitions ───────────────────────────────────── */
     var SKILLS = [
         { id:'F1', name:'Lineaire functie opstellen', layer:0, needs:[],
@@ -110,12 +141,20 @@
 
     GEN.F1 = function () {
         var slope = ri(2, 6), intercept = slope * ri(10, 25);
+        var correct = -slope;
+        var step3 = mcStep(
+            'De vraaglijn is Qv = ' + intercept + ' + ? \u00D7 P. Wat is de co\u00EBffici\u00EBnt van P?',
+            correct,
+            [slope, -intercept, intercept, slope + 1, -(slope - 1)],
+            'De vraag daalt, dus de co\u00EBffici\u00EBnt is negatief.',
+            'Qv = ' + intercept + ' \u2212 ' + slope + 'P, dus de co\u00EBffici\u00EBnt is \u2212' + slope + '.'
+        );
         return {
             context: 'De vraag naar een product daalt met ' + slope + ' stuks per euro prijsverhoging. Bij een prijs van \u20AC0 is de vraag ' + intercept + ' stuks.',
             steps: [
                 { q: 'Hoeveel is de vraag bij P = 0?', a: intercept, hint: 'Dit staat direct in de opgave.', expl: 'Bij P = 0 is Qv = ' + intercept + '.' },
                 { q: 'Met hoeveel stuks daalt de vraag per euro prijsverhoging?', a: slope, hint: 'Zoek het woord \'daalt\' in de tekst.', expl: 'Per euro stijging daalt de vraag met ' + slope + '.' },
-                { q: 'De vraaglijn is Qv = ' + intercept + ' + ? \u00D7 P. Wat is de co\u00EBffici\u00EBnt van P? (let op het teken!)', a: -slope, hint: 'De vraag daalt, dus de co\u00EBffici\u00EBnt is negatief.', expl: 'Qv = ' + intercept + ' \u2212 ' + slope + 'P, dus de co\u00EBffici\u00EBnt is \u2212' + slope + '.' }
+                step3
             ]
         };
     };
@@ -136,11 +175,19 @@
     GEN.F3 = function () {
         var b = pick([2, 4, 5]), aOver = ri(10, 30), a = b * aOver;
         var coefQ = round2(1 / b);
+        var correctCoef = -coefQ;
+        var step2 = mcStep(
+            'Wat is de co\u00EBffici\u00EBnt van Q?',
+            correctCoef,
+            [coefQ, -1 / (b + 1), 1 / b, -b, b],
+            'Je deelt \u2212Q door ' + b + '. Let op: het teken blijft negatief.',
+            'P = ' + aOver + ' \u2212 ' + coefQ + 'Q, dus de co\u00EBffici\u00EBnt is \u2212' + coefQ + '.'
+        );
         return {
             context: 'Schrijf om: Qv = ' + a + ' \u2212 ' + b + 'P  \u2192  P = ?',
             steps: [
                 { q: 'Herschrijf naar P = \u2026 Wat is de constante term?', a: aOver, hint: 'Isoleer ' + b + 'P aan \u00E9\u00E9n kant en deel alles door ' + b + '.', expl: b + 'P = ' + a + ' \u2212 Q \u2192 P = ' + a + '/' + b + ' \u2212 Q/' + b + ' \u2192 constante = ' + aOver },
-                { q: 'Wat is de co\u00EBffici\u00EBnt van Q? (let op het teken!)', a: -coefQ, hint: 'Je deelt \u2212Q door ' + b + '. Let op: het teken blijft negatief.', expl: 'P = ' + aOver + ' \u2212 ' + coefQ + 'Q, dus de co\u00EBffici\u00EBnt is \u2212' + coefQ + '.' }
+                step2
             ]
         };
     };
@@ -305,12 +352,22 @@
         var Q2 = Q1 + deltaQ;
         if (Q2 <= 0) return GEN.B8();
         var Ev = round2(pctQ / pctP);
+        var absEv = Math.abs(Ev);
+        var elastic = absEv > 1 ? 'elastisch' : absEv < 1 ? 'inelastisch' : 'eenheidselastisch';
+        var mcInterp = mcStep(
+            'De Ev = ' + Ev + '. De vraag is\u2026',
+            elastic,
+            ['elastisch', 'inelastisch', 'eenheidselastisch', 'perfect elastisch'],
+            '|Ev| > 1 \u2192 elastisch, |Ev| < 1 \u2192 inelastisch, |Ev| = 1 \u2192 eenheidselastisch.',
+            '|Ev| = ' + absEv + (absEv > 1 ? ' > 1 \u2192 elastisch.' : absEv < 1 ? ' < 1 \u2192 inelastisch.' : ' = 1 \u2192 eenheidselastisch.')
+        );
         return {
             context: 'De prijs stijgt van \u20AC' + P1 + ' naar \u20AC' + P2 + '.\nDe gevraagde hoeveelheid daalt van ' + Q1 + ' naar ' + Q2 + '.\nBereken de prijselasticiteit van de vraag.',
             steps: [
                 { q: 'Bereken de procentuele verandering van de prijs (%\u0394P).', a: pctP, hint: '%\u0394P = (\u0394P / P\u2081) \u00D7 100 = (' + deltaP + ' / ' + P1 + ') \u00D7 100', expl: '%\u0394P = (' + deltaP + ' / ' + P1 + ') \u00D7 100 = ' + pctP + '%' },
                 { q: 'Bereken de procentuele verandering van de vraag (%\u0394Q). Let op het teken!', a: pctQ, hint: '%\u0394Q = ((Q\u2082 \u2212 Q\u2081) / Q\u2081) \u00D7 100 = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
-                { q: 'Bereken de prijselasticiteit (Ev = %\u0394Q / %\u0394P).', a: Ev, hint: 'Deel de procentuele verandering van Q door die van P.', expl: 'Ev = ' + pctQ + ' / ' + pctP + ' = ' + Ev }
+                { q: 'Bereken de prijselasticiteit (Ev = %\u0394Q / %\u0394P).', a: Ev, hint: 'Deel de procentuele verandering van Q door die van P.', expl: 'Ev = ' + pctQ + ' / ' + pctP + ' = ' + Ev },
+                mcInterp
             ]
         };
     };
@@ -331,12 +388,21 @@
         var Ekr = round2(pctQa / pctPb);
         var goodA = pick(['brood', 'koffie', 'fietsen', 'laptops', 'boeken', 'schoenen']);
         var goodB = pick(['boter', 'thee', 'auto\u2019s', 'tablets', 'e-readers', 'laarzen']);
+        var relation = Ekr > 0 ? 'substituten' : 'complementen';
+        var mcRelation = mcStep(
+            'Ekr = ' + Ekr + '. ' + goodA + ' en ' + goodB + ' zijn\u2026',
+            relation,
+            ['substituten', 'complementen', 'onafhankelijke goederen', 'inferieure goederen'],
+            'Ekr > 0 \u2192 substituten, Ekr < 0 \u2192 complementen.',
+            'Ekr = ' + Ekr + (Ekr > 0 ? ' > 0 \u2192 substituten.' : ' < 0 \u2192 complementen.')
+        );
         return {
             context: 'De prijs van ' + goodB + ' verandert van \u20AC' + Pb1 + ' naar \u20AC' + Pb2 + '.\nDe gevraagde hoeveelheid ' + goodA + ' verandert van ' + Qa1 + ' naar ' + Qa2 + '.\nBereken de kruiselasticiteit.',
             steps: [
                 { q: 'Bereken de procentuele prijsverandering van ' + goodB + ' (%\u0394Pb).', a: pctPb, hint: '%\u0394Pb = ((' + Pb2 + ' \u2212 ' + Pb1 + ') / ' + Pb1 + ') \u00D7 100', expl: '%\u0394Pb = (' + deltaPb + ' / ' + Pb1 + ') \u00D7 100 = ' + pctPb + '%' },
                 { q: 'Bereken de procentuele hoeveelheidsverandering van ' + goodA + ' (%\u0394Qa).', a: pctQa, hint: '%\u0394Qa = ((' + Qa2 + ' \u2212 ' + Qa1 + ') / ' + Qa1 + ') \u00D7 100', expl: '%\u0394Qa = (' + deltaQa + ' / ' + Qa1 + ') \u00D7 100 = ' + pctQa + '%' },
-                { q: 'Bereken de kruiselasticiteit (Ekr = %\u0394Qa / %\u0394Pb).', a: Ekr, hint: 'Deel %\u0394Qa door %\u0394Pb.', expl: 'Ekr = ' + pctQa + ' / ' + pctPb + ' = ' + Ekr }
+                { q: 'Bereken de kruiselasticiteit (Ekr = %\u0394Qa / %\u0394Pb).', a: Ekr, hint: 'Deel %\u0394Qa door %\u0394Pb.', expl: 'Ekr = ' + pctQa + ' / ' + pctPb + ' = ' + Ekr },
+                mcRelation
             ]
         };
     };
@@ -355,12 +421,21 @@
         if (Q2 <= 0) return GEN.B10();
         var Ey = round2(pctQ / pctY);
         var good = pick(['bioscoopkaartjes', 'brood', 'tweedehands kleding', 'restaurantbezoeken', 'luxe horloges', 'biologische groenten']);
+        var goodType = Ey > 1 ? 'luxe goed' : Ey > 0 ? 'normaal (noodzakelijk) goed' : 'inferieur goed';
+        var mcType = mcStep(
+            'Ey = ' + Ey + '. ' + good.charAt(0).toUpperCase() + good.slice(1) + ' is een\u2026',
+            goodType,
+            ['luxe goed', 'normaal (noodzakelijk) goed', 'inferieur goed', 'Giffen-goed'],
+            'Ey > 1 \u2192 luxe, 0 < Ey < 1 \u2192 noodzakelijk, Ey < 0 \u2192 inferieur.',
+            'Ey = ' + Ey + (Ey > 1 ? ' > 1 \u2192 luxe goed.' : Ey > 0 ? ', 0 < Ey < 1 \u2192 normaal (noodzakelijk) goed.' : ' < 0 \u2192 inferieur goed.')
+        );
         return {
             context: 'Het inkomen stijgt van \u20AC' + Y1 + ' naar \u20AC' + Y2 + ' per maand.\nDe gevraagde hoeveelheid ' + good + ' verandert van ' + Q1 + ' naar ' + Q2 + '.\nBereken de inkomenselasticiteit.',
             steps: [
                 { q: 'Bereken de procentuele inkomensverandering (%\u0394Y).', a: pctY, hint: '%\u0394Y = (\u0394Y / Y\u2081) \u00D7 100 = (' + deltaY + ' / ' + Y1 + ') \u00D7 100', expl: '%\u0394Y = (' + deltaY + ' / ' + Y1 + ') \u00D7 100 = ' + pctY + '%' },
                 { q: 'Bereken de procentuele hoeveelheidsverandering (%\u0394Q).', a: pctQ, hint: '%\u0394Q = ((' + Q2 + ' \u2212 ' + Q1 + ') / ' + Q1 + ') \u00D7 100', expl: '%\u0394Q = (' + deltaQ + ' / ' + Q1 + ') \u00D7 100 = ' + pctQ + '%' },
-                { q: 'Bereken de inkomenselasticiteit (Ey = %\u0394Q / %\u0394Y).', a: Ey, hint: 'Deel %\u0394Q door %\u0394Y.', expl: 'Ey = ' + pctQ + ' / ' + pctY + ' = ' + Ey }
+                { q: 'Bereken de inkomenselasticiteit (Ey = %\u0394Q / %\u0394Y).', a: Ey, hint: 'Deel %\u0394Q door %\u0394Y.', expl: 'Ey = ' + pctQ + ' / ' + pctY + ' = ' + Ey },
+                mcType
             ]
         };
     };

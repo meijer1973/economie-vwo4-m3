@@ -1114,6 +1114,53 @@ body {
     margin-top: 4px;
 }
 
+/* ── Multiple choice mode ────────────────────────────────── */
+.st-mc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.st-mc-option {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #475569;
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.st-mc-option:active {
+    transform: scale(0.97);
+}
+.st-mc-option.st-mc-correct {
+    background: #166534;
+    border-color: #22c55e;
+    color: #dcfce7;
+}
+.st-mc-option.st-mc-wrong {
+    background: #7f1d1d;
+    border-color: #ef4444;
+    color: #fecaca;
+    animation: shake 0.4s ease;
+}
+.st-mc-option.st-mc-faded {
+    opacity: 0.35;
+    pointer-events: none;
+}
+.st-mc-option:disabled {
+    cursor: default;
+}
+
 /* ── Goal achievement celebration ─────────────────────────── */
 .st-goal-achieved-card {
     background: #111827;

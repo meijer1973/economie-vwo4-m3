@@ -43,6 +43,7 @@
     var depHistory = [];           // navigation stack for back button
     var savedDepState = null;      // overlay state saved while doing an exercise
     var goalJustAchieved = null;   // set when a goal is completed during this exercise
+    var mcSelected = -1;           // which MC option was clicked (-1 = none)
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -393,6 +394,7 @@
         showExpl = false;
         finishResult = null;
         lastFinishedSkillId = null;
+        mcSelected = -1;
         render();
         focusInput();
     }
@@ -441,24 +443,46 @@
         }
 
         // Current step
+        var stepMode = state.currentStep.mode || 'numeric';
         var stepClass = 'st-step-card';
         if (feedback === 'correct') stepClass += ' st-correct';
         if (feedback === 'wrong') stepClass += ' st-wrong';
         html += '<div class="' + stepClass + '">';
         html += '<p class="st-question">' + esc(state.currentStep.q) + '</p>';
 
-        // Input row
-        html += '<div class="st-input-row">';
-        html += '<button class="st-minus-btn" id="st-toggle-minus"' + (feedback === 'correct' ? ' disabled' : '') + '>\u00B1</button>';
-        html += '<input class="st-answer-input" id="st-input" type="text" inputmode="decimal" value="' + esc(inputValue) + '"' + (feedback === 'correct' ? ' disabled' : '') + ' placeholder="Antwoord (gebruik \u00B1 voor negatief)">';
+        if (stepMode === 'mc') {
+            // Multiple choice grid
+            html += '<div class="st-mc-grid">';
+            for (var oi = 0; oi < state.currentStep.options.length; oi++) {
+                var optClass = 'st-mc-option';
+                var optDisabled = '';
+                if (feedback === 'correct') {
+                    if (oi === state.currentStep.correctIdx) {
+                        optClass += ' st-mc-correct';
+                    } else {
+                        optClass += ' st-mc-faded';
+                    }
+                    optDisabled = ' disabled';
+                } else if (feedback === 'wrong' && mcSelected === oi) {
+                    optClass += ' st-mc-wrong';
+                }
+                html += '<button class="' + optClass + '" data-mc-idx="' + oi + '"' + optDisabled + '>' + esc(String(state.currentStep.options[oi])) + '</button>';
+            }
+            html += '</div>';
+        } else {
+            // Numeric input row
+            html += '<div class="st-input-row">';
+            html += '<button class="st-minus-btn" id="st-toggle-minus"' + (feedback === 'correct' ? ' disabled' : '') + '>\u00B1</button>';
+            html += '<input class="st-answer-input" id="st-input" type="text" inputmode="decimal" value="' + esc(inputValue) + '"' + (feedback === 'correct' ? ' disabled' : '') + ' placeholder="Antwoord (gebruik \u00B1 voor negatief)">';
 
-        var btnBg = feedback === 'correct' ? '#166534' : lc.bg;
-        var btnColor = feedback === 'correct' ? '#dcfce7' : lc.text;
-        html += '<button class="st-check-btn" id="st-check" style="background:' + btnBg + ';color:' + btnColor + '"' + (feedback === 'correct' ? ' disabled' : '') + '>Check</button>';
-        html += '</div>';
+            var btnBg = feedback === 'correct' ? '#166534' : lc.bg;
+            var btnColor = feedback === 'correct' ? '#dcfce7' : lc.text;
+            html += '<button class="st-check-btn" id="st-check" style="background:' + btnBg + ';color:' + btnColor + '"' + (feedback === 'correct' ? ' disabled' : '') + '>Check</button>';
+            html += '</div>';
+        }
 
-        // Feedback
-        if (feedback === 'wrong') {
+        // Feedback (wrong message — only for numeric; MC shows inline via button color)
+        if (feedback === 'wrong' && stepMode !== 'mc') {
             html += '<p class="st-wrong-msg">\u2717 Niet juist. Probeer het opnieuw' + (!showHint ? ' of gebruik een hint.' : '.') + '</p>';
         }
 
@@ -508,13 +532,26 @@
         });
 
         var inp = document.getElementById('st-input');
-        inp.addEventListener('input', function () {
-            inputValue = this.value;
-            if (feedback === 'wrong') feedback = null;
-        });
-        inp.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') doCheck();
-        });
+        if (inp) {
+            inp.addEventListener('input', function () {
+                inputValue = this.value;
+                if (feedback === 'wrong') feedback = null;
+            });
+            inp.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') doCheck();
+            });
+        }
+
+        // MC option handlers (instant submit on tap)
+        var mcBtns = root.querySelectorAll('.st-mc-option');
+        for (var mi = 0; mi < mcBtns.length; mi++) {
+            mcBtns[mi].addEventListener('click', function () {
+                if (feedback === 'correct') return;
+                var idx = parseInt(this.getAttribute('data-mc-idx'), 10);
+                mcSelected = idx;
+                doCheck(idx);
+            });
+        }
 
         var toggleBtn = document.getElementById('st-toggle-minus');
         if (toggleBtn) {
@@ -550,9 +587,10 @@
         }
     }
 
-    function doCheck() {
+    function doCheck(mcIdx) {
         if (feedback === 'correct') return;
-        var result = engine.checkAnswer(inputValue);
+        var answerInput = mcIdx !== undefined ? mcIdx : inputValue;
+        var result = engine.checkAnswer(answerInput);
         if (result.correct) {
             feedback = 'correct';
             showExpl = true;
@@ -581,6 +619,7 @@
                     inputValue = '';
                     showHint = false;
                     showExpl = false;
+                    mcSelected = -1;
                     render();
                     focusInput();
                 }, 1200);
