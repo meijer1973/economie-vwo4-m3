@@ -506,3 +506,280 @@ describe('abortExercise', () => {
         expect(engine.getSkillStars('F1')).toBe(0);
     });
 });
+
+// ── Goal management ──────────────────────────────────────────────
+
+describe('Goal management', () => {
+    test('setGoal adds a goal', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        const result = engine.setGoal('E7');
+        expect(result).not.toBeNull();
+        expect(result.active).toHaveLength(1);
+        expect(result.active[0].id).toBe('E7');
+        expect(result.active[0].setAt).toBeGreaterThan(0);
+    });
+
+    test('setGoal rejects duplicate', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        expect(engine.setGoal('E7')).toBeNull();
+    });
+
+    test('setGoal enforces max 2 goals', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        engine.setGoal('S2');
+        expect(engine.setGoal('E1')).toBeNull();
+        expect(engine.getGoals().active).toHaveLength(2);
+    });
+
+    test('setGoal rejects non-existent skill', () => {
+        const engine = createEngine();
+        expect(engine.setGoal('NOPE')).toBeNull();
+    });
+
+    test('setGoal rejects already-achieved goal', () => {
+        const storage = makeStorage({
+            'skilltree_goals': JSON.stringify({
+                active: [],
+                achieved: [{ id: 'S2', setAt: 1000, achievedAt: 2000 }]
+            })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        expect(engine.setGoal('S2')).toBeNull();
+    });
+
+    test('removeGoal removes a goal', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        engine.setGoal('S2');
+        engine.removeGoal('E7');
+        expect(engine.getGoals().active).toHaveLength(1);
+        expect(engine.getGoals().active[0].id).toBe('S2');
+    });
+
+    test('removeGoal is a no-op for non-goal', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        engine.removeGoal('F1');
+        expect(engine.getGoals().active).toHaveLength(1);
+    });
+
+    test('isGoal returns correct boolean', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        expect(engine.isGoal('E7')).toBe(true);
+        expect(engine.isGoal('F1')).toBe(false);
+    });
+
+    test('isAchievedGoal returns correct boolean', () => {
+        const storage = makeStorage({
+            'skilltree_goals': JSON.stringify({
+                active: [],
+                achieved: [{ id: 'S2', setAt: 1000, achievedAt: 2000 }]
+            })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        expect(engine.isAchievedGoal('S2')).toBe(true);
+        expect(engine.isAchievedGoal('E7')).toBe(false);
+    });
+
+    test('goals persist to storage', () => {
+        const storage = makeStorage();
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        engine.setGoal('E7');
+        const saved = JSON.parse(storage._data['skilltree_goals']);
+        expect(saved.active).toHaveLength(1);
+        expect(saved.active[0].id).toBe('E7');
+    });
+
+    test('goals load from storage on construction', () => {
+        const storage = makeStorage({
+            'skilltree_goals': JSON.stringify({
+                active: [{ id: 'E7', setAt: 1000 }],
+                achieved: [{ id: 'S2', setAt: 500, achievedAt: 800 }]
+            })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        expect(engine.isGoal('E7')).toBe(true);
+        expect(engine.isAchievedGoal('S2')).toBe(true);
+    });
+});
+
+// ── Goal path computation ────────────────────────────────────────
+
+describe('getGoalPath', () => {
+    test('returns full transitive path for a deep skill', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        const path = engine.getGoalPath('E7');
+        expect(path).not.toBeNull();
+        expect(path.goalId).toBe('E7');
+        expect(path.goalName).toBeDefined();
+        expect(path.totalPrereqs).toBeGreaterThan(5);
+        expect(path.remainingSkills.length).toBeGreaterThan(0);
+    });
+
+    test('correctly counts mastered prereqs', () => {
+        const storage = makeStorage({
+            'skilltree_global_stars': JSON.stringify({ F1: 3, F2: 3, F3: 1, F4: 2 })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        const path = engine.getGoalPath('S1');
+        // S1 path: S1, B1, F5, F1, F2, F4. Stars: F1=3, F2=3, F4=2 → 3 mastered (>=1)
+        expect(path.masteredPrereqs).toBe(3);
+        expect(path.fullyMastered).toBe(2); // F1 and F2 have >= 3
+    });
+
+    test('identifies nextActionable skills', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        const path = engine.getGoalPath('S1');
+        // Foundation skills should be actionable (no prereqs)
+        expect(path.nextActionable.length).toBeGreaterThan(0);
+        // All nextActionable should be in remaining
+        for (const sid of path.nextActionable) {
+            expect(path.remainingSkills).toContain(sid);
+        }
+    });
+
+    test('marks goal as complete when skill has >= 3 stars', () => {
+        const storage = makeStorage({
+            'skilltree_global_stars': JSON.stringify({ F1: 5, F2: 5, B1: 5, F5: 3, S1: 3 })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        const path = engine.getGoalPath('S1');
+        expect(path.complete).toBe(true);
+    });
+
+    test('works for skills not visible in current paragraph', () => {
+        // E7 is not in the 3.1.1 skill set, but getGoalPath uses full graph
+        const engine = createEngine({ data: { parNr: '3.1.1', activeSkills: ['F1', 'F2', 'F3', 'F4'] } });
+        const path = engine.getGoalPath('E7');
+        expect(path).not.toBeNull();
+        expect(path.totalPrereqs).toBeGreaterThan(5);
+    });
+
+    test('returns null for non-existent skill', () => {
+        const engine = createEngine();
+        expect(engine.getGoalPath('NOPE')).toBeNull();
+    });
+});
+
+describe('getGoalPathForParagraph', () => {
+    test('returns intersection of goal path with visible skills', () => {
+        const engine = createEngine({
+            data: { parNr: '3.2.1', activeSkills: ['F1', 'F2', 'F3', 'F4', 'F7', 'F5', 'B1', 'B8', 'B9', 'B10', 'S1'] }
+        });
+        const result = engine.getGoalPathForParagraph('S1');
+        expect(result).not.toBeNull();
+        expect(result.visibleOnPath.length).toBeGreaterThan(0);
+        // F1, F2 should be on path to S1 and visible
+        expect(result.visibleOnPath).toContain('F1');
+        expect(result.goalVisibleHere).toBe(true); // S1 is visible in this paragraph
+    });
+
+    test('returns goalVisibleHere=false when goal not in paragraph', () => {
+        const engine = createEngine({
+            data: { parNr: '3.1.1', activeSkills: ['F1', 'F2', 'F3', 'F4'] }
+        });
+        const result = engine.getGoalPathForParagraph('E7');
+        expect(result.goalVisibleHere).toBe(false);
+        // But some foundation skills on the path should be visible
+        expect(result.visibleOnPath.length).toBeGreaterThan(0);
+    });
+});
+
+// ── Goal-aware next skill ────────────────────────────────────────
+
+describe('getNextSkill with goals', () => {
+    test('prioritizes goal-path skills', () => {
+        const engine = createEngine({
+            data: { parNr: '3.2.7', activeSkills: null }
+        });
+        engine.setGoal('S1');
+        // S1 depends on F1, F2, B1, F5 — all are foundation/building blocks
+        const next = engine.getNextSkill('F7'); // F7 is NOT on the S1 path
+        // Next should be a skill on the S1 path
+        const path = engine.getGoalPath('S1');
+        const pathSet = {};
+        for (let i = 0; i < path.remainingSkills.length; i++) {
+            pathSet[path.remainingSkills[i]] = true;
+        }
+        expect(pathSet[next.id]).toBe(true);
+    });
+
+    test('falls back to normal behavior with no goals', () => {
+        const engine = createEngine();
+        const next = engine.getNextSkill('F1');
+        expect(next).not.toBeNull();
+    });
+});
+
+// ── Goal completion ──────────────────────────────────────────────
+
+describe('checkGoalCompletion', () => {
+    test('moves goal from active to achieved when >= 3 stars', () => {
+        const storage = makeStorage({
+            'skilltree_global_stars': JSON.stringify({ S1: 3 })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        engine.setGoal('S1');
+        const achieved = engine.checkGoalCompletion();
+        expect(achieved).toEqual(['S1']);
+        expect(engine.isGoal('S1')).toBe(false);
+        expect(engine.isAchievedGoal('S1')).toBe(true);
+    });
+
+    test('sets achievedAt timestamp', () => {
+        const storage = makeStorage({
+            'skilltree_global_stars': JSON.stringify({ S1: 4 })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        engine.setGoal('S1');
+        engine.checkGoalCompletion();
+        const goals = engine.getGoals();
+        expect(goals.achieved.length).toBeGreaterThanOrEqual(1);
+        const s1 = goals.achieved.find(g => g.id === 'S1');
+        expect(s1.achievedAt).toBeGreaterThan(0);
+    });
+
+    test('returns empty array when no goals are complete', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('E7');
+        expect(engine.checkGoalCompletion()).toEqual([]);
+    });
+
+    test('persists changes to storage', () => {
+        const storage = makeStorage({
+            'skilltree_global_stars': JSON.stringify({ S1: 3 })
+        });
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null }, storage });
+        engine.setGoal('S1');
+        engine.checkGoalCompletion();
+        const saved = JSON.parse(storage._data['skilltree_goals']);
+        expect(saved.active).toHaveLength(0);
+        expect(saved.achieved.length).toBeGreaterThanOrEqual(1);
+    });
+});
+
+// ── isOnGoalPath ─────────────────────────────────────────────────
+
+describe('isOnGoalPath', () => {
+    test('returns true for skill on active goal path', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('S1');
+        // F1 is a prerequisite of S1 (via B1)
+        expect(engine.isOnGoalPath('F1')).toBe(true);
+    });
+
+    test('returns false for skill not on any goal path', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        engine.setGoal('S1');
+        // F7 (snijpunten bepalen) is not on the S1 path
+        expect(engine.isOnGoalPath('F7')).toBe(false);
+    });
+
+    test('returns false when no goals set', () => {
+        const engine = createEngine({ data: { parNr: '3.2.7', activeSkills: null } });
+        expect(engine.isOnGoalPath('F1')).toBe(false);
+    });
+});

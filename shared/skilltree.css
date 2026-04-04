@@ -415,6 +415,11 @@ body {
 .st-score-perfect {
     color: #fbbf24;
 }
+.st-streak {
+    color: #f97316;
+    font-weight: 600;
+    animation: fadeIn 0.3s ease;
+}
 
 /* ── Result card (inline, replaces star overlay) ────────────── */
 .st-result-card {
@@ -829,4 +834,308 @@ body {
 }
 .st-expl-check .st-expl-section-label {
     color: #86efac;
+}
+
+/* ── Near-miss encouragement ──────────────────────────────── */
+.st-near-miss {
+    color: #fbbf24;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ── Next skill button ────────────────────────────────────── */
+.st-btn-next {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    border: none;
+    background: #1e40af;
+    color: #dbeafe;
+}
+
+/* ── Mastery card (5/5 stars) ─────────────────────────────── */
+.st-mastery-card {
+    border: 2px solid #fbbf24 !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Confetti animation ───────────────────────────────────── */
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(350px) translateX(var(--drift, 30px)) rotate(720deg);
+        opacity: 0;
+    }
+}
+.st-confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+.st-confetti-piece {
+    position: absolute;
+    top: -8px;
+    width: 6px;
+    height: 10px;
+    border-radius: 2px;
+    animation: confettiFall 2s ease-out forwards;
+}
+
+/* ── Goal banner ──────────────────────────────────────────── */
+.st-goal-banner {
+    padding: 0 12px 12px;
+}
+.st-goal-prompt {
+    color: #64748b;
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 10px 16px;
+    background: #111827;
+    border: 1px dashed #334155;
+    border-radius: 10px;
+}
+.st-goal-section-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: #f59e0b;
+    margin-bottom: 6px;
+    padding-left: 2px;
+}
+.st-goal-card {
+    background: #111827;
+    border: 1px solid #f59e0b40;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    position: relative;
+}
+.st-goal-card-achieved {
+    border-color: #166534;
+    background: #0d1f0d;
+}
+.st-goal-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #f8fafc;
+    padding-right: 24px;
+}
+.st-goal-name-id {
+    font-size: 0.6rem;
+    font-weight: 700;
+    opacity: 0.5;
+    margin-right: 4px;
+}
+.st-goal-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    font-family: inherit;
+}
+.st-goal-bar {
+    height: 4px;
+    background: #1e293b;
+    border-radius: 2px;
+    margin: 6px 0 4px;
+    overflow: hidden;
+}
+.st-goal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+.st-goal-info {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+}
+.st-goal-next-hint {
+    font-size: 0.68rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* Goal path visualization */
+.st-goal-path {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #1e293b;
+}
+.st-goal-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+.st-goal-step-done {
+    background: #052e16;
+    border-color: #166534;
+    color: #86efac;
+}
+.st-goal-step-actionable {
+    background: #1a1500;
+    border-color: #854d0e;
+    color: #fbbf24;
+    cursor: pointer;
+    font-family: inherit;
+}
+.st-goal-step-actionable:hover {
+    background: #2a2500;
+    border-color: #a16207;
+}
+.st-goal-step-target {
+    border-color: #f59e0b;
+    font-weight: 600;
+}
+.st-goal-step-id {
+    font-weight: 700;
+    opacity: 0.7;
+    font-size: 0.6rem;
+}
+.st-goal-step-name {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.st-goal-step-check {
+    color: #22c55e;
+    font-weight: 700;
+}
+.st-goal-step-stars {
+    opacity: 0.6;
+    font-size: 0.6rem;
+}
+.st-goal-step-arrow {
+    color: #475569;
+    font-size: 0.6rem;
+}
+
+.st-goal-achieved-text {
+    color: #22c55e;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ── Goal path highlighting on skill cards ────────────────── */
+.st-on-goal-path {
+    border-left: 3px solid #f59e0b !important;
+}
+.st-goal-skill {
+    animation: nodeGlow 2.5s ease-in-out infinite;
+    --st-glow: rgba(245, 158, 11, 0.4);
+}
+.st-goal-icon {
+    font-size: 0.55rem;
+    margin-left: 4px;
+}
+
+/* ── Goal button in dependency overlay ────────────────────── */
+.st-goal-set-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin: 8px 0;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.st-goal-set-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ── Goal progress on result screen ───────────────────────── */
+.st-result-goal {
+    background: #111827;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 12px auto;
+    max-width: 400px;
+    animation: fadeIn 0.5s ease;
+}
+.st-result-goal-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 6px;
+}
+.st-result-goal-next {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+/* ── Goal achievement celebration ─────────────────────────── */
+.st-goal-achieved-card {
+    background: #111827;
+    border: 2px solid #22c55e;
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin: 16px auto;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+.st-goal-achieved-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 4px;
+}
+.st-goal-achieved-name {
+    font-size: 0.9rem;
+    color: #22c55e;
+    font-weight: 500;
+    margin-bottom: 16px;
 }

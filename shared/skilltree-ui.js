@@ -42,6 +42,7 @@
     var depSubgraph = null;        // cached result of getDependencySubgraph
     var depHistory = [];           // navigation stack for back button
     var savedDepState = null;      // overlay state saved while doing an exercise
+    var goalJustAchieved = null;   // set when a goal is completed during this exercise
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -125,6 +126,21 @@
         var layerColors = engine.getLayerColors();
         var visible = engine.getVisibleSkills();
 
+        // Precompute goal-path skills for highlighting
+        var goals = engine.getGoals();
+        var goalPathSet = {};
+        var goalSkillSet = {};
+        for (var gi = 0; gi < goals.active.length; gi++) {
+            var gid = goals.active[gi].id;
+            goalSkillSet[gid] = true;
+            var parPath = engine.getGoalPathForParagraph(gid);
+            if (parPath) {
+                for (var pi = 0; pi < parPath.visibleOnPath.length; pi++) {
+                    goalPathSet[parPath.visibleOnPath[pi]] = true;
+                }
+            }
+        }
+
         var viewMode = engine.getViewMode();
         var html = '<div class="st-legend">';
         html += '<span>' + iconInfo() + ' Info</span>';
@@ -139,6 +155,9 @@
         html += progress.mastered + ' / ' + progress.total + ' vaardigheden \u00B7 ';
         html += progress.totalStars + ' / ' + progress.maxStars + ' sterren';
         html += '</div></div>';
+
+        // Goal banner
+        html += renderGoalBanner(goals);
 
         html += '<div class="st-layers">';
         for (var li = 0; li < layerNames.length; li++) {
@@ -160,12 +179,18 @@
                 var cs = getCardDisplayState(layerSkills[k].id);
                 if (!cs) continue;
 
-                html += '<button class="' + cs.classes + '"';
+                var cardClasses = cs.classes;
+                if (goalPathSet[cs.id] && !goalSkillSet[cs.id]) cardClasses += ' st-on-goal-path';
+                if (goalSkillSet[cs.id]) cardClasses += ' st-goal-skill';
+
+                html += '<button class="' + cardClasses + '"';
                 html += ' data-skill="' + cs.id + '"';
                 if (!cs.hasGenerator) html += ' disabled';
                 html += ' style="background:' + cs.bg + ';color:' + cs.text + ';border:' + cs.borderStyle + ';box-shadow:' + cs.boxShadow + ';--st-glow:' + cs.glow + '">';
 
-                html += '<div class="st-skill-id"><span>' + esc(cs.id) + '</span>';
+                html += '<div class="st-skill-id"><span>' + esc(cs.id);
+                if (goalPathSet[cs.id]) html += ' <span class="st-goal-icon">\uD83C\uDFAF</span>';
+                html += '</span>';
                 html += '<span class="st-skill-icons">';
                 html += '<span class="st-info-btn" data-info-skill="' + cs.id + '" title="Meer informatie">' + iconInfo() + '</span>';
                 if (cs.hasDeps) {
@@ -234,6 +259,25 @@
             });
         }
 
+        // Wire goal remove buttons
+        var goalRemBtns = root.querySelectorAll('.st-goal-remove');
+        for (var gr = 0; gr < goalRemBtns.length; gr++) {
+            goalRemBtns[gr].addEventListener('click', function () {
+                var gid = this.getAttribute('data-goal-id');
+                engine.removeGoal(gid);
+                render();
+            });
+        }
+
+        // Wire goal path start-exercise buttons
+        var goalStartBtns = root.querySelectorAll('[data-goal-start]');
+        for (var gs = 0; gs < goalStartBtns.length; gs++) {
+            goalStartBtns[gs].addEventListener('click', function () {
+                var sid = this.getAttribute('data-goal-start');
+                startSkill(sid);
+            });
+        }
+
         var resetBtn = document.getElementById('st-reset');
         if (resetBtn) {
             resetBtn.addEventListener('click', function () {
@@ -256,6 +300,86 @@
             savedDepState = null;
             renderDependencyOverlay();
         }
+    }
+
+    // ── Goal banner ───────────────────────────────────────────
+    function renderGoalBanner(goals) {
+        var hasActive = goals.active.length > 0;
+        var hasAchieved = goals.achieved.length > 0;
+
+        if (!hasActive && !hasAchieved) {
+            return '<div class="st-goal-banner"><div class="st-goal-prompt">\uD83C\uDFAF Kies een doel via het afhankelijkheden-menu van een vaardigheid</div></div>';
+        }
+
+        var html = '<div class="st-goal-banner">';
+        html += '<div class="st-goal-section-title">\uD83C\uDFAF Doelen</div>';
+
+        // Active goals
+        for (var i = 0; i < goals.active.length; i++) {
+            var goal = goals.active[i];
+            var path = engine.getGoalPath(goal.id);
+            if (!path) continue;
+
+            var pct = path.totalPrereqs > 0 ? Math.round((path.fullyMastered / path.totalPrereqs) * 100) : 0;
+
+            html += '<div class="st-goal-card">';
+            html += '<button class="st-goal-remove" data-goal-id="' + goal.id + '">\u2715</button>';
+            html += '<div class="st-goal-name"><span class="st-goal-name-id">' + esc(goal.id) + '</span>' + esc(path.goalName) + '</div>';
+            html += '<div class="st-goal-bar"><div class="st-goal-bar-fill" style="width:' + pct + '%"></div></div>';
+            html += '<div class="st-goal-info"><span>' + path.fullyMastered + '/' + path.totalPrereqs + ' stappen</span><span>' + pct + '%</span></div>';
+
+            // Full ordered path with progress
+            if (path.orderedPath && path.orderedPath.length > 0) {
+                html += '<div class="st-goal-path">';
+                for (var pi = 0; pi < path.orderedPath.length; pi++) {
+                    var step = path.orderedPath[pi];
+                    var stepClass = 'st-goal-step';
+                    if (step.done) stepClass += ' st-goal-step-done';
+                    else if (step.actionable) stepClass += ' st-goal-step-actionable';
+                    var isGoalTarget = step.id === goal.id;
+                    if (isGoalTarget) stepClass += ' st-goal-step-target';
+
+                    if (step.actionable && engine.hasGenerator(step.id)) {
+                        html += '<button class="' + stepClass + '" data-goal-start="' + step.id + '">';
+                    } else {
+                        html += '<span class="' + stepClass + '">';
+                    }
+                    html += '<span class="st-goal-step-id">' + esc(step.id) + '</span>';
+                    html += '<span class="st-goal-step-name">' + esc(step.name) + '</span>';
+                    if (step.done) html += '<span class="st-goal-step-check">\u2713</span>';
+                    else html += '<span class="st-goal-step-stars">' + step.stars + '/3</span>';
+                    if (step.actionable && engine.hasGenerator(step.id)) {
+                        html += '</button>';
+                    } else {
+                        html += '</span>';
+                    }
+
+                    // Arrow between steps (not after last)
+                    if (pi < path.orderedPath.length - 1) {
+                        html += '<span class="st-goal-step-arrow">\u2192</span>';
+                    }
+                }
+                html += '</div>';
+            }
+
+            html += '</div>';
+        }
+
+        // Achieved badges
+        for (var a = 0; a < goals.achieved.length; a++) {
+            var badge = goals.achieved[a];
+            var skill = engine.getAllSkills();
+            var badgeName = badge.id;
+            for (var bs = 0; bs < skill.length; bs++) {
+                if (skill[bs].id === badge.id) { badgeName = skill[bs].name; break; }
+            }
+            html += '<div class="st-goal-card st-goal-card-achieved">';
+            html += '<div class="st-goal-name"><span class="st-goal-achieved-text">\uD83C\uDFC6 ' + esc(badge.id) + ' \u00B7 ' + esc(badgeName) + ' (behaald!)</span></div>';
+            html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
     }
 
     function startSkill(skillId) {
@@ -364,7 +488,11 @@
         var scoreClass = penalty === 0 ? 'st-score-perfect' : '';
         html += '<div class="st-score-tracker">';
         html += '<span>Fouten: ' + state.errors + '</span>';
-        html += '<span>Hints: ' + state.hints + '</span>';
+        if (state.streak >= 2) {
+            html += '<span class="st-streak">\uD83D\uDD25 ' + state.streak + ' op rij!</span>';
+        } else {
+            html += '<span>Hints: ' + state.hints + '</span>';
+        }
         html += '<span class="' + scoreClass + '">+' + previewStars + ' \u2605</span>';
         html += '</div>';
 
@@ -435,6 +563,11 @@
                 if (fr) {
                     lastFinishedSkillId = fr.skillId;
                     finishResult = fr;
+                    // Check if any goals are now achieved
+                    var achieved = engine.checkGoalCompletion();
+                    if (achieved.length > 0) {
+                        goalJustAchieved = achieved;
+                    }
                 }
                 render();
             } else {
@@ -459,10 +592,28 @@
         }
     }
 
+    // ── Confetti generator ──────────────────────────────────────
+    function spawnConfetti(container) {
+        var colors = ['#fbbf24', '#22c55e', '#3b82f6', '#ef4444', '#a855f7', '#f97316'];
+        var confettiCount = 40;
+        for (var i = 0; i < confettiCount; i++) {
+            var span = document.createElement('span');
+            span.className = 'st-confetti-piece';
+            span.style.left = Math.random() * 100 + '%';
+            span.style.background = colors[Math.floor(Math.random() * colors.length)];
+            span.style.animationDelay = (Math.random() * 0.6) + 's';
+            span.style.animationDuration = (1.2 + Math.random() * 1.0) + 's';
+            // Random horizontal drift
+            span.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
+            container.appendChild(span);
+        }
+    }
+
     // ── Completed view (inline, no overlay) ───────────────────
     function renderCompleted() {
         var fr = finishResult;
-        var msg = fr.earned === 3 ? 'Perfect! \uD83C\uDFAF' : fr.earned === 2 ? 'Goed gedaan!' : 'Gehaald!';
+        var isMastery = fr.newTotal === 5 && fr.improved;
+        var msg = isMastery ? 'Meester! \uD83C\uDFC6' : fr.earned === 3 ? 'Perfect! \uD83C\uDFAF' : fr.earned === 2 ? 'Goed gedaan!' : 'Gehaald!';
         var details = '';
         if (fr.errors > 0) details += fr.errors + ' fout' + (fr.errors > 1 ? 'en' : '');
         if (fr.errors > 0 && fr.hints > 0) details += ', ';
@@ -471,8 +622,13 @@
 
         var html = '<div class="st-exercise">';
 
-        // Result card
-        html += '<div class="st-result-card">';
+        // Result card (with confetti container)
+        html += '<div class="st-result-card' + (isMastery ? ' st-mastery-card' : '') + '">';
+
+        // Confetti container (above content, inside card)
+        if (isMastery) {
+            html += '<div class="st-confetti-container" id="st-confetti"></div>';
+        }
 
         // Star display
         html += '<div class="st-result-stars">';
@@ -492,18 +648,87 @@
             html += '<p class="st-result-progress">' + fr.newTotal + '/5 sterren (al behaald)</p>';
         }
 
+        // Near-miss encouragement
+        if (fr.newTotal === 4 && fr.improved) {
+            html += '<p class="st-near-miss">Nog \u00e9\u00e9n ster voor de gouden rand \uD83C\uDFC6 Doe het foutloos!</p>';
+        }
+
         // Navigation buttons
         html += '<div class="st-result-buttons">';
-        html += '<button class="st-btn-back" id="st-result-back">' + iconArrowLeft() + ' Terug naar overzicht</button>';
+        html += '<button class="st-btn-back" id="st-result-back">' + iconArrowLeft() + ' Overzicht</button>';
         if (fr.newTotal < 5) {
-            html += '<button class="st-btn-retry" id="st-result-retry">' + iconRefresh() + ' Opnieuw oefenen</button>';
+            html += '<button class="st-btn-retry" id="st-result-retry">' + iconRefresh() + ' Opnieuw</button>';
         }
+
+        // Next skill button
+        var nextSkill = engine.getNextSkill(fr.skillId);
+        if (nextSkill) {
+            html += '<button class="st-btn-next" id="st-result-next" data-skill="' + nextSkill.id + '">Volgende \u2192</button>';
+        }
+
         html += '</div>';
 
         html += '</div>'; // end result card
+
+        // Goal progress section (if skill is on a goal path)
+        var activeGoals = engine.getGoals().active;
+        for (var gpi = 0; gpi < activeGoals.length; gpi++) {
+            if (engine.isOnGoalPath(fr.skillId)) {
+                var gPath = engine.getGoalPath(activeGoals[gpi].id);
+                if (gPath) {
+                    var gPct = gPath.totalPrereqs > 0 ? Math.round((gPath.fullyMastered / gPath.totalPrereqs) * 100) : 0;
+                    html += '<div class="st-result-goal">';
+                    html += '<div class="st-result-goal-title">\uD83C\uDFAF Doel: ' + esc(gPath.goalName) + '</div>';
+                    html += '<div class="st-goal-bar"><div class="st-goal-bar-fill" style="width:' + gPct + '%"></div></div>';
+                    html += '<div class="st-goal-info"><span>' + gPath.fullyMastered + '/' + gPath.totalPrereqs + ' stappen</span><span>' + gPct + '%</span></div>';
+                    if (gPath.nextActionable.length > 0) {
+                        var nId = gPath.nextActionable[0];
+                        var allSk = engine.getAllSkills();
+                        var nName = nId;
+                        for (var nsi = 0; nsi < allSk.length; nsi++) {
+                            if (allSk[nsi].id === nId) { nName = allSk[nsi].name; break; }
+                        }
+                        html += '<div class="st-result-goal-next">Volgende stap: ' + esc(nId) + ' \u2014 ' + esc(nName) + '</div>';
+                    }
+                    html += '</div>';
+                }
+                break; // show only one goal progress
+            }
+        }
+
+        // Goal achievement celebration
+        if (goalJustAchieved && goalJustAchieved.length > 0) {
+            for (var agi = 0; agi < goalJustAchieved.length; agi++) {
+                var achievedId = goalJustAchieved[agi];
+                var allSkills = engine.getAllSkills();
+                var achievedName = achievedId;
+                for (var asi = 0; asi < allSkills.length; asi++) {
+                    if (allSkills[asi].id === achievedId) { achievedName = allSkills[asi].name; break; }
+                }
+                html += '<div class="st-goal-achieved-card" id="st-goal-achieved-card">';
+                html += '<div class="st-confetti-container" id="st-goal-confetti"></div>';
+                html += '<div class="st-goal-achieved-title">\uD83C\uDFC6 Doel bereikt!</div>';
+                html += '<div class="st-goal-achieved-name">' + esc(achievedName) + '</div>';
+                html += '<button class="st-btn-back" id="st-goal-achieved-ok">Bekijk je badges \u2192</button>';
+                html += '</div>';
+            }
+        }
+
         html += '</div>'; // end exercise
 
         root.innerHTML = html;
+
+        // Spawn confetti particles
+        if (isMastery) {
+            var confettiEl = document.getElementById('st-confetti');
+            if (confettiEl) spawnConfetti(confettiEl);
+        }
+
+        // Spawn goal confetti
+        if (goalJustAchieved && goalJustAchieved.length > 0) {
+            var goalConfettiEl = document.getElementById('st-goal-confetti');
+            if (goalConfettiEl) spawnConfetti(goalConfettiEl);
+        }
 
         // Animate stars
         setTimeout(function () {
@@ -520,6 +745,7 @@
         // Wire events
         document.getElementById('st-result-back').addEventListener('click', function () {
             finishResult = null;
+            goalJustAchieved = null;
             returnToTree();
         });
 
@@ -527,7 +753,27 @@
         if (retryBtn) {
             retryBtn.addEventListener('click', function () {
                 finishResult = null;
+                goalJustAchieved = null;
                 startSkill(lastFinishedSkillId);
+            });
+        }
+
+        var nextBtn = document.getElementById('st-result-next');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+                var sid = this.getAttribute('data-skill');
+                finishResult = null;
+                goalJustAchieved = null;
+                startSkill(sid);
+            });
+        }
+
+        var goalOkBtn = document.getElementById('st-goal-achieved-ok');
+        if (goalOkBtn) {
+            goalOkBtn.addEventListener('click', function () {
+                finishResult = null;
+                goalJustAchieved = null;
+                returnToTree();
             });
         }
     }
@@ -734,6 +980,21 @@
         overlayHTML += '<h2>Afhankelijkheden: ' + esc(title) + '</h2>';
         overlayHTML += '</div>';
         overlayHTML += svg;
+
+        // Goal button
+        var isAlreadyGoal = engine.isGoal(depSkillId);
+        var isAlreadyAchieved = engine.isAchievedGoal(depSkillId);
+        var activeGoalCount = engine.getGoals().active.length;
+        if (isAlreadyAchieved) {
+            overlayHTML += '<button class="st-goal-set-btn" disabled>\uD83C\uDFC6 Doel al behaald</button>';
+        } else if (isAlreadyGoal) {
+            overlayHTML += '<button class="st-goal-set-btn" disabled>\uD83C\uDFAF Dit is al een doel</button>';
+        } else if (activeGoalCount >= 2) {
+            overlayHTML += '<button class="st-goal-set-btn" disabled>Maximaal 2 doelen \u2014 verwijder eerst een doel</button>';
+        } else {
+            overlayHTML += '<button class="st-goal-set-btn" id="st-set-goal">\uD83C\uDFAF Stel in als doel</button>';
+        }
+
         overlayHTML += '<div class="st-dep-legend">';
         overlayHTML += '<span>\u2500 <span style="color:#22c55e">groen</span> = beheerst</span>';
         overlayHTML += '<span>\u2500 <span style="color:#ef4444">rood</span> = nog te oefenen</span>';
@@ -789,6 +1050,16 @@
                 var sid = this.getAttribute('data-info-skill');
                 if (!sid) return;
                 openInfoPopup(sid);
+            });
+        }
+
+        // Wire goal button
+        var goalBtn = document.getElementById('st-set-goal');
+        if (goalBtn) {
+            goalBtn.addEventListener('click', function () {
+                engine.setGoal(depSkillId);
+                closeDependencyOverlay();
+                render();
             });
         }
 
