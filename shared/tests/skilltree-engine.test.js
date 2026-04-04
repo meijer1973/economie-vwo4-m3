@@ -864,7 +864,7 @@ describe('checkAnswer MC mode', () => {
 
     test('steps without mode field default to numeric', () => {
         const engine = createEngine();
-        engine.startExercise('F4');
+        engine.startExercise('F5');
         const step = engine.getExerciseState().currentStep;
         expect(step.mode).toBeUndefined();
         const result = engine.checkAnswer(step.a);

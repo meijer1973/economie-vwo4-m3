@@ -208,9 +208,17 @@
     GEN.F4 = function () {
         var a = ri(30, 80), b = pick([2, 3, 4, 5]), Q = ri(3, 15);
         var ans = a - b * Q;
+        var mcFirst = mcStep(
+            'Wat bereken je eerst?',
+            b + ' \u00D7 ' + Q,
+            [a + ' \u2212 ' + b, a + ' \u00D7 ' + Q, Q + ' \u2212 ' + b, a + ' + ' + b],
+            'Eerst vermenigvuldigen, dan aftrekken.',
+            'Eerst ' + b + ' \u00D7 ' + Q + ' uitrekenen, dan pas aftrekken van ' + a + '.'
+        );
         return {
             context: 'Gegeven: P = ' + a + ' \u2212 ' + b + 'Q. Bereken P als Q = ' + Q + '.',
             steps: [
+                mcFirst,
                 { q: 'Bereken ' + b + ' \u00D7 ' + Q + ' = ?', a: b * Q, hint: 'Vermenigvuldig ' + b + ' met ' + Q + '.', expl: b + ' \u00D7 ' + Q + ' = ' + (b * Q) },
                 { q: 'P = ' + a + ' \u2212 ' + (b * Q) + ' = ?', a: ans, hint: 'Trek ' + (b * Q) + ' af van ' + a + '.', expl: 'P = ' + a + ' \u2212 ' + (b * Q) + ' = ' + ans }
             ]
@@ -230,12 +238,19 @@
 
     GEN.F6 = function () {
         var a = ri(1, 4), b = ri(3, 12), c = ri(10, 100);
+        var mcConst = mcStep(
+            'Wat is de afgeleide van de constante ' + c + '?',
+            0,
+            [c, 1, -c, c / 2],
+            'Wat gebeurt er met een constante bij differenti\u00EBren?',
+            'De afgeleide van een constante is altijd 0.'
+        );
         return {
             context: 'Bepaal de afgeleide van f(Q) = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.',
             steps: [
                 { q: 'Wat is de afgeleide van ' + a + 'Q\u00B2? Geef de co\u00EBffici\u00EBnt van Q.', a: 2 * a, hint: 'Bij differenti\u00EBren: vermenigvuldig de co\u00EBffici\u00EBnt met de macht.', expl: a + 'Q\u00B2 \u2192 ' + (2 * a) + 'Q' },
                 { q: 'Wat is de afgeleide van ' + b + 'Q?', a: b, hint: 'De afgeleide van bQ is gewoon b.', expl: b + 'Q \u2192 ' + b },
-                { q: 'Wat is de afgeleide van de constante ' + c + '?', a: 0, hint: 'Wat gebeurt er met een constante bij differenti\u00EBren?', expl: 'De afgeleide van een constante is 0.' }
+                mcConst
             ]
         };
     };
@@ -243,9 +258,17 @@
     GEN.F7 = function () {
         var b = pick([2, 3, 4, 5]), alphaDiv = ri(8, 25), alpha = b * alphaDiv;
         var d = pick([1, 2, 3, 4]), cDiv = ri(3, 12), c = d * cDiv;
+        var mcSnijpunt = mcStep(
+            'Wat stel je gelijk aan nul om het snijpunt met de P-as te vinden?',
+            'Q',
+            ['Q', 'P', 'Qv \u2212 Qa', 'P \u2212 Q'],
+            'Het snijpunt met de P-as is het punt waar de hoeveelheid nul is.',
+            'Op de P-as is Q = 0. Je vult Q = 0 in om P te berekenen.'
+        );
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nBepaal de snijpunten met de P-as.',
             steps: [
+                mcSnijpunt,
                 { q: 'Bij welke prijs is de gevraagde hoeveelheid nul? (snijpunt vraaglijn met P-as)', a: alphaDiv, hint: 'Vul Qv = 0 in en los op naar P.', expl: '0 = ' + alpha + ' \u2212 ' + b + 'P \u2192 P = ' + alpha + '/' + b + ' = ' + alphaDiv },
                 { q: 'Bij welke prijs begint het aanbod? (snijpunt aanbodlijn met P-as)', a: cDiv, hint: 'Vul Qa = 0 in en los op naar P.', expl: '0 = \u2212' + c + ' + ' + d + 'P \u2192 P = ' + c + '/' + d + ' = ' + cDiv }
             ]
@@ -262,9 +285,22 @@
         var alpha = a + c;
         var Qs = alpha - b * Ps;
         if (Qs <= 0) return GEN.B1();
+        var orderEvenwicht = {
+            q: 'Zet de stappen voor het berekenen van het marktevenwicht in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Vul P* in om Q* te berekenen',
+                'Stel Qv = Qa',
+                'Los op naar P'
+            ],
+            correctOrder: [1, 2, 0],
+            hint: 'Eerst gelijkstellen, dan oplossen, dan invullen.',
+            expl: 'Stap 1: Qv = Qa \u2192 Stap 2: los op naar P* \u2192 Stap 3: vul P* in voor Q*.'
+        };
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P  en  Qa = \u2212' + c + ' + ' + d + 'P. Bereken het marktevenwicht.',
             steps: [
+                orderEvenwicht,
                 { q: 'Stel Qv = Qa en los op. P* = ?', a: Ps, hint: alpha + ' \u2212 ' + b + 'P = \u2212' + c + ' + ' + d + 'P \u2192 ' + (b + d) + 'P = ' + (alpha + c), expl: 'P* = ' + (alpha + c) + ' \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Q* = ?', a: Qs, hint: 'Vul P* in bij Qv: ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps, expl: 'Q* = ' + Qs }
             ]
@@ -273,11 +309,18 @@
 
     GEN.B2 = function () {
         var a = ri(30, 80), b = ri(1, 4);
+        var mcQ2 = mcStep(
+            'Wat is de co\u00EBffici\u00EBnt van Q\u00B2?',
+            -b,
+            [b, -a, a, -(b + 1), b - 1],
+            '\u2212' + b + 'Q \u00D7 Q = \u2212' + b + 'Q\u00B2. De co\u00EBffici\u00EBnt is negatief.',
+            'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2, dus de co\u00EBffici\u00EBnt van Q\u00B2 is \u2212' + b + '.'
+        );
         return {
             context: 'De vraaglijn is P = ' + a + ' \u2212 ' + b + 'Q. Stel de TO-functie op (TO = P \u00D7 Q).',
             steps: [
                 { q: 'TO = P \u00D7 Q = (' + a + ' \u2212 ' + b + 'Q) \u00D7 Q. Werk de haakjes uit. Wat is de co\u00EBffici\u00EBnt van Q?', a: a, hint: a + ' \u00D7 Q \u2192 co\u00EBffici\u00EBnt is ' + a + '.', expl: 'De eerste term is ' + a + 'Q.' },
-                { q: 'Wat is de co\u00EBffici\u00EBnt van Q\u00B2? (let op het teken!)', a: -b, hint: '\u2212' + b + 'Q \u00D7 Q = \u2212' + b + 'Q\u00B2. De co\u00EBffici\u00EBnt is negatief.', expl: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2, dus de co\u00EBffici\u00EBnt van Q\u00B2 is \u2212' + b + '.' }
+                mcQ2
             ]
         };
     };
@@ -286,10 +329,17 @@
         var a = round1(ri(1, 5) * 0.5), b = ri(5, 20), c = ri(50, 300);
         var Q = ri(5, 15);
         var vk = round1(a * Q * Q + b * Q);
+        var mcVK = mcStep(
+            'Wat zijn de vaste kosten?',
+            c,
+            [b, a, round1(a + b), round1(a * Q * Q)],
+            'De vaste kosten zijn de kosten als er niets geproduceerd wordt (Q = 0).',
+            'TK(0) = ' + c + '. De constante term is de vaste kosten.'
+        );
         return {
             context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c,
             steps: [
-                { q: 'Wat zijn de vaste kosten?', a: c, hint: 'De vaste kosten zijn de kosten als er niets geproduceerd wordt (Q = 0).', expl: 'TK(0) = ' + c + ', dus de vaste kosten = ' + c + '.' },
+                mcVK,
                 { q: 'Bereken de variabele kosten bij Q = ' + Q + '.', a: vk, hint: 'De variabele kosten zijn TK minus de vaste kosten. Of: de termen m\u00E9t Q.', expl: 'TVK = ' + a + '\u00D7' + (Q * Q) + ' + ' + b + '\u00D7' + Q + ' = ' + vk }
             ]
         };
@@ -317,11 +367,18 @@
 
     GEN.B5 = function () {
         var a = ri(30, 80), b = ri(1, 4);
+        var mcMO = mcStep(
+            'Wat is de co\u00EBffici\u00EBnt van Q in MO?',
+            -(2 * b),
+            [2 * b, -b, b, -(2 * b + 1), 2 * b - 1],
+            'Wat is de afgeleide van \u2212' + b + 'Q\u00B2? Let op het teken.',
+            'MO = ' + a + ' \u2212 ' + (2 * b) + 'Q, dus de co\u00EBffici\u00EBnt is \u2212' + (2 * b) + '.'
+        );
         return {
             context: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2. Bepaal de MO-functie (= afgeleide van TO).',
             steps: [
                 { q: 'Wat is de constante term in MO?', a: a, hint: 'MO is de afgeleide van TO naar Q. Wat is de afgeleide van ' + a + 'Q?', expl: 'MO begint met ' + a },
-                { q: 'Wat is de co\u00EBffici\u00EBnt van Q in MO? (met teken)', a: -(2 * b), hint: 'Wat is de afgeleide van \u2212' + b + 'Q\u00B2? Let op het teken.', expl: 'MO = ' + a + ' \u2212 ' + (2 * b) + 'Q' },
+                mcMO,
                 { q: 'Bij welke Q is MO = 0?', a: round1(a / (2 * b)), hint: 'Stel MO = 0 en los op naar Q.', expl: 'Q = ' + a + ' \u00F7 ' + (2 * b) + ' = ' + round1(a / (2 * b)) }
             ]
         };
@@ -329,10 +386,17 @@
 
     GEN.B6 = function () {
         var a = round1(pick([0.5, 1, 1.5, 2])), b = ri(5, 20), c = ri(50, 200);
+        var mcMK = mcStep(
+            'Wat is de co\u00EBffici\u00EBnt van Q in MK?',
+            round1(2 * a),
+            [a, round1(a / 2), round1(2 * a + 1), round1(a * a)],
+            'MK is de afgeleide van TK. Wat is de afgeleide van ' + a + 'Q\u00B2?',
+            a + 'Q\u00B2 \u2192 ' + round1(2 * a) + 'Q (vermenigvuldig co\u00EBffici\u00EBnt met macht).'
+        );
         return {
             context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Bepaal de MK-functie.',
             steps: [
-                { q: 'Wat is de co\u00EBffici\u00EBnt van Q in MK?', a: round1(2 * a), hint: 'MK is de afgeleide van TK. Wat is de afgeleide van ' + a + 'Q\u00B2?', expl: a + 'Q\u00B2 \u2192 ' + round1(2 * a) + 'Q' },
+                mcMK,
                 { q: 'Wat is de constante in MK?', a: b, hint: 'Wat is de afgeleide van ' + b + 'Q?', expl: 'MK = ' + round1(2 * a) + 'Q + ' + b }
             ]
         };
@@ -704,7 +768,14 @@
             steps: [
                 { q: 'Bereken de alternatieve kosten van ' + prodPaar[0] + ' voor ' + landPaar[0] + ' (in eenheden ' + prodPaar[1] + ').', a: akA1, hint: 'Hoeveel ' + prodPaar[1] + ' geeft ' + landPaar[0] + ' op per eenheid ' + prodPaar[0] + '? Deel ' + maxB1 + ' door ' + maxA1 + '.', expl: 'AK = ' + maxB1 + ' / ' + maxA1 + ' = ' + akA1 + ' ' + prodPaar[1] + ' per ' + prodPaar[0] },
                 { q: 'Bereken de alternatieve kosten van ' + prodPaar[0] + ' voor ' + landPaar[1] + ' (in eenheden ' + prodPaar[1] + ').', a: akA2, hint: 'Hoeveel ' + prodPaar[1] + ' geeft ' + landPaar[1] + ' op per eenheid ' + prodPaar[0] + '? Deel ' + maxB2 + ' door ' + maxA2 + '.', expl: 'AK = ' + maxB2 + ' / ' + maxA2 + ' = ' + akA2 + ' ' + prodPaar[1] + ' per ' + prodPaar[0] },
-                { q: 'Wat zijn de laagste alternatieve kosten? (het land met comparatief voordeel)', a: laagsteAK, hint: 'Vergelijk de twee alternatieve kosten. De laagste wint.', expl: 'Laagste AK = ' + laagsteAK + ', dus ' + (akA1 < akA2 ? landPaar[0] : landPaar[1]) + ' heeft het comparatief voordeel bij ' + prodPaar[0] + '.' }
+                { q: 'Wat zijn de laagste alternatieve kosten? (het land met comparatief voordeel)', a: laagsteAK, hint: 'Vergelijk de twee alternatieve kosten. De laagste wint.', expl: 'Laagste AK = ' + laagsteAK + ', dus ' + (akA1 < akA2 ? landPaar[0] : landPaar[1]) + ' heeft het comparatief voordeel bij ' + prodPaar[0] + '.' },
+                mcStep(
+                    'Welk land moet zich specialiseren in ' + prodPaar[0] + '?',
+                    akA1 < akA2 ? landPaar[0] : landPaar[1],
+                    [landPaar[0], landPaar[1], 'Beide landen', 'Geen van beide'],
+                    'Het land met de laagste alternatieve kosten specialiseert zich.',
+                    (akA1 < akA2 ? landPaar[0] : landPaar[1]) + ' heeft de laagste AK (' + laagsteAK + ') en specialiseert zich dus in ' + prodPaar[0] + '.'
+                )
             ]
         };
     };
