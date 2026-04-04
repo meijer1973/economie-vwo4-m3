@@ -25,6 +25,7 @@
     function iconReset()     { return '<span class="st-icon"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>'; }
     function iconRefresh()   { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg></span>'; }
     function iconTree()      { return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/><circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/><path d="M7 15.5v3"/><path d="M17 15.5v3"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>'; }
+    function iconInfo()      { return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'; }
 
     // ── State ─────────────────────────────────────────────────
     var view = 'tree'; // 'tree' | 'exercise'
@@ -38,6 +39,7 @@
     var depSkillId = null;         // which skill's dependency tree is shown (null = hidden)
     var depSubgraph = null;        // cached result of getDependencySubgraph
     var depHistory = [];           // navigation stack for back button
+    var savedDepState = null;      // overlay state saved while doing an exercise
 
     // ── Render dispatcher ─────────────────────────────────────
     function render() {
@@ -65,18 +67,68 @@
         return h;
     }
 
+    // ── Shared card display state ─────────────────────────────
+    function getCardDisplayState(skillId) {
+        var skill = null;
+        var visible = engine.getVisibleSkills();
+        for (var i = 0; i < visible.length; i++) {
+            if (visible[i].id === skillId) { skill = visible[i]; break; }
+        }
+        if (!skill) return null;
+
+        var stars = engine.getStars();
+        var layerColors = engine.getLayerColors();
+        var layerNames = engine.getLayerNames();
+        var newArr = engine.getNewSkills();
+        var lc = layerColors[skill.layer] || layerColors[0];
+        var starCount = stars[skill.id] || 0;
+        var hasGen = engine.hasGenerator(skill.id);
+        var ready = engine.prereqsDone(skill.id);
+        var missing = engine.getMissingPrereqs(skill.id);
+        var isNew = false;
+        for (var n = 0; n < newArr.length; n++) { if (newArr[n] === skill.id) { isNew = true; break; } }
+        var isMastered = starCount === 5;
+        var isLastLayer = skill.layer === layerNames.length - 1;
+        var hasDeps = skill.needs.length > 0;
+
+        var boxShadow = starCount >= 1 ? '0 0 12px ' + lc.glow :
+                        isNew ? '0 0 10px ' + lc.glow : 'none';
+        var borderStyle = isMastered ? '2px solid #fbbf24' :
+                          (isNew && starCount === 0) ? '1.5px solid ' + lc.text :
+                          '1px solid ' + lc.text + '40';
+        var strokeColor = isMastered ? '#fbbf24' : lc.text + '60';
+        var strokeWidth = isMastered ? 2 : 1;
+
+        var classes = 'st-skill-card';
+        if (!ready && starCount === 0) classes += ' st-locked';
+        if (isMastered) classes += ' st-mastered-5';
+        if (isNew && starCount === 0) classes += ' st-new-skill';
+
+        return {
+            id: skill.id, name: skill.name, layer: skill.layer,
+            starCount: starCount, hasGenerator: hasGen, hasDeps: hasDeps,
+            ready: ready, missing: missing, isNew: isNew, isMastered: isMastered,
+            isLastLayer: isLastLayer,
+            bg: lc.bg, text: lc.text, glow: lc.glow,
+            borderStyle: borderStyle, boxShadow: boxShadow,
+            strokeColor: strokeColor, strokeWidth: strokeWidth,
+            classes: classes
+        };
+    }
+
     // ── Tree view ─────────────────────────────────────────────
     function renderTree() {
         var progress = engine.getProgress();
         var layerNames = engine.getLayerNames();
         var layerColors = engine.getLayerColors();
         var visible = engine.getVisibleSkills();
-        var stars = engine.getStars();
-        var newSkillSet = {};
-        var newArr = engine.getNewSkills();
-        for (var ni = 0; ni < newArr.length; ni++) newSkillSet[newArr[ni]] = true;
 
-        var html = '<div class="st-header">';
+        var html = '<div class="st-legend">';
+        html += '<span>' + iconInfo() + ' Info</span>';
+        html += '<span>' + iconTree() + ' Afhankelijkheden</span>';
+        html += '</div>';
+
+        html += '<div class="st-header">';
         html += '<h1>Wiskundevaardigheden</h1>';
         html += '<p class="st-subtitle">Verdien sterren en bouw je vaardigheden op</p>';
         html += '<div class="st-progress-summary">';
@@ -101,42 +153,30 @@
             html += '<div class="st-layer-grid">';
 
             for (var k = 0; k < layerSkills.length; k++) {
-                var skill = layerSkills[k];
-                var starCount = stars[skill.id] || 0;
-                var hasGen = engine.hasGenerator(skill.id);
-                var ready = engine.prereqsDone(skill.id);
-                var missing = engine.getMissingPrereqs(skill.id);
+                var cs = getCardDisplayState(layerSkills[k].id);
+                if (!cs) continue;
 
-                var isNew = !!newSkillSet[skill.id];
-                var classes = 'st-skill-card';
-                if (!ready && starCount === 0) classes += ' st-locked';
-                if (starCount === 5) classes += ' st-mastered-5';
-                if (isNew && starCount === 0) classes += ' st-new-skill';
+                html += '<button class="' + cs.classes + '"';
+                html += ' data-skill="' + cs.id + '"';
+                if (!cs.hasGenerator) html += ' disabled';
+                html += ' style="background:' + cs.bg + ';color:' + cs.text + ';border:' + cs.borderStyle + ';box-shadow:' + cs.boxShadow + ';--st-glow:' + cs.glow + '">';
 
-                var boxShadow = starCount >= 1 ? '0 0 12px ' + lc.glow :
-                                isNew ? '0 0 10px ' + lc.glow : 'none';
-                var borderStyle = starCount === 5 ? '2px solid #fbbf24' :
-                                  (isNew && starCount === 0) ? '1.5px solid ' + lc.text :
-                                  '1px solid ' + lc.text + '40';
-
-                html += '<button class="' + classes + '"';
-                html += ' data-skill="' + skill.id + '"';
-                if (!hasGen) html += ' disabled';
-                html += ' style="background:' + lc.bg + ';color:' + lc.text + ';border:' + borderStyle + ';box-shadow:' + boxShadow + ';--st-glow:' + lc.glow + '">';
-
-                html += '<div class="st-skill-id"><span>' + esc(skill.id) + '</span>';
-                if (skill.needs.length > 0) {
-                    html += '<span class="st-dep-btn" data-dep-skill="' + skill.id + '" title="Toon afhankelijkheden">' + iconTree() + '</span>';
+                html += '<div class="st-skill-id"><span>' + esc(cs.id) + '</span>';
+                html += '<span class="st-skill-icons">';
+                html += '<span class="st-info-btn" data-info-skill="' + cs.id + '" title="Meer informatie">' + iconInfo() + '</span>';
+                if (cs.hasDeps) {
+                    html += '<span class="st-dep-btn" data-dep-skill="' + cs.id + '" title="Toon afhankelijkheden">' + iconTree() + '</span>';
                 }
+                html += '</span>';
                 html += '</div>';
-                if (!ready && missing.length > 0 && starCount === 0) {
-                    html += '<div class="st-prereq-hint" title="Tip: oefen eerst ' + missing.join(', ') + '">\uD83D\uDCA1 ' + missing.join(', ') + '</div>';
+                if (!cs.ready && cs.missing.length > 0 && cs.starCount === 0) {
+                    html += '<div class="st-prereq-hint" title="Tip: oefen eerst ' + cs.missing.join(', ') + '">\uD83D\uDCA1 ' + cs.missing.join(', ') + '</div>';
                 }
 
-                html += '<div>' + (li === layerNames.length - 1 ? '\uD83C\uDFC6 ' : '') + esc(skill.name) + '</div>';
+                html += '<div>' + (cs.isLastLayer ? '\uD83C\uDFC6 ' : '') + esc(cs.name) + '</div>';
 
-                if (starCount > 0) {
-                    html += '<div class="st-stars">' + starsHTML(starCount) + '</div>';
+                if (cs.starCount > 0) {
+                    html += '<div class="st-stars">' + starsHTML(cs.starCount) + '</div>';
                 } else {
                     html += '<div class="st-tap-hint">Tap om te oefenen \u2192</div>';
                 }
@@ -171,6 +211,16 @@
             });
         }
 
+        // Wire info buttons
+        var infoBtns = root.querySelectorAll('.st-info-btn');
+        for (var ib = 0; ib < infoBtns.length; ib++) {
+            infoBtns[ib].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var sid = this.getAttribute('data-info-skill');
+                openInfoPopup(sid);
+            });
+        }
+
         var resetBtn = document.getElementById('st-reset');
         if (resetBtn) {
             resetBtn.addEventListener('click', function () {
@@ -179,6 +229,19 @@
                     render();
                 }
             });
+        }
+    }
+
+    function returnToTree() {
+        view = 'tree';
+        render();
+        // Restore overlay if we came from one
+        if (savedDepState) {
+            depHistory = savedDepState.history;
+            depSkillId = savedDepState.skillId;
+            depSubgraph = engine.getDependencySubgraph(depSkillId);
+            savedDepState = null;
+            renderDependencyOverlay();
         }
     }
 
@@ -206,7 +269,7 @@
         }
 
         var state = engine.getExerciseState();
-        if (!state) { view = 'tree'; render(); return; }
+        if (!state) { returnToTree(); return; }
 
         var lc = engine.getLayerColors()[state.skillLayer];
         var progress = ((state.currentStepIdx + (feedback === 'correct' ? 1 : 0)) / state.totalSteps) * 100;
@@ -295,8 +358,7 @@
         document.getElementById('st-back').addEventListener('click', function () {
             engine.abortExercise();
             if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }
-            view = 'tree';
-            render();
+            returnToTree();
         });
 
         var inp = document.getElementById('st-input');
@@ -432,8 +494,7 @@
         // Wire events
         document.getElementById('st-result-back').addEventListener('click', function () {
             finishResult = null;
-            view = 'tree';
-            render();
+            returnToTree();
         });
 
         var retryBtn = document.getElementById('st-result-retry');
@@ -575,24 +636,50 @@
             var node = nodes[ni];
             var pos = nodePos[node.id];
             if (!pos) continue;
+            var cs = getCardDisplayState(node.id);
             var lc = layerColors[node.layer] || layerColors[0];
-            var nodeStars = stars[node.id] || 0;
-            var strokeColor = nodeStars === 5 ? '#fbbf24' : lc.text + '60';
-            var strokeWidth = nodeStars === 5 ? 2 : 1;
-            var isRoot = node.id === depSkillId;
+            var nodeStars = cs ? cs.starCount : (stars[node.id] || 0);
+            var sColor = cs ? cs.strokeColor : (lc.text + '60');
+            var sWidth = cs ? cs.strokeWidth : 1;
+            var hasGen = cs ? cs.hasGenerator : false;
+            var hasDeps = cs ? cs.hasDeps : (node.needs && node.needs.length > 0);
+            var nodeBg = cs ? cs.bg : lc.bg;
+            var nodeText = cs ? cs.text : lc.text;
 
-            svg += '<g class="st-dep-node" data-skill="' + node.id + '">';
+            var nodeClass = 'st-dep-node' + (hasGen ? '' : ' st-dep-node-disabled');
+            svg += '<g class="' + nodeClass + '" data-skill="' + node.id + '">';
             svg += '<rect x="' + pos.x + '" y="' + pos.y + '" width="' + NODE_W + '" height="' + NODE_H + '"';
-            svg += ' rx="8" fill="' + lc.bg + '" stroke="' + strokeColor + '" stroke-width="' + strokeWidth + '"';
-            if (isRoot) svg += ' stroke-dasharray=""';
-            svg += '/>';
+            svg += ' rx="8" fill="' + nodeBg + '" stroke="' + sColor + '" stroke-width="' + sWidth + '"/>';
 
             // Skill ID badge
-            svg += '<text x="' + (pos.x + 7) + '" y="' + (pos.y + 12) + '" fill="' + lc.text + '" font-size="8.5" font-weight="700" opacity="0.5" font-family="DM Sans, sans-serif">' + node.id + '</text>';
+            svg += '<text x="' + (pos.x + 7) + '" y="' + (pos.y + 12) + '" fill="' + nodeText + '" font-size="8.5" font-weight="700" opacity="0.5" font-family="DM Sans, sans-serif">' + node.id + '</text>';
+
+            // Info icon (top-right, shifted left if tree icon also present)
+            var infoX = pos.x + NODE_W - (hasDeps ? 30 : 16);
+            var infoY = pos.y + 3;
+            svg += '<g class="st-dep-info-btn" data-info-skill="' + node.id + '" transform="translate(' + infoX + ',' + infoY + ')">';
+            svg += '<rect x="-3" y="-3" width="18" height="18" fill="transparent"/>';
+            svg += '<g transform="scale(0.5)" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">';
+            svg += '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>';
+            svg += '</g></g>';
+
+            // Tree icon (top-right, only if has dependencies)
+            if (hasDeps) {
+                var treeX = pos.x + NODE_W - 16;
+                var treeY = pos.y + 3;
+                svg += '<g class="st-dep-tree-btn" data-dep-skill="' + node.id + '" transform="translate(' + treeX + ',' + treeY + ')">';
+                svg += '<rect x="-3" y="-3" width="18" height="18" fill="transparent"/>';
+                svg += '<g transform="scale(0.5)" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">';
+                svg += '<path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/>';
+                svg += '<circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/>';
+                svg += '<path d="M7 15.5v3"/><path d="M17 15.5v3"/>';
+                svg += '<circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>';
+                svg += '</g></g>';
+            }
 
             // Skill name (truncate if needed)
             var displayName = node.name.length > 20 ? node.name.substring(0, 18) + '\u2026' : node.name;
-            svg += '<text x="' + pos.cx + '" y="' + (pos.y + 26) + '" fill="' + lc.text + '" font-size="9.5" font-weight="500" text-anchor="middle" font-family="DM Sans, sans-serif">' + esc(displayName) + '</text>';
+            svg += '<text x="' + pos.cx + '" y="' + (pos.y + 26) + '" fill="' + nodeText + '" font-size="9.5" font-weight="500" text-anchor="middle" font-family="DM Sans, sans-serif">' + esc(displayName) + '</text>';
 
             // Stars
             var starY = pos.y + NODE_H - 7;
@@ -624,7 +711,7 @@
         overlayHTML += '<div class="st-dep-legend">';
         overlayHTML += '<span>\u2500 <span style="color:#22c55e">groen</span> = beheerst</span>';
         overlayHTML += '<span>\u2500 <span style="color:#ef4444">rood</span> = nog te oefenen</span>';
-        overlayHTML += '<span>Tap een vaardigheid om te oefenen</span>';
+        overlayHTML += '<span>Tap = oefenen \u00B7 ' + iconTree() + ' = afhankelijkheden</span>';
         overlayHTML += '</div>';
         overlayHTML += '</div></div>';
 
@@ -638,20 +725,44 @@
             if (e.target === this) closeDependencyOverlay();
         });
 
+        // Node click → start exercise (same as main tree), but remember overlay state
         var svgNodes = document.querySelectorAll('#st-dep-overlay .st-dep-node');
         for (var sni = 0; sni < svgNodes.length; sni++) {
             svgNodes[sni].addEventListener('click', function (e) {
                 e.stopPropagation();
                 var sid = this.getAttribute('data-skill');
+                if (!sid || !engine.hasGenerator(sid)) return;
+                // Save overlay state so we can return after exercise
+                savedDepState = { skillId: depSkillId, history: depHistory.slice() };
+                // Remove overlay DOM but keep saved state
+                depSkillId = null;
+                depSubgraph = null;
+                depHistory = [];
+                var el = document.getElementById('st-dep-overlay');
+                if (el) el.remove();
+                startSkill(sid);
+            });
+        }
+
+        // Tree icon click → drill deeper (same as main tree)
+        var treeBtns = document.querySelectorAll('#st-dep-overlay .st-dep-tree-btn');
+        for (var ti = 0; ti < treeBtns.length; ti++) {
+            treeBtns[ti].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var sid = this.getAttribute('data-dep-skill');
                 if (!sid) return;
-                // If it has prerequisites, show its dep tree; otherwise start exercise
-                var sg = engine.getDependencySubgraph(sid);
-                if (sg && sg.nodes.length > 1) {
-                    openDependencyOverlay(sid);
-                } else if (engine.hasGenerator(sid)) {
-                    closeDependencyOverlay();
-                    startSkill(sid);
-                }
+                openDependencyOverlay(sid);
+            });
+        }
+
+        // Info icon click → show info popup
+        var depInfoBtns = document.querySelectorAll('#st-dep-overlay .st-dep-info-btn');
+        for (var di = 0; di < depInfoBtns.length; di++) {
+            depInfoBtns[di].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var sid = this.getAttribute('data-info-skill');
+                if (!sid) return;
+                openInfoPopup(sid);
             });
         }
 
@@ -674,6 +785,60 @@
             }
         }
         return count > 0 ? sum / count : 0;
+    }
+
+    // ── Info popup ─────────────────────────────────────────────
+
+    function openInfoPopup(skillId) {
+        closeInfoPopup();
+        var desc = engine.getSkillDescription(skillId);
+        var preview = engine.generatePreview(skillId);
+        var cs = getCardDisplayState(skillId);
+        if (!cs) return;
+
+        var html = '<div class="st-info-overlay" id="st-info-overlay">';
+        html += '<div class="st-info-container">';
+        html += '<div class="st-info-header" style="color:' + cs.text + '">';
+        html += '<span class="st-info-skill-id">' + esc(cs.id) + '</span>';
+        html += '<span>' + esc(cs.name) + '</span>';
+        html += '<button class="st-info-close" id="st-info-close">\u2715</button>';
+        html += '</div>';
+
+        if (desc) {
+            html += '<p class="st-info-desc">' + esc(desc) + '</p>';
+        }
+
+        if (preview) {
+            html += '<div class="st-info-preview">';
+            html += '<div class="st-info-preview-label">Voorbeeldvraag</div>';
+            html += '<div class="st-info-preview-context">' + esc(preview.context) + '</div>';
+            html += '<div class="st-info-preview-q">' + esc(preview.question) + '</div>';
+            html += '</div>';
+        }
+
+        if (cs.starCount > 0) {
+            html += '<div class="st-info-stars">' + starsHTML(cs.starCount) + '</div>';
+        }
+
+        html += '</div></div>';
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        document.getElementById('st-info-close').addEventListener('click', closeInfoPopup);
+        document.getElementById('st-info-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeInfoPopup();
+        });
+        document.addEventListener('keydown', infoEscHandler);
+    }
+
+    function closeInfoPopup() {
+        var el = document.getElementById('st-info-overlay');
+        if (el) el.remove();
+        document.removeEventListener('keydown', infoEscHandler);
+    }
+
+    function infoEscHandler(e) {
+        if (e.key === 'Escape') closeInfoPopup();
     }
 
     // ── Focus helper ──────────────────────────────────────────

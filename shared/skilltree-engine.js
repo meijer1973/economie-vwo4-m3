@@ -301,6 +301,21 @@
         return !!this._elements.GEN[skillId];
     };
 
+    SkillTreeEngine.prototype.getSkillDescription = function (skillId) {
+        var s = this._skillMap[skillId];
+        return s ? (s.desc || '') : '';
+    };
+
+    SkillTreeEngine.prototype.generatePreview = function (skillId) {
+        var gen = this._elements.GEN[skillId];
+        if (!gen) return null;
+        for (var i = 0; i < 10; i++) {
+            var ex = gen();
+            if (ex) return { context: ex.context, question: ex.steps[0].q };
+        }
+        return null;
+    };
+
     SkillTreeEngine.prototype.startExercise = function (skillId) {
         var gen = this._elements.GEN[skillId];
         if (!gen) return null;

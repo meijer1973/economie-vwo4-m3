@@ -40,6 +40,7 @@ describe('base-elements', () => {
             expect(skill.name).toBeTruthy();
             expect(typeof skill.layer).toBe('number');
             expect(Array.isArray(skill.needs)).toBe(true);
+            expect(skill.desc).toBeTruthy();
         }
     });
 
