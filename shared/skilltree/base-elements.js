@@ -352,9 +352,22 @@
         var coefB = round2(1 / a2), constB = round2(-c2 / a2);
         var coefCol = round2(coefA + coefB);
         var constCol = round2(constA + constB);
+        var orderB4 = {
+            q: 'Zet de stappen voor het opstellen van de collectieve aanbodfunctie in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Schrijf individuele functies om naar Q = f(P)',
+                'Tel de Q-functies van alle bedrijven op',
+                'Vereenvoudig de collectieve functie'
+            ],
+            correctOrder: [0, 1, 2],
+            hint: 'Eerst omschrijven, dan optellen, dan vereenvoudigen.',
+            expl: 'Stap 1: Omschrijven naar Q = f(P) \u2192 Stap 2: Optellen \u2192 Stap 3: Vereenvoudigen.'
+        };
         return {
             context: 'Bedrijf A: P = ' + a1 + 'Qa + ' + c1 + '\nBedrijf B: P = ' + a2 + 'Qb + ' + c2 + '\nStel de collectieve aanbodfunctie op.',
             steps: [
+                orderB4,
                 { q: 'Herschrijf het aanbod van A naar Qa = \u2026P + \u2026 Wat is de co\u00EBffici\u00EBnt van P?', a: coefA, hint: 'P = ' + a1 + 'Qa + ' + c1 + ' \u2192 ' + a1 + 'Qa = P \u2212 ' + c1 + ' \u2192 deel door ' + a1, expl: 'Qa = ' + coefA + 'P + (' + constA + '). De co\u00EBffici\u00EBnt van P is ' + coefA + '.' },
                 { q: 'Wat is de constante in Qa = ' + coefA + 'P + ?', a: constA, hint: '\u2212' + c1 + ' \u00F7 ' + a1 + ' = ? (let op het minteken!)', expl: 'Qa = ' + coefA + 'P + (' + constA + '). De constante is ' + constA + '.' },
                 { q: 'Herschrijf het aanbod van B naar Qb = \u2026P + \u2026 Wat is de co\u00EBffici\u00EBnt van P?', a: coefB, hint: 'P = ' + a2 + 'Qb + ' + c2 + ' \u2192 deel door ' + a2, expl: 'Qb = ' + coefB + 'P + (' + constB + '). De co\u00EBffici\u00EBnt van P is ' + coefB + '.' },
@@ -407,9 +420,17 @@
         var Q = ri(5, 20);
         var tk = round1(a * Q * Q + b * Q + c);
         var gtk = round2(tk / Q);
+        var mcGTK = mcStep(
+            'Hoe bereken je de GTK?',
+            'TK / Q',
+            ['TK \u2212 Q', 'TK \u00D7 Q', 'Q / TK'],
+            'GTK staat voor Gemiddelde Totale Kosten.',
+            'GTK = TK gedeeld door Q. "Gemiddelde" betekent: delen door de hoeveelheid.'
+        );
         return {
             context: 'TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Bereken GTK bij Q = ' + Q + '.',
             steps: [
+                mcGTK,
                 { q: 'Bereken eerst TK bij Q = ' + Q + '.', a: tk, hint: 'Vul Q = ' + Q + ' in de kostenfunctie in en reken stap voor stap uit.', expl: 'TK = ' + a + '\u00D7' + (Q * Q) + ' + ' + (b * Q) + ' + ' + c + ' = ' + tk },
                 { q: 'Bereken nu GTK.', a: gtk, hint: 'GTK = TK gedeeld door Q.', expl: 'GTK = ' + tk + ' \u00F7 ' + Q + ' = ' + gtk }
             ]
@@ -548,9 +569,17 @@
         if (Qs <= 2) return GEN.S1();
         var pIntercept = round1(alpha / b);
         var cs = round1(0.5 * Qs * (pIntercept - Ps));
+        var mcCS = mcStep(
+            'Wat is de vorm van het consumentensurplus in de grafiek?',
+            'Driehoek tussen vraaglijn, prijslijn en P-as',
+            ['Rechthoek onder de vraaglijn', 'Driehoek tussen aanbodlijn en prijslijn', 'Het verschil tussen vraag en aanbod'],
+            'Het CS is het gebied boven de prijs en onder de vraaglijn.',
+            'Het consumentensurplus is een driehoek: basis = Q*, hoogte = Pmax \u2212 P*.'
+        );
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nEvenwicht: P* = ' + Ps + ', Q* = ' + Qs + '.\nBereken het consumentensurplus.',
             steps: [
+                mcCS,
                 { q: 'Bepaal het snijpunt van de vraaglijn met de P-as.', a: pIntercept, hint: 'Het snijpunt met de P-as vind je door Q = 0 in te vullen.', expl: 'Qv = 0 \u2192 ' + alpha + ' = ' + b + 'P \u2192 Pmax = ' + pIntercept },
                 { q: 'Bereken het consumentensurplus.', a: cs, hint: 'CS is een driehoek met basis Q* en hoogte Pmax \u2212 P*.', expl: 'CS = \u00BD \u00D7 ' + Qs + ' \u00D7 (' + pIntercept + ' \u2212 ' + Ps + ') = ' + cs }
             ]
@@ -577,9 +606,27 @@
         var to = round1(a * Q - b * Q * Q);
         var tk = round1(tkA * Q * Q + tkB * Q + tkC);
         var winst = round1(to - tk);
+        var wrongWinst = round1(to + tk);
+        var errorS3 = {
+            q: 'E\u00E9n van deze winstberekeningen bevat een fout. Welke?',
+            mode: 'error',
+            shownSteps: [
+                { text: 'Winst = TO \u2212 TK = ' + to + ' \u2212 ' + tk + ' = ' + winst, isError: false },
+                { text: 'Winst = TO + TK = ' + to + ' + ' + tk + ' = ' + wrongWinst, isError: true },
+                { text: 'Winst = ' + a + '\u00D7' + Q + ' \u2212 ' + b + '\u00D7' + (Q * Q) + ' \u2212 (' + tkA + '\u00D7' + (Q * Q) + ' + ' + tkB + '\u00D7' + Q + ' + ' + tkC + ') = ' + winst, isError: false }
+            ],
+            hint: 'Winst = TO \u2212 TK, niet TO + TK.',
+            expl: 'De fout telt TO en TK op in plaats van af te trekken. Winst = TO \u2212 TK.'
+        };
+        // Shuffle error position
+        var errS3Items = errorS3.shownSteps.slice();
+        var errS3Item = errS3Items.splice(1, 1)[0];
+        errS3Items.splice(ri(0, 2), 0, errS3Item);
+        errorS3.shownSteps = errS3Items;
         return {
             context: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2 en TK = ' + tkA + 'Q\u00B2 + ' + tkB + 'Q + ' + tkC + '.\nBereken de winst bij Q = ' + Q + '.',
             steps: [
+                errorS3,
                 { q: 'Bereken TO bij Q = ' + Q + '.', a: to, hint: 'TO = ' + a + 'Q \u2212 ' + b + 'Q\u00B2. Vul Q = ' + Q + ' in.', expl: 'TO = ' + a + '\u00D7' + Q + ' \u2212 ' + b + '\u00D7' + (Q * Q) + ' = ' + to },
                 { q: 'Bereken TK bij Q = ' + Q + '.', a: tk, hint: 'Vul Q = ' + Q + ' in de kostenfunctie in.', expl: 'TK = ' + tkA + '\u00D7' + (Q * Q) + ' + ' + tkB + '\u00D7' + Q + ' + ' + tkC + ' = ' + tk },
                 { q: 'Bereken de winst.', a: winst, hint: 'Winst = TO \u2212 TK.', expl: 'Winst = ' + to + ' \u2212 ' + tk + ' = ' + winst }
@@ -594,9 +641,22 @@
         var b = round1(P - a * (Q1 + Q2));
         var c = round1(a * Q1 * Q2);
         if (b < 0) return GEN.S4();
+        var orderS4 = {
+            q: 'Zet de stappen voor een break-even berekening in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Stel TO = TK',
+                'Herschrijf naar aQ\u00B2 + bQ + c = 0',
+                'Los op met de abc-formule'
+            ],
+            correctOrder: [0, 1, 2],
+            hint: 'Eerst gelijkstellen, dan herschrijven, dan oplossen.',
+            expl: 'Stap 1: TO = TK \u2192 Stap 2: alles naar \u00E9\u00E9n kant \u2192 Stap 3: abc-formule.'
+        };
         return {
             context: 'TO = ' + P + 'Q en TK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.\nBij welke hoeveelheden is er break-even?',
             steps: [
+                orderS4,
                 { q: 'Stel TO = TK en herschrijf naar de vorm \u2026Q\u00B2 + \u2026Q + \u2026 = 0. Wat is de co\u00EBffici\u00EBnt van Q?', a: round1(b - P), hint: P + 'Q = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Breng alles naar \u00E9\u00E9n kant.', expl: a + 'Q\u00B2 + (' + b + ' \u2212 ' + P + ')Q + ' + c + ' = 0 \u2192 co\u00EBffici\u00EBnt = ' + round1(b - P) },
                 { q: 'Bereken de kleinste break-even hoeveelheid.', a: Q1, hint: 'Los de kwadratische vergelijking op met de abc-formule.', expl: 'Q\u2081 = ' + Q1 },
                 { q: 'Bereken de grootste break-even hoeveelheid.', a: Q2, hint: 'De tweede oplossing van dezelfde vergelijking.', expl: 'Q\u2082 = ' + Q2 + '. Tussen Q=' + Q1 + ' en Q=' + Q2 + ' maakt het bedrijf winst.' }
@@ -617,9 +677,17 @@
         var newPs = round1((alpha + newC) / (b + d));
         var newQs = round1(alpha - b * newPs);
         if (newQs <= 0) return GEN.S5();
+        var mcS5 = mcStep(
+            'Wat verandert er aan de aanbodfunctie na een heffing van \u20AC' + heffing + '?',
+            'De aanbodcurve schuift omhoog (naar links)',
+            ['De aanbodcurve schuift omlaag (naar rechts)', 'De vraagcurve schuift naar links', 'Beide curves schuiven'],
+            'Een heffing bij de producent verhoogt de kosten per stuk.',
+            'De producent ontvangt P \u2212 heffing, waardoor de aanbodcurve omhoog (naar links) schuift.'
+        );
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid heft \u20AC' + heffing + ' per stuk bij de producent.\nBereken het nieuwe evenwicht.',
             steps: [
+                mcS5,
                 { q: 'Wat is de nieuwe constante in de aanbodfunctie na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') = \u2212' + newC + ' + ' + d + 'P' },
                 { q: 'Bereken de nieuwe evenwichtsprijs.', a: newPs, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op naar P.', expl: alpha + ' \u2212 ' + b + 'P = \u2212' + newC + ' + ' + d + 'P \u2192 P* = ' + newPs },
                 { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: newQs, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + newPs + ' = ' + newQs }
@@ -633,9 +701,17 @@
         var testP = cInd + aInd * ri(2, 6);
         var qInd = (testP - cInd) / aInd;
         var qCol = n * qInd;
+        var mcS6 = mcStep(
+            'Hoe vind je de minimumprijs waarvoor er wordt aangeboden?',
+            'Vul Qi = 0 in en los op naar P',
+            ['Vul P = 0 in en los op naar Q', 'Stel Qv = Qa', 'Neem de afgeleide van de aanbodfunctie'],
+            'Het aanbod begint bij de prijs waar Qi precies nul is.',
+            'Qi = 0 invullen geeft de minimumprijs. Pas vanaf die prijs wordt er aangeboden.'
+        );
         return {
             context: n + ' identieke bedrijven, elk met individueel aanbod: P = ' + aInd + 'Qi + ' + cInd + '.\nBepaal het collectieve aanbod.',
             steps: [
+                mcS6,
                 { q: 'Vanaf welke prijs wordt er aangeboden?', a: cInd, hint: 'Schrijf om naar Qi als functie van P. Bij welke P is Qi = 0?', expl: 'Qi = (P \u2212 ' + cInd + ') / ' + aInd + '. Minimumprijs = ' + cInd },
                 { q: 'Bereken Qi per bedrijf bij P = ' + testP + '.', a: qInd, hint: 'Vul P = ' + testP + ' in bij Qi = (P \u2212 ' + cInd + ') / ' + aInd + '.', expl: 'Qi = (' + testP + ' \u2212 ' + cInd + ') / ' + aInd + ' = ' + qInd },
                 { q: 'Bereken het collectieve aanbod bij P = ' + testP + '.', a: qCol, hint: 'Er zijn ' + n + ' identieke bedrijven.', expl: 'Qcol = ' + n + ' \u00D7 ' + qInd + ' = ' + qCol }
@@ -663,7 +739,14 @@
                 { q: 'Bereken de evenwichtsprijs zonder overheidsingrijpen.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Bereken de gevraagde hoeveelheid bij de minimumprijs.', a: QvMin, hint: 'Vul P = ' + Pmin + ' in bij Qv.', expl: 'Qv = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pmin + ' = ' + QvMin },
                 { q: 'Bereken de aangeboden hoeveelheid bij de minimumprijs.', a: QaMin, hint: 'Vul P = ' + Pmin + ' in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '\u00D7' + Pmin + ' = ' + QaMin },
-                { q: 'Bereken het overschot op de markt.', a: overschot, hint: 'Overschot = aanbod \u2212 vraag.', expl: 'Overschot = ' + QaMin + ' \u2212 ' + QvMin + ' = ' + overschot }
+                { q: 'Bereken het overschot op de markt.', a: overschot, hint: 'Overschot = aanbod \u2212 vraag.', expl: 'Overschot = ' + QaMin + ' \u2212 ' + QvMin + ' = ' + overschot },
+                mcStep(
+                    'Er is een overschot van ' + overschot + ' stuks. Wat is het gevolg?',
+                    'Aanbieders kunnen niet alles kwijt',
+                    ['Consumenten kunnen niet genoeg kopen', 'De prijs zal dalen naar het evenwicht', 'Er ontstaat een zwarte markt met hogere prijzen'],
+                    'Bij een minimumprijs is het aanbod groter dan de vraag.',
+                    'Bij een overschot produceren aanbieders meer dan consumenten willen kopen.'
+                )
             ]
         };
     };
@@ -689,7 +772,14 @@
                 { q: 'Bereken de evenwichtsprijs zonder overheidsingrijpen.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Bereken de gevraagde hoeveelheid bij de maximumprijs.', a: QvMax, hint: 'Vul P = ' + Pmax + ' in bij Qv.', expl: 'Qv = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pmax + ' = ' + QvMax },
                 { q: 'Bereken de aangeboden hoeveelheid bij de maximumprijs.', a: QaMax, hint: 'Vul P = ' + Pmax + ' in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '\u00D7' + Pmax + ' = ' + QaMax },
-                { q: 'Bereken het tekort op de markt.', a: tekort, hint: 'Tekort = vraag \u2212 aanbod.', expl: 'Tekort = ' + QvMax + ' \u2212 ' + QaMax + ' = ' + tekort }
+                { q: 'Bereken het tekort op de markt.', a: tekort, hint: 'Tekort = vraag \u2212 aanbod.', expl: 'Tekort = ' + QvMax + ' \u2212 ' + QaMax + ' = ' + tekort },
+                mcStep(
+                    'Er is een tekort van ' + tekort + ' stuks. Wat is een waarschijnlijk gevolg?',
+                    'Er kan een zwarte markt ontstaan',
+                    ['De prijs daalt verder', 'Producenten gaan meer produceren', 'Het tekort lost zichzelf op'],
+                    'Bij een maximumprijs is de vraag groter dan het aanbod.',
+                    'Bij een tekort zijn er consumenten die meer willen betalen. Dat cre\u00EBert ruimte voor een zwarte markt.'
+                )
             ]
         };
     };
@@ -708,9 +798,17 @@
         var newQs = round1(alpha - b * newPs);
         if (newQs <= 0 || newPs <= 0) return GEN.S9();
         var totaalSubsidie = round1(subsidie * newQs);
+        var mcS9 = mcStep(
+            'Wat verandert er aan de aanbodfunctie na een subsidie van \u20AC' + subsidie + '?',
+            'De aanbodcurve schuift omlaag (naar rechts)',
+            ['De aanbodcurve schuift omhoog (naar links)', 'De vraagcurve schuift naar rechts', 'De vraagcurve schuift naar links'],
+            'Een subsidie verlaagt de kosten per stuk voor de producent.',
+            'De producent ontvangt P + subsidie, waardoor de aanbodcurve omlaag (naar rechts) schuift.'
+        );
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid geeft een subsidie van \u20AC' + subsidie + ' per stuk aan de producent.\nBereken het nieuwe evenwicht.',
             steps: [
+                mcS9,
                 { q: 'Wat is de nieuwe constante in de aanbodfunctie na de subsidie?', a: newC, hint: 'De producent ontvangt P + ' + subsidie + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P + ' + subsidie + ') = ' + newC + ' + ' + d + 'P' },
                 { q: 'Bereken de nieuwe evenwichtsprijs.', a: newPs, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op naar P.', expl: alpha + ' \u2212 ' + b + 'P = ' + newC + ' + ' + d + 'P \u2192 P* = ' + newPs },
                 { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: newQs, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + newPs + ' = ' + newQs },
@@ -733,9 +831,17 @@
         if (Qtest <= 0) Qtest = Qstar + 2;
         var mkTest = round1(2 * a * Qtest + bk);
         var gtkTest = round2(a * Qtest + bk + c / Qtest);
+        var mcS10 = mcStep(
+            'Wat betekent het punt waar MK = GTK economisch gezien?',
+            'Het minimum van de GTK-curve (effici\u00EBnte schaal)',
+            ['Het punt van maximale winst', 'Het break-even punt', 'Het punt waar de productie stopt'],
+            'De MK-curve snijdt de GTK-curve altijd in het laagste punt.',
+            'Waar MK = GTK bereikt de GTK zijn minimum. Dit heet de effici\u00EBnte schaal.'
+        );
         return {
             context: 'TK = ' + a + 'Q\u00B2 + ' + bk + 'Q + ' + c + '.\nBij welke hoeveelheid is MK = GTK?',
             steps: [
+                mcS10,
                 { q: 'Stel de MK-functie op. Wat is MK bij Q = ' + Qtest + '?', a: mkTest, hint: 'MK is de afgeleide van TK. MK = ' + round1(2 * a) + 'Q + ' + bk + '.', expl: 'MK = ' + round1(2 * a) + '\u00D7' + Qtest + ' + ' + bk + ' = ' + mkTest },
                 { q: 'Stel de GTK-functie op. Wat is GTK bij Q = ' + Qtest + '?', a: gtkTest, hint: 'GTK = TK/Q = ' + a + 'Q + ' + bk + ' + ' + c + '/Q.', expl: 'GTK = ' + a + '\u00D7' + Qtest + ' + ' + bk + ' + ' + c + '/' + Qtest + ' = ' + gtkTest },
                 { q: 'Stel MK = GTK en los Q op.', a: Qstar, hint: round1(2 * a) + 'Q + ' + bk + ' = ' + a + 'Q + ' + bk + ' + ' + c + '/Q. Vereenvoudig: ' + a + 'Q = ' + c + '/Q.', expl: a + 'Q = ' + c + '/Q \u2192 Q\u00B2 = ' + round1(c / a) + ' \u2192 Q = ' + Qstar }
@@ -791,9 +897,23 @@
         if (b < 0) return GEN.E1();
         var Qmid = Math.round((Q1 + Q2) / 2);
         var winstMid = round1(P * Qmid - (a * Qmid * Qmid + b * Qmid + c));
+        var orderE1 = {
+            q: 'Zet de stappen van een volledige break-even analyse in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Stel TO = TK op',
+                'Herschrijf naar aQ\u00B2 + bQ + c = 0',
+                'Bereken break-even Q met abc-formule',
+                'Bereken de winst bij een gegeven Q'
+            ],
+            correctOrder: [0, 1, 2, 3],
+            hint: 'Eerst opstellen, dan herschrijven, dan oplossen, dan interpreteren.',
+            expl: 'TO = TK \u2192 herschrijven \u2192 abc-formule \u2192 winst bij specifiek punt.'
+        };
         return {
             context: 'Een producent verkoopt voor P = ' + P + '.\nTK = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '.\nVoer een volledige break-even analyse uit.',
             steps: [
+                orderE1,
                 { q: 'Stel TO = TK en herschrijf naar \u2026Q\u00B2 + \u2026Q + \u2026 = 0. Wat is de co\u00EBffici\u00EBnt van Q?', a: round1(b - P), hint: P + 'Q = ' + a + 'Q\u00B2 + ' + b + 'Q + ' + c + '. Breng alles naar \u00E9\u00E9n kant.', expl: a + 'Q\u00B2 + (' + b + ' \u2212 ' + P + ')Q + ' + c + ' = 0 \u2192 co\u00EBffici\u00EBnt = ' + round1(b - P) },
                 { q: 'Bereken de kleinste break-even hoeveelheid.', a: Q1, hint: 'Gebruik de abc-formule.', expl: 'Q\u2081 = ' + Q1 },
                 { q: 'Bereken de grootste break-even hoeveelheid.', a: Q2, hint: 'De tweede oplossing van dezelfde vergelijking.', expl: 'Q\u2082 = ' + Q2 },
@@ -819,6 +939,25 @@
                 { q: 'Bereken de evenwichtsprijs.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Bereken de evenwichtshoeveelheid.', a: Qs, hint: 'Vul P* in bij Qv of Qa.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps + ' = ' + Qs },
                 { q: 'Bepaal het snijpunt van de vraaglijn met de P-as.', a: pMax, hint: 'Bij welke prijs is de gevraagde hoeveelheid nul?', expl: 'Q = 0 \u2192 ' + alpha + ' = ' + b + 'P \u2192 Pmax = ' + pMax },
+                (function () {
+                    var wrongCS = round1(0.5 * Ps * (pMax - Qs));
+                    var errE2 = {
+                        q: 'E\u00E9n van deze CS-berekeningen bevat een fout. Welke?',
+                        mode: 'error',
+                        shownSteps: [
+                            { text: 'CS = \u00BD \u00D7 ' + Qs + ' \u00D7 (' + pMax + ' \u2212 ' + Ps + ') = ' + cs, isError: false },
+                            { text: 'CS = \u00BD \u00D7 ' + Ps + ' \u00D7 (' + pMax + ' \u2212 ' + Qs + ') = ' + wrongCS, isError: true },
+                            { text: 'CS = \u00BD \u00D7 Q* \u00D7 (Pmax \u2212 P*) = \u00BD \u00D7 ' + Qs + ' \u00D7 ' + round1(pMax - Ps) + ' = ' + cs, isError: false }
+                        ],
+                        hint: 'De basis van de driehoek is Q*, de hoogte is Pmax \u2212 P*.',
+                        expl: 'De fout verwisselt Q* en P* in de formule. De basis is altijd de hoeveelheid.'
+                    };
+                    var items = errE2.shownSteps.slice();
+                    var item = items.splice(1, 1)[0];
+                    items.splice(ri(0, 2), 0, item);
+                    errE2.shownSteps = items;
+                    return errE2;
+                })(),
                 { q: 'Bereken het consumentensurplus.', a: cs, hint: 'CS is een driehoek met basis Q* en hoogte Pmax \u2212 P*.', expl: 'CS = \u00BD \u00D7 ' + Qs + ' \u00D7 (' + pMax + ' \u2212 ' + Ps + ') = ' + cs }
             ]
         };
@@ -832,9 +971,22 @@
         var q1 = round1((testP - c1) / a1);
         var q2 = round1((testP - c2) / a2);
         var qTot = round1(n1 * q1 + (testP >= c2 ? n2 * q2 : 0));
+        var orderE3 = {
+            q: 'Zet de stappen voor het bepalen van het collectieve aanbod in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Bereken het aanbod per bedrijf bij de gegeven prijs',
+                'Vermenigvuldig met het aantal bedrijven per groep',
+                'Tel het aanbod van alle groepen bij elkaar op'
+            ],
+            correctOrder: [0, 1, 2],
+            hint: 'Eerst individueel, dan per groep, dan totaal.',
+            expl: 'Stap 1: Q per bedrijf \u2192 Stap 2: \u00D7 aantal bedrijven \u2192 Stap 3: groepen optellen.'
+        };
         return {
             context: 'Groep A: ' + n1 + ' bedrijven, elk P = ' + a1 + 'Q + ' + c1 + '\nGroep B: ' + n2 + ' bedrijf(ven), elk P = ' + a2 + 'Q + ' + c2 + '\nBepaal het collectieve aanbod.',
             steps: [
+                orderE3,
                 { q: 'Bereken het aanbod per bedrijf van groep A bij P = ' + testP + '.', a: q1, hint: 'Schrijf om: Qa = (P \u2212 ' + c1 + ') / ' + a1 + '. Vul P in.', expl: 'Qa = (' + testP + ' \u2212 ' + c1 + ') / ' + a1 + ' = ' + q1 },
                 { q: 'Bereken het totale aanbod van groep A.', a: round1(n1 * q1), hint: 'Er zijn ' + n1 + ' bedrijven in groep A.', expl: n1 + ' \u00D7 ' + q1 + ' = ' + round1(n1 * q1) },
                 { q: 'Bereken het aanbod per bedrijf van groep B bij P = ' + testP + '.', a: q2, hint: 'Schrijf om: Qb = (P \u2212 ' + c2 + ') / ' + a2 + '. Vul P in.', expl: 'Qb = (' + testP + ' \u2212 ' + c2 + ') / ' + a2 + ' = ' + q2 },
@@ -857,9 +1009,23 @@
         var Qn = round1(alpha - b * Pn);
         if (Qn <= 0) return GEN.E4();
         var dwl = round1(0.5 * (Qs - Qn) * heffing);
+        var orderE4 = {
+            q: 'Zet de stappen voor het berekenen van het welvaartsverlies in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Bereken het oude evenwicht',
+                'Pas de aanbodfunctie aan voor de heffing',
+                'Bereken het nieuwe evenwicht',
+                'Bereken het welvaartsverlies als driehoek'
+            ],
+            correctOrder: [0, 1, 2, 3],
+            hint: 'Je moet eerst beide evenwichten kennen voordat je het verschil kunt berekenen.',
+            expl: 'Oud evenwicht \u2192 aanpassen aanbod \u2192 nieuw evenwicht \u2192 DWL = \u00BD \u00D7 \u0394Q \u00D7 heffing.'
+        };
         return {
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P, Qa = \u2212' + c + ' + ' + d + 'P.\nHeffing: \u20AC' + heffing + '/stuk.\nBereken het welvaartsverlies.',
             steps: [
+                orderE4,
                 { q: 'Bereken de oude evenwichtsprijs.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Bereken de oude evenwichtshoeveelheid.', a: Qs, hint: 'Vul P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps + ' = ' + Qs },
                 { q: 'Wat is de nieuwe constante in Qa na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') \u2192 constante = ' + newC },
@@ -879,9 +1045,17 @@
         var gtk = round2(tk / Qs);
         var winstPerStuk = round2(P - gtk);
         var totWinst = round1(winstPerStuk * Qs);
+        var mcE5 = mcStep(
+            'Wat is de voorwaarde voor optimale productie bij volkomen mededinging?',
+            'P = MK',
+            ['MO = MK', 'P = GTK', 'TO = TK'],
+            'Bij VM is de prijs gegeven. De producent is een prijsnemer.',
+            'Bij VM geldt P = MO (horizontale vraaglijn). Dus MO = MK wordt P = MK.'
+        );
         return {
             context: 'Marktprijs P = ' + P + ' (volledige mededinging).\nTK = ' + a + 'Q\u00B2 + ' + bk + 'Q + ' + ck + '.\nBepaal de optimale productie en winst.',
             steps: [
+                mcE5,
                 { q: 'Bepaal de optimale productiehoeveelheid Q*.', a: Qs, hint: 'Bij volledige mededinging geldt: P = MK. Bepaal eerst MK.', expl: 'MK = ' + round1(2 * a) + 'Q + ' + bk + '. P = MK \u2192 Q* = (' + P + ' \u2212 ' + bk + ') \u00F7 ' + round1(2 * a) + ' = ' + Qs },
                 { q: 'Bereken TK bij de optimale hoeveelheid.', a: tk, hint: 'Vul Q* = ' + Qs + ' in de kostenfunctie in.', expl: 'TK = ' + a + '\u00D7' + Qs + '\u00B2 + ' + bk + '\u00D7' + Qs + ' + ' + ck + ' = ' + tk },
                 { q: 'Bereken GTK bij de optimale hoeveelheid.', a: gtk, hint: 'GTK = TK gedeeld door Q.', expl: 'GTK = ' + tk + ' \u00F7 ' + Qs + ' = ' + gtk },
@@ -905,9 +1079,23 @@
         var QsupNew = Math.max(0, -c + d * (Pw + importR));
         var govRev = round1(importR * (QdNew - QsupNew));
         if (Qsup < 0 || QsupNew < 0 || QdNew <= QsupNew) return GEN.E6();
+        var orderE6 = {
+            q: 'Zet de analysestappen voor een invoerrecht in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Bereken vraag en aanbod bij de wereldmarktprijs',
+                'Bereken de import zonder invoerrecht',
+                'Bereken vraag en aanbod bij Pw + invoerrecht',
+                'Bereken de overheidsinkomsten'
+            ],
+            correctOrder: [0, 1, 2, 3],
+            hint: 'Begin met de situatie zonder ingrijpen, dan met invoerrecht.',
+            expl: 'Uitgangssituatie \u2192 import berekenen \u2192 nieuwe situatie \u2192 overheidsinkomsten.'
+        };
         return {
             context: 'Qv = ' + a + ' \u2212 ' + b + 'P, Qa = \u2212' + c + ' + ' + d + 'P.\nWereldmarktprijs Pw = ' + Pw + '. Invoerrecht: \u20AC' + importR + '/stuk.\nAnalyseer de effecten.',
             steps: [
+                orderE6,
                 { q: 'Bereken de binnenlandse vraag bij de wereldmarktprijs.', a: Qd, hint: 'Vul Pw = ' + Pw + ' in bij Qv.', expl: 'Qd = ' + a + ' \u2212 ' + b + '\u00D7' + Pw + ' = ' + Qd },
                 { q: 'Bereken het binnenlandse aanbod bij de wereldmarktprijs.', a: Qsup, hint: 'Vul Pw = ' + Pw + ' in bij Qa.', expl: 'Qs = \u2212' + c + ' + ' + d + '\u00D7' + Pw + ' = ' + Qsup },
                 { q: 'Hoeveel wordt er ge\u00EFmporteerd zonder invoerrecht?', a: Qd - Qsup, hint: 'Import = binnenlandse vraag \u2212 binnenlands aanbod.', expl: 'Import = ' + Qd + ' \u2212 ' + Qsup + ' = ' + (Qd - Qsup) },
@@ -927,9 +1115,26 @@
         var TO = round1(Pstar * Qs);
         var TK = round1(aTK * Qs * Qs + bTK * Qs + cTK);
         var winst = round1(TO - TK);
+        var wrongQs = round1(aP / (2 * bP));
+        var errorE7 = {
+            q: 'E\u00E9n van deze methoden voor winstmaximalisatie bevat een fout. Welke?',
+            mode: 'error',
+            shownSteps: [
+                { text: 'MO = MK: ' + aP + ' \u2212 ' + (2 * bP) + 'Q = ' + round1(2 * aTK) + 'Q + ' + bTK + ' \u2192 Q = ' + Qs, isError: false },
+                { text: 'MO = 0: ' + aP + ' \u2212 ' + (2 * bP) + 'Q = 0 \u2192 Q = ' + wrongQs, isError: true },
+                { text: 'MO = ' + aP + ' \u2212 ' + (2 * bP) + 'Q en MK = ' + round1(2 * aTK) + 'Q + ' + bTK, isError: false }
+            ],
+            hint: 'De monopolist maximaliseert winst bij MO = MK, niet bij MO = 0.',
+            expl: 'MO = 0 geeft de opbrengstmaximaliserende hoeveelheid, niet de winstmaximaliserende.'
+        };
+        var errE7Items = errorE7.shownSteps.slice();
+        var errE7Item = errE7Items.splice(1, 1)[0];
+        errE7Items.splice(ri(0, 2), 0, errE7Item);
+        errorE7.shownSteps = errE7Items;
         return {
             context: 'Monopolist: P = ' + aP + ' \u2212 ' + bP + 'Q.\nTK = ' + aTK + 'Q\u00B2 + ' + bTK + 'Q + ' + cTK + '.\nBepaal de maximale winst.',
             steps: [
+                errorE7,
                 { q: 'Bepaal de winstmaximaliserende hoeveelheid Q*.', a: Qs, hint: 'Stel MO = MK. Bepaal eerst MO en MK uit de gegeven functies.', expl: 'MO = ' + aP + ' \u2212 ' + (2 * bP) + 'Q, MK = ' + round1(2 * aTK) + 'Q + ' + bTK + '. MO = MK \u2192 Q* = ' + Qs },
                 { q: 'Bereken de prijs die de monopolist vraagt.', a: Pstar, hint: 'Vul Q* in de vraaglijn (P = \u2026).', expl: 'P* = ' + aP + ' \u2212 ' + bP + '\u00D7' + Qs + ' = ' + Pstar },
                 { q: 'Bereken de totale opbrengst.', a: TO, hint: 'TO = P* \u00D7 Q*.', expl: 'TO = ' + Pstar + ' \u00D7 ' + Qs + ' = ' + TO },
@@ -951,9 +1156,23 @@
         var winst1 = round1((P1 - mk) * Q1);
         var winst2 = round1((P2 - mk) * Q2);
         var totWinst = round1(winst1 + winst2);
+        var orderE8 = {
+            q: 'Zet de stappen voor prijsdiscriminatie in de juiste volgorde.',
+            mode: 'order',
+            blocks: [
+                'Stel MO = MK op voor elke markt apart',
+                'Bereken Q* per markt',
+                'Bepaal de prijs per markt via de vraaglijn',
+                'Bereken de winst per markt en tel op'
+            ],
+            correctOrder: [0, 1, 2, 3],
+            hint: 'Bij prijsdiscriminatie optimaliseer je elke markt apart.',
+            expl: 'Per markt: MO = MK \u2192 Q* \u2192 P* \u2192 winst. Totaal = som van deelmarkten.'
+        };
         return {
             context: 'Prijsdiscriminatie. MK = ' + mk + ' (constant).\nMarkt 1: P\u2081 = ' + a1 + ' \u2212 ' + b1 + 'Q\u2081\nMarkt 2: P\u2082 = ' + a2 + ' \u2212 ' + b2 + 'Q\u2082',
             steps: [
+                orderE8,
                 { q: 'Bepaal de optimale hoeveelheid op markt 1.', a: Q1, hint: 'Stel MO\u2081 = MK en los op. MO\u2081 is de afgeleide van TO\u2081.', expl: 'MO\u2081 = ' + a1 + ' \u2212 ' + (2 * b1) + 'Q\u2081 = ' + mk + ' \u2192 Q\u2081 = ' + Q1 },
                 { q: 'Welke prijs vraagt de monopolist op markt 1?', a: P1, hint: 'Vul Q\u2081 in de vraagfunctie van markt 1.', expl: 'P\u2081 = ' + a1 + ' \u2212 ' + b1 + '\u00D7' + Q1 + ' = ' + P1 },
                 { q: 'Bepaal de optimale hoeveelheid op markt 2.', a: Q2, hint: 'Stel MO\u2082 = MK en los op.', expl: 'MO\u2082 = ' + a2 + ' \u2212 ' + (2 * b2) + 'Q\u2082 = ' + mk + ' \u2192 Q\u2082 = ' + Q2 },
@@ -982,7 +1201,14 @@
                 { q: 'Bereken MK bij Q* = ' + Qstar + '.', a: mkStar, hint: 'MK = ' + round1(2 * a) + 'Q + ' + bk + '. Vul Q* in.', expl: 'MK = ' + round1(2 * a) + '\u00D7' + Qstar + ' + ' + bk + ' = ' + mkStar },
                 { q: 'Wat is de lange-termijn evenwichtsprijs?', a: mkStar, hint: 'Op lange termijn bij VM geldt: P = MK = GTK.', expl: 'P = MK(Q*) = ' + mkStar },
                 { q: 'Bereken GTK bij Q* (ter verificatie).', a: gtkStar, hint: 'GTK = ' + a + 'Q + ' + bk + ' + ' + c + '/Q. Vul Q* = ' + Qstar + ' in.', expl: 'GTK = ' + a + '\u00D7' + Qstar + ' + ' + bk + ' + ' + c + '/' + Qstar + ' = ' + gtkStar + ' \u2248 P \u2713' },
-                { q: 'Wat is de winst per stuk op lange termijn?', a: 0, hint: 'Bij lange-termijnevenwicht bij VM geldt P = GTK.', expl: 'Winst/stuk = P \u2212 GTK = ' + mkStar + ' \u2212 ' + gtkStar + ' \u2248 0 (afrondingsverschil)' }
+                { q: 'Wat is de winst per stuk op lange termijn?', a: 0, hint: 'Bij lange-termijnevenwicht bij VM geldt P = GTK.', expl: 'Winst/stuk = P \u2212 GTK = ' + mkStar + ' \u2212 ' + gtkStar + ' \u2248 0 (afrondingsverschil)' },
+                mcStep(
+                    'De economische winst is nul. Waarom blijven bedrijven toch produceren?',
+                    'Ze maken normale winst (ondernemersbeloning zit in de kosten)',
+                    ['Ze hopen dat de prijs stijgt', 'Ze zijn verplicht om door te gaan', 'Ze maken eigenlijk wel winst maar die is verborgen'],
+                    'Denk aan het verschil tussen economische winst en boekhoudkundige winst.',
+                    'Bij economische winst = 0 is de ondernemersbeloning al verrekend in TK. Het bedrijf maakt "normale winst".'
+                )
             ]
         };
     };
