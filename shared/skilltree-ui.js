@@ -9,6 +9,7 @@
     // ── Dependencies ──────────────────────────────────────────
     var elements = window.SKILL_TREE_ELEMENTS;
     var data = window.SKILL_TREE_DATA;
+    var explanations = window.SKILL_TREE_EXPLANATIONS || {};
     var Engine = window.SkillTreeEngine;
 
     if (!elements || !Engine || !data) {
@@ -16,7 +17,7 @@
         return;
     }
 
-    var engine = new Engine({ elements: elements, data: data });
+    var engine = new Engine({ elements: elements, data: data, explanations: explanations });
     var root = document.getElementById('skilltree-app');
 
     // ── SVG Icons ─────────────────────────────────────────────
@@ -26,6 +27,7 @@
     function iconRefresh()   { return '<span class="st-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg></span>'; }
     function iconTree()      { return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M12 9l-5 5"/><path d="M12 9l5 5"/><circle cx="12" cy="3" r="1.5"/><circle cx="7" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/><path d="M7 15.5v3"/><path d="M17 15.5v3"/><circle cx="7" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>'; }
     function iconInfo()      { return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'; }
+    function iconBook()      { return '<span class="st-icon"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>'; }
 
     // ── State ─────────────────────────────────────────────────
     var view = 'tree'; // 'tree' | 'exercise'
@@ -123,14 +125,16 @@
         var layerColors = engine.getLayerColors();
         var visible = engine.getVisibleSkills();
 
+        var viewMode = engine.getViewMode();
         var html = '<div class="st-legend">';
         html += '<span>' + iconInfo() + ' Info</span>';
         html += '<span>' + iconTree() + ' Afhankelijkheden</span>';
+        html += '<button class="st-view-toggle" id="st-view-toggle">' + (viewMode === 'module' ? '\u00A7 Paragraaf' : '\u25A6 Module') + '</button>';
         html += '</div>';
 
         html += '<div class="st-header">';
         html += '<h1>Wiskundevaardigheden</h1>';
-        html += '<p class="st-subtitle">Verdien sterren en bouw je vaardigheden op</p>';
+        html += '<p class="st-subtitle">' + (viewMode === 'module' ? 'Alle vaardigheden van de module' : 'Vaardigheden voor deze paragraaf') + '</p>';
         html += '<div class="st-progress-summary">';
         html += progress.mastered + ' / ' + progress.total + ' vaardigheden \u00B7 ';
         html += progress.totalStars + ' / ' + progress.maxStars + ' sterren';
@@ -218,6 +222,15 @@
                 e.stopPropagation();
                 var sid = this.getAttribute('data-info-skill');
                 openInfoPopup(sid);
+            });
+        }
+
+        var viewToggle = document.getElementById('st-view-toggle');
+        if (viewToggle) {
+            viewToggle.addEventListener('click', function () {
+                var current = engine.getViewMode();
+                engine.setViewMode(current === 'module' ? 'paragraph' : 'module');
+                render();
             });
         }
 
@@ -325,10 +338,15 @@
             html += '<p class="st-wrong-msg">\u2717 Niet juist. Probeer het opnieuw' + (!showHint ? ' of gebruik een hint.' : '.') + '</p>';
         }
 
-        // Hint
+        // Hint + Uitleg buttons
+        html += '<div class="st-help-row">';
         if (feedback !== 'correct' && !showHint) {
             html += '<button class="st-hint-btn" id="st-hint">' + iconLightbulb() + ' Hint</button>';
         }
+        if (engine.hasExplanation(state.skillId)) {
+            html += '<button class="st-uitleg-btn" id="st-uitleg">' + iconBook() + ' Uitleg</button>';
+        }
+        html += '</div>';
         if (showHint) {
             html += '<div class="st-hint-box">\uD83D\uDCA1 ' + esc(state.currentStep.hint) + '</div>';
         }
@@ -392,6 +410,14 @@
                 showHint = true;
                 render();
                 focusInput();
+            });
+        }
+
+        var uitlegBtn = document.getElementById('st-uitleg');
+        if (uitlegBtn) {
+            uitlegBtn.addEventListener('click', function () {
+                var state = engine.getExerciseState();
+                if (state) openExplanationOverlay(state.skillId);
             });
         }
     }
@@ -839,6 +865,93 @@
 
     function infoEscHandler(e) {
         if (e.key === 'Escape') closeInfoPopup();
+    }
+
+    // ── Explanation overlay ───────────────────────────────────
+
+    function openExplanationOverlay(skillId) {
+        closeExplanationOverlay();
+        var expl = engine.getExplanation(skillId);
+        if (!expl) return;
+        var cs = getCardDisplayState(skillId);
+        var skillName = cs ? cs.name : skillId;
+
+        var html = '<div class="st-expl-overlay" id="st-expl-overlay">';
+        html += '<div class="st-expl-container">';
+
+        // Header
+        html += '<div class="st-expl-header">';
+        html += '<button class="st-expl-back" id="st-expl-close">' + iconArrowLeft() + '</button>';
+        html += '<h2>' + esc(expl.title || skillName) + '</h2>';
+        html += '</div>';
+
+        // Sections
+        for (var i = 0; i < expl.sections.length; i++) {
+            var sec = expl.sections[i];
+            switch (sec.type) {
+                case 'uitleg':
+                    html += '<div class="st-expl-section st-expl-uitleg">';
+                    html += '<div class="st-expl-section-label">Uitleg</div>';
+                    html += '<div class="st-expl-text">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+                case 'formule':
+                    html += '<div class="st-expl-section st-expl-formule">';
+                    html += '<div class="st-expl-section-label">Formule</div>';
+                    html += '<div class="st-expl-formula-box">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+                case 'voorbeeld':
+                    html += '<div class="st-expl-section st-expl-voorbeeld">';
+                    html += '<div class="st-expl-section-label">Voorbeeld' + (sec.title ? ': ' + esc(sec.title) : '') + '</div>';
+                    html += '<div class="st-expl-text">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+                case 'tip':
+                    html += '<div class="st-expl-section st-expl-tip">';
+                    html += '<div class="st-expl-section-label">\uD83D\uDCA1 Tip</div>';
+                    html += '<div class="st-expl-text">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+                case 'valkuil':
+                    html += '<div class="st-expl-section st-expl-valkuil">';
+                    html += '<div class="st-expl-section-label">\u26A0 Valkuil</div>';
+                    html += '<div class="st-expl-text">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+                case 'check':
+                    html += '<div class="st-expl-section st-expl-check">';
+                    html += '<div class="st-expl-section-label">\u2714 Zelfcheck</div>';
+                    html += '<div class="st-expl-text">' + formatExplText(sec.content) + '</div>';
+                    html += '</div>';
+                    break;
+            }
+        }
+
+        html += '</div></div>';
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        document.getElementById('st-expl-close').addEventListener('click', closeExplanationOverlay);
+        document.getElementById('st-expl-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeExplanationOverlay();
+        });
+        document.addEventListener('keydown', explEscHandler);
+    }
+
+    function closeExplanationOverlay() {
+        var el = document.getElementById('st-expl-overlay');
+        if (el) el.remove();
+        document.removeEventListener('keydown', explEscHandler);
+    }
+
+    function explEscHandler(e) {
+        if (e.key === 'Escape') closeExplanationOverlay();
+    }
+
+    function formatExplText(text) {
+        // Convert newlines to <br> and preserve plain text
+        return esc(text).replace(/\n/g, '<br>');
     }
 
     // ── Focus helper ──────────────────────────────────────────

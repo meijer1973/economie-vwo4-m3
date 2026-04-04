@@ -36,6 +36,7 @@
 
         this._elements = config.elements;
         this._data = config.data || { parNr: 'unknown', activeSkills: null };
+        this._explanations = config.explanations || {};
         this._storage = config.storage || (typeof localStorage !== 'undefined' ? localStorage : null);
 
         // Build skill lookup
@@ -90,6 +91,20 @@
 
     SkillTreeEngine.prototype.getVisibleSkills = function () {
         return this._visibleSkills;
+    };
+
+    SkillTreeEngine.prototype.setViewMode = function (mode) {
+        // 'paragraph' = filtered by activeSkills, 'module' = all skills
+        if (mode === 'module') {
+            this._visibleSkills = this._elements.SKILLS.slice();
+        } else {
+            this._visibleSkills = this._computeVisibleSkills();
+        }
+        this._viewMode = mode;
+    };
+
+    SkillTreeEngine.prototype.getViewMode = function () {
+        return this._viewMode || 'paragraph';
     };
 
     SkillTreeEngine.prototype.getAllSkills = function () {
@@ -304,6 +319,14 @@
     SkillTreeEngine.prototype.getSkillDescription = function (skillId) {
         var s = this._skillMap[skillId];
         return s ? (s.desc || '') : '';
+    };
+
+    SkillTreeEngine.prototype.getExplanation = function (skillId) {
+        return this._explanations[skillId] || null;
+    };
+
+    SkillTreeEngine.prototype.hasExplanation = function (skillId) {
+        return !!this._explanations[skillId];
     };
 
     SkillTreeEngine.prototype.generatePreview = function (skillId) {
