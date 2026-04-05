@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.3.1",
     "parName": "De rol van de overheid"
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Kamer: schaf meerprijs wegwerpverpakking eten weer af",
     "body": "De Tweede Kamer heeft besloten de verplichte meerprijs op plastic wegwerpverpakkingen voor eten en drinken per 1 januari 2026 af te schaffen. Volgens de Kamer bevordert de toeslag 'in de praktijk geen duurzaamheid' en heeft de maatregel het zwerfafval op straat niet verminderd. Het kabinet wilde de meerprijs van 25 cent verplicht maken, maar een meerderheid stemde hiertegen.",

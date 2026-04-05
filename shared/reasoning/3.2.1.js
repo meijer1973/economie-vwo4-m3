@@ -20,12 +20,4 @@ var REASONING_CSV = `id;structure_type;structure_label;problem_text;step_1_label
 var REASONING_META = {
   "parNr": "3.2.1",
   "parName": "Marktevenwicht",
-  "domain": "math-economics",
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  }
-};
+  "domain": "math-economics"};

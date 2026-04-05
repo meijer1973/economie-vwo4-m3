@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.7",
     "parName": "Toepassen"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Heineken daagt Jumbo voor de rechter omdat supermarktketen minder bier inkoopt",
     "body": "Heineken heeft supermarktketen Jumbo voor de rechter gedaagd omdat Jumbo minder Heineken-bier inkoopt. Volgens Heineken leidt dit tot lege schappen. Jumbo stelt dat Heinekens inkoopprijzen te hoog zijn en doet mee aan het internationale inkoopverbond Everest, samen met het Duitse Edeka en het Franse Auchan. Ondertussen groeit het speciaalbier: honderden kleine craft brouwerijen bieden gedifferentieerde bieren aan met hogere marges dan regulier pils.",

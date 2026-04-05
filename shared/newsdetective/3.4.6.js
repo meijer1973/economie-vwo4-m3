@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.6",
     "parName": "Toepassen"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Nederland past exportregels aan voor ASML, nu in lijn met VS",
     "body": "Nederland scherpt de exportregels voor ASML-chipmachines naar China verder aan, in lijn met Amerikaanse beperkingen. Meer machines hebben voortaan een exportvergunning nodig. De EU en VS vrezen dat China geavanceerde chips gebruikt voor economische en militaire doeleinden. ASML, dat afhankelijk is van toeleveranciers uit tientallen landen, ziet China als belangrijke afzetmarkt en verwacht omzetdaling.",

@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.2",
     "parName": "Inter-industri\u00eble handel"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Waarde Nederlandse landbouwexport in 2024 met bijna 5 procent gestegen",
     "body": "De waarde van de Nederlandse landbouwexport is in 2024 met bijna 5 procent gestegen. Zuivel en eieren blijven het belangrijkste exportproduct (12,3 miljard euro), gevolgd door sierteelt en vlees. Duitsland is met 25 procent van de totale landbouwexport de grootste afnemer. Tegelijk importeert Nederland veel landbouwproducten die hier niet groeien, zoals olijfolie, citrusvruchten en wijn.",

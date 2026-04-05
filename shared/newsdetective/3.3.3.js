@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.3.3",
     "parName": "Collectieve goederen"
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Helft van de dijken voldoet nog niet aan norm voor 2050",
     "body": "Meer dan de helft van de primaire waterkeringen in Nederland voldoet nog niet aan de veiligheidsnormen voor 2050. Van de circa 3.500 kilometer dijk die beoordeeld moet worden, heeft 1.500 kilometer versterking nodig, terwijl pas 174 kilometer is afgerond. De overheid heeft 12,4 miljard euro gereserveerd voor dit enorme versterkingsprogramma.",

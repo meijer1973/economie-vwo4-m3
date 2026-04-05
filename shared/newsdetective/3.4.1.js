@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.1",
     "parName": "Internationale handel"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Meer goederenhandel in eerste halfjaar 2025",
     "body": "Het CBS meldt dat de Nederlandse goederenexport in het eerste halfjaar van 2025 is gegroeid. De export naar Duitsland steeg fors, vooral door meer uitvoer van voedingsmiddelen en fabricaten van Nederlandse makelij. Ook de handel met de VS groeide: de exportwaarde was 10,5 procent hoger dan een jaar eerder.",

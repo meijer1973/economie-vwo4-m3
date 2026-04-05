@@ -12,13 +12,6 @@ var QUIZ_DATA = {
       "Berekeningen van surplus en tariefeffecten"
     ]
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "handelsbeleid": {
       "name": "Handelsbeleid",

@@ -11,13 +11,6 @@ var QUIZ_DATA = {
       "Algebraïsche manipulaties en formulerings-toepassing"
     ]
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "marktvormen_herkennen": {
       "name": "Marktvormen Herkennen",

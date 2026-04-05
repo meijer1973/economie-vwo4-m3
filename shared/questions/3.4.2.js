@@ -11,13 +11,6 @@ var QUIZ_DATA = {
       "Berekeningen met comparatief voordeel"
     ]
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "comparatief_voordeel": {
       "name": "Comparatief Voordeel",

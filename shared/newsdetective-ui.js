@@ -13,7 +13,8 @@
     if (!data) { console.error('newsdetective-ui.js: NEWS_DETECTIVE_DATA not found'); return; }
 
     // ── Set CSS custom properties from domain colors ────────────────
-    var dc = data.domainColors || {};
+    var _par = (data.meta && data.meta.parNr || '').substring(0, 3);
+    var dc = data.domainColors || (window.DOMAIN_COLORS && window.DOMAIN_COLORS[_par]) || {};
     var root = document.documentElement;
     if (dc.primary)   root.style.setProperty('--nd-domain', dc.primary);
     if (dc.primaryDk) root.style.setProperty('--nd-domain-dk', dc.primaryDk);

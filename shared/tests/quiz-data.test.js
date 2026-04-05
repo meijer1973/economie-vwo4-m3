@@ -37,12 +37,6 @@ describe.each(allQuizzes)('$parNr ($file)', ({ parNr, data }) => {
         expect(data.meta.parName.length).toBeGreaterThan(0);
     });
 
-    test('has domainColors', () => {
-        expect(data.domainColors).toBeDefined();
-        expect(data.domainColors.primary).toMatch(/^#/);
-        expect(data.domainColors.navy).toMatch(/^#/);
-    });
-
     test('has categories with required structure', () => {
         expect(data.categories).toBeDefined();
         const catKeys = Object.keys(data.categories);

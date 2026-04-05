@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.2",
     "parName": "Volkomen concurrentie"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Melkprijs historisch hoog, maar melkveehouders 'lopen niet binnen'",
     "body": "De melkprijs die boeren ontvangen is gestegen tot een recordhoogte van ruim 50 cent per liter, aangedreven door de wereldwijde vraag en de gevolgen van de oorlog in Oekra\u00efne. Toch profiteren individuele boeren nauwelijks: zij zijn prijsnemers op de wereldmarkt en zien tegelijkertijd hun kosten voor veevoer en energie fors stijgen.",

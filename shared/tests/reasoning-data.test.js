@@ -68,8 +68,6 @@ describe.each(allData)('$parNr ($file)', ({ parNr, csv, meta }) => {
         expect(typeof meta.parName).toBe('string');
         expect(meta.parName.length).toBeGreaterThan(0);
         expect(['arithmetic', 'economics', 'math-economics']).toContain(meta.domain);
-        expect(meta.domainColors).toBeDefined();
-        expect(meta.domainColors.primary).toMatch(/^#/);
     });
 
     test('has all required CSV columns', () => {

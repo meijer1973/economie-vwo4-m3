@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.5",
     "parName": "Monopolistische concurrentie"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Aantal koffiebars groeit explosief: 'Dit is een vechtmarkt geworden'",
     "body": "Het aantal koffiebars en lunchrooms in Nederland groeit hard: het aantal lunchrooms steeg met 16 procent en koffiebars met 13 procent. Maar de markt raakt verzadigd. Eigenaar Arjan Pen van specialty koffiezaak Josephine Coffee in Arnhem: \u201CTien jaar geleden had je twee koffiezaken in de straat, nu zijn het er zes. Dit is een vechtmarkt geworden.\u201D Om te overleven moet je je onderscheiden: eigen bonenmelanges, latte art en persoonlijke uitleg over de herkomst van de koffie.",

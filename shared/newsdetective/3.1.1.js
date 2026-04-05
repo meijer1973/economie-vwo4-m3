@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.1.1",
     "parName": "Markt en marktstructuur"
   },
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Topman Albert Heijn: 'Prijsverlagingen waar mogelijk'",
     "body": "Marit van Egmond, topman van het moederbedrijf van Albert Heijn, zegt dat klanten het gevoel hebben bij AH duurder uit te zijn dan de kassabon aangeeft. De supermarktketen verlaagt daarom waar mogelijk de prijzen om te concurreren met prijsvechters Lidl en Aldi, die in de afgelopen jaren flink marktaandeel wonnen.",

@@ -12,13 +12,6 @@ var QUIZ_DATA = {
       "Berekeningen met marktgegevens"
     ]
   },
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "marktbegrippen": {
       "name": "Marktbegrippen",

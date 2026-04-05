@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.5",
     "parName": "Internationaal handelsbeleid"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "EU-landen stemmen in met heffing op Chinese elektrische auto's",
     "body": "De EU-lidstaten hebben ingestemd met importheffingen op elektrische auto's uit China, variërend van 7,8 tot 35,3 procent per fabrikant. Tien landen stemden voor, waaronder Nederland, vijf landen — waaronder Duitsland — stemden tegen. De Europese Commissie concludeerde dat Chinese autofabrikanten oneerlijke staatssteun ontvangen waardoor zij hun auto's onder de kostprijs in Europa kunnen aanbieden.",

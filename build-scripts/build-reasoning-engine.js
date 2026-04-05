@@ -130,6 +130,7 @@ function generateShell(parNr, parName) {
 
     </div><!-- /r-content-layout -->
 </div>
+<script src="${sharedPath}/theme.js"></script>
 <script src="${sharedPath}/reasoning/${parNr}.js"></script>
 <script src="${sharedPath}/reasoning/meta-categories.js"></script>
 <script src="${sharedPath}/reasoning-engine.js"></script>

@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.3",
     "parName": "Intra-industri\u00eble handel"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Duitse auto-industrie hapert, en dat is ook in Nederland te merken",
     "body": "Ongeveer 300 Nederlandse bedrijven met zo'n 30.000 werknemers produceren voor ruim 10 miljard euro aan auto-onderdelen, waarvan 43 procent naar Duitsland gaat. Tegelijk importeert Nederland auto's en andere onderdelen uit Duitsland. Deze wederzijdse handel in auto-onderdelen en auto's binnen dezelfde industrie staat onder druk door de crisis bij Duitse autofabrikanten als Volkswagen en Mercedes.",

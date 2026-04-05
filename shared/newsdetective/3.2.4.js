@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.4",
     "parName": "Oligopolie"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "ACM waarschuwt: prijs en kwaliteit onder druk door minder concurrentie in telecom",
     "body": "De Autoriteit Consument & Markt (ACM) waarschuwt dat de concurrentie op de Nederlandse telecommarkt afneemt. Na de fusie van T-Mobile en Tele2 zijn er nog maar drie providers met een eigen netwerk: KPN, Odido (voorheen T-Mobile) en VodafoneZiggo. Volgens de ACM leidt minder concurrentie tot hogere prijzen en minder innovatie. Tussen 2008 en 2015, toen Nederland ook drie providers had, behoorden de mobiele tarieven tot de hoogste van Europa.",

@@ -11,13 +11,6 @@ var QUIZ_DATA = {
       "Overheidsfinanciering en betalingsbereidheid"
     ]
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "collectieve_goederen": {
       "name": "Collectieve Goederen",

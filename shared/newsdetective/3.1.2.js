@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.1.2",
     "parName": "Marktvormen"
   },
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Grote webshops eisen minder bezorgkosten, dus 'tegenvallende winst' voor PostNL",
     "body": "PostNL ziet de winst onder druk staan doordat grote webshops als Bol en Amazon lagere bezorgtarieven afdwingen. De pakketmarkt groeit wel, maar de marges krimpen. DHL en DPD winnen marktaandeel door scherpe prijzen aan te bieden aan grote verzenders.",

@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.3",
     "parName": "Monopolie"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Spoorafspraken definitief: tot 2033 alleen NS-treinen op belangrijkste lijnen",
     "body": "NS heeft tot 2033 het alleenrecht gekregen om treinen te laten rijden op het hoofdrailnet \u2014 zonder openbare aanbesteding. Concurrenten als Arriva, Keolis en Qbuzz hebben geen kans gekregen om mee te dingen. De Europese Commissie heeft Nederland voor het Europees Hof gedaagd omdat de gunning in strijd zou zijn met Europese mededingingsregels. NS bedient zo\u2019n 90% van alle treinreizigers in Nederland.",

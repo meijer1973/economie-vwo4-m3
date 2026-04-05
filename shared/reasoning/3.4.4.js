@@ -20,12 +20,4 @@ var REASONING_CSV = `id;structure_type;structure_label;problem_text;step_1_label
 var REASONING_META = {
   "parNr": "3.4.4",
   "parName": "Internationale productieketens",
-  "domain": "economics",
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  }
-};
+  "domain": "economics"};

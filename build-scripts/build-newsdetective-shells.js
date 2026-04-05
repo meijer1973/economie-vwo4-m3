@@ -62,6 +62,7 @@ function generateShell(parNr, parName) {
 <body>
 <div class="nd-app" id="nd-app"></div>
 
+<script src="${sharedPath}/theme.js"></script>
 <script src="${sharedPath}/newsdetective/${parNr}.js"></script>
 <script src="${sharedPath}/newsdetective-engine.js"></script>
 <script src="${sharedPath}/newsdetective-ui.js"></script>

@@ -143,13 +143,13 @@ Skills zijn beschikbaar als project commands in `.claude/commands/`. Ze worden *
 
 Je kunt skills ook expliciet aanroepen: `/project:econ-pptx-templates`, `/project:economic-graph`, etc.
 
-**Belangrijk:** alle skills delen hetzelfde kleurenpalet (blauw/amber/groen domein-systeem) en dezelfde typografie (Arial + Consolas). De bronbestanden staan ook nog in `skills/` als referentie.
+**Belangrijk:** alle skills delen hetzelfde kleurenpalet (blauw/amber/groen domein-systeem) en dezelfde typografie (Arial + Consolas).
 
 ---
 
 ## Build Scripts — Herbruikbare bouwscripts
 
-De map `build-scripts/` bevat kant-en-klare Node.js-scripts voor het genereren van lesmateriaal. Elk script implementeert een template uit de `skills/`-map en kan worden aangepast voor elke nieuwe paragraaf door alleen de inhoudssectie te wijzigen.
+De map `build-scripts/` bevat kant-en-klare Node.js-scripts voor het genereren van lesmateriaal. Elk script implementeert een template uit de skills en kan worden aangepast voor elke nieuwe paragraaf door alleen de inhoudssectie te wijzigen.
 
 ### Beschikbare scripts
 
@@ -428,6 +428,8 @@ Each reasoning game HTML file lives in `3. Oefenen/` and is named:
 |--------|---------|
 | `build-scripts/build-reasoning-engine.js` | Generate HTML shells for all paragraphs with data files |
 | `build-scripts/build-reasoning-questions.js` | Validate CSV + generate JS data file from CSV |
+
+**Belangrijk:** De `.csv`-bestanden in `shared/reasoning/` zijn de bronbestanden. De `.js`-bestanden worden gegenereerd door `build-reasoning-questions.js`. Verwijder de CSV's nooit — zonder hen kan de build pipeline niet draaien.
 
 ### Adding a new reasoning game paragraph:
 1. Author questions in a spreadsheet → export as semicolon-delimited CSV

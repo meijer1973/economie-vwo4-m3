@@ -20,12 +20,4 @@ var REASONING_CSV = `id;structure_type;structure_label;problem_text;step_1_label
 var REASONING_META = {
   "parNr": "3.1.3",
   "parName": "Toepassen",
-  "domain": "economics",
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  }
-};
+  "domain": "economics"};

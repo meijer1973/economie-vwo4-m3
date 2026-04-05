@@ -11,13 +11,6 @@ var QUIZ_DATA = {
       "Geïntegreerde analyses van overheidsbeleid"
     ]
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "overheid_toepassen": {
       "name": "Overheid Toepassen",

@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.6",
     "parName": "Marktvormen en hun economische doelmatigheid"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Farmaceut Leadiant krijgt miljoenenboete van ACM voor buitensporige medicijnprijs",
     "body": "De Autoriteit Consument & Markt (ACM) heeft farmaceut Leadiant een boete van 19,6 miljoen euro opgelegd wegens misbruik van marktmacht. Leadiant is de enige producent van het medicijn CDCA, dat onmisbaar is voor circa 60 pati\u00ebnten met de zeldzame stofwisselingsziekte CTX. De prijs steeg van \u20ac46 per 100 capsules in 2008 naar \u20ac14.000 per verpakking in 2017 \u2014 dat is \u20ac153.000 per pati\u00ebnt per jaar. Pati\u00ebnten en verzekeraars hadden geen alternatief.",

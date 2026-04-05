@@ -125,6 +125,7 @@ ${topicsHtml}
         </div>
     </div>
 </div>
+<script src="${sharedPath}/theme.js"></script>
 <script src="${sharedPath}/questions/${parNr}.js"></script>
 <script src="${sharedPath}/quiz-engine.js"></script>
 <script src="${sharedPath}/quiz-ui.js"></script>

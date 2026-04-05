@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.1.3",
     "parName": "Toepassen"
   },
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Just Eat Takeaway van Thuisbezorgd.nl opgekocht door techonderneming Prosus",
     "body": "Techbedrijf Prosus koopt Just Eat Takeaway, het moederbedrijf van Thuisbezorgd.nl, voor 4,1 miljard euro. Door de overname verdwijnt een van de grootste Nederlandse beursgenoteerde bedrijven van de beurs. De maaltijdbezorgmarkt wordt daarmee verder geconcentreerd in handen van grote internationale spelers.",

@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.2.1",
     "parName": "Marktevenwicht"
   },
-  "domainColors": {
-    "primary": "#1A5276",
-    "primaryDk": "#154360",
-    "primaryLt": "#EBF5FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Huizenprijzen stijgen nog steeds, wel ietsje langzamer",
     "body": "De huizenprijzen in Nederland stegen in het laatste kwartaal van 2024 met 11,5% op jaarbasis, maar de stijging vlakt iets af vergeleken met eerder in 2024. Het aanbod nam toe doordat beleggers huurwoningen verkochten, maar dit extra aanbod werd snel opgeslokt door de hoge vraag. Er werden in 2024 bijna 145.000 woningen verkocht.",

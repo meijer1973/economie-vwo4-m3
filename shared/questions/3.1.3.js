@@ -12,13 +12,6 @@ var QUIZ_DATA = {
       "Synthese van concepten uit 3.1.1 en 3.1.2"
     ]
   },
-  "domainColors": {
-    "primary": "#17A2B8",
-    "primaryDk": "#117A8B",
-    "primaryLt": "#E8F8FB",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "categories": {
     "marktvormen_herkennen": {
       "name": "Marktvormen herkennen",

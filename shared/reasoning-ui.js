@@ -13,7 +13,8 @@
     if (!csv || !meta) { console.error('reasoning-ui.js: REASONING_CSV or REASONING_META not found'); return; }
 
     // ── Set CSS custom properties ───────────────────────────────────
-    var dc = meta.domainColors || {};
+    var _par = (meta.parNr || '').substring(0, 3);
+    var dc = meta.domainColors || (window.DOMAIN_COLORS && window.DOMAIN_COLORS[_par]) || {};
     var root = document.documentElement;
     if (dc.primary)   root.style.setProperty('--r-primary', dc.primary);
     if (dc.primaryDk) root.style.setProperty('--r-primary-dk', dc.primaryDk);

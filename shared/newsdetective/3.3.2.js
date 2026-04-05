@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.3.2",
     "parName": "Overheidsbeleid"
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Suikertaks gaat gemiddeld 50 euro kosten, maar meer als je veel snoept",
     "body": "Het kabinet wil vanaf 2030 een suikertaks invoeren op voedingsmiddelen en dranken met 6 procent suiker of meer. De belasting moet zo'n 900 miljoen euro per jaar opleveren, gemiddeld 50 euro per Nederlander. Het doel is ongezond eetgedrag te ontmoedigen door suikerrijke producten duurder te maken.",

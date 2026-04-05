@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.3.4",
     "parName": "Toepassen"
   },
-  "domainColors": {
-    "primary": "#E67E22",
-    "primaryDk": "#BA6A1C",
-    "primaryLt": "#FEF5E7",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Amsterdam scherpt regels voor vakantieverhuur in deel van de stad verder aan",
     "body": "De gemeente Amsterdam halveert het maximumaantal nachten dat bewoners hun woning aan toeristen mogen verhuren van 30 naar 15 per jaar, ingaand april 2026. De maatregel geldt voor het centrum en de Pijp, waar bewoners de meeste overlast ervaren. Bij aanhoudende problemen kan de gemeente tijdelijk een volledig verhuurverbod instellen.",

@@ -38,14 +38,6 @@ describe.each(allData)('$parNr ($file)', ({ parNr, data }) => {
         expect(data.meta.parName.length).toBeGreaterThan(0);
     });
 
-    // ── Domain colors ───────────────────────────────────────────────
-    test('has domainColors with 5 color fields', () => {
-        expect(data.domainColors).toBeDefined();
-        for (const key of ['primary', 'primaryDk', 'primaryLt', 'accent', 'navy']) {
-            expect(data.domainColors[key]).toMatch(/^#/);
-        }
-    });
-
     // ── Article ─────────────────────────────────────────────────────
     test('has article with required fields', () => {
         expect(data.article).toBeDefined();

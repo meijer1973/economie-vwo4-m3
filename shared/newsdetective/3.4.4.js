@@ -3,13 +3,6 @@ var NEWS_DETECTIVE_DATA = {
     "parNr": "3.4.4",
     "parName": "Internationale productieketens"
   },
-  "domainColors": {
-    "primary": "#1E8449",
-    "primaryDk": "#186A3B",
-    "primaryLt": "#E8F8F0",
-    "accent": "#F8C471",
-    "navy": "#1E2761"
-  },
   "article": {
     "headline": "Dip in chipmarkt maakt toeleveranciers ASML nerveus",
     "body": "Een dip in de chipmarkt zorgt voor nervositeit bij de honderden toeleveranciers van ASML. Het bedrijf assembleert chipmachines in Veldhoven met onderdelen van gespecialiseerde leveranciers uit tientallen landen — lenzen uit Duitsland (Zeiss), laserbronnen uit de VS (Cymer) en precisie-elektronica uit Japan. Kleinere toeleveranciers vrezen dat bestellingen teruglopen nu de hoofdleveranciers hun voorraden al hebben opgebouwd.",

@@ -23,14 +23,6 @@ const path = require('path');
 const MODULE_ROOT = path.resolve(__dirname, '..');
 const OUTPUT_DIR = path.join(MODULE_ROOT, 'shared', 'reasoning');
 
-// Domain colors per chapter
-const DOMAIN_COLORS = {
-    '3.1': { primary: '#17A2B8', primaryDk: '#117A8B', primaryLt: '#E8F8FB', accent: '#F8C471', navy: '#1E2761' },
-    '3.2': { primary: '#1A5276', primaryDk: '#154360', primaryLt: '#EBF5FB', accent: '#F8C471', navy: '#1E2761' },
-    '3.3': { primary: '#E67E22', primaryDk: '#BA6A1C', primaryLt: '#FEF5E7', accent: '#F8C471', navy: '#1E2761' },
-    '3.4': { primary: '#1E8449', primaryDk: '#186A3B', primaryLt: '#E8F8F0', accent: '#F8C471', navy: '#1E2761' }
-};
-
 // Paragraph names (discover from directory)
 function findParName(parNr) {
     function walk(dir) {
@@ -353,9 +345,6 @@ function main() {
 
     // Look up paragraph name
     const parName = findParName(parNr);
-    const chapterPrefix = parNr.split('.').slice(0, 2).join('.');
-    const domainColors = DOMAIN_COLORS[chapterPrefix] || DOMAIN_COLORS['3.1'];
-
     // Write output file
     if (!fs.existsSync(OUTPUT_DIR)) {
         fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -375,8 +364,7 @@ var REASONING_CSV = \`${escapedCSV}\`;
 var REASONING_META = ${JSON.stringify({
         parNr: parNr,
         parName: parName,
-        domain: domain,
-        domainColors: domainColors
+        domain: domain
     }, null, 2)};
 `;
 
