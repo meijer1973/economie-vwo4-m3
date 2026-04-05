@@ -529,3 +529,56 @@ separate animation screen).
 2. Run `npm test` — generator stress tests will automatically include it
 3. Add the element to relevant paragraph data files
 4. Run `npm test` again to validate data files
+
+---
+
+## Nieuws-detective Architecture
+
+The 20 nieuws-detective HTML files use a shared engine architecture:
+
+```
+shared/
+  newsdetective-engine.js       ← Pure game logic (UMD, testable in Node.js + browser)
+  newsdetective-ui.js           ← DOM binding layer (browser only)
+  newsdetective.css             ← Shared styles with CSS custom properties (--nd-*)
+  newsdetective/
+    3.1.1.js ... 3.4.6.js      ← Per-paragraph data files (20 total)
+  tests/
+    newsdetective-engine.test.js ← Engine unit tests
+    newsdetective-data.test.js   ← Data validation tests
+```
+
+Each nieuws-detective HTML file lives in `1. Voorbereiden/` and is named:
+`X.Y.Z [Naam] – nieuws-detective.html`
+
+### Game design
+
+Each paragraph has one news article with 4 rounds:
+
+| Round | Type | Interaction |
+|-------|------|-------------|
+| 1 | Herken het concept | Multiple choice (4 options) |
+| 2 | Voorspel het gevolg | Order a cause-effect chain (4 steps + 2 distractors) |
+| 3 | Kies het juiste model | Select matching model card (3 options) |
+| 4 | Spot de fout | Click wrong phrase in fake expert analysis |
+
+Score: 0-4, no localStorage (lightweight intro activity).
+
+### Build scripts for nieuws-detective
+
+| Script | Purpose |
+|--------|---------|
+| `build-scripts/build-newsdetective-shells.js` | Generate HTML shells in `1. Voorbereiden/` |
+
+### Adding a new nieuws-detective paragraph:
+1. Create data file in `shared/newsdetective/X.Y.Z.js` (copy existing as template)
+2. Run: `node build-scripts/build-newsdetective-shells.js` to generate HTML shell
+3. Run `npm test` to validate data structure
+4. Run `node scripts/check-links.js` to verify references
+5. Rebuild landing page: `node build-scripts/build-landing-page.js`
+
+### Modifying nieuws-detective engine:
+1. Edit `shared/newsdetective-engine.js`
+2. Run `npm test` — all tests must pass
+3. Test in browser locally (all 4 rounds)
+4. Push and verify deployment

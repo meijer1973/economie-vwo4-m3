@@ -79,7 +79,7 @@ const CHAPTER_NUMBERS = { "3.1": "1", "3.2": "2", "3.3": "3", "3.4": "4" };
 // SECTION RULES
 // ═══════════════════════════════════════════════════════════════════════════
 
-const VOORBEREIDEN_PATTERNS = [/instapquiz\.html$/i, /uitleg voorkennis\.docx$/i, /^Lees dit.*\.docx$/i];
+const VOORBEREIDEN_PATTERNS = [/instapquiz\.html$/i, /nieuws-detective\.html$/i, /uitleg voorkennis\.docx$/i, /^Lees dit.*\.docx$/i];
 const LEREN_PATTERNS = [/presentatie\.pptx$/i, /uitleg vaardigheden\.docx$/i, /youtube.videos\.html$/i, /nieuws met visual\.docx$/i, /samenvatting\.docx$/i];
 const OEFENEN_DIRS = ["basisopgaven", "middenopgaven", "verrijkingsopgaven", "begeleide inoefening"];
 const DELETE_PATTERNS = [/^desktop\.ini$/i, /\.zip$/i, /\.tmp$/i];
@@ -148,7 +148,7 @@ function restructureFolder(paragraafPath, paragraaf) {
 
 function scanFiles(paragraafPath) {
   const result = {
-    voorbereiden: { instapquiz: null, voorkennis: null, leesdit: null },
+    voorbereiden: { instapquiz: null, voorkennis: null, leesdit: null, nieuwsdetective: null },
     leren: { presentatie: null, vaardigheden: null, youtube: null, nieuws: null, samenvatting: null },
     oefenen: { redeneerSpel: null, wiskundevaardigheden: null, begeleide: null, basis: null, midden: null, verrijking: null },
   };
@@ -160,6 +160,7 @@ function scanFiles(paragraafPath) {
     const vFiles = fs.readdirSync(vDir);
     for (const f of vFiles) {
       if (/instapquiz\.html$/i.test(f)) result.voorbereiden.instapquiz = f;
+      else if (/nieuws-detective\.html$/i.test(f)) result.voorbereiden.nieuwsdetective = f;
       else if (/uitleg voorkennis\.html$/i.test(f)) result.voorbereiden.voorkennis = f;
       else if (/^Lees dit/i.test(f)) result.voorbereiden.leesdit = f;
     }
@@ -562,6 +563,7 @@ const ICONS = {
   doc:       '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
   play:      '<polygon points="5 3 19 12 5 21 5 3"/>',
   newspaper: '<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2V9"/><line x1="10" y1="8" x2="18" y2="8"/><line x1="10" y1="12" x2="18" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/>',
+  search:    '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
   check:     '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   users:     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   star0:     '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none"/>',
@@ -783,6 +785,7 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
 
   const voorbereidenCards = [
     files.voorbereiden.instapquiz ? card(encPath([vP, files.voorbereiden.instapquiz]), ICONS.quiz, "Instapquiz", "Test wat je al weet over deze stof", "html") : "",
+    files.voorbereiden.nieuwsdetective ? card(encPath([vP, files.voorbereiden.nieuwsdetective]), ICONS.search, "Nieuws-detective", "Ontdek de economie achter het nieuws", "html") : "",
     files.voorbereiden.voorkennis ? card(encPath([vP, files.voorbereiden.voorkennis]), ICONS.book, "Voorkennis", "Herhaal wat je nodig hebt voor deze les", ext(files.voorbereiden.voorkennis)) : "",
     files.voorbereiden.leesdit ? card(encPath([vP, files.voorbereiden.leesdit]), ICONS.info, "Hoe begin ik?", "Wegwijzer als je niet weet waar je moet starten", "docx", "card-guide") : "",
   ].filter(Boolean).join("\n");
