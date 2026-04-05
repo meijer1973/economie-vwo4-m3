@@ -785,9 +785,9 @@ function renderParagraafPage(paragraaf, files, resolvedMap) {
 
   const voorbereidenCards = [
     files.voorbereiden.instapquiz ? card(encPath([vP, files.voorbereiden.instapquiz]), ICONS.quiz, "Instapquiz", "Test wat je al weet over deze stof", "html") : "",
-    files.voorbereiden.nieuwsdetective ? card(encPath([vP, files.voorbereiden.nieuwsdetective]), ICONS.search, "Nieuws-detective", "Ontdek de economie achter het nieuws", "html") : "",
     files.voorbereiden.voorkennis ? card(encPath([vP, files.voorbereiden.voorkennis]), ICONS.book, "Voorkennis", "Herhaal wat je nodig hebt voor deze les", ext(files.voorbereiden.voorkennis)) : "",
-    files.voorbereiden.leesdit ? card(encPath([vP, files.voorbereiden.leesdit]), ICONS.info, "Hoe begin ik?", "Wegwijzer als je niet weet waar je moet starten", "docx", "card-guide") : "",
+    files.voorbereiden.nieuwsdetective ? card(encPath([vP, files.voorbereiden.nieuwsdetective]), ICONS.search, "Nieuws-detective", "Ontdek de economie achter het nieuws", "html") : "",
+    // files.voorbereiden.leesdit ? card(encPath([vP, files.voorbereiden.leesdit]), ICONS.info, "Hoe begin ik?", "Wegwijzer als je niet weet waar je moet starten", "docx", "card-guide") : "",
   ].filter(Boolean).join("\n");
 
   const lerenCards = [
