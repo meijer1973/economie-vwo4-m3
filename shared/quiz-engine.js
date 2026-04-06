@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * QuizEngine — Pure game logic for instapquiz mastery system.
  * No DOM references. Works in both browser (<script>) and Node.js (require).

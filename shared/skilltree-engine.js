@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * SkillTreeEngine — Pure game logic for the skill tree (wiskundevaardigheden).
  * No DOM references. Works in both browser (<script>) and Node.js (require).

@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * reasoning-ui.js — DOM binding layer for the Reasoning Game.
  * Reads window.REASONING_CSV + window.REASONING_META,

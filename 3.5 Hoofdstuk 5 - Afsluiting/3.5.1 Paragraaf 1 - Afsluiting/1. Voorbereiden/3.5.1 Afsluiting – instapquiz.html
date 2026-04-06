@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afsluiting - Instapquiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../../shared/quiz.css">
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <h1><span class="par-badge">3.5.1</span> Afsluiting – Instapquiz</h1>
+        <div class="stats-bar" id="game-stats" style="display: none;">
+            <div><i class="fa-solid fa-star"></i> Score: <span id="score-display">0</span></div>
+            <div><i class="fa-solid fa-list-ol"></i> Vraag: <span id="question-count">0/10</span></div>
+        </div>
+    </div>
+    <div class="content-layout">
+        <div class="main-area">
+            <div id="start-screen" class="screen active">
+                <h2>Afsluiting</h2>
+                <p>Herhaal alle onderwerpen van Module 3: markten, marktvormen, overheid en internationale handel. Deze quiz test of je de kernconcepten beheerst.</p>
+                <div class="topics-box">
+                    <h3><i class="fa-solid fa-bullseye icon"></i> Wat we gaan toetsen:</h3>
+                    <ul>
+                        <li>Marktstructuur en marktvormen</li>
+                        <li>Marktevenwicht en welvaartsanalyse</li>
+                        <li>Overheidsbeleid en marktfalen</li>
+                        <li>Internationale handel en protectionisme</li>
+                    </ul>
+                </div>
+                <button class="btn btn-large" onclick="startGame()">Start de Training</button>
+            </div>
+            <div id="game-screen" class="screen">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="category-display" class="category-badge">Categorie</div>
+                    <div id="difficulty-stars" style="color: #fbbf24; margin-bottom: 20px; font-size: 18px;"></div>
+                </div>
+                <div id="question-text" class="question-text">Vraag...</div>
+                <div id="options-container" class="options-grid"></div>
+                <div id="feedback-container" class="feedback-box">
+                    <div id="feedback-title" class="feedback-title">Feedback</div>
+                    <div id="feedback-text">Uitleg...</div>
+                </div>
+                <button id="next-btn" class="btn" style="display: none;" onclick="nextQuestion()">Volgende Vraag <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <div id="end-screen" class="screen">
+                <h2>Sessie Voltooid! <i class="fa-solid fa-trophy" style="color: #fbbf24;"></i></h2>
+                <p style="font-size: 18px; margin-top: 10px; margin-bottom: 30px;">In deze sessie heb je <span id="final-score" style="font-weight: bold; color: var(--domain-primary);"></span> vragen goed beantwoord.</p>
+                <div style="background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 10px; font-size: 18px;">Hoe nu verder?</h3>
+                    <p style="color: #475569; line-height: 1.6;">Bekijk je actuele voortgang in de zijbalk (of hieronder op mobiel). Bouw per onderwerp een <strong>reeks van 3</strong> op om deze definitief af te sluiten en de balk groen te maken. Maak je een fout? Dan reset de reeks naar nul.</p>
+                </div>
+                <button class="btn btn-large" onclick="restartSession()">Start Volgende Sessie <i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+        </div>
+        <div class="sidebar-area" id="sidebar">
+            <h3 class="sidebar-title"><i class="fa-solid fa-chart-pie"></i> Jouw Voortgang</h3>
+            <div id="mastery-dashboard" class="mastery-container"></div>
+        </div>
+    </div>
+</div>
+<script src="../../../shared/theme.js"></script>
+<script src="../../../shared/questions/3.5.1.js"></script>
+<script src="../../../shared/quiz-engine.js"></script>
+<script src="../../../shared/quiz-ui.js"></script>
+</body>
+</html>

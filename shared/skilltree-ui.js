@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * SkillTree UI — DOM binding layer for the skill tree (wiskundevaardigheden).
  * IIFE that reads window.SKILL_TREE_ELEMENTS and window.SKILL_TREE_DATA,

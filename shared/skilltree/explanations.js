@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * SkillTree Explanations — Detailed per-skill explanations for students.
  * UMD module: sets window.SKILL_TREE_EXPLANATIONS in browser, module.exports in Node.js.

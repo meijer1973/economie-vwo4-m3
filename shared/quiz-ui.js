@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * quiz-ui.js — DOM binding layer for instapquiz.
  * Reads window.QUIZ_DATA (set by the per-quiz data file),

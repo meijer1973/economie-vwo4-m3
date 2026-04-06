@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.5.2 Naar het examen – Begeleide inoefening</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #F7F8FA; color: #2D3748; line-height: 1.6; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :root {
+    --navy: #1E2761; --dark: #2D3748; --gray: #718096; --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0; --white: #FFFFFF; --sidebar-w: 270px;
+    --accent: #1A5276; --accent-lt: #EBF5FB; --accent-dk: #154360;
+  }
+  .page-layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border-gray); position: sticky; top: 0;
+    height: 100vh; overflow-y: auto; padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header { padding: 0.6rem 1.2rem 1rem; border-bottom: 1px solid var(--border-gray); margin-bottom: 0.4rem; }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+  .nav-opgave { margin-bottom: 0.15rem; }
+  .nav-opgave-title {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem;
+    font-size: 0.76rem; font-weight: bold; color: var(--dark); cursor: pointer;
+    border-left: 3px solid transparent; transition: background 0.15s;
+  }
+  .nav-opgave-title:hover { background: #F7FAFC; }
+  .nav-opgave.expanded .nav-opgave-title { border-left-color: var(--accent); background: var(--light-gray); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--accent); }
+  .nav-opgave-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-arrow {
+    width: 14px; height: 14px; flex-shrink: 0; stroke: var(--gray); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s;
+  }
+  .nav-opgave.expanded .nav-arrow { transform: rotate(180deg); }
+  .nav-questions { display: none; padding: 0.1rem 0 0.3rem; }
+  .nav-opgave.expanded .nav-questions { display: block; }
+  .nav-q {
+    display: block; padding: 0.3rem 1rem 0.3rem 2.2rem; font-size: 0.72rem;
+    color: var(--gray); border-left: 3px solid transparent; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; cursor: pointer; transition: background 0.1s;
+  }
+  .nav-q:hover { color: var(--dark); background: #F7FAFC; }
+  .nav-q.active { color: var(--dark); font-weight: bold; border-left-color: var(--accent); background: var(--light-gray); }
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+  .content { flex: 1; min-width: 0; }
+  .hero {
+    background: var(--navy); color: var(--white); padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--accent); }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.25rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+  .hero-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; margin-top: 1.5rem; }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.8rem; cursor: pointer; transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid var(--accent);
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.2rem; }
+  .hero-card-title { font-size: 0.78rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-count { font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem; }
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+  .opgave-section { margin-bottom: 2.5rem; scroll-margin-top: 1rem; }
+  .opgave-header {
+    display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem;
+    margin-bottom: 0.8rem; border-bottom: 3px solid var(--accent);
+  }
+  .opgave-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; font-size: 0.95rem;
+    font-weight: bold; color: var(--white); background: var(--accent); flex-shrink: 0;
+  }
+  .opgave-title-group { flex: 1; }
+  .opgave-title { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
+  .opgave-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.55rem;
+    border-radius: 3px; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.03em;
+    background: var(--accent-lt); color: var(--accent);
+  }
+  .context-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.9rem 1.1rem; margin-bottom: 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.7; color: var(--dark); border-left: 4px solid var(--accent);
+  }
+  .opgave-intro {
+    font-size: 0.92rem; color: var(--dark); margin-bottom: 1rem; padding: 0.7rem 0.9rem;
+    background: #FAFBFC; border-radius: 6px; border-left: 3px solid var(--border-gray);
+  }
+  .question-card {
+    background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px;
+    margin-bottom: 1rem; overflow: hidden; scroll-margin-top: 1rem;
+  }
+  .question-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #EDF2F7; }
+  .question-label {
+    font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.3rem;
+  }
+  .question-text { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .fill-in {
+    background: #FAFBFC; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.6rem 1.2rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: var(--dark);
+  }
+  .helper-section { padding: 0 1.2rem 0.8rem; }
+  details { border-radius: 5px; margin-bottom: 0.5rem; overflow: hidden; }
+  details summary {
+    padding: 0.55rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    user-select: none; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+    border-radius: 5px; transition: background 0.15s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; font-size: 0.7rem; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .detail-content { padding: 0.5rem 0.8rem 0.7rem; font-size: 0.85rem; line-height: 1.7; }
+  .helper-denkstappen summary { background: #E8F4FD; color: #1565C0; }
+  .helper-denkstappen summary:hover { background: #D0EAFB; }
+  .helper-denkstappen .detail-content { background: #F1F8FE; color: #0D47A1; }
+  .helper-hint summary { background: #FFF8E1; color: #F57F17; }
+  .helper-hint summary:hover { background: #FFF0C0; }
+  .helper-hint .detail-content { background: #FFFCF0; color: #E65100; }
+  .helper-formule summary { background: #F3E5F5; color: #6A1B9A; }
+  .helper-formule summary:hover { background: #E8D5EB; }
+  .helper-formule .detail-content { background: #F9F0FB; color: #4A148C; font-family: Consolas, 'Courier New', monospace; }
+  .helper-letop summary { background: #FFF3E0; color: #BF360C; }
+  .helper-letop summary:hover { background: #FFE8CC; }
+  .helper-letop .detail-content { background: #FFF8F0; color: #BF360C; }
+  .helper-controle summary { background: #E8F5E9; color: #1B5E20; }
+  .helper-controle summary:hover { background: #D5ECD7; }
+  .helper-controle .detail-content { background: #F0FAF0; color: #1B5E20; }
+  .helper-kernregel summary { background: #FFF8E1; color: #5D4037; }
+  .helper-kernregel summary:hover { background: #FFF0C0; }
+  .helper-kernregel .detail-content { background: #FFFCF0; color: #5D4037; }
+  .helper-tip summary { background: #EBF5FB; color: #154360; }
+  .helper-tip summary:hover { background: #D6EAF8; }
+  .helper-tip .detail-content { background: #F4FAFE; color: #154360; }
+  .answer-toggle { border-top: 1px solid #EDF2F7; }
+  .answer-toggle summary {
+    padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: bold; color: var(--accent);
+    cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center;
+    gap: 0.4rem; background: var(--accent-lt); transition: background 0.15s;
+  }
+  .answer-toggle summary::-webkit-details-marker { display: none; }
+  .answer-toggle summary::before { content: "▸"; font-size: 0.75rem; transition: transform 0.2s; }
+  .answer-toggle[open] summary::before { transform: rotate(90deg); }
+  .answer-toggle[open] summary { background: #D4E6F1; }
+  .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #D6EAF8; }
+  .answer-box {
+    background: #F0FFF0; border: 1px solid #C8E6C9; border-radius: 6px;
+    padding: 0.8rem 1rem; margin-bottom: 0.6rem; font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.8; color: #1B5E20;
+  }
+  .uitleg-box {
+    background: #FFFDE7; border-left: 3px solid #AFB42B; border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem; font-size: 0.85rem; line-height: 1.6; color: #827717;
+  }
+  .samenvatting-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .samenvatting-caption {
+    background: var(--accent); color: var(--white); padding: 0.7rem 1rem;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .samenvatting-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .samenvatting-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 28%; }
+  .samenvatting-table td:last-child { color: #4A5568; }
+  @media (max-width: 1100px) { .hero-cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -290px; top: 0; height: 100vh; width: 290px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+  }
+  @media (max-width: 480px) { .hero-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.5.2 Naar het examen</h2>
+      <p>Begeleide inoefening</p>
+    </div>
+    <div class="nav-opgave expanded">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-1">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">1 &middot; CE-opgave: Marktanalyse smartp</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q1a" data-q="q1a">1a (2 punten)</a>
+        <a class="nav-q" href="#q1b" data-q="q1b">1b (3 punten)</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-2">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">2 &middot; CE-opgave: Overheidsbeleid en </span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q2a" data-q="q2a">2a (2 punten)</a>
+        <a class="nav-q" href="#q2b" data-q="q2b">2b (3 punten)</a>
+        <a class="nav-q" href="#q2c" data-q="q2c">2c (2 punten)</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-3">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">3 &middot; CE-opgave: Internationale hand</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q3a" data-q="q3a">3a (2 punten)</a>
+        <a class="nav-q" href="#q3b" data-q="q3b">3b (3 punten)</a>
+        <a class="nav-q" href="#q3c" data-q="q3c">3c (2 punten)</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-4">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">4 &middot; CE-opgave: Marktfalen en exter</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q4a" data-q="q4a">4a (2 punten)</a>
+        <a class="nav-q" href="#q4b" data-q="q4b">4b (3 punten)</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-5">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">5 &middot; CE-opgave: Surplus bij minimum</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q5a" data-q="q5a">5a (2 punten)</a>
+        <a class="nav-q" href="#q5b" data-q="q5b">5b (3 punten)</a>
+      </div>
+    </div>
+    <div class="nav-opgave">
+      <div class="nav-opgave-title" data-toggle="opgave" data-scroll="opgave-6">
+        <span class="nav-dot"></span>
+        <span class="nav-opgave-label">6 &middot; CE-opgave: Prijselasticiteit e</span>
+        <svg class="nav-arrow" viewBox="0 0 14 14"><polyline points="3 5 7 9 11 5"/></svg>
+      </div>
+      <div class="nav-questions">
+        <a class="nav-q" href="#q6a" data-q="q6a">6a (2 punten)</a>
+        <a class="nav-q" href="#q6b" data-q="q6b">6b (3 punten)</a>
+        <a class="nav-q" href="#q6c" data-q="q6c">6c (2 punten)</a>
+      </div>
+    </div>
+
+  </nav>
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.5.2 &middot; Begeleide inoefening</span>
+        <h1>Naar het examen &mdash; Begeleide inoefening</h1>
+        <p class="hero-sub">Oefeningen met denkstappen, formule-herinneringen en hints.</p>
+        <div class="hero-cards">
+          <div class="hero-card" data-target="opgave-1">
+            <div class="hero-card-num">Opgave 1</div>
+            <div class="hero-card-title">CE-opgave: Marktanalyse smartphones</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-2">
+            <div class="hero-card-num">Opgave 2</div>
+            <div class="hero-card-title">CE-opgave: Overheidsbeleid en accij</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-3">
+            <div class="hero-card-num">Opgave 3</div>
+            <div class="hero-card-title">CE-opgave: Internationale handel en</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-4">
+            <div class="hero-card-num">Opgave 4</div>
+            <div class="hero-card-title">CE-opgave: Marktfalen en externe ef</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-5">
+            <div class="hero-card-num">Opgave 5</div>
+            <div class="hero-card-title">CE-opgave: Surplus bij minimumprijs</div>
+            <div class="hero-card-count">2 deelvragen</div>
+          </div>
+          <div class="hero-card" data-target="opgave-6">
+            <div class="hero-card-num">Opgave 6</div>
+            <div class="hero-card-title">CE-opgave: Prijselasticiteit en bel</div>
+            <div class="hero-card-count">3 deelvragen</div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+    <main>
+
+      <section class="opgave-section" id="opgave-1">
+        <div class="opgave-header">
+          <span class="opgave-num">1</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Marktanalyse smartphones</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+De markt voor smartphones in Europa wordt gedomineerd door drie grote spelers: Apple (28%), Samsung (31%) en Xiaomi (17%). De overige aanbieders hebben gezamenlijk 24% marktaandeel. Elk merk onderscheidt zich door eigen besturingssysteem, design en ecosysteem. De R&amp;D-kosten voor een nieuw smartphone-merk bedragen meer dan €1 miljard.</p>
+
+        <div class="question-card" id="q1a">
+          <div class="question-header">
+            <div class="question-label">Vraag 1a (2 punten)</div>
+            <div class="question-text">Beredeneer dat de Europese smartphonemarkt kenmerken heeft van een heterogeen oligopolie.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Noem het kenmerk → geef het bewijs uit de tekst.<br>2. Doe dit voor minstens drie kenmerken.<br>3. Gebruik de termen: weinig aanbieders, heterogeen product, hoge toetredingsbarrières.</div>
+            </details>
+            <details class="helper-hint">
+              <summary>Hint</summary>
+              <div class="detail-content">Bij een 'beredeneer'-vraag op het CE moet je elk kenmerk koppelen aan een feit uit de bron. Alleen benoemen is niet genoeg.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Weinig aanbieders: drie bedrijven (Apple, Samsung, Xiaomi) hebben samen 76% marktaandeel.<br>Heterogeen product: elk merk heeft een eigen besturingssysteem, design en ecosysteem.<br>Hoge toetredingsbarrières: R&D-kosten van meer dan €1 miljard maken toetreding zeer moeilijk.<br>Conclusie: weinig aanbieders + heterogeen product + hoge barrières = heterogeen oligopolie.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op het CE krijg je punten per correct benoemd kenmerk mét bronverwijzing. Drie kenmerken met bewijs = maximale score. Let op dat je niet monopolistische concurrentie zegt — daar zijn veel aanbieders.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q1b">
+          <div class="question-header">
+            <div class="question-label">Vraag 1b (3 punten)</div>
+            <div class="question-text">De HHI (Herfindahl-Hirschman Index) wordt gebruikt om de marktconcentratie te meten. Bereken de HHI voor de drie grootste aanbieders, exclusief de overige aanbieders. Verklaar wat de uitkomst zegt over de mate van concurrentie.</div>
+          </div>
+          <div class="fill-in">HHI = 28² + 31² + 17²<br>HHI = ........ + ........ + ........<br>HHI = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. HHI = som van de gekwadrateerde marktaandelen (in percentages).<br>2. Bereken voor Apple, Samsung en Xiaomi.<br>3. Beoordeel: HHI > 2500 = hoge concentratie.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">HHI = s₁² + s₂² + s₃² + ...<br>waarbij s = marktaandeel in %</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraagfunctie:  Qv = 500 − 200p   (Q in miljoenen liters, p in euro's)<br>Aanbodfunctie: Qa = −100 + 400p</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Let op: als je de overige aanbieders (24%) als één groep meetelt, wordt de HHI hoger (2.034 + 576 = 2.610). De vraag specificeert 'exclusief de overige' — lees altijd nauwkeurig.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-2">
+        <div class="opgave-header">
+          <span class="opgave-num">2</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Overheidsbeleid en accijns</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Vraagfunctie:  Qv = 500 − 200p   (Q in miljoenen liters, p in euro's)<br>Aanbodfunctie: Qa = −100 + 400p</div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+De overheid overweegt een suikertaks van €0,30 per liter op frisdrank. De huidige marktsituatie is:</p>
+
+        <div class="question-card" id="q2a">
+          <div class="question-header">
+            <div class="question-label">Vraag 2a (2 punten)</div>
+            <div class="question-text">Bereken het huidige marktevenwicht (prijs en hoeveelheid).</div>
+          </div>
+          <div class="fill-in">500 − 200p = −100 + 400p<br>p* = ........<br>Q* = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Stel Qv = Qa.<br>2. Los op naar p.<br>3. Vul terug voor Q.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">500 − 200p = −100 + 400p<br>600 = 600p<br>p* = €1,00<br>Q = 500 − 200 × 1 = 300<br>Q* = 300 miljoen liter</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Standaard evenwichtsberekening. Controleer altijd door Q ook in de aanbodfunctie in te vullen: Qa = −100 + 400 × 1 = 300 ✓</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2b">
+          <div class="question-header">
+            <div class="question-label">Vraag 2b (3 punten)</div>
+            <div class="question-text">Bereken het nieuwe evenwicht na invoering van de suikertaks. Bereken ook hoeveel van de belasting de consument draagt en hoeveel de producent.</div>
+          </div>
+          <div class="fill-in">Qa_nieuw = −100 + 400(p − 0,30) = ........<br>Nieuw evenwicht: p = ........    Q = ........<br>Deel consument: ........    Deel producent: ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Pas de aanbodfunctie aan: vervang p door (p − 0,30).<br>2. Bereken het nieuwe evenwicht.<br>3. Belastingdeel consument = p_nieuw − p_oud.<br>4. Belastingdeel producent = belasting − deel consument.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Nieuwe aanbod: Qa = −100 + 400(p − t)<br>Deel consument = p_nieuw − p_oud<br>Deel producent = t − deel consument</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa_nieuw = −100 + 400(p − 0,30) = −100 + 400p − 120 = −220 + 400p<br>500 − 200p = −220 + 400p<br>720 = 600p<br>p_consument = €1,20<br>Q_nieuw = 500 − 200 × 1,20 = 260<br>Q_nieuw = 260 miljoen liter<br>p_producent = 1,20 − 0,30 = €0,90<br><br>Deel consument: €0,20 (= 1,20 − 1,00) → 67% van de belasting<br>Deel producent: €0,10 (= 1,00 − 0,90) → 33% van de belasting</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> De verdeling van de belastingdruk hangt af van de prijselasticiteiten. Hier is de vraag minder elastisch dan het aanbod (helling vraag = −200, helling aanbod = 400), waardoor de consument een groter deel draagt.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q2c">
+          <div class="question-header">
+            <div class="question-label">Vraag 2c (2 punten)</div>
+            <div class="question-text">Bereken het welvaartsverlies door de suikertaks.</div>
+          </div>
+          <div class="fill-in">DWL = ½ × ........ × ........ = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Welvaartsverlies = de driehoek van niet meer verhandelde eenheden.<br>2. Basis = verschil in hoeveelheid, hoogte = belasting.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">DWL = ½ × t × (Q_oud − Q_nieuw)</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Binnenlandse vraag:  Qv = 1200 − 4p<br>Binnenlands aanbod:  Qa = −300 + 6p<br>Wereldmarktprijs:    p_w = €120 per ton</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het welvaartsverlies is €6 miljoen. Dit is de maatschappelijke kosten van de belasting bovenop de herverdeling. Op het CE moet je dit getal kunnen interpreteren: het is de waarde van de transacties die niet meer plaatsvinden.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-3">
+        <div class="opgave-header">
+          <span class="opgave-num">3</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Internationale handel en invoerheffing</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Binnenlandse vraag:  Qv = 1200 − 4p<br>Binnenlands aanbod:  Qa = −300 + 6p<br>Wereldmarktprijs:    p_w = €120 per ton</div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+Nederland importeert staal uit China. Op de binnenlandse markt gelden de volgende vergelijkingen:</p>
+
+        <div class="question-card" id="q3a">
+          <div class="question-header">
+            <div class="question-label">Vraag 3a (2 punten)</div>
+            <div class="question-text">Bereken de binnenlandse vraag, het binnenlands aanbod en de omvang van de import bij de wereldmarktprijs.</div>
+          </div>
+          <div class="fill-in">Qv = 1200 − 4 × 120 = ........<br>Qa = −300 + 6 × 120 = ........<br>Import = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Vul p_w = 120 in bij zowel de vraag- als de aanbodfunctie.<br>2. Import = vraag − aanbod.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qv = 1200 − 4 × 120 = 1200 − 480 = 720<br>Qa = −300 + 6 × 120 = −300 + 720 = 420<br>Import = 720 − 420 = 300 ton</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij de wereldmarktprijs is de binnenlandse vraag groter dan het binnenlands aanbod. Het verschil wordt geïmporteerd.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3b">
+          <div class="question-header">
+            <div class="question-label">Vraag 3b (3 punten)</div>
+            <div class="question-text">De EU legt een invoerheffing van €20 per ton op Chinees staal. Bereken de nieuwe binnenlandse prijs, de nieuwe import en de opbrengst van de heffing voor de overheid.</div>
+          </div>
+          <div class="fill-in">p_nieuw = ........<br>Qv_nieuw = ........    Qa_nieuw = ........<br>Import_nieuw = ........<br>Heffingsopbrengst = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Nieuwe binnenlandse prijs = wereldmarktprijs + heffing.<br>2. Vul de nieuwe prijs in bij vraag en aanbod.<br>3. Nieuwe import = nieuwe vraag − nieuw aanbod.<br>4. Heffingsopbrengst = heffing × nieuwe import.</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">p_nieuw = p_w + heffing<br>Heffingsopbrengst = heffing × import_nieuw</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">p_nieuw = 120 + 20 = €140<br>Qv_nieuw = 1200 − 4 × 140 = 1200 − 560 = 640<br>Qa_nieuw = −300 + 6 × 140 = −300 + 840 = 540<br>Import_nieuw = 640 − 540 = 100 ton<br>Heffingsopbrengst = 20 × 100 = €2.000</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Door de heffing stijgt de binnenlandse prijs, daalt de import (van 300 naar 100 ton), en groeit het binnenlands aanbod (van 420 naar 540). Binnenlandse producenten profiteren, maar consumenten betalen meer.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q3c">
+          <div class="question-header">
+            <div class="question-label">Vraag 3c (2 punten)</div>
+            <div class="question-text">Verklaar waarom de invoerheffing leidt tot een welvaartsverlies voor Nederland, ondanks de heffingsopbrengst voor de overheid.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Welvaartsverlies bestaat uit twee driehoeken.<br>2. Driehoek 1: inefficiënte binnenlandse productie (aanbodzijde).<br>3. Driehoek 2: verloren consumptie (vraagzijde).<br>4. Denk aan: heffingsopbrengst is geen nettoverlies, maar de driehoeken wel.</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: Bij een 'verklaar'-vraag moet je de economische logica uitleggen, niet alleen het rekenen.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De invoerheffing leidt tot welvaartsverlies door twee effecten:<br>1. Productie-inefficiëntie: binnenlandse producenten maken 120 ton extra (540 − 420) tegen hogere kosten dan de wereldmarktprijs. Die extra productie kost meer dan €120 per ton maar levert geen extra welvaart op.<br>2. Consumptieverlies: 80 ton (720 − 640) wordt niet meer geconsumeerd, terwijl consumenten hiervoor meer dan €120 wilden betalen.<br>De heffingsopbrengst (€2.000) is slechts een overdracht van consumenten naar overheid — geen nettowelvaart. De twee driehoeken zijn het nettoverlies voor de maatschappij als geheel.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Dit is een standaard CE-antwoordmodel. Je moet twee effecten noemen (productie-inefficiëntie en consumptieverlies) en uitleggen waarom de heffingsopbrengst geen welvaartswinst is. Bij 'verklaar' is de redenering belangrijker dan het getal.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-4">
+        <div class="opgave-header">
+          <span class="opgave-num">4</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Marktfalen en externe effecten</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+Een chemiefabriek loost afvalwater in een rivier. De fabriek produceert onder volkomen concurrentie. De productiekosten zijn €30 per eenheid, maar de vervuiling veroorzaakt €8 per eenheid aan schade bij omwonenden en visserij. De marktprijs is €30.</p>
+
+        <div class="question-card" id="q4a">
+          <div class="question-header">
+            <div class="question-label">Vraag 4a (2 punten)</div>
+            <div class="question-text">Leg uit waarom hier sprake is van een negatief extern effect en waarom de markt faalt.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Wat is een extern effect? → kosten/baten die niet in de prijs verwerkt zijn.<br>2. Wie draagt de schade? Is dit dezelfde partij als de producent?<br>3. Waarom leidt dit tot overproductie?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Negatief extern effect: de vervuiling veroorzaakt €8 per eenheid schade bij derden (omwonenden, visserij) die niet in de productiekosten van de fabriek zijn opgenomen.<br>Marktfalen: de private kosten (€30) zijn lager dan de maatschappelijke kosten (€30 + €8 = €38). De fabriek produceert op basis van private kosten en produceert daardoor meer dan maatschappelijk optimaal is. De markt zelf corrigeert dit niet.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het sleutelwoord is 'niet in de prijs verwerkt'. Externe effecten leiden tot een verschil tussen private en maatschappelijke kosten, waardoor de marktuitkomst niet efficiënt is.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q4b">
+          <div class="question-header">
+            <div class="question-label">Vraag 4b (3 punten)</div>
+            <div class="question-text">De overheid overweegt een Pigouviaanse belasting. Hoe hoog moet deze belasting zijn? Verklaar waarom deze belasting de efficiëntie verbetert.</div>
+          </div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Een Pigouviaanse belasting is gelijk aan het externe effect per eenheid.<br>2. Wat gebeurt er met de aanbodcurve?<br>3. Waarom komt de marktuitkomst dan dichter bij het maatschappelijk optimum?</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraagfunctie:  Qv = 600 − 10p<br>Aanbodfunctie: Qa = −200 + 20p<br>Minimumprijs:  p_min = €32</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Bij een Pigouviaanse belasting gaat het altijd om internalisering van externe effecten. De belasting is exact gelijk aan de marginale schade, zodat private kosten = maatschappelijke kosten. Dit is een standaard CE-onderwerp.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-5">
+        <div class="opgave-header">
+          <span class="opgave-num">5</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Surplus bij minimumprijs</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Vraagfunctie:  Qv = 600 − 10p<br>Aanbodfunctie: Qa = −200 + 20p<br>Minimumprijs:  p_min = €32</div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+De overheid stelt een minimumprijs in op de markt voor graan om boeren te beschermen.</p>
+
+        <div class="question-card" id="q5a">
+          <div class="question-header">
+            <div class="question-label">Vraag 5a (2 punten)</div>
+            <div class="question-text">Bereken het marktevenwicht zonder overheidsingrijpen. Toon aan dat de minimumprijs boven de evenwichtsprijs ligt.</div>
+          </div>
+          <div class="fill-in">600 − 10p = −200 + 20p<br>p* = ........    Q* = ........<br>p_min (........) is ........ dan p* (........)</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bereken het evenwicht: Qv = Qa.<br>2. Vergelijk p* met p_min.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">600 − 10p = −200 + 20p<br>800 = 30p<br>p* = €26⅔ ≈ €26,67<br>Q* = 600 − 10 × 26⅔ = 600 − 266⅔ = 333⅓<br>Q* ≈ 333 eenheden<br>De minimumprijs (€32) ligt boven de evenwichtsprijs (€26,67). De minimumprijs is bindend.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Een minimumprijs is alleen bindend als deze boven het evenwicht ligt. Anders heeft de maatregel geen effect.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q5b">
+          <div class="question-header">
+            <div class="question-label">Vraag 5b (3 punten)</div>
+            <div class="question-text">Bereken bij de minimumprijs: de gevraagde hoeveelheid, de aangeboden hoeveelheid en de omvang van het overschot. Bereken het welvaartsverlies.</div>
+          </div>
+          <div class="fill-in">Qv bij p=32: ........<br>Qa bij p=32: ........<br>Overschot: ........<br>DWL = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Vul p_min = 32 in bij vraag en aanbod.<br>2. Overschot = aanbod − vraag.<br>3. Welvaartsverlies: driehoek tussen Q_verhandeld en Q_evenwicht.<br>4. Let op: bij een minimumprijs wordt de gevraagde hoeveelheid verhandeld (korte kant van de markt).</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Bij minimumprijs: Q_verhandeld = Qv (de korte kant)<br>DWL = ½ × (p_min − p_aanbod bij Qv) × (Q* − Qv)</div>
+            </details>
+            <details class="helper-letop">
+              <summary>Let op</summary>
+              <div class="detail-content">Let op: De verhandelde hoeveelheid is de gevraagde hoeveelheid, niet de aangeboden hoeveelheid!</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Vraagfunctie:  Qv = 100 − 5p    (Q in miljoenen liters, p in €/liter)<br>Aanbodfunctie: Qa = −20 + 20p<br><br>De overheid overweegt een accijnsverhoging van €0,50 per liter.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Het welvaartsverlies ontstaat doordat 53 eenheden (333 − 280) niet meer verhandeld worden, terwijl consumenten er meer voor wilden betalen dan de productiekosten. Het overschot van 160 eenheden is apart — die worden geproduceerd maar niet verkocht.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <section class="opgave-section" id="opgave-6">
+        <div class="opgave-header">
+          <span class="opgave-num">6</span>
+          <div class="opgave-title-group">
+            <div class="opgave-title">CE-opgave: Prijselasticiteit en belastingverdeling</div>
+            <span class="opgave-badge">Marktanalyse</span>
+          </div>
+        </div>
+        <div class="context-box">Vraagfunctie:  Qv = 100 − 5p    (Q in miljoenen liters, p in €/liter)<br>Aanbodfunctie: Qa = −20 + 20p<br><br>De overheid overweegt een accijnsverhoging van €0,50 per liter.</div>
+        <p class="opgave-intro">Gebruik de volgende informatie.
+
+Op de markt voor benzine geldt:</p>
+
+        <div class="question-card" id="q6a">
+          <div class="question-header">
+            <div class="question-label">Vraag 6a (2 punten)</div>
+            <div class="question-text">Bereken de prijselasticiteit van de vraag in het huidige evenwicht.</div>
+          </div>
+          <div class="fill-in">Evenwicht: p* = ........    Q* = ........<br>Ev = ........ × (........ / ........)<br>Ev = ........</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Bereken eerst het evenwicht.<br>2. De prijselasticiteit van de vraag = (dQ/dp) × (p/Q).<br>3. dQ/dp lees je af uit de vraagfunctie (de coëfficiënt van p).</div>
+            </details>
+            <details class="helper-formule">
+              <summary>Formule-herinnering</summary>
+              <div class="detail-content">Ev = (ΔQ/Δp) × (p/Q)<br>Bij lineaire vraagfunctie: ΔQ/Δp = coëfficiënt van p</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">100 − 5p = −20 + 20p → 120 = 25p → p* = €4,80<br>Q* = 100 − 5 × 4,80 = 100 − 24 = 76<br>Ev = −5 × (4,80 / 76)<br>Ev = −0,316 (inelastisch)</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> |Ev| < 1, dus de vraag is inelastisch. Dit is typisch voor benzine: consumenten zijn weinig gevoelig voor prijsveranderingen op korte termijn.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6b">
+          <div class="question-header">
+            <div class="question-label">Vraag 6b (3 punten)</div>
+            <div class="question-text">Bereken het nieuwe evenwicht na de accijnsverhoging. Welk percentage van de accijns wordt doorberekend aan de consument?</div>
+          </div>
+          <div class="fill-in">Qa_nieuw = −20 + 20(p − 0,50) = ........<br>p_nieuw = ........<br>Doorberekend aan consument: ........ %</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Pas de aanbodfunctie aan: Qa = −20 + 20(p − 0,50).<br>2. Bereken het nieuwe evenwicht.<br>3. Deel consument = (p_nieuw − p_oud) / accijns × 100%.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">Qa_nieuw = −20 + 20(p − 0,50) = −20 + 20p − 10 = −30 + 20p<br>100 − 5p = −30 + 20p → 130 = 25p<br>p_consument = €5,20<br>Q_nieuw = 100 − 5 × 5,20 = 74<br>p_producent = 5,20 − 0,50 = €4,70<br><br>Prijsstijging consument: 5,20 − 4,80 = €0,40<br>Doorberekend: 0,40 / 0,50 × 100% = 80%</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Omdat de vraag inelastisch is (|Ev| = 0,316), draagt de consument het grootste deel van de accijns (80%). Dit is een kernregel: de partij met de minst elastische curve draagt het grootste deel van de belasting.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="question-card" id="q6c">
+          <div class="question-header">
+            <div class="question-label">Vraag 6c (2 punten)</div>
+            <div class="question-text">Verklaar met behulp van het begrip prijselasticiteit waarom de consument een groter deel van de accijns draagt dan de producent.</div>
+          </div>
+          <div class="fill-in">De belangrijkste kernregels van dit onderwerp op een rij:</div>
+          <div class="helper-section">
+            <details class="helper-denkstappen">
+              <summary>Denkstappen</summary>
+              <div class="detail-content">1. Vergelijk de elasticiteit van vraag en aanbod.<br>2. Welke partij kan makkelijker 'ontwijken'?<br>3. Wie draagt het meeste = wie het minst elastisch is.</div>
+            </details>
+          </div>
+          <details class="answer-toggle">
+            <summary>Toon antwoord</summary>
+            <div class="answer-content">
+              <div class="answer-box">De vraag naar benzine is inelastisch (|Ev| = 0,316): consumenten verminderen hun benzinegebruik nauwelijks bij een prijsstijging, omdat benzine een noodzakelijk goed is met weinig substituten.<br>Het aanbod is elastischer: producenten kunnen hun aanbod makkelijker aanpassen.<br>Kernregel: de partij met de minst elastische curve draagt het grootste deel van de belasting. Consumenten kunnen niet makkelijk 'ontwijken', dus accepteren ze de hogere prijs.</div>
+              <div class="uitleg-box"><strong>Uitleg:</strong> Op het CE wordt verwacht dat je het verband legt tussen elasticiteit en belastingdruk. Noem altijd: (1) welke partij inelastischer is, (2) waarom (noodzakelijk goed/weinig substituten), en (3) de conclusie voor de belastingverdeling.</div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+
+      <div class="samenvatting-section">
+        <div class="samenvatting-caption">&#9632; Samenvattend schema</div>
+        <table class="samenvatting-table">
+          <tbody>
+            <tr><td>Beredeneer-vragen</td><td>Kenmerk noemen + bronbewijs geven; minstens 3 argumenten</td></tr>
+            <tr><td>HHI</td><td>Som van gekwadrateerde marktaandelen; &gt;2500 = hoge concentratie</td></tr>
+            <tr><td>Belasting</td><td>Aanbod verschuift omhoog; verdeling via elasticiteiten</td></tr>
+            <tr><td>Invoerheffing</td><td>p_binnenlands = p_wereld + heffing; twee welvaartsverliesdriehoeken</td></tr>
+            <tr><td>Extern effect</td><td>Verschil private en maatschappelijke kosten; Pigouviaanse belasting = marginale schade</td></tr>
+            <tr><td>Minimumprijs</td><td>Bindend als p_min &gt; p*; korte kant van de markt = verhandelde Q</td></tr>
+            <tr><td>Prijselasticiteit</td><td>Ev = (ΔQ/Δp) × (p/Q); inelastisch → consument draagt meer belasting</td></tr>
+            <tr><td>CE-aanpak</td><td>Lees de vraag, markeer sleutelwoorden, gebruik de juiste formule, controleer je antwoord</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script>
+(function() {
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  document.querySelectorAll('[data-toggle="opgave"]').forEach(function(title) {
+    title.addEventListener('click', function() {
+      var opgave = this.closest('.nav-opgave');
+      opgave.classList.toggle('expanded');
+      var targetId = this.dataset.scroll;
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.nav-q[data-q]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById(el.dataset.q);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var target = document.getElementById(el.dataset.target);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  var navQs = document.querySelectorAll('.nav-q[data-q]');
+  var questionCards = document.querySelectorAll('.question-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navQs.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-q[data-q="' + entry.target.id + '"]');
+        if (active) {
+          active.classList.add('active');
+          var parent = active.closest('.nav-opgave');
+          if (parent && !parent.classList.contains('expanded')) parent.classList.add('expanded');
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  questionCards.forEach(function(q) { observer.observe(q); });
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+})();
+</script>
+</body>
+</html>

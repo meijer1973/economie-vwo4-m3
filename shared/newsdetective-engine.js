@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * NewsDetectiveEngine — Pure game logic for Nieuws-detective.
  * No DOM references. Works in both browser (<script>) and Node.js (require).

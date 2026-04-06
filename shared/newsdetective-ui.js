@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * newsdetective-ui.js — DOM binding layer for Nieuws-detective.
  * Reads window.NEWS_DETECTIVE_DATA (set by per-paragraph data file),

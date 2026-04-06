@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3.5.1 Afsluiting – Uitleg vaardigheden</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #F7F8FA;
+    color: #2D3748;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  :root {
+    --navy: #1E2761;
+    --dark: #2D3748;
+    --gray: #718096;
+    --light-gray: #F7F8FA;
+    --border-gray: #CBD5E0;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --markt-primary: #1A5276;
+    --markt-light: #EBF5FB;
+    --markt-dark: #154360;
+    --bedrijf-primary: #E67E22;
+    --bedrijf-light: #FEF5E7;
+    --bedrijf-dark: #BA6A1C;
+    --overheid-primary: #1A5276;
+    --overheid-light: #EBF5FB;
+    --overheid-dark: #154360;
+  }
+
+  .page-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--border-gray);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 1.2rem 0; z-index: 10;
+  }
+  .sidebar-header {
+    padding: 0.6rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    margin-bottom: 0.6rem;
+  }
+  .sidebar-header h2 { font-size: 0.82rem; font-weight: bold; color: var(--navy); line-height: 1.3; }
+  .sidebar-header p { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+  .nav-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.65rem 1.2rem; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { background: #F7FAFC; }
+  .nav-item.active { background: var(--light-gray); font-weight: bold; }
+  .nav-item.active.domain-markt { border-left-color: var(--markt-primary); }
+  .domain-markt .nav-number { background: var(--markt-primary); }
+  .domain-markt .nav-badge { background: var(--markt-light); color: var(--markt-primary); }
+  .section-header.border-markt { border-bottom: 3px solid var(--markt-primary); }
+  .section-num.bg-markt { background: var(--markt-primary); }
+  .badge-markt { background: var(--markt-light); color: var(--markt-primary); }
+  .samenvatting-table caption.caption-markt { background: var(--markt-primary); }
+  .hero-card.card-markt { border-top-color: var(--markt-primary); }
+  .card-markt .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--markt-light); }
+  .nav-item.active.domain-bedrijf { border-left-color: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-number { background: var(--bedrijf-primary); }
+  .domain-bedrijf .nav-badge { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .section-header.border-bedrijf { border-bottom: 3px solid var(--bedrijf-primary); }
+  .section-num.bg-bedrijf { background: var(--bedrijf-primary); }
+  .badge-bedrijf { background: var(--bedrijf-light); color: var(--bedrijf-primary); }
+  .samenvatting-table caption.caption-bedrijf { background: var(--bedrijf-primary); }
+  .hero-card.card-bedrijf { border-top-color: var(--bedrijf-primary); }
+  .card-bedrijf .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--bedrijf-light); }
+  .nav-item.active.domain-overheid { border-left-color: var(--overheid-primary); }
+  .domain-overheid .nav-number { background: var(--overheid-primary); }
+  .domain-overheid .nav-badge { background: var(--overheid-light); color: var(--overheid-primary); }
+  .section-header.border-overheid { border-bottom: 3px solid var(--overheid-primary); }
+  .section-num.bg-overheid { background: var(--overheid-primary); }
+  .badge-overheid { background: var(--overheid-light); color: var(--overheid-primary); }
+  .samenvatting-table caption.caption-overheid { background: var(--overheid-primary); }
+  .hero-card.card-overheid { border-top-color: var(--overheid-primary); }
+  .card-overheid .hero-card-domain { background: rgba(0,0,0,0.15); color: var(--overheid-light); }
+
+  .nav-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 0.7rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .nav-text { flex: 1; min-width: 0; }
+  .nav-title { font-size: 0.76rem; color: var(--dark); line-height: 1.3; display: block; }
+  .nav-badge {
+    display: inline-block; font-size: 0.6rem; font-weight: bold;
+    padding: 0.1rem 0.45rem; border-radius: 3px; margin-top: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sidebar-toggle {
+    display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 20;
+    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border-gray);
+    background: var(--white); cursor: pointer;
+    align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .sidebar-toggle svg { width: 20px; height: 20px; stroke: var(--dark); stroke-width: 2; fill: none; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9; }
+
+  .content { flex: 1; min-width: 0; }
+
+  .hero {
+    background: var(--navy); color: var(--white);
+    padding: 2.5rem 2rem 1.8rem; position: relative;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 5px; background: linear-gradient(90deg, var(--markt-primary) 0% 33%, var(--bedrijf-primary) 33% 67%, var(--overheid-primary) 67% 100%);
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 4px; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+  }
+  .hero h1 { font-size: 2.1rem; font-weight: bold; margin: 0.6rem 0 0.3rem; }
+  .hero-sub { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
+
+  .hero-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.9rem; cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    border-top: 3px solid transparent;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+  .hero-card-num { font-size: 0.7rem; font-weight: bold; opacity: 0.6; margin-bottom: 0.3rem; }
+  .hero-card-title { font-size: 0.82rem; font-weight: bold; line-height: 1.3; }
+  .hero-card-domain {
+    display: inline-block; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; margin-top: 0.4rem; text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding-bottom: 0.7rem; margin-bottom: 1.2rem;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.95rem; font-weight: bold; color: var(--white); flex-shrink: 0;
+  }
+  .section-title-group { flex: 1; }
+  .section-title { font-size: 1.25rem; font-weight: bold; color: var(--dark); }
+  .section-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: bold;
+    padding: 0.15rem 0.55rem; border-radius: 3px; margin-top: 0.15rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .sub-heading {
+    font-size: 1.05rem; font-weight: bold; color: var(--dark);
+    margin: 1.6rem 0 0.6rem; padding-left: 0.1rem;
+  }
+  .intro-text { font-size: 0.92rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.7; }
+
+  .begrippen-table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; font-size: 0.88rem; }
+  .begrippen-table th {
+    text-align: left; font-weight: bold; padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid var(--border-gray); color: var(--dark);
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .begrippen-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .begrippen-table tr:last-child td { border-bottom: none; }
+  .begrippen-table td:first-child { font-weight: 600; color: var(--dark); }
+  .begrippen-table td:last-child { color: #4A5568; }
+
+  .formula-box {
+    background: #F8F9FA; border: 1px solid #E2E8F0; border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: 1rem;
+    font-family: Consolas, 'Courier New', monospace; font-size: 0.88rem;
+    line-height: 1.8; color: var(--dark); border-left: 4px solid #A0AEC0;
+  }
+
+  .callout {
+    border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.8rem;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  .callout-kernregel { background: #FFF8E1; border-left: 4px solid #F9A825; color: #5D4037; }
+  .callout-letop { background: #FFF3E0; border-left: 4px solid #EF6C00; color: #BF360C; }
+  .callout-controle { background: #E8F5E9; border-left: 4px solid #43A047; color: #1B5E20; }
+  .callout-tip { background: #EBF5FB; border-left: 4px solid #1A5276; color: #154360; }
+  .callout-icon { margin-right: 0.4rem; }
+
+  .samenvatting-table {
+    width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+    font-size: 0.88rem; background: var(--white);
+    border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;
+  }
+  .samenvatting-table caption {
+    text-align: left; font-weight: bold; font-size: 0.82rem;
+    padding: 0.6rem 0.8rem; color: var(--white);
+  }
+  .samenvatting-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #EDF2F7; vertical-align: top; }
+  .samenvatting-table tr:last-child td { border-bottom: none; }
+  .samenvatting-table td:first-child { font-weight: 600; color: var(--dark); width: 30%; }
+
+  .checklist-section {
+    background: var(--white); border: 1px solid var(--border-gray);
+    border-radius: 8px; padding: 1.5rem; margin-top: 2rem;
+  }
+  .checklist-title { font-size: 1.1rem; font-weight: bold; color: var(--dark); margin-bottom: 0.3rem; }
+  .checklist-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.5rem 0; border-bottom: 1px solid #EDF2F7;
+    font-size: 0.88rem; color: var(--dark); cursor: pointer; user-select: none;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0;
+    accent-color: #1E8449; cursor: pointer;
+  }
+  .checklist-item.checked label { color: var(--gray); text-decoration: line-through; }
+
+  @media (max-width: 1024px) {
+    .hero-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+      transition: left 0.25s ease; box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; }
+    .sidebar-overlay.show { display: block; }
+    .hero { padding: 2rem 1.2rem 1.5rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-cards { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    main { padding: 1rem 1.2rem 2rem; }
+    .section-title { font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="page-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>3.5.1 Afsluiting</h2>
+      <p>Uitleg vaardigheden</p>
+    </div>
+    <a class="nav-item domain-markt" href="#sectie-1" data-section="sectie-1">
+      <span class="nav-number">1</span>
+      <span class="nav-text">
+        <span class="nav-title">Marktevenwicht berekenen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-bedrijf" href="#sectie-2" data-section="sectie-2">
+      <span class="nav-number">2</span>
+      <span class="nav-text">
+        <span class="nav-title">Winstmaximalisatie (MO = MK)</span>
+        <span class="nav-badge">Bedrijfseconomie</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-3" data-section="sectie-3">
+      <span class="nav-number">3</span>
+      <span class="nav-text">
+        <span class="nav-title">Surplus berekenen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-markt" href="#sectie-4" data-section="sectie-4">
+      <span class="nav-number">4</span>
+      <span class="nav-text">
+        <span class="nav-title">Welvaartsverlies bepalen</span>
+        <span class="nav-badge">Marktanalyse</span>
+      </span>
+    </a>
+    <a class="nav-item domain-overheid" href="#sectie-5" data-section="sectie-5">
+      <span class="nav-number">5</span>
+      <span class="nav-text">
+        <span class="nav-title">Effecten van belasting en subsidie</span>
+        <span class="nav-badge">Overheid &amp; Handel</span>
+      </span>
+    </a>
+    <a class="nav-item domain-overheid" href="#sectie-6" data-section="sectie-6">
+      <span class="nav-number">6</span>
+      <span class="nav-text">
+        <span class="nav-title">Comparatief voordeel bepalen</span>
+        <span class="nav-badge">Overheid &amp; Handel</span>
+      </span>
+    </a>
+    <a class="nav-item domain-overheid" href="#sectie-7" data-section="sectie-7">
+      <span class="nav-number">7</span>
+      <span class="nav-text">
+        <span class="nav-title">Ruilvoet berekenen</span>
+        <span class="nav-badge">Overheid &amp; Handel</span>
+      </span>
+    </a>
+
+  </nav>
+
+  <div class="content">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="hero-badge">3.5.1 &middot; Vaardigheden</span>
+        <h1>Afsluiting &mdash; Vaardigheden</h1>
+        <p class="hero-sub">Overzicht van alle kernvaardigheden uit module 3</p>
+        <div class="hero-cards">
+          <div class="hero-card card-markt" data-target="sectie-1">
+            <div class="hero-card-num">01</div>
+            <div class="hero-card-title">Marktevenwicht berekenen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-bedrijf" data-target="sectie-2">
+            <div class="hero-card-num">02</div>
+            <div class="hero-card-title">Winstmaximalisatie (MO = MK)</div>
+            <span class="hero-card-domain">Bedrijfseconomie</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-3">
+            <div class="hero-card-num">03</div>
+            <div class="hero-card-title">Surplus berekenen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-markt" data-target="sectie-4">
+            <div class="hero-card-num">04</div>
+            <div class="hero-card-title">Welvaartsverlies bepalen</div>
+            <span class="hero-card-domain">Marktanalyse</span>
+          </div>
+          <div class="hero-card card-overheid" data-target="sectie-5">
+            <div class="hero-card-num">05</div>
+            <div class="hero-card-title">Effecten van belasting en subsidie</div>
+            <span class="hero-card-domain">Overheid &amp; Handel</span>
+          </div>
+          <div class="hero-card card-overheid" data-target="sectie-6">
+            <div class="hero-card-num">06</div>
+            <div class="hero-card-title">Comparatief voordeel bepalen</div>
+            <span class="hero-card-domain">Overheid &amp; Handel</span>
+          </div>
+          <div class="hero-card card-overheid" data-target="sectie-7">
+            <div class="hero-card-num">07</div>
+            <div class="hero-card-title">Ruilvoet berekenen</div>
+            <span class="hero-card-domain">Overheid &amp; Handel</span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="section" id="sectie-1">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">1</span>
+          <div class="section-title-group">
+            <div class="section-title">Marktevenwicht berekenen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Het marktevenwicht is het startpunt van vrijwel elke analyse. Zonder evenwichtsprijs en -hoeveelheid kun je geen surplus, belastingeffecten of welvaartsverlies berekenen.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">Je hebt twee vergelijkingen: een vraaglijn en een aanbodlijn. In het evenwicht geldt Qv = Qa (of Qv = Qa via de prijs).</p>
+        <div class="formula-box">
+            Stap 1: Stel Qv = Qa<br>
+            Stap 2: Los op naar P (evenwichtsprijs)<br>
+            Stap 3: Vul P in voor Q (evenwichtshoeveelheid)
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: Qv = 100 – 2P en Qa = –20 + 3P</p>
+        <div class="formula-box">
+            100 – 2P = –20 + 3P<br>
+            120 = 5P<br>
+            P* = 24<br>
+            Q* = 100 – 2(24) = 52
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Controleer altijd je antwoord door P* in beide vergelijkingen in te vullen. Beide moeten dezelfde Q geven.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij twee lineaire vergelijkingen de evenwichtsprijs en -hoeveelheid berekenen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Evenwicht</td><td>Het punt waar Qv = Qa</td></tr>
+            <tr><td>Methode</td><td>Vergelijkingen gelijkstellen, oplossen naar P, dan Q berekenen</td></tr>
+            <tr><td>Controle</td><td>P* invullen in beide vergelijkingen → zelfde Q</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (surplus) en 5 (belasting/subsidie)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-2">
+        <div class="section-header border-bedrijf">
+          <span class="section-num bg-bedrijf">2</span>
+          <div class="section-title-group">
+            <div class="section-title">Winstmaximalisatie (MO = MK)</div>
+            <span class="section-badge badge-bedrijf">Bedrijfseconomie</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Bij marktvormen met prijszettingsmacht (monopolie, oligopolie) kiest het bedrijf zelf hoeveel het produceert. De gouden regel is: produceer tot MO = MK.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">De marginale opbrengst (MO) is de extra opbrengst van één extra eenheid. De marginale kosten (MK) zijn de extra kosten. Zolang MO &gt; MK levert extra productie winst op.</p>
+        <div class="formula-box">
+            Stap 1: Bepaal de MO-functie (afgeleide van TO)<br>
+            Stap 2: Bepaal de MK-functie (afgeleide van TK)<br>
+            Stap 3: Stel MO = MK en los op naar Q<br>
+            Stap 4: Lees de prijs af op de vraaglijn (niet op MO!)<br>
+            Stap 5: Winst = TO – TK
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Gegeven: P = 80 – 2Q (vraaglijn) en TK = Q² + 20Q + 100</p>
+        <div class="formula-box">
+            TO = P × Q = (80 – 2Q) × Q = 80Q – 2Q²<br>
+            MO = 80 – 4Q<br>
+            MK = 2Q + 20<br>
+            MO = MK → 80 – 4Q = 2Q + 20 → Q* = 10<br>
+            P* = 80 – 2(10) = 60<br>
+            Winst = TO – TK = 600 – 300 = 300
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> MO ≠ gemiddelde opbrengst. MO is de EXTRA opbrengst van de laatst verkochte eenheid. Bij monopolie daalt MO twee keer zo snel als de vraaglijn.
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> De prijs lees je altijd af op de vraaglijn, nooit op de MO-lijn. De MO-lijn geeft alleen de optimale hoeveelheid.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een gegeven vraag- en kostenfunctie de winstmaximaliserende prijs, hoeveelheid en winst berekenen?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-bedrijf">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Regel</td><td>Produceer tot MO = MK</td></tr>
+            <tr><td>MO</td><td>Afgeleide van TO (extra opbrengst per eenheid)</td></tr>
+            <tr><td>MK</td><td>Afgeleide van TK (extra kosten per eenheid)</td></tr>
+            <tr><td>Prijs</td><td>Aflezen op vraaglijn bij Q*, niet op MO-lijn</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (evenwicht) en 4 (welvaartsverlies)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-3">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">3</span>
+          <div class="section-title-group">
+            <div class="section-title">Surplus berekenen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Surplus meet de welvaart op een markt. Consumentensurplus (CS) is het voordeel voor kopers, producentensurplus (PS) is het voordeel voor verkopers. Samen vormen ze het totale surplus.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">Bij lineaire vraag- en aanbodlijnen zijn CS en PS driehoeken. Je berekent ze met de driehoeksformule.</p>
+        <div class="formula-box">
+            CS = ½ × basis × hoogte<br>
+                = ½ × Q* × (Pmax – P*)<br>
+            <br>
+            PS = ½ × basis × hoogte<br>
+                = ½ × Q* × (P* – Pmin)<br>
+            <br>
+            Totaal surplus = CS + PS
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Met P* = 24 en Q* = 52 (uit vaardigheid 1). Pmax = 50 (snijpunt vraaglijn met P-as), Pmin = 6,67 (snijpunt aanbodlijn met P-as).</p>
+        <div class="formula-box">
+            CS = ½ × 52 × (50 – 24) = ½ × 52 × 26 = 676<br>
+            PS = ½ × 52 × (24 – 6,67) = ½ × 52 × 17,33 = 450,58<br>
+            Totaal surplus = 676 + 450,58 = 1.126,58
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Teken altijd een grafiek bij surplusberekeningen. Dan zie je direct welke driehoek je moet berekenen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je CS, PS en het totale surplus berekenen bij een lineair vraag-aanbodmodel?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>CS</td><td>Driehoek boven P* en onder de vraaglijn</td></tr>
+            <tr><td>PS</td><td>Driehoek onder P* en boven de aanbodlijn</td></tr>
+            <tr><td>Formule</td><td>½ × basis × hoogte (driehoeksformule)</td></tr>
+            <tr><td>Totaal surplus</td><td>CS + PS = maximaal bij marktevenwicht</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (evenwicht) en 4 (welvaartsverlies)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-4">
+        <div class="section-header border-markt">
+          <span class="section-num bg-markt">4</span>
+          <div class="section-title-group">
+            <div class="section-title">Welvaartsverlies bepalen</div>
+            <span class="section-badge badge-markt">Marktanalyse</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Wanneer een markt niet in het vrije-marktevenwicht is, gaat er welvaart verloren. Dit welvaartsverlies (deadweight loss) is het surplus dat verdwijnt door marktmacht, belasting of regelgeving.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">Het welvaartsverlies is het verschil tussen het totale surplus bij vrije markt en het totale surplus in de werkelijke situatie.</p>
+        <div class="formula-box">
+            Welvaartsverlies = Totaal surplus (vrije markt) – Totaal surplus (werkelijk)<br>
+            <br>
+            Bij een driehoek: WV = ½ × (Q_vrij – Q_werkelijk) × (P_hoog – P_laag)
+        </div>
+        <h3 class="sub-heading">Wanneer treedt welvaartsverlies op?</h3>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Het welvaartsverlies is altijd een driehoek. Zoek de drie hoekpunten in je grafiek en bereken de oppervlakte.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het welvaartsverlies berekenen bij monopolie, belasting en minimumprijs?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-markt">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Definitie</td><td>Surplus dat verloren gaat door afwijking van het vrije-marktevenwicht</td></tr>
+            <tr><td>Vorm</td><td>Altijd een driehoek in de grafiek</td></tr>
+            <tr><td>Oorzaken</td><td>Marktmacht, belasting, subsidie, prijsregulering</td></tr>
+            <tr><td>Berekening</td><td>½ × basis × hoogte van de verloren driehoek</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 3 (surplus) en 5 (belasting)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-5">
+        <div class="section-header border-overheid">
+          <span class="section-num bg-overheid">5</span>
+          <div class="section-title-group">
+            <div class="section-title">Effecten van belasting en subsidie</div>
+            <span class="section-badge badge-overheid">Overheid &amp; Handel</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De overheid gebruikt belastingen en subsidies om markten te sturen. Een accijns verhoogt de prijs, een subsidie verlaagt die. In beide gevallen verandert het evenwicht én het surplus.</p>
+        <h3 class="sub-heading">Hoe werkt het bij een belasting?</h3>
+        <p class="intro-text">Een belasting per eenheid (accijns) verschuift de aanbodlijn omhoog met het belastingbedrag.</p>
+        <div class="formula-box">
+            Nieuwe aanbodlijn: Qa_nieuw = Qa_oud(P – t)<br>
+            Of in prijsvorm: Pa_nieuw = Pa_oud + t<br>
+            <br>
+            Consument betaalt: Pc (hogere prijs)<br>
+            Producent ontvangt: Pp = Pc – t (lagere prijs)<br>
+            Belastingopbrengst = t × Q_nieuw
+        </div>
+        <h3 class="sub-heading">Hoe werkt het bij een subsidie?</h3>
+        <p class="intro-text">Een subsidie per eenheid verschuift de aanbodlijn omlaag met het subsidiebedrag. Het effect is precies omgekeerd aan een belasting.</p>
+        <div class="formula-box">
+            Nieuwe aanbodlijn: Pa_nieuw = Pa_oud – s<br>
+            Consument betaalt: Pc (lagere prijs)<br>
+            Producent ontvangt: Pp = Pc + s (hogere prijs)<br>
+            Subsidiekosten = s × Q_nieuw
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> De belasting wordt gedeeld door consument en producent. Wie het meeste betaalt hangt af van de prijselasticiteit: de minst elastische partij draagt het meeste.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je het nieuwe evenwicht, de belastingopbrengst en het welvaartsverlies berekenen na invoering van een belasting?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-overheid">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Belasting</td><td>Aanbodlijn omhoog → hogere prijs, lagere hoeveelheid</td></tr>
+            <tr><td>Subsidie</td><td>Aanbodlijn omlaag → lagere prijs, hogere hoeveelheid</td></tr>
+            <tr><td>Verdeling</td><td>Minst elastische partij draagt het meeste</td></tr>
+            <tr><td>Welvaartsverlies</td><td>Altijd aanwezig bij belasting (driehoek)</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 1 (evenwicht), 3 (surplus), 4 (welvaartsverlies)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-6">
+        <div class="section-header border-overheid">
+          <span class="section-num bg-overheid">6</span>
+          <div class="section-title-group">
+            <div class="section-title">Comparatief voordeel bepalen</div>
+            <span class="section-badge badge-overheid">Overheid &amp; Handel</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">Internationale handel is gebaseerd op comparatief voordeel. Zelfs als een land in alles slechter is dan een ander land, loont specialisatie als de relatieve kosten verschillen.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">Comparatief voordeel gaat over alternatieve kosten: wat moet je opgeven om één eenheid extra te produceren?</p>
+        <div class="formula-box">
+            Stap 1: Bereken de alternatieve kosten voor elk product in elk land<br>
+            Stap 2: Vergelijk de alternatieve kosten tussen landen<br>
+            Stap 3: Elk land specialiseert in het product met de LAAGSTE<br>
+                     alternatieve kosten
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Nederland kan 100 kaas of 50 wijn produceren. Frankrijk kan 60 kaas of 80 wijn produceren.</p>
+        <div class="formula-box">
+            Nederland: 1 kaas kost 50/100 = 0,5 wijn<br>
+                       1 wijn kost 100/50 = 2 kaas<br>
+            <br>
+            Frankrijk: 1 kaas kost 80/60 = 1,33 wijn<br>
+                       1 wijn kost 60/80 = 0,75 kaas<br>
+            <br>
+            Nederland: comparatief voordeel in kaas (0,5 < 1,33)<br>
+            Frankrijk: comparatief voordeel in wijn (0,75 < 2)
+        </div>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Comparatief voordeel ≠ absoluut voordeel. Een land kan in alles slechter zijn en toch comparatief voordeel hebben in één product.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je bij een tabel met productiemogelijkheden bepalen welk land zich in welk product moet specialiseren?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-overheid">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Definitie</td><td>Laagste alternatieve kosten voor een product</td></tr>
+            <tr><td>Methode</td><td>Alternatieve kosten berekenen en vergelijken</td></tr>
+            <tr><td>Sleutelregel</td><td>Specialiseer in product met laagste alternatieve kosten</td></tr>
+            <tr><td>Let op</td><td>Comparatief ≠ absoluut voordeel</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 7 (ruilvoet)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+      <section class="section" id="sectie-7">
+        <div class="section-header border-overheid">
+          <span class="section-num bg-overheid">7</span>
+          <div class="section-title-group">
+            <div class="section-title">Ruilvoet berekenen</div>
+            <span class="section-badge badge-overheid">Overheid &amp; Handel</span>
+          </div>
+        </div>
+        <h3 class="sub-heading">Waarom is dit belangrijk?</h3>
+        <p class="intro-text">De ruilvoet bepaalt de grenzen van internationale handel. Beide landen moeten er beter van worden, anders is er geen prikkel om te ruilen.</p>
+        <h3 class="sub-heading">Hoe werkt het?</h3>
+        <p class="intro-text">De ruilvoet ligt altijd tussen de alternatieve kosten van de twee landen. Binnen die grenzen profiteren beide landen.</p>
+        <div class="formula-box">
+            Ruilvoet voor product X: tussen AK_land1 en AK_land2<br>
+            <br>
+            Voorbeeld met kaas en wijn:<br>
+            AK kaas Nederland = 0,5 wijn<br>
+            AK kaas Frankrijk = 1,33 wijn<br>
+            Ruilvoet: 1 kaas wordt geruild voor 0,5 tot 1,33 wijn
+        </div>
+        <h3 class="sub-heading">Voorbeeld</h3>
+        <p class="intro-text">Bij een ruilvoet van 1 kaas = 0,8 wijn:</p>
+        <div class="callout callout-tip">
+          <span class="callout-icon">&#10024;</span>
+          <strong>Tip:</strong> Controleer altijd: ligt de ruilvoet tussen de twee alternatieve kosten? Zo niet, dan wil één van de twee landen niet ruilen.
+        </div>
+        <div class="callout callout-controle">
+          <span class="callout-icon">&#9989;</span>
+          <strong>Controle:</strong> Kun je de grenzen van de ruilvoet bepalen en controleren of een gegeven ruilvoet voor beide landen voordelig is?
+        </div>
+        <table class="samenvatting-table">
+          <caption class="caption-overheid">&#128203; Samenvatting</caption>
+          <tbody>
+            <tr><td>Ruilvoet</td><td>Hoeveel van product Y je krijgt voor 1 eenheid product X</td></tr>
+            <tr><td>Grenzen</td><td>Tussen de alternatieve kosten van beide landen</td></tr>
+            <tr><td>Voorwaarde</td><td>Beide landen moeten beter af zijn dan zonder handel</td></tr>
+            <tr><td>Controle</td><td>Ruilvoet moet tussen AK_land1 en AK_land2 liggen</td></tr>
+            <tr><td>Verband met</td><td>→ Vaardigheid 6 (comparatief voordeel)</td></tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <div class="checklist-section" style="margin-bottom: 2rem;">
+        <div class="checklist-title">Veelvoorkomende valkuilen</div>
+        <p class="checklist-sub">Let op deze veelgemaakte fouten bij het leren van deze paragraaf:</p>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;MO = MK geeft de prijs&quot; → Onjuist! MO = MK geeft de hoeveelheid. De prijs lees je af op de vraaglijn bij die hoeveelheid.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;CS = prijs × hoeveelheid&quot; → Onjuist! CS is een driehoek, niet een rechthoek. Gebruik de driehoeksformule: ½ × basis × hoogte.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Comparatief voordeel = het meeste produceren&quot; → Onjuist! Dat is absoluut voordeel. Comparatief voordeel gaat over de laagste alternatieve kosten.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Bij een belasting draagt de consument alles&quot; → Onjuist! De belasting wordt verdeeld op basis van prijselasticiteit. De minst elastische partij draagt het meeste.
+        </div>
+        <div class="callout callout-letop">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <strong>Let op:</strong> &quot;Welvaartsverlies = belastingopbrengst&quot; → Onjuist! Belastingopbrengst is een herverdeling (rechthoek). Welvaartsverlies is de driehoek die voor niemand beschikbaar is.
+        </div>
+
+      </div>
+
+
+      <div class="checklist-section">
+        <div class="checklist-title">Samenvatting checklist</div>
+        <p class="checklist-sub">Controleer of je de volgende vaardigheden beheerst:</p>
+        <div class="checklist-item">
+          <input type="checkbox" id="check1">
+          <label for="check1">Marktevenwicht berekenen door Qv = Qa op te lossen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check2">
+          <label for="check2">Winstmaximalisatie via MO = MK: optimale Q, prijs en winst bepalen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check3">
+          <label for="check3">Consumentensurplus en producentensurplus berekenen als driehoeken</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check4">
+          <label for="check4">Welvaartsverlies herkennen en berekenen bij monopolie, belasting en minimumprijs</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check5">
+          <label for="check5">Effect van belasting en subsidie op evenwichtsprijs en -hoeveelheid doorrekenen</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check6">
+          <label for="check6">Comparatief voordeel bepalen via alternatieve kosten</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check7">
+          <label for="check7">Ruilvoetgrenzen berekenen en controleren of handel voordelig is</label>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('[data-section], [data-target]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var id = el.dataset.section || el.dataset.target;
+      var target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  var navItems = document.querySelectorAll('.nav-item[data-section]');
+  var sections = document.querySelectorAll('.section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        var active = document.querySelector('.nav-item[data-section="' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('.checklist-item input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

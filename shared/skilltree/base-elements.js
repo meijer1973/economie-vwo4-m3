@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * SkillTree Base Elements — All 37 exercise generators.
  * UMD module: sets window.SKILL_TREE_ELEMENTS in browser, module.exports in Node.js.

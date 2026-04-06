@@ -1,3 +1,4 @@
+// AUTO-COPIED FROM 4veco-platform/engines/ — DO NOT EDIT HERE
 /**
  * ReasoningEngine — Pure game logic for the Reasoning Game.
  * Supports 5 game modes and 3 content domains.
