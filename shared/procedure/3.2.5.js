@@ -16,7 +16,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Stap 1",
-          text: "Gegeven: de vraagfunctie p = a \u2212 bQ en de kostenfunctie"
+          text: "Gegeven: vraagfunctie p = a \u2212 bQ en een kostenfunctie (TK of MK)"
         },
         {
           type: "choose",
@@ -29,7 +29,7 @@ var PROCEDURE_DATA = {
             {
               text: "Leid de MO-functie af: MO = a \u2212 bQ",
               correct: false,
-              feedback: "Dit is de vraagfunctie zelf (= GO), niet de MO. Bij een lineaire vraagfunctie is MO twee keer zo steil: MO = a \u2212 2bQ."
+              feedback: "Dit is de vraagfunctie (= GO per eenheid), niet de MO. Bij een lineaire vraagfunctie heeft MO een dubbele helling: MO = a \u2212 2bQ."
             },
             {
               text: "Leid de MO-functie af: MO = \u22122bQ",
@@ -54,7 +54,7 @@ var PROCEDURE_DATA = {
             {
               text: "Stel MO = GK",
               correct: false,
-              feedback: "Verwarring marginaal/gemiddeld. MO = GK is geen bekende voorwaarde. Break-even is p = GK; winstmax is MO = MK."
+              feedback: "MO = GK is geen economische voorwaarde. Break-even vind je met p = GK; winstmaximalisatie met MO = MK."
             }
           ]
         },
@@ -121,7 +121,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Eindstap",
-          text: "Conclusie: de winst of het verlies is berekend"
+          text: "Conclusie: je kent nu de optimale Q*, p* en de winst of het verlies"
         }
       ]
     },
@@ -219,7 +219,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Eindstap",
-          text: "LT-evenwicht: p = GK, \u03c0 = 0, overcapaciteit (productie < GK_min)"
+          text: "LT-evenwicht: p = GK en \u03c0 = 0, met overcapaciteit (productie ligt links van GK_min)"
         }
       ]
     },
@@ -232,7 +232,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Stap 1",
-          text: "Gegeven: een marktsituatie om te classificeren"
+          text: "Gegeven: een beschrijving van een markt"
         },
         {
           type: "choose",
@@ -297,7 +297,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Eindstap",
-          text: "Conclusie: classificatie als VC, MC, oligopolie of monopolie"
+          text: "Conclusie: de markt is een VC, MC, oligopolie of monopolie"
         }
       ]
     }

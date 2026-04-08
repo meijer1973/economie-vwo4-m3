@@ -45,8 +45,7 @@
     resultsScore:  document.getElementById("p-results-score"),
     resultsFill:   document.getElementById("p-results-fill"),
     resultsDetail: document.getElementById("p-results-detail"),
-    sidebarList:   document.getElementById("p-sidebar-list"),
-    scrollHint:    document.getElementById("p-scroll-hint")
+    sidebarList:   document.getElementById("p-sidebar-list")
   };
 
   // --- Screen management ---
@@ -55,11 +54,34 @@
       if (s) s.classList.remove("active");
     });
     if (screen) screen.classList.add("active");
+    // Hide sidebar during game, show on menu/results
+    var layout = document.querySelector(".p-content-layout");
+    if (layout) {
+      layout.classList.toggle("p-no-sidebar", screen === els.gameScreen);
+    }
   }
 
-  // --- Arrow SVG ---
+  // --- Arrow SVG (downward ↓) ---
   function arrowSVG() {
-    return '<svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>';
+    return '<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>';
+  }
+
+  // --- Auto-scroll helper ---
+  function findNextUnansweredStep() {
+    if (!engine.current) return null;
+    for (var i = 0; i < engine.current.steps.length; i++) {
+      if (engine.current.steps[i].type === "choose" && engine.selections[i] === null) return i;
+    }
+    return null;
+  }
+
+  function scrollToStep(stepIndex) {
+    var el = document.querySelector('.p-step-col[data-step="' + stepIndex + '"]');
+    if (el) {
+      setTimeout(function () {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 80);
+    }
   }
 
   // --- Sidebar ---
@@ -154,10 +176,8 @@
     renderPipeline();
     renderSidebar(proc.id);
 
-    // Scroll pipeline to start
-    if (els.pipeline && els.pipeline.parentElement) {
-      els.pipeline.parentElement.scrollLeft = 0;
-    }
+    // Scroll to top of game
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function updateStepCounter() {
@@ -245,6 +265,17 @@
           els.checkBtn.disabled = !engine.isAllSelected();
           updateStepCounter();
           renderPipeline(); // Re-render to update selection visuals
+
+          // Auto-scroll to next unanswered step, or to check button
+          var next = findNextUnansweredStep();
+          if (next !== null) {
+            scrollToStep(next);
+          } else {
+            // All selected — scroll to check button
+            setTimeout(function () {
+              els.checkBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 80);
+          }
         });
       });
     }
