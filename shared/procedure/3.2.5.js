@@ -95,7 +95,7 @@ var PROCEDURE_DATA = {
             {
               text: "Lees GTK af bij het minimum van GTK",
               correct: false,
-              feedback: "Je wilt GTK bij de geproduceerde hoeveelheid Q*, niet bij het GTK-minimum.\nHet GTK-minimum is pas relevant bij de vergelijking met VC."
+              feedback: "Je wilt GTK bij de geproduceerde hoeveelheid Q*, niet bij het GTK-minimum.\nLees GTK af bij Q*."
             }
           ]
         },
@@ -127,7 +127,7 @@ var PROCEDURE_DATA = {
       ]
     },
 
-    // ── Procedure 2: LT-evenwicht (= secties 2, 4 en 5 uitleg vaardigheden) ──
+    // ── Procedure 2: LT-evenwicht (= secties 2 en 4 uitleg vaardigheden) ──
     {
       id: "lt-evenwicht",
       title: "Lange termijn: winst verdwijnt",
@@ -215,34 +215,14 @@ var PROCEDURE_DATA = {
             {
               text: "Toetreding stopt als:\np* = GTK-minimum",
               correct: false,
-              feedback: "p = GTK-minimum is het VC LT-evenwicht.\nBij MC raakt V de GTK-curve BOVEN het minimum \u2192 daarom is er overcapaciteit."
-            }
-          ]
-        },
-        {
-          type: "choose",
-          label: "Stap 5",
-          options: [
-            {
-              text: "Productie ligt links van GTK-minimum\n\u2192 overcapaciteit",
-              correct: true
-            },
-            {
-              text: "Productie ligt bij GTK-minimum\n\u2192 geen overcapaciteit",
-              correct: false,
-              feedback: "Dat is het VC-evenwicht. Bij MC raakt V de GTK-curve boven het minimum.\nBedrijven produceren niet op de laagste kosten \u2192 overcapaciteit."
-            },
-            {
-              text: "Positieve winst op LT want het product is gedifferentieerd",
-              correct: false,
-              feedback: "Differentiatie geeft marktmacht op KT, maar vrije toetreding drukt de winst naar nul op LT.\nAlleen de overcapaciteit blijft."
+              feedback: "p = GTK-minimum is het VC LT-evenwicht.\nBij MC raakt V de GTK-curve niet per se bij het minimum."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "LT-evenwicht bij MC:\np* = GTK \u2192 winst = 0\nProductie links van GTK-minimum \u2192 overcapaciteit"
+          text: "LT-evenwicht bij MC:\np* = GTK \u2192 winst = 0\n(V raakt de GTK-curve: break-even)"
         }
       ]
     },
