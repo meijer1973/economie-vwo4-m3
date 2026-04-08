@@ -1,7 +1,7 @@
 # Vertaalrisico-analyse Economische Begrippen VWO Bovenbouw
 
 > **Methodologie:** Multi-agent analyse (4 agenten x 3 rondes) gebaseerd op het VWO examenprogramma economie 2025, domeinen D t/m I.  
-> **Bronnen:** Syllabus Centraal Examen Economie VWO 2025 (CvTE, versie 2, juli 2023), Praktische Economie VWO  
+> **Bronnen:** Syllabus Centraal Examen Economie VWO 2025 (CvTE, versie 2, juli 2023), Economie VWO  
 > **Doel:** Identificatie van Engelse economische begrippen die bij vertaling naar het Nederlands een risico vormen op een verkeerde term in VWO-context.
 
 -----
