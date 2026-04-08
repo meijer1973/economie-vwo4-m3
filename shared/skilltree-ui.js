@@ -1143,9 +1143,7 @@
         // ── Wire overlay events ───────────────────────────────
         document.getElementById('st-dep-close').addEventListener('click', goBackDependency);
 
-        document.getElementById('st-dep-overlay').addEventListener('click', function (e) {
-            if (e.target === this) closeDependencyOverlay();
-        });
+        // Close button / back button handles navigation (no background-click dismiss in fullscreen mode)
 
         // Node click → start exercise (same as main tree), but remember overlay state
         var svgNodes = document.querySelectorAll('#st-dep-overlay .st-dep-node');
