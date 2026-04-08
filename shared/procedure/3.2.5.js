@@ -1,5 +1,5 @@
 // Procedure Practice Game data for 3.2.5 Monopolistische concurrentie
-// Elke afleider is gebaseerd op een echte veelgemaakte leerlingfout.
+// Sluit aan bij de stappen uit "uitleg vaardigheden" (secties 1, 3, 4/5, 6).
 
 var PROCEDURE_DATA = {
   meta: {
@@ -7,34 +7,55 @@ var PROCEDURE_DATA = {
     parName: "Monopolistische concurrentie"
   },
   procedures: [
+    // ── Procedure 1: Winst bepalen (= sectie 3 uitleg vaardigheden) ──
     {
       id: "kt-winst",
-      title: "KT Winstmaximalisatie",
+      title: "Winst bepalen bij MC",
       icon: "fa-chart-line",
-      description: "Bepaal de winstmaximaliserende prijs en hoeveelheid op korte termijn",
+      description: "Bepaal de winst via het vijfstappenplan uit de uitleg vaardigheden",
       steps: [
         {
           type: "given",
+          label: "Gegeven",
+          text: "Gegeven: een grafiek met de vraaglijn (V), MO, MK en GTK"
+        },
+        {
+          type: "choose",
           label: "Stap 1",
-          text: "Gegeven: vraagfunctie en kostenfunctie\np = a \u2212 bQ"
+          options: [
+            {
+              text: "Stel MO = MK op\n(winstmaximalisatievoorwaarde)",
+              correct: true
+            },
+            {
+              text: "Stel p = MK op",
+              correct: false,
+              feedback: "p = MK geldt alleen bij volkomen concurrentie, waar p = MO.\nBij MC daalt de vraaglijn, dus MO < p. Gebruik MO = MK."
+            },
+            {
+              text: "Stel MO = GTK op",
+              correct: false,
+              feedback: "MO = GTK is geen economische voorwaarde.\nBreak-even vind je met p = GTK; winstmaximalisatie met MO = MK."
+            }
+          ]
         },
         {
           type: "choose",
           label: "Stap 2",
           options: [
             {
-              text: "Leid de MO-functie af:\nMO = a \u2212 2bQ",
+              text: "Los Q* op\n(snijpunt MO en MK)",
               correct: true
             },
             {
-              text: "Leid de MO-functie af:\nMO = a \u2212 bQ",
+              text: "Los Q* op uit\np = GTK",
               correct: false,
-              feedback: "Dit is de vraagfunctie (= GO per eenheid), niet de MO. Bij een lineaire vraagfunctie heeft MO een dubbele helling:\nMO = a \u2212 2bQ."
+              feedback: "p = GTK is de LT-evenwichtsconditie (nulwinst), niet de KT-winstmaximalisatie.\nGebruik het snijpunt MO = MK."
             },
             {
-              text: "Leid de MO-functie af:\nMO = \u22122bQ",
+              text: "Los Q* op uit\nV = MK",
               correct: false,
-              feedback: "Je bent de constante term \u2018a\u2019 vergeten.\nTO = p \u00d7 Q = aQ \u2212 bQ\u00b2, dus MO = a \u2212 2bQ."
+              feedback: "V = MK (ofwel p = MK) geldt alleen bij volkomen concurrentie.\nBij MC is MO \u2260 p, dus gebruik MO = MK."
             }
           ]
         },
@@ -43,18 +64,18 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "Stel MO = MK (winstmaximalisatievoorwaarde)",
+              text: "Lees p* af op de vraaglijn (V) bij Q*",
               correct: true
             },
             {
-              text: "Stel p = MK",
+              text: "Lees p* af op de MO-lijn bij Q*",
               correct: false,
-              feedback: "p = MK geldt alleen bij volkomen concurrentie, waar p = MO.\nBij MC daalt de vraagcurve, dus MO < p.\nGebruik MO = MK."
+              feedback: "De MO-lijn ligt bij MC onder de vraaglijn. Lees je p* af op MO, dan krijg je een te laag bedrag.\nDe prijs is wat de consument betaalt: lees af op V."
             },
             {
-              text: "Stel MO = GK",
+              text: "Lees p* af op de MK-lijn bij Q*",
               correct: false,
-              feedback: "MO = GK is geen economische voorwaarde. Break-even vind je met p = GK; winstmaximalisatie met MO = MK."
+              feedback: "De MK-lijn geeft de kosten van de laatste eenheid, niet de verkoopprijs.\nDe prijs lees je af op de vraaglijn (V)."
             }
           ]
         },
@@ -63,18 +84,18 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "Los Q* op uit de vergelijking MO = MK",
+              text: "Lees GTK af bij Q*",
               correct: true
             },
             {
-              text: "Los Q* op uit de vergelijking p = GK",
+              text: "Lees MK af bij Q*",
               correct: false,
-              feedback: "p = GK is de LT-evenwichtsconditie (nulwinst), niet de KT-winstmaximalisatie. Gebruik MO = MK."
+              feedback: "MK is de marginale kosten (kosten van de laatste eenheid).\nVoor de winstberekening heb je de gemiddelde kosten nodig: GTK."
             },
             {
-              text: "Los Q* op uit de vergelijking GO = GK",
+              text: "Lees GTK af bij het minimum van GTK",
               correct: false,
-              feedback: "GO = GK geeft het break-even punt, niet het winstmaximum. Winstmax vind je met MO = MK."
+              feedback: "Je wilt GTK bij de geproduceerde hoeveelheid Q*, niet bij het GTK-minimum.\nHet GTK-minimum is pas relevant bij de vergelijking met VC."
             }
           ]
         },
@@ -83,91 +104,73 @@ var PROCEDURE_DATA = {
           label: "Stap 5",
           options: [
             {
-              text: "Vul Q* in de vraagfunctie in \u2192 p*",
+              text: "Bereken de winst:\nwinst = (p* \u2212 GTK) \u00d7 Q*",
               correct: true
             },
             {
-              text: "Vul Q* in de MO-functie in \u2192 p*",
+              text: "Bereken de winst:\nwinst = p* \u00d7 Q*",
               correct: false,
-              feedback: "De MO-functie geeft de marginale opbrengst, niet de prijs. De consument betaalt de prijs op de vraagcurve:\np = a \u2212 bQ*."
+              feedback: "p* \u00d7 Q* is de totale omzet (TO), niet de winst.\nJe moet de kosten eraf trekken: winst = (p* \u2212 GTK) \u00d7 Q*."
             },
             {
-              text: "Vul Q* in de MK-functie in \u2192 p*",
+              text: "Bereken de winst:\nwinst = (p* \u2212 MK) \u00d7 Q*",
               correct: false,
-              feedback: "De MK-functie geeft de kosten van de laatste eenheid, niet de verkoopprijs. De prijs lees je af op de vraagcurve."
-            }
-          ]
-        },
-        {
-          type: "choose",
-          label: "Stap 6",
-          options: [
-            {
-              text: "Bereken winst:\n\u03c0 = (p* \u2212 GK) \u00d7 Q*",
-              correct: true
-            },
-            {
-              text: "Bereken winst:\n\u03c0 = p* \u00d7 Q*",
-              correct: false,
-              feedback: "p* \u00d7 Q* is de totale omzet (TO), niet de winst. Je moet de kosten eraf trekken:\n\u03c0 = (p* \u2212 GK) \u00d7 Q*."
-            },
-            {
-              text: "Bereken winst:\n\u03c0 = (p* \u2212 MK) \u00d7 Q*",
-              correct: false,
-              feedback: "Je trekt de marginale kosten af i.p.v. de gemiddelde kosten.\nWinst per eenheid = p \u2212 GK, niet p \u2212 MK."
+              feedback: "Je trekt de marginale kosten af i.p.v. de gemiddelde kosten.\nWinst per eenheid = p* \u2212 GTK, niet p* \u2212 MK."
             }
           ]
         },
         {
           type: "given",
-          label: "Eindstap",
-          text: "Conclusie: je kent nu de optimale Q*, p* en de winst of het verlies"
+          label: "Klaar",
+          text: "Je kent nu Q*, p* en de winst (of het verlies als p* < GTK)"
         }
       ]
     },
+
+    // ── Procedure 2: LT-evenwicht (= secties 2, 4 en 5 uitleg vaardigheden) ──
     {
       id: "lt-evenwicht",
-      title: "LT Evenwicht bij MC",
+      title: "Lange termijn: winst verdwijnt",
       icon: "fa-scale-balanced",
-      description: "Beschrijf het lange-termijn aanpassingsproces naar nulwinst",
+      description: "Beschrijf stap voor stap hoe de winst op lange termijn verdwijnt",
       steps: [
         {
           type: "given",
-          label: "Stap 1",
-          text: "Gegeven: bedrijven in de markt maken op KT positieve winst"
+          label: "Gegeven",
+          text: "Korte termijn:\np* > GTK \u2192 winst > 0"
         },
         {
           type: "choose",
-          label: "Stap 2",
+          label: "Stap 1",
           options: [
             {
-              text: "Nieuwe aanbieders treden toe tot de markt (lage toetredingsbarri\u00e8res)",
+              text: "Nieuwe aanbieders treden toe\n(toetredingsbarri\u00e8res zijn laag)",
               correct: true
             },
             {
-              text: "Bestaande bedrijven verhogen hun prijs om meer winst te maken",
+              text: "Bestaande bedrijven verhogen hun prijs",
               correct: false,
               feedback: "Bij MC heeft elk bedrijf beperkte marktmacht. De marktreactie op winst is toetreding van nieuwe concurrenten, niet prijsverhoging."
             },
             {
               text: "De overheid grijpt in en reguleert de markt",
               correct: false,
-              feedback: "LT-dynamiek bij MC draait om het vrije marktmechanisme (toetreding/uittreding), niet om overheidsbeleid."
+              feedback: "Het LT-mechanisme bij MC draait om het vrije marktmechanisme (toetreding/uittreding), niet om overheidsbeleid."
             }
           ]
         },
         {
           type: "choose",
-          label: "Stap 3",
+          label: "Stap 2",
           options: [
             {
-              text: "De individuele vraag per bedrijf verschuift naar links (meer substituten)",
+              text: "De individuele vraaglijn verschuift naar links\n(klanten verdeeld over meer aanbieders)",
               correct: true
             },
             {
               text: "De totale marktvraag daalt",
               correct: false,
-              feedback: "De marktvraag verandert niet \u2014 er komen meer aanbieders die dezelfde marktvraag verdelen. De vraag per bedrijf daalt."
+              feedback: "De marktvraag verandert niet (of stijgt zelfs door meer variatie). Het zijn de klanten die verdeeld worden over meer aanbieders.\nDe individuele vraaglijn verschuift naar links."
             },
             {
               text: "De kostencurve van elk bedrijf verschuift omhoog",
@@ -178,21 +181,41 @@ var PROCEDURE_DATA = {
         },
         {
           type: "choose",
-          label: "Stap 4",
+          label: "Stap 3",
           options: [
             {
-              text: "Toetreding stopt als:\nMO = MK \u00e9n p = GK tegelijk\n(tangentieconditie)",
+              text: "Door lagere vraag daalt p*\n\u2192 winst neemt af",
               correct: true
             },
             {
-              text: "Toetreding stopt als:\np = MK\n(allocatieve doelmatigheid)",
+              text: "Door hogere kosten daalt de winst",
               correct: false,
-              feedback: "p = MK geldt bij VC (volkomen concurrentie). Bij MC is de LT-conditie:\np = GK (nulwinst), niet p = MK."
+              feedback: "De kosten veranderen niet door toetreding. De winst daalt doordat de individuele vraaglijn naar links verschuift \u2192 lagere p*."
             },
             {
-              text: "Toetreding stopt als:\np = GK_min\n(productieve doelmatigheid)",
+              text: "Door prijsafspraken stabiliseert de winst",
               correct: false,
-              feedback: "p = GK_min is het VC LT-evenwicht. Bij MC raakt de vraagcurve de GK-curve BOVEN het minimum \u2192 overcapaciteit."
+              feedback: "Bij MC zijn er veel aanbieders \u2014 prijsafspraken zijn niet mogelijk.\nDe winst daalt doordat de vraaglijn naar links schuift."
+            }
+          ]
+        },
+        {
+          type: "choose",
+          label: "Stap 4",
+          options: [
+            {
+              text: "Toetreding stopt wanneer V de GTK-curve raakt:\np* = GTK \u2192 winst = 0 (break-even)",
+              correct: true
+            },
+            {
+              text: "Toetreding stopt als:\np* = MK",
+              correct: false,
+              feedback: "p = MK is de effici\u00ebntieconditie bij volkomen concurrentie.\nBij MC is de LT-conditie: V raakt GTK \u2192 p* = GTK \u2192 winst = 0."
+            },
+            {
+              text: "Toetreding stopt als:\np* = GTK-minimum",
+              correct: false,
+              feedback: "p = GTK-minimum is het VC LT-evenwicht.\nBij MC raakt V de GTK-curve BOVEN het minimum \u2192 daarom is er overcapaciteit."
             }
           ]
         },
@@ -201,56 +224,158 @@ var PROCEDURE_DATA = {
           label: "Stap 5",
           options: [
             {
-              text: "Nulwinst, maar productie links van GK_min \u2192 overcapaciteit",
+              text: "Productie ligt links van GTK-minimum\n\u2192 overcapaciteit",
               correct: true
             },
             {
-              text: "Nulwinst bij GK_min \u2192 geen overcapaciteit",
+              text: "Productie ligt bij GTK-minimum\n\u2192 geen overcapaciteit",
               correct: false,
-              feedback: "Dat is het VC-evenwicht. Bij MC zit het tangentiepunt links van GK_min \u2014 bedrijven produceren niet op de laagste kosten."
+              feedback: "Dat is het VC-evenwicht. Bij MC raakt V de GTK-curve boven het minimum.\nBedrijven produceren niet op de laagste kosten \u2192 overcapaciteit."
             },
             {
               text: "Positieve winst op LT want het product is gedifferentieerd",
               correct: false,
-              feedback: "Differentiatie geeft marktmacht op KT, maar vrije toetreding drukt de winst naar nul op LT. Alleen de overcapaciteit blijft."
+              feedback: "Differentiatie geeft marktmacht op KT, maar vrije toetreding drukt de winst naar nul op LT.\nAlleen de overcapaciteit blijft."
             }
           ]
         },
         {
           type: "given",
-          label: "Eindstap",
-          text: "LT-evenwicht:\np = GK en \u03c0 = 0\nMet overcapaciteit (productie ligt links van GK_min)"
+          label: "Klaar",
+          text: "LT-evenwicht bij MC:\np* = GTK \u2192 winst = 0\nProductie links van GTK-minimum \u2192 overcapaciteit"
         }
       ]
     },
+
+    // ── Procedure 3: Kenmerken MC herkennen (= sectie 1 uitleg vaardigheden) ──
     {
-      id: "marktvorm",
-      title: "Marktvorm Herkennen",
+      id: "kenmerken-mc",
+      title: "Kenmerken MC herkennen",
       icon: "fa-magnifying-glass-chart",
-      description: "Classificeer een marktsituatie als VC, MC, oligopolie of monopolie",
+      description: "Herken monopolistische concurrentie met de drie checkvragen",
       steps: [
         {
           type: "given",
+          label: "Gegeven",
+          text: "Gegeven: een beschrijving van een markt (casus)"
+        },
+        {
+          type: "choose",
+          label: "Check 1",
+          options: [
+            {
+              text: "Is het product heterogeen?\n(verschilt per aanbieder: merk, stijl, kwaliteit)",
+              correct: true
+            },
+            {
+              text: "Is het product goedkoop?",
+              correct: false,
+              feedback: "De prijs zegt niets over de marktvorm. Een hoog of laag geprijsd product kan bij elke marktvorm voorkomen.\nBij MC draait het om het product: is het heterogeen?"
+            },
+            {
+              text: "Is het product een eerste levensbehoefte?",
+              correct: false,
+              feedback: "Of iets noodzakelijk of luxe is, is irrelevant voor de marktvorm.\nBij MC draait het om de vraag: verschilt het product per aanbieder?"
+            }
+          ]
+        },
+        {
+          type: "choose",
+          label: "Check 2",
+          options: [
+            {
+              text: "Zijn er veel aanbieders?\n(geen enkele aanbieder heeft grote marktmacht)",
+              correct: true
+            },
+            {
+              text: "Is er \u00e9\u00e9n dominante aanbieder?",
+              correct: false,
+              feedback: "\u00c9\u00e9n dominante aanbieder wijst op een monopolie of oligopolie.\nBij MC zijn er juist veel aanbieders die elk een klein marktaandeel hebben."
+            },
+            {
+              text: "Maken alle bedrijven winst?",
+              correct: false,
+              feedback: "Winst kan bij elke marktvorm voorkomen op korte termijn.\nHet is geen kenmerk van de marktvorm. Kijk naar het aantal aanbieders."
+            }
+          ]
+        },
+        {
+          type: "choose",
+          label: "Check 3",
+          options: [
+            {
+              text: "Zijn de toetredingsbarri\u00e8res laag?\n(nieuwe aanbieders kunnen makkelijk toetreden)",
+              correct: true
+            },
+            {
+              text: "Is de markt internationaal?",
+              correct: false,
+              feedback: "Internationaal of nationaal zegt niets over de marktvorm.\nBij MC gaat het erom of nieuwe aanbieders makkelijk kunnen toetreden."
+            },
+            {
+              text: "Is de markt gereguleerd door de overheid?",
+              correct: false,
+              feedback: "Regulering is overheidsbeleid en kan bij elke marktvorm voorkomen.\nHet is geen kenmerk van de marktvorm zelf. Kijk naar toetredingsbarri\u00e8res."
+            }
+          ]
+        },
+        {
+          type: "given",
+          label: "Klaar",
+          text: "Alle drie ja \u2192 monopolistische concurrentie\nHeterogeen product + veel aanbieders + lage drempels = MC"
+        }
+      ]
+    },
+
+    // ── Procedure 4: Marktaandeel berekenen (= sectie 6 uitleg vaardigheden) ──
+    {
+      id: "marktaandeel",
+      title: "Marktaandeel berekenen",
+      icon: "fa-calculator",
+      description: "Bereken het marktaandeel van een aanbieder met de juiste formule",
+      steps: [
+        {
+          type: "given",
+          label: "Gegeven",
+          text: "Gegeven: afzetgegevens van een bedrijf en de totale markt"
+        },
+        {
+          type: "choose",
           label: "Stap 1",
-          text: "Gegeven: een beschrijving van een markt"
+          options: [
+            {
+              text: "Bepaal de eigen afzet\n(dit wordt de teller)",
+              correct: true
+            },
+            {
+              text: "Bepaal de totale marktafzet\n(en gebruik die als teller)",
+              correct: false,
+              feedback: "De totale marktafzet is de noemer, niet de teller!\nDe teller is de eigen afzet van het bedrijf of de groep."
+            },
+            {
+              text: "Bepaal de winst van het bedrijf",
+              correct: false,
+              feedback: "Winst is niet hetzelfde als afzet.\nMarktaandeel gaat over het deel van de totale afzet, niet over winst."
+            }
+          ]
         },
         {
           type: "choose",
           label: "Stap 2",
           options: [
             {
-              text: "Bepaal het aantal aanbieders (veel / weinig / \u00e9\u00e9n)",
+              text: "Bepaal de totale marktafzet\n(dit wordt de noemer)",
               correct: true
             },
             {
-              text: "Bepaal de hoogte van de prijs",
+              text: "Bepaal het aantal concurrenten",
               correct: false,
-              feedback: "De prijs alleen zegt niets over de marktvorm. Een hoge prijs kan bij elke marktvorm voorkomen. Begin met de marktstructuur: hoeveel aanbieders zijn er?"
+              feedback: "Het aantal concurrenten is niet de totale marktafzet.\nJe hebt het totaal van de hele markt nodig als noemer."
             },
             {
-              text: "Bepaal de winst van het bedrijf",
+              text: "Bepaal de afzet van de grootste concurrent",
               correct: false,
-              feedback: "Winst kan bij elke marktvorm voorkomen op KT. Het is geen onderscheidend criterium. Kijk eerst naar het aantal aanbieders."
+              feedback: "Je vergelijkt niet met \u00e9\u00e9n concurrent, maar met de hele markt.\nDe noemer is altijd het totaal van de hele markt."
             }
           ]
         },
@@ -259,45 +384,25 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "Bepaal het type product (homogeen/heterogeen) en de toetredingsbarri\u00e8res",
+              text: "Marktaandeel =\n(eigen afzet / totale marktafzet) \u00d7 100%",
               correct: true
             },
             {
-              text: "Bepaal de prijselasticiteit van de vraag",
+              text: "Marktaandeel =\n(totale marktafzet / eigen afzet) \u00d7 100%",
               correct: false,
-              feedback: "Elasticiteit hangt samen met de marktvorm, maar is geen classificatiecriterium. Kijk naar het product (homogeen/heterogeen) en de toetredingsbarri\u00e8res."
+              feedback: "Teller en noemer zijn verwisseld! Dit is de meest gemaakte fout.\nDe eigen afzet staat in de teller, het totaal in de noemer."
             },
             {
-              text: "Bepaal of er overheidssubsidie is",
+              text: "Marktaandeel =\neigen afzet \u2212 totale marktafzet",
               correct: false,
-              feedback: "Subsidie is overheidsbeleid en kan bij elke marktvorm voorkomen. Het is geen kenmerk van de marktvorm zelf."
-            }
-          ]
-        },
-        {
-          type: "choose",
-          label: "Stap 4",
-          options: [
-            {
-              text: "Check strategische interdependentie (ja \u2192 oligopolie, nee \u2192 MC of VC)",
-              correct: true
-            },
-            {
-              text: "Check of het product een luxegoed is",
-              correct: false,
-              feedback: "Luxe vs. noodzakelijk is irrelevant voor de marktvorm. H\u00e9t sleutelonderscheid tussen MC en oligopolie is strategische interdependentie."
-            },
-            {
-              text: "Check of de overheid de markt reguleert",
-              correct: false,
-              feedback: "Regulering kan bij elke marktvorm voorkomen en is geen classificatiecriterium. Kijk naar interdependentie tussen bedrijven."
+              feedback: "Marktaandeel is een verhouding (deling), geen verschil (aftrekking).\nGebruik: (eigen afzet / totale marktafzet) \u00d7 100%."
             }
           ]
         },
         {
           type: "given",
-          label: "Eindstap",
-          text: "Conclusie: de markt is een VC, MC, oligopolie of monopolie"
+          label: "Klaar",
+          text: "Het marktaandeel is berekend\nOnthoud: teller = deel, noemer = totaal"
         }
       ]
     }
