@@ -9,32 +9,32 @@ var PROCEDURE_DATA = {
   procedures: [
     {
       id: "kt-winst",
-      title: "Winst bepalen bij MC",
+      title: "Winst bepalen",
       icon: "fa-chart-line",
       description: "Bepaal in vijf stappen de winst uit een grafiek",
       steps: [
         {
           type: "given",
           label: "Gegeven",
-          text: "Een grafiek met de vraaglijn (V), MO, MK en GTK"
+          text: "Een grafiek met de vraaglijn (V),\nde marginale opbrengst (MO), marginale kosten (MK)\nen gemiddelde totale kosten (GTK)"
         },
         {
           type: "choose",
           label: "Stap 1",
           options: [
             {
-              text: "Stel MO = MK op",
+              text: "Gebruik de regel:\nmarginale opbrengst = marginale kosten\n(MO = MK)",
               correct: true
             },
             {
-              text: "Stel P = MK op",
+              text: "Gebruik de regel:\nprijs = marginale kosten\n(P = MK)",
               correct: false,
-              feedback: "P = MK geldt alleen bij volkomen concurrentie.\nBij MC gebruik je MO = MK."
+              feedback: "P = MK geldt alleen bij volkomen concurrentie.\nHier gebruik je MO = MK."
             },
             {
-              text: "Stel MO = GTK op",
+              text: "Gebruik de regel:\nmarginale opbrengst = gemiddelde kosten\n(MO = GTK)",
               correct: false,
-              feedback: "MO = GTK bestaat niet als regel.\nWinstmaximalisatie doe je met MO = MK."
+              feedback: "MO = GTK bestaat niet als regel.\nVoor maximale winst gebruik je MO = MK."
             }
           ]
         },
@@ -43,18 +43,18 @@ var PROCEDURE_DATA = {
           label: "Stap 2",
           options: [
             {
-              text: "Zoek Q* bij het snijpunt van MO en MK",
+              text: "Zoek Q*:\nde hoeveelheid waar MO en MK elkaar snijden",
               correct: true
             },
             {
-              text: "Zoek Q* bij het snijpunt van P en GTK",
+              text: "Zoek Q*:\nde hoeveelheid waar prijs en GTK elkaar snijden",
               correct: false,
-              feedback: "P = GTK hoort bij het lange-termijn evenwicht (nulwinst).\nVoor winstmaximalisatie zoek je MO = MK."
+              feedback: "Prijs = GTK hoort bij het lange-termijn evenwicht (nulwinst).\nVoor maximale winst zoek je waar MO = MK."
             },
             {
-              text: "Zoek Q* bij het snijpunt van V en MK",
+              text: "Zoek Q*:\nde hoeveelheid waar de vraaglijn en MK elkaar snijden",
               correct: false,
-              feedback: "V = MK is het evenwicht bij volkomen concurrentie.\nBij MC gebruik je MO = MK."
+              feedback: "Vraaglijn = MK is het evenwicht bij volkomen concurrentie.\nHier gebruik je MO = MK."
             }
           ]
         },
@@ -63,18 +63,18 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "Lees P* af op de vraaglijn (V) bij Q*",
+              text: "Lees de prijs (P*) af\nop de vraaglijn bij Q*",
               correct: true
             },
             {
-              text: "Lees P* af op de MO-lijn bij Q*",
+              text: "Lees de prijs (P*) af\nop de MO-lijn bij Q*",
               correct: false,
-              feedback: "De MO-lijn ligt onder de vraaglijn. Dan krijg je een te laag bedrag.\nDe prijs lees je altijd af op V."
+              feedback: "De MO-lijn ligt onder de vraaglijn \u2014 dan krijg je een te laag bedrag.\nDe prijs lees je altijd af op de vraaglijn."
             },
             {
-              text: "Lees P* af op de MK-lijn bij Q*",
+              text: "Lees de prijs (P*) af\nop de MK-lijn bij Q*",
               correct: false,
-              feedback: "MK geeft de kosten, niet de prijs.\nDe prijs lees je af op de vraaglijn (V)."
+              feedback: "De MK-lijn geeft de kosten, niet de prijs.\nDe prijs lees je af op de vraaglijn."
             }
           ]
         },
@@ -83,18 +83,18 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "Lees GTK af bij Q*",
+              text: "Lees de gemiddelde kosten (GTK) af bij Q*",
               correct: true
             },
             {
-              text: "Lees MK af bij Q*",
+              text: "Lees de marginale kosten (MK) af bij Q*",
               correct: false,
               feedback: "MK is de kosten van de laatste eenheid.\nVoor de winst heb je de gemiddelde kosten nodig: GTK."
             },
             {
-              text: "Lees GTK af bij het laagste punt van GTK",
+              text: "Lees de GTK af bij het laagste punt van de GTK-curve",
               correct: false,
-              feedback: "Je wilt GTK bij Q*, niet bij het laagste punt.\nLees GTK af bij de hoeveelheid die je produceert."
+              feedback: "Je wilt de GTK bij Q*, niet bij het laagste punt.\nLees GTK af bij de hoeveelheid die je produceert."
             }
           ]
         },
@@ -103,25 +103,25 @@ var PROCEDURE_DATA = {
           label: "Stap 5",
           options: [
             {
-              text: "Winst =\n(P* \u2212 GTK) \u00d7 Q*",
+              text: "Winst per stuk = prijs \u2212 GTK\nTotale winst = (P* \u2212 GTK) \u00d7 Q*",
               correct: true
             },
             {
-              text: "Winst =\nP* \u00d7 Q*",
+              text: "Winst = P* \u00d7 Q*",
               correct: false,
               feedback: "Dat is de omzet, niet de winst.\nJe moet de kosten eraf trekken: (P* \u2212 GTK) \u00d7 Q*."
             },
             {
-              text: "Winst =\n(P* \u2212 MK) \u00d7 Q*",
+              text: "Winst = (P* \u2212 MK) \u00d7 Q*",
               correct: false,
-              feedback: "Je gebruikt hier MK in plaats van GTK.\nWinst per stuk = P* \u2212 GTK."
+              feedback: "Je gebruikt hier MK in plaats van GTK.\nWinst per stuk = prijs \u2212 GTK."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "Je kent nu Q*, P* en de winst\n(of het verlies, als P* < GTK)"
+          text: "Je kent nu Q*, P* en de winst\n(of het verlies, als P* lager is dan GTK)"
         }
       ]
     },
@@ -130,30 +130,30 @@ var PROCEDURE_DATA = {
       id: "lt-evenwicht",
       title: "Lange termijn: winst verdwijnt",
       icon: "fa-scale-balanced",
-      description: "Wat gebeurt er als bedrijven winst maken bij MC?",
+      description: "Wat gebeurt er als bedrijven winst maken?",
       steps: [
         {
           type: "given",
           label: "Gegeven",
-          text: "Korte termijn: bedrijven maken winst\n(P* > GTK)"
+          text: "Korte termijn: bedrijven maken winst\n(de prijs is hoger dan de gemiddelde kosten)"
         },
         {
           type: "choose",
           label: "Stap 1",
           options: [
             {
-              text: "Er komen nieuwe aanbieders bij\n(de drempels zijn laag)",
+              text: "Er komen nieuwe aanbieders bij\n(de toetredingsdrempels zijn laag)",
               correct: true
             },
             {
               text: "Bestaande bedrijven verhogen hun prijs",
               correct: false,
-              feedback: "Bij MC hebben bedrijven weinig marktmacht.\nWinst trekt juist nieuwe concurrenten aan."
+              feedback: "Bij deze marktvorm hebben bedrijven weinig marktmacht.\nWinst trekt juist nieuwe concurrenten aan."
             },
             {
               text: "De overheid grijpt in",
               correct: false,
-              feedback: "Bij MC draait het om toetreding en uittreding, niet om de overheid."
+              feedback: "Het gaat hier om toetreding en uittreding, niet om de overheid."
             }
           ]
         },
@@ -168,7 +168,7 @@ var PROCEDURE_DATA = {
             {
               text: "De totale marktvraag daalt",
               correct: false,
-              feedback: "De marktvraag verandert niet.\nDe klanten worden verdeeld over meer aanbieders, dus de vraag per bedrijf daalt."
+              feedback: "De marktvraag verandert niet.\nDe klanten worden verdeeld over meer aanbieders."
             },
             {
               text: "De kosten per bedrijf stijgen",
@@ -188,12 +188,12 @@ var PROCEDURE_DATA = {
             {
               text: "De kosten stijgen en de winst neemt af",
               correct: false,
-              feedback: "De kosten veranderen niet.\nDe winst daalt omdat de vraaglijn naar links schuift en de prijs daalt."
+              feedback: "De kosten veranderen niet.\nDe winst daalt omdat de vraaglijn naar links schuift."
             },
             {
               text: "Bedrijven maken prijsafspraken",
               correct: false,
-              feedback: "Bij MC zijn er te veel aanbieders voor prijsafspraken.\nDe winst daalt gewoon door meer concurrentie."
+              feedback: "Er zijn te veel aanbieders voor prijsafspraken.\nDe winst daalt gewoon door meer concurrentie."
             }
           ]
         },
@@ -202,34 +202,34 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "Toetreding stopt als V de GTK raakt\nP* = GTK \u2192 winst = 0",
+              text: "Toetreding stopt als de vraaglijn\nde GTK-curve raakt.\nDan geldt: prijs = GTK, dus winst = 0",
               correct: true
             },
             {
-              text: "Toetreding stopt als P* = MK",
+              text: "Toetreding stopt als\nde prijs gelijk is aan de marginale kosten",
               correct: false,
-              feedback: "P = MK is het criterium bij volkomen concurrentie.\nBij MC stopt toetreding als P* = GTK (nulwinst)."
+              feedback: "Prijs = MK is het criterium bij volkomen concurrentie.\nHier stopt toetreding als prijs = GTK (nulwinst)."
             },
             {
-              text: "Toetreding stopt als P* = laagste punt van GTK",
+              text: "Toetreding stopt als\nde prijs gelijk is aan het laagste punt van GTK",
               correct: false,
-              feedback: "Dat is het evenwicht bij volkomen concurrentie.\nBij MC raakt V de GTK-curve, maar niet per se bij het laagste punt."
+              feedback: "Dat is het evenwicht bij volkomen concurrentie.\nHier raakt de vraaglijn de GTK-curve, maar niet per se bij het laagste punt."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "Lange termijn bij MC:\nP* = GTK, winst = 0\n(V raakt de GTK-curve)"
+          text: "Lange termijn:\nDe vraaglijn raakt de GTK-curve.\nPrijs = GTK, winst = 0"
         }
       ]
     },
 
     {
       id: "kenmerken-mc",
-      title: "MC herkennen",
+      title: "Monopolistische concurrentie herkennen",
       icon: "fa-magnifying-glass-chart",
-      description: "Herken monopolistische concurrentie in drie stappen",
+      description: "Herken deze marktvorm in drie stappen",
       steps: [
         {
           type: "given",
@@ -267,7 +267,7 @@ var PROCEDURE_DATA = {
             {
               text: "Is er \u00e9\u00e9n grote aanbieder?",
               correct: false,
-              feedback: "\u00c9\u00e9n grote aanbieder wijst op monopolie of oligopolie.\nBij MC zijn er juist veel aanbieders."
+              feedback: "\u00c9\u00e9n grote aanbieder wijst op monopolie of oligopolie.\nBij deze marktvorm zijn er juist veel aanbieders."
             },
             {
               text: "Maken de bedrijven winst?",
@@ -281,7 +281,7 @@ var PROCEDURE_DATA = {
           label: "Check 3",
           options: [
             {
-              text: "Zijn de toetredingsdrempels laag?\n(makkelijk toetreden)",
+              text: "Zijn de toetredingsdrempels laag?\n(nieuwe aanbieders kunnen makkelijk toetreden)",
               correct: true
             },
             {
@@ -320,7 +320,7 @@ var PROCEDURE_DATA = {
           label: "Stap 1",
           options: [
             {
-              text: "Zoek de eigen afzet\n(dit is de teller)",
+              text: "Zoek de eigen afzet\n(dit is de teller van de breuk)",
               correct: true
             },
             {
@@ -340,18 +340,18 @@ var PROCEDURE_DATA = {
           label: "Stap 2",
           options: [
             {
-              text: "Zoek de totale marktafzet\n(dit is de noemer)",
+              text: "Zoek de totale marktafzet\n(dit is de noemer van de breuk)",
               correct: true
             },
             {
               text: "Tel het aantal concurrenten",
               correct: false,
-              feedback: "Het aantal concurrenten is niet de totale afzet.\nJe hebt het totaal van de hele markt nodig."
+              feedback: "Het aantal concurrenten is niet hetzelfde als de totale afzet.\nJe hebt de totale afzet van de hele markt nodig."
             },
             {
               text: "Zoek de afzet van de grootste concurrent",
               correct: false,
-              feedback: "Je vergelijkt niet met \u00e9\u00e9n concurrent maar met de hele markt.\nDe noemer is het totaal van de hele markt."
+              feedback: "Je vergelijkt niet met \u00e9\u00e9n concurrent maar met de hele markt.\nDe noemer is de totale afzet van de hele markt."
             }
           ]
         },
@@ -360,18 +360,18 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "Marktaandeel =\neigen afzet / totaal \u00d7 100%",
+              text: "Marktaandeel =\neigen afzet \u00f7 totale afzet \u00d7 100%",
               correct: true
             },
             {
-              text: "Marktaandeel =\ntotaal / eigen afzet \u00d7 100%",
+              text: "Marktaandeel =\ntotale afzet \u00f7 eigen afzet \u00d7 100%",
               correct: false,
               feedback: "Teller en noemer zijn omgedraaid!\nDe eigen afzet staat boven de streep, het totaal eronder."
             },
             {
-              text: "Marktaandeel =\neigen afzet \u2212 totaal",
+              text: "Marktaandeel =\neigen afzet \u2212 totale afzet",
               correct: false,
-              feedback: "Marktaandeel is een breuk (delen), niet een verschil (aftrekken).\nGebruik: eigen afzet / totaal \u00d7 100%."
+              feedback: "Marktaandeel is een breuk (delen), niet een verschil (aftrekken).\nGebruik: eigen afzet \u00f7 totaal \u00d7 100%."
             }
           ]
         },

@@ -9,9 +9,9 @@ var PROCEDURE_DATA = {
   procedures: [
     {
       id: "cs-berekenen",
-      title: "CS berekenen",
+      title: "Consumentensurplus berekenen",
       icon: "fa-chart-area",
-      description: "Bereken het consumentensurplus in vier stappen",
+      description: "Bereken het voordeel voor consumenten in vier stappen",
       steps: [
         {
           type: "given",
@@ -23,18 +23,18 @@ var PROCEDURE_DATA = {
           label: "Stap 1",
           options: [
             {
-              text: "Zoek de prijs P* in de grafiek",
+              text: "Zoek de evenwichtsprijs (P*) in de grafiek",
               correct: true
             },
             {
               text: "Zoek het punt waar MO = MK",
               correct: false,
-              feedback: "MO = MK gebruik je bij winstmaximalisatie.\nVoor het CS heb je de prijs P* nodig."
+              feedback: "MO = MK gebruik je bij winstmaximalisatie.\nVoor het consumentensurplus heb je de prijs nodig."
             },
             {
-              text: "Zoek de GTK bij Q*",
+              text: "Zoek de gemiddelde kosten (GTK) bij Q*",
               correct: false,
-              feedback: "GTK heb je nodig bij winstberekening, niet bij het CS.\nZoek eerst de prijs P*."
+              feedback: "GTK heb je nodig bij winstberekening, niet bij het consumentensurplus.\nZoek eerst de prijs."
             }
           ]
         },
@@ -43,18 +43,18 @@ var PROCEDURE_DATA = {
           label: "Stap 2",
           options: [
             {
-              text: "Zoek waar V de y-as snijdt\n(= de hoogste prijs die iemand wil betalen)",
+              text: "Zoek waar de vraaglijn de y-as snijdt.\nDit is de hoogste prijs die iemand wil betalen (P_max)",
               correct: true
             },
             {
-              text: "Zoek waar V de x-as snijdt",
+              text: "Zoek waar de vraaglijn de x-as snijdt",
               correct: false,
-              feedback: "Dat geeft de maximale hoeveelheid, niet de maximale prijs.\nHet CS begint bij de y-as."
+              feedback: "Dat geeft de maximale hoeveelheid, niet de maximale prijs.\nHet consumentensurplus begint bij de y-as."
             },
             {
-              text: "Zoek waar MK de y-as snijdt",
+              text: "Zoek waar de MK-lijn de y-as snijdt",
               correct: false,
-              feedback: "MK gaat over kosten, niet over wat consumenten willen betalen.\nKijk naar de vraaglijn V."
+              feedback: "MK gaat over kosten, niet over wat consumenten willen betalen.\nKijk naar de vraaglijn."
             }
           ]
         },
@@ -63,18 +63,18 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "CS = driehoek boven P* en onder V",
+              text: "Het consumentensurplus is de driehoek\nboven de prijs en onder de vraaglijn",
               correct: true
             },
             {
-              text: "CS = driehoek onder P* en boven MK",
+              text: "Het consumentensurplus is de driehoek\nonder de prijs en boven de MK-lijn",
               correct: false,
-              feedback: "Dat is het producentensurplus (PS)!\nCS ligt boven de prijs, PS ligt eronder."
+              feedback: "Dat is het producentensurplus!\nConsumentensurplus ligt boven de prijs, producentensurplus eronder."
             },
             {
-              text: "CS = rechthoek P* \u00d7 Q*",
+              text: "Het consumentensurplus is de rechthoek\nprijs \u00d7 hoeveelheid",
               correct: false,
-              feedback: "P* \u00d7 Q* is wat consumenten in totaal betalen.\nHet CS is wat ze besparen: een driehoek, geen rechthoek."
+              feedback: "Prijs \u00d7 hoeveelheid is wat consumenten betalen.\nHet surplus is wat ze besparen: een driehoek, geen rechthoek."
             }
           ]
         },
@@ -83,57 +83,57 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "CS =\n\u00bd \u00d7 Q* \u00d7 (P_max \u2212 P*)",
+              text: "Consumentensurplus =\n\u00bd \u00d7 Q* \u00d7 (P_max \u2212 P*)",
               correct: true
             },
             {
-              text: "CS =\nQ* \u00d7 (P_max \u2212 P*)",
+              text: "Consumentensurplus =\nQ* \u00d7 (P_max \u2212 P*)",
               correct: false,
               feedback: "Je bent de \u00bd vergeten!\nHet is een driehoek: \u00bd \u00d7 basis \u00d7 hoogte."
             },
             {
-              text: "CS =\n\u00bd \u00d7 P* \u00d7 Q*",
+              text: "Consumentensurplus =\n\u00bd \u00d7 P* \u00d7 Q*",
               correct: false,
-              feedback: "Dat is de formule voor het PS (bij MK door de oorsprong).\nVoor CS gebruik je: \u00bd \u00d7 Q* \u00d7 (P_max \u2212 P*)."
+              feedback: "Dat is de formule voor het producentensurplus\n(bij een MK-lijn door de oorsprong)."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "CS berekend!\nCS = driehoek boven de prijs, onder de vraaglijn"
+          text: "Consumentensurplus berekend!\nDit is de driehoek boven de prijs, onder de vraaglijn"
         }
       ]
     },
 
     {
       id: "harberger",
-      title: "Harbergerdriehoek",
+      title: "Welvaartsverlies bij monopolie",
       icon: "fa-triangle-exclamation",
-      description: "Bereken het welvaartsverlies door monopolie",
+      description: "Bereken de Harbergerdriehoek: het surplus dat verloren gaat",
       steps: [
         {
           type: "given",
           label: "Gegeven",
-          text: "Een grafiek met V, MO en MK"
+          text: "Een grafiek met de vraaglijn (V),\nmarginale opbrengst (MO) en marginale kosten (MK)"
         },
         {
           type: "choose",
           label: "Stap 1",
           options: [
             {
-              text: "Zoek het VC-evenwicht (punt B)\nDaar geldt: P = MK",
+              text: "Zoek het evenwicht bij volkomen concurrentie.\nDaar geldt: prijs = MK",
               correct: true
             },
             {
-              text: "Zoek het VC-evenwicht\nDaar geldt: MO = MK",
+              text: "Zoek het evenwicht bij volkomen concurrentie.\nDaar geldt: MO = MK",
               correct: false,
-              feedback: "MO = MK hoort bij monopolie.\nBij VC is de prijs gelijk aan MK: P = MK."
+              feedback: "MO = MK hoort bij monopolie.\nBij volkomen concurrentie is de prijs gelijk aan MK."
             },
             {
-              text: "Zoek het VC-evenwicht\nDaar geldt: P = GTK",
+              text: "Zoek het evenwicht bij volkomen concurrentie.\nDaar geldt: prijs = GTK",
               correct: false,
-              feedback: "P = GTK betekent nulwinst (break-even).\nHet VC-evenwicht is waar P = MK."
+              feedback: "Prijs = GTK betekent nulwinst.\nHet evenwicht bij volkomen concurrentie is waar prijs = MK."
             }
           ]
         },
@@ -142,18 +142,18 @@ var PROCEDURE_DATA = {
           label: "Stap 2",
           options: [
             {
-              text: "Zoek het monopolie-evenwicht:\nMO = MK geeft Q_m, prijs aflezen op V",
+              text: "Zoek het monopolie-evenwicht:\nMO = MK geeft de hoeveelheid.\nDe prijs lees je af op de vraaglijn",
               correct: true
             },
             {
-              text: "Zoek het monopolie-evenwicht:\nV = MK geeft Q_m en P_m",
+              text: "Zoek het monopolie-evenwicht:\nvraaglijn = MK geeft hoeveelheid en prijs",
               correct: false,
-              feedback: "V = MK is het VC-evenwicht!\nBij monopolie gebruik je MO = MK en lees je de prijs af op V."
+              feedback: "Vraaglijn = MK is volkomen concurrentie!\nBij monopolie gebruik je MO = MK en lees je de prijs af op de vraaglijn."
             },
             {
-              text: "Zoek het monopolie-evenwicht:\nMO = MK geeft Q_m, prijs aflezen op MO",
+              text: "Zoek het monopolie-evenwicht:\nMO = MK geeft de hoeveelheid.\nDe prijs lees je af op de MO-lijn",
               correct: false,
-              feedback: "De prijs lees je af op V, niet op MO.\nMO is niet wat de consument betaalt."
+              feedback: "De prijs lees je af op de vraaglijn, niet op MO.\nMO is niet wat de consument betaalt."
             }
           ]
         },
@@ -162,16 +162,16 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "De Harbergerdriehoek = welvaartsverlies\n(driehoek tussen VC- en monopoliepunt)",
+              text: "De Harbergerdriehoek is het welvaartsverlies:\nde driehoek tussen het VC-punt en het monopoliepunt",
               correct: true
             },
             {
-              text: "De Harbergerdriehoek = het verschil in CS",
+              text: "De Harbergerdriehoek is\nhet verschil in consumentensurplus",
               correct: false,
-              feedback: "Het is het verlies aan totaal surplus (CS + PS samen).\nEen deel van het CS wordt PS, maar de driehoek verdwijnt helemaal."
+              feedback: "Het is het verlies aan totaal surplus\n(consumentensurplus + producentensurplus samen).\nEen deel van het CS wordt PS, maar de driehoek verdwijnt helemaal."
             },
             {
-              text: "De Harbergerdriehoek = de winst van de monopolist",
+              text: "De Harbergerdriehoek is\nde winst van de monopolist",
               correct: false,
               feedback: "De monopoliewinst is een rechthoek.\nDe Harbergerdriehoek is surplus dat niemand meer krijgt."
             }
@@ -182,18 +182,18 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "Oppervlakte =\n\u00bd \u00d7 (Q_vc \u2212 Q_m) \u00d7 (P_m \u2212 MK_m)",
+              text: "Oppervlakte Harbergerdriehoek =\n\u00bd \u00d7 (hoeveelheid VC \u2212 hoeveelheid monopolie)\n\u00d7 (prijs monopolie \u2212 MK bij monopolie)",
               correct: true
             },
             {
-              text: "Oppervlakte =\n(Q_vc \u2212 Q_m) \u00d7 (P_m \u2212 MK_m)",
+              text: "Oppervlakte =\n(hoeveelheid VC \u2212 hoeveelheid monopolie)\n\u00d7 (prijs monopolie \u2212 MK bij monopolie)",
               correct: false,
               feedback: "Je bent de \u00bd vergeten!\nHet is een driehoek: \u00bd \u00d7 basis \u00d7 hoogte."
             },
             {
-              text: "Oppervlakte =\n\u00bd \u00d7 (P_m \u2212 P_vc) \u00d7 (Q_vc \u2212 Q_m)",
+              text: "Oppervlakte =\n\u00bd \u00d7 (prijs monopolie \u2212 prijs VC)\n\u00d7 (hoeveelheid VC \u2212 hoeveelheid monopolie)",
               correct: false,
-              feedback: "De hoogte is P_m \u2212 MK_m, niet P_m \u2212 P_vc.\nKijk naar de afstand tussen prijs en MK bij Q_m."
+              feedback: "De hoogte is: prijs monopolie \u2212 MK bij monopolie.\nNiet: prijs monopolie \u2212 prijs VC."
             }
           ]
         },
@@ -209,30 +209,30 @@ var PROCEDURE_DATA = {
       id: "ts-vergelijken",
       title: "Totaal surplus vergelijken",
       icon: "fa-scale-balanced",
-      description: "Vergelijk de welvaart bij VC en monopolie",
+      description: "Vergelijk de totale welvaart bij volkomen concurrentie en monopolie",
       steps: [
         {
           type: "given",
           label: "Gegeven",
-          text: "Een markt met VC-evenwicht en monopolie-evenwicht"
+          text: "Een markt met een evenwicht bij\nvolkomen concurrentie en bij monopolie"
         },
         {
           type: "choose",
           label: "Stap 1",
           options: [
             {
-              text: "Bereken CS en PS bij volkomen concurrentie\nTS = CS + PS",
+              text: "Bereken het consumentensurplus \u00e9n het\nproducentensurplus bij volkomen concurrentie.\nTel ze bij elkaar op: dat is het totaal surplus",
               correct: true
             },
             {
-              text: "Bereken alleen CS bij volkomen concurrentie",
+              text: "Bereken alleen het consumentensurplus\nbij volkomen concurrentie",
               correct: false,
-              feedback: "Totaal surplus = CS + PS samen.\nJe hebt beide nodig."
+              feedback: "Het totaal surplus = consumentensurplus + producentensurplus.\nJe hebt beide nodig."
             },
             {
               text: "Bereken de winst bij volkomen concurrentie",
               correct: false,
-              feedback: "Bij VC is de winst op lange termijn nul.\nTotaal surplus bereken je met CS + PS."
+              feedback: "Bij volkomen concurrentie is de winst op lange termijn nul.\nTotaal surplus bereken je met consumentensurplus + producentensurplus."
             }
           ]
         },
@@ -241,18 +241,18 @@ var PROCEDURE_DATA = {
           label: "Stap 2",
           options: [
             {
-              text: "Bereken CS en PS bij monopolie\nTS = CS + PS",
+              text: "Bereken het consumentensurplus \u00e9n het\nproducentensurplus bij monopolie.\nTel ze bij elkaar op: dat is het totaal surplus",
               correct: true
             },
             {
-              text: "Bereken alleen PS bij monopolie",
+              text: "Bereken alleen het producentensurplus\nbij monopolie",
               correct: false,
-              feedback: "Totaal surplus = CS + PS samen.\nBij monopolie is CS kleiner, maar het bestaat nog steeds."
+              feedback: "Het totaal surplus = consumentensurplus + producentensurplus.\nBij monopolie is het CS kleiner, maar het bestaat nog steeds."
             },
             {
               text: "Bereken meteen de Harbergerdriehoek",
               correct: false,
-              feedback: "De Harbergerdriehoek is het resultaat.\nBereken eerst CS en PS bij monopolie."
+              feedback: "De Harbergerdriehoek is het eindresultaat.\nBereken eerst het totaal surplus bij monopolie."
             }
           ]
         },
@@ -261,25 +261,25 @@ var PROCEDURE_DATA = {
           label: "Stap 3",
           options: [
             {
-              text: "Verschil = TS bij VC \u2212 TS bij monopolie\n= Harbergerdriehoek",
+              text: "Trek het totaal surplus bij monopolie af\nvan het totaal surplus bij volkomen concurrentie.\nHet verschil is de Harbergerdriehoek",
               correct: true
             },
             {
-              text: "Verschil = TS bij monopolie \u2212 TS bij VC",
+              text: "Trek het totaal surplus bij volkomen concurrentie af\nvan het totaal surplus bij monopolie",
               correct: false,
-              feedback: "Andersom! VC heeft altijd een hoger totaal surplus.\nTS_vc \u2212 TS_monopolie = Harbergerdriehoek."
+              feedback: "Andersom! Volkomen concurrentie heeft altijd een hoger totaal surplus.\nDus: totaal surplus VC \u2212 totaal surplus monopolie."
             },
             {
-              text: "Verschil = CS bij VC \u2212 CS bij monopolie",
+              text: "Trek het consumentensurplus bij monopolie af\nvan het consumentensurplus bij volkomen concurrentie",
               correct: false,
-              feedback: "De Harbergerdriehoek is het verschil in totaal surplus (CS + PS), niet alleen CS.\nEen deel van het CS wordt PS bij monopolie."
+              feedback: "De Harbergerdriehoek is het verschil in totaal surplus\n(consumentensurplus + producentensurplus samen), niet alleen in CS."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "VC heeft altijd een hoger totaal surplus\nHet verschil is de Harbergerdriehoek"
+          text: "Volkomen concurrentie heeft altijd een hoger totaal surplus.\nHet verschil is de Harbergerdriehoek (welvaartsverlies)"
         }
       ]
     },
@@ -293,18 +293,18 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Gegeven",
-          text: "Gegevens over een markt (prijs, kosten, surplus)"
+          text: "Gegevens over een markt:\nprijs, kosten en surplus"
         },
         {
           type: "choose",
           label: "Check 1",
           options: [
             {
-              text: "Is de prijs gelijk aan MK?\n(P = MK)",
+              text: "Is de prijs gelijk aan de marginale kosten?\n(P = MK)",
               correct: true
             },
             {
-              text: "Is de prijs gelijk aan GTK?\n(P = GTK)",
+              text: "Is de prijs gelijk aan de gemiddelde kosten?\n(P = GTK)",
               correct: false,
               feedback: "P = GTK betekent nulwinst, niet effici\u00ebntie.\nEffici\u00ebntie check je met P = MK."
             },
@@ -320,18 +320,18 @@ var PROCEDURE_DATA = {
           label: "Check 2",
           options: [
             {
-              text: "Is het totaal surplus maximaal?\n(CS + PS zo groot mogelijk)",
+              text: "Is het totaal surplus maximaal?\n(consumentensurplus + producentensurplus\nzo groot mogelijk)",
               correct: true
             },
             {
-              text: "Is het CS maximaal?",
+              text: "Is het consumentensurplus maximaal?",
               correct: false,
-              feedback: "Effici\u00ebntie gaat over het totaal surplus (CS + PS samen).\nNiet alleen over het voordeel voor consumenten."
+              feedback: "Effici\u00ebntie gaat over het totaal surplus\n(consumentensurplus + producentensurplus samen).\nNiet alleen over het voordeel voor consumenten."
             },
             {
               text: "Is de prijs zo laag mogelijk?",
               correct: false,
-              feedback: "Een lage prijs is fijn voor consumenten, maar niet het criterium.\nEffici\u00ebntie = totaal surplus maximaal."
+              feedback: "Een lage prijs is fijn voor consumenten, maar niet het criterium.\nEffici\u00ebntie = totaal surplus zo groot mogelijk."
             }
           ]
         },
@@ -351,14 +351,14 @@ var PROCEDURE_DATA = {
             {
               text: "Zijn er veel aanbieders?",
               correct: false,
-              feedback: "Veel aanbieders k\u00e1n op concurrentie wijzen, maar het is geen criterium.\nEffici\u00ebntie = P = MK en geen Harbergerdriehoek."
+              feedback: "Veel aanbieders k\u00e1n op concurrentie wijzen, maar het is geen criterium.\nEffici\u00ebntie = P = MK en geen welvaartsverlies."
             }
           ]
         },
         {
           type: "given",
           label: "Klaar",
-          text: "Alle drie ja? Dan is de markt effici\u00ebnt\nP = MK, TS maximaal, geen welvaartsverlies"
+          text: "Alle drie ja? Dan is de markt effici\u00ebnt!\nP = MK, totaal surplus maximaal, geen welvaartsverlies"
         }
       ]
     }
