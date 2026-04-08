@@ -16,25 +16,25 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Stap 1",
-          text: "Gegeven: vraagfunctie p = a \u2212 bQ en een kostenfunctie (TK of MK)"
+          text: "Gegeven: vraagfunctie en kostenfunctie\np = a \u2212 bQ"
         },
         {
           type: "choose",
           label: "Stap 2",
           options: [
             {
-              text: "Leid de MO-functie af: MO = a \u2212 2bQ",
+              text: "Leid de MO-functie af:\nMO = a \u2212 2bQ",
               correct: true
             },
             {
-              text: "Leid de MO-functie af: MO = a \u2212 bQ",
+              text: "Leid de MO-functie af:\nMO = a \u2212 bQ",
               correct: false,
-              feedback: "Dit is de vraagfunctie (= GO per eenheid), niet de MO. Bij een lineaire vraagfunctie heeft MO een dubbele helling: MO = a \u2212 2bQ."
+              feedback: "Dit is de vraagfunctie (= GO per eenheid), niet de MO. Bij een lineaire vraagfunctie heeft MO een dubbele helling:\nMO = a \u2212 2bQ."
             },
             {
-              text: "Leid de MO-functie af: MO = \u22122bQ",
+              text: "Leid de MO-functie af:\nMO = \u22122bQ",
               correct: false,
-              feedback: "Je bent de constante term \u2018a\u2019 vergeten. TO = p \u00d7 Q = aQ \u2212 bQ\u00b2, dus MO = a \u2212 2bQ."
+              feedback: "Je bent de constante term \u2018a\u2019 vergeten.\nTO = p \u00d7 Q = aQ \u2212 bQ\u00b2, dus MO = a \u2212 2bQ."
             }
           ]
         },
@@ -49,7 +49,7 @@ var PROCEDURE_DATA = {
             {
               text: "Stel p = MK",
               correct: false,
-              feedback: "p = MK geldt alleen bij volkomen concurrentie, waar p = MO. Bij MC daalt de vraagcurve, dus MO < p. Gebruik MO = MK."
+              feedback: "p = MK geldt alleen bij volkomen concurrentie, waar p = MO.\nBij MC daalt de vraagcurve, dus MO < p.\nGebruik MO = MK."
             },
             {
               text: "Stel MO = GK",
@@ -89,7 +89,7 @@ var PROCEDURE_DATA = {
             {
               text: "Vul Q* in de MO-functie in \u2192 p*",
               correct: false,
-              feedback: "De MO-functie geeft de marginale opbrengst, niet de prijs. De consument betaalt de prijs op de vraagcurve: p = a \u2212 bQ*."
+              feedback: "De MO-functie geeft de marginale opbrengst, niet de prijs. De consument betaalt de prijs op de vraagcurve:\np = a \u2212 bQ*."
             },
             {
               text: "Vul Q* in de MK-functie in \u2192 p*",
@@ -103,18 +103,18 @@ var PROCEDURE_DATA = {
           label: "Stap 6",
           options: [
             {
-              text: "Bereken winst: \u03c0 = (p* \u2212 GK) \u00d7 Q*",
+              text: "Bereken winst:\n\u03c0 = (p* \u2212 GK) \u00d7 Q*",
               correct: true
             },
             {
-              text: "Bereken winst: \u03c0 = p* \u00d7 Q*",
+              text: "Bereken winst:\n\u03c0 = p* \u00d7 Q*",
               correct: false,
-              feedback: "p* \u00d7 Q* is de totale omzet (TO), niet de winst. Je moet de kosten eraf trekken: \u03c0 = (p* \u2212 GK) \u00d7 Q*."
+              feedback: "p* \u00d7 Q* is de totale omzet (TO), niet de winst. Je moet de kosten eraf trekken:\n\u03c0 = (p* \u2212 GK) \u00d7 Q*."
             },
             {
-              text: "Bereken winst: \u03c0 = (p* \u2212 MK) \u00d7 Q*",
+              text: "Bereken winst:\n\u03c0 = (p* \u2212 MK) \u00d7 Q*",
               correct: false,
-              feedback: "Je trekt de marginale kosten af i.p.v. de gemiddelde kosten. Winst per eenheid = p \u2212 GK, niet p \u2212 MK."
+              feedback: "Je trekt de marginale kosten af i.p.v. de gemiddelde kosten.\nWinst per eenheid = p \u2212 GK, niet p \u2212 MK."
             }
           ]
         },
@@ -181,16 +181,16 @@ var PROCEDURE_DATA = {
           label: "Stap 4",
           options: [
             {
-              text: "Toetreding stopt als MO = MK \u00e9n p = GK tegelijk (tangentieconditie)",
+              text: "Toetreding stopt als:\nMO = MK \u00e9n p = GK tegelijk\n(tangentieconditie)",
               correct: true
             },
             {
-              text: "Toetreding stopt als p = MK (allocatieve doelmatigheid)",
+              text: "Toetreding stopt als:\np = MK\n(allocatieve doelmatigheid)",
               correct: false,
-              feedback: "p = MK geldt bij VC (volkomen concurrentie). Bij MC is de LT-conditie p = GK (nulwinst), niet p = MK."
+              feedback: "p = MK geldt bij VC (volkomen concurrentie). Bij MC is de LT-conditie:\np = GK (nulwinst), niet p = MK."
             },
             {
-              text: "Toetreding stopt als p = GK_min (productieve doelmatigheid)",
+              text: "Toetreding stopt als:\np = GK_min\n(productieve doelmatigheid)",
               correct: false,
               feedback: "p = GK_min is het VC LT-evenwicht. Bij MC raakt de vraagcurve de GK-curve BOVEN het minimum \u2192 overcapaciteit."
             }
@@ -219,7 +219,7 @@ var PROCEDURE_DATA = {
         {
           type: "given",
           label: "Eindstap",
-          text: "LT-evenwicht: p = GK en \u03c0 = 0, met overcapaciteit (productie ligt links van GK_min)"
+          text: "LT-evenwicht:\np = GK en \u03c0 = 0\nMet overcapaciteit (productie ligt links van GK_min)"
         }
       ]
     },

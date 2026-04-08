@@ -211,7 +211,7 @@
       if (step.type === "given") {
         html += '<div class="p-given-card">';
         html += '<span class="p-given-icon"><i class="fa-solid fa-lock"></i></span>';
-        html += escapeHtml(step.text);
+        html += '<span class="p-given-text">' + escapeHtml(step.text) + '</span>';
         html += '</div>';
       } else {
         html += '<div class="p-step-options">';
@@ -345,7 +345,8 @@
   function escapeHtml(str) {
     var d = document.createElement("div");
     d.textContent = str;
-    return d.innerHTML;
+    // Convert newlines to <br> so formulas get their own line
+    return d.innerHTML.replace(/\n/g, "<br>");
   }
 
   // --- Event bindings ---
