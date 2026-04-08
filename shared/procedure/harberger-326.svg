@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360">
+  <rect width="720" height="360" rx="8" fill="#F7FAFC"/>
+
+  <!-- Title -->
+  <text x="360" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2D3748">Welvaartsverlies bij monopolie (Harbergerdriehoek)</text>
+
+  <!-- Axis labels -->
+  <text x="15" y="180" transform="rotate(-90, 15, 180)" font-family="Arial, sans-serif" font-size="12" fill="#718096" text-anchor="middle">Prijs (P)</text>
+  <text x="380" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#718096">Hoeveelheid (Q)</text>
+
+  <!-- Axes -->
+  <line x1="80" y1="45" x2="80" y2="310" stroke="#2D3748" stroke-width="1.5"/>
+  <line x1="80" y1="310" x2="680" y2="310" stroke="#2D3748" stroke-width="1.5"/>
+
+  <!-- Grid coordinates:
+       Plot area: x=80..680, y=45..310 (600w x 265h)
+       P-axis: 0..60 maps to y=310..45 (4.417 px per unit)
+       Q-axis: 0..60 maps to x=80..680 (10 px per unit)
+
+       V (vraag): P = 60 - Q  → (0,60)=(80,45) to (60,0)=(680,310)
+       MK = A:    P = Q        → (0,0)=(80,310) to (60,60)=(680,45)
+       MO:        P = 60 - 2Q  → (0,60)=(80,45) to (30,0)=(380,310)
+
+       VC equilibrium (B): Q=30, P=30 → (380, 177.5)
+       Monopoly: MO=MK at Q=20, MK=20 → A: (280, 221.7)
+       Monopoly price on V: Q=20, P=40 → C: (280, 133.3)
+  -->
+
+  <!-- CS area at VC (light blue, full triangle) -->
+  <polygon points="80,45 380,177 80,177" fill="#85C1E9" opacity="0.25"/>
+
+  <!-- PS area at VC (light green, full triangle) -->
+  <polygon points="80,310 380,177 80,177" fill="#82E0AA" opacity="0.25"/>
+
+  <!-- Surplus transfer rectangle (CS that becomes PS at monopoly) -->
+  <rect x="80" y="133" width="200" height="44" fill="#85C1E9" opacity="0.15"/>
+
+  <!-- Harbergerdriehoek (DWL) — the key element -->
+  <polygon points="280,133 380,177 280,222" fill="#F1948A" opacity="0.55" stroke="#E24B4A" stroke-width="1.5"/>
+  <text x="315" y="182" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#C0392B">DWL</text>
+
+  <!-- Demand line V: P = 60 - Q -->
+  <line x1="80" y1="45" x2="680" y2="310" stroke="#185FA5" stroke-width="2.5"/>
+  <text x="685" y="312" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#185FA5">V</text>
+
+  <!-- Supply line MK = A: P = Q -->
+  <line x1="80" y1="310" x2="680" y2="45" stroke="#639922" stroke-width="2.5"/>
+  <text x="685" y="48" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#639922">MK</text>
+
+  <!-- MO line: P = 60 - 2Q (dashed) -->
+  <line x1="80" y1="45" x2="380" y2="310" stroke="#854F0B" stroke-width="2" stroke-dasharray="8,5"/>
+  <text x="385" y="312" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#854F0B">MO</text>
+
+  <!-- Dashed construction lines -->
+  <!-- Monopoly price horizontal -->
+  <line x1="80" y1="133" x2="280" y2="133" stroke="#718096" stroke-width="1" stroke-dasharray="4,4"/>
+  <!-- Monopoly quantity vertical -->
+  <line x1="280" y1="222" x2="280" y2="310" stroke="#718096" stroke-width="1" stroke-dasharray="4,4"/>
+  <!-- VC price horizontal -->
+  <line x1="80" y1="177" x2="380" y2="177" stroke="#718096" stroke-width="1" stroke-dasharray="4,4"/>
+  <!-- VC quantity vertical -->
+  <line x1="380" y1="177" x2="380" y2="310" stroke="#718096" stroke-width="1" stroke-dasharray="4,4"/>
+  <!-- MK at monopoly horizontal -->
+  <line x1="80" y1="222" x2="280" y2="222" stroke="#718096" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Point B: VC equilibrium -->
+  <circle cx="380" cy="177" r="5" fill="#185FA5" stroke="#fff" stroke-width="1.5"/>
+  <text x="392" y="170" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#185FA5">B</text>
+  <text x="392" y="183" font-family="Arial, sans-serif" font-size="9" fill="#718096">(VC)</text>
+
+  <!-- Point A: MO=MK intersection -->
+  <circle cx="280" cy="222" r="5" fill="#854F0B" stroke="#fff" stroke-width="1.5"/>
+  <text x="256" y="240" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#854F0B">A</text>
+
+  <!-- Point C: Monopoly price on V -->
+  <circle cx="280" cy="133" r="5" fill="#C0392B" stroke="#fff" stroke-width="1.5"/>
+  <text x="256" y="128" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#C0392B">C</text>
+
+  <!-- Price labels on Y-axis -->
+  <text x="72" y="137" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#2D3748">P_m=40</text>
+  <text x="72" y="181" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#2D3748">P_vc=30</text>
+  <text x="72" y="226" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#2D3748">MK_m=20</text>
+  <text x="72" y="49" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#718096">60</text>
+
+  <!-- Quantity labels on X-axis -->
+  <text x="280" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2D3748">Q_m=20</text>
+  <text x="380" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2D3748">Q_vc=30</text>
+</svg>

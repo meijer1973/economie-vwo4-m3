@@ -111,6 +111,8 @@ var PROCEDURE_DATA = {
       title: "Welvaartsverlies bij monopolie",
       icon: "fa-triangle-exclamation",
       description: "Bereken de Harbergerdriehoek: het surplus dat verloren gaat",
+      image: "../../../shared/procedure/harberger-326.svg",
+      imageAlt: "Grafiek met vraaglijn, MO, MK, de Harbergerdriehoek (rood) en de punten B (volkomen concurrentie) en C (monopolieprijs)",
       steps: [
         {
           type: "given",
