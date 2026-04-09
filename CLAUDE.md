@@ -31,6 +31,7 @@ X.Y.Z Paragraaf – [Naam]/
 │   ├── X.Y.Z [Naam] – presentatie.pptx
 │   ├── X.Y.Z [Naam] – nieuws met visual.docx
 │   ├── X.Y.Z [Naam] – samenvatting.docx
+│   ├── X.Y.Z [Naam] – stappenplan.html
 │   ├── X.Y.Z [Naam] – uitleg vaardigheden.docx
 │   └── X.Y.Z [Naam] – youtube-videos.html
 └── 3. Oefenen/
@@ -69,11 +70,13 @@ shared/
 ├── reasoning-engine.js, reasoning-ui.js, ...       ← Redeneer-spel engine
 ├── skilltree-engine.js, skilltree-ui.js, ...       ← Wiskundevaardigheden engine
 ├── newsdetective-engine.js, newsdetective-ui.js, ...← Nieuws-detective engine
+├── procedure-engine.js, procedure-ui.js, ...        ← Stappenplan engine
 ├── theme.js                                         ← Module-specifieke kleuren
 ├── questions/3.1.1.js ... 3.4.6.js                 ← Quiz data
 ├── reasoning/3.1.1.js ... 3.4.6.js                 ← Reasoning data
 ├── newsdetective/3.1.1.js ... 3.4.6.js             ← News detective data
-└── skilltree/base-elements.js, 3.1.1.js ...        ← Skill tree data
+├── skilltree/base-elements.js, 3.1.1.js ...        ← Skill tree data
+└── procedure/3.2.5.js, 3.2.6.js ...               ← Stappenplan data
 ```
 
 ## Workflow
