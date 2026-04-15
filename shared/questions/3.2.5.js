@@ -2,7 +2,7 @@ var QUIZ_DATA = {
   "meta": {
     "parNr": "3.2.5",
     "parName": "Monopolistische Concurrentie",
-    "subtitle": "Begrijp het unieke karakter van monopolistische concurrentie: veel bedrijven met heterogene producten, korte termijn winst, lange termijn nulwinst, en productdifferentiatie. Voer berekeningen uit en analyse.",
+    "subtitle": "Begrijp het unieke karakter van monopolistische concurrentie: veel bedrijven met heterogene producten, kortetermijnwinst, langetermijn-nulwinst en productdifferentiatie. Voer berekeningen en analyses uit.",
     "testTopics": [
       "Monopolistische concurrentie karakteristieken",
       "Productdifferentiatie en marktpositionering",
@@ -21,7 +21,7 @@ var QUIZ_DATA = {
       }
     },
     "productdifferentiatie": {
-      "name": "Product-differentiatie",
+      "name": "Productdifferentiatie",
       "colors": {
         "bg": "#EBF5FB",
         "text": "#154360",
@@ -55,9 +55,9 @@ var QUIZ_DATA = {
     "rekenen": {
       "name": "Berekeningen",
       "colors": {
-        "bg": "#F3E8F9",
-        "text": "#7B2D8E",
-        "bar": "#7B2D8E"
+        "bg": "#FDEDEC",
+        "text": "#922B21",
+        "bar": "#C0392B"
       }
     }
   },
@@ -67,13 +67,13 @@ var QUIZ_DATA = {
       "difficulty": 1,
       "q": "Wat zijn de vier karakteristieken van monopolistische concurrentie?",
       "options": [
-        "Veel bedrijven, heterogeen product, lage toetredingsdrempel, individuele marktmacht",
+        "Veel bedrijven, heterogeen product, vrije toe- en uittreding, enige prijszettingsmacht door productdifferentiatie",
         "Twee bedrijven, homogeen product, hoge barrières, geen marktmacht",
-        "Één bedrijf, uniek product, oneindig toetredingsdrempel, volledige marktmacht",
+        "Één bedrijf, uniek product, onoverkomelijke toetredingsdrempels, volledige marktmacht",
         "Veel bedrijven, homogeen product, hoge barrières, geen marktmacht"
       ],
       "answer": 0,
-      "rationale": "Monopolistische concurrentie heeft veel bedrijven met ieder hun differentie product. Toetredingsdrempel is laag, zodat bedrijven op lange termijn toetreden en verdwijnen."
+      "rationale": "Monopolistische concurrentie heeft veel bedrijven met elk een gedifferentieerd product. De toetredingsdrempel is laag, zodat bedrijven op lange termijn vrij kunnen toetreden en uittreden."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -83,7 +83,7 @@ var QUIZ_DATA = {
         "Kleding, restaurants, café's, schoonheidssalons",
         "Auto's, olie, tabak, vliegtuigen",
         "Brood, water, elektriciteit, gas",
-        "Alleen monopolies zoals staatsbedrijen"
+        "Alleen monopolies zoals staatsbedrijven"
       ],
       "answer": 0,
       "rationale": "Kleding, restaurants, en dergelijke producten zijn onderhevig aan sterke productdifferentiatie, lage barrières, en veel aanbieders."
@@ -107,12 +107,12 @@ var QUIZ_DATA = {
       "q": "Waarom kun je in monopolistische concurrentie een prijs boven marginale kosten vragen?",
       "options": [
         "Omdat je het enige bedrijf bent",
-        "Omdat je product differentie is; klanten kunnen niet zomaar naar concurrent gaan",
+        "Omdat je product gedifferentieerd is; klanten kunnen niet zomaar naar een concurrent overstappen",
         "Omdat wetten dit verplichten",
         "Omdat marginale kosten nul zijn"
       ],
       "answer": 0,
-      "rationale": "Productdifferentiatie geeft bedrijven 'lokale monopoliemacht' over hun eigen variatie, waardoor zij P > MC kunnen handhaven."
+      "rationale": "Productdifferentiatie geeft bedrijven 'lokale monopoliemacht' over hun eigen variant, waardoor zij P > MK kunnen handhaven."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -150,8 +150,8 @@ var QUIZ_DATA = {
         "Omdat het verplicht is",
         "Omdat het kosten vermindert"
       ],
-      "answer": 0,
-      "rationale": "Differentiatie geeft bedrijven voorkeur onder consumenten, maakt vraag minder prijsgevoelig, en stelt hen in staat P > MC te handhaven."
+      "answer": 1,
+      "rationale": "Differentiatie geeft bedrijven voorkeur onder consumenten, maakt vraag minder prijsgevoelig, en stelt hen in staat P > MK te handhaven."
     },
     {
       "category": "productdifferentiatie",
@@ -226,62 +226,62 @@ var QUIZ_DATA = {
         "Perfect horizontaal (volkomen concurrentie)",
         "Perfect verticaal (monopolie)",
         "Naar beneden hellend (monopolistische concurrentie)",
-        "Omhoog hellend (Giffen goed)"
+        "Omhoog hellend (Giffen-goed)"
       ],
-      "answer": 0,
+      "answer": 2,
       "rationale": "De residuele vraaglijn voor een bedrijf in monopolistische concurrentie holt af (naar beneden hellend) vanwege productdifferentiatie."
     },
     {
       "category": "korte_termijn",
       "difficulty": 3,
-      "q": "Bedrijf: P = 80 - 2Q, TC = 100 + 5Q + Q². Winst bij winstmaximalisatie?",
+      "q": "Bedrijf: P = 100 − Q, TK = 200 + 20Q + Q². Wat is de totale winst bij winstmaximalisatie?",
       "options": [
-        "Π = 100",
-        "Π = 75",
-        "Π = 125",
-        "Π = 50"
+        "TW = 600",
+        "TW = 400",
+        "TW = 800",
+        "TW = 500"
       ],
       "answer": 0,
-      "rationale": "MR = 80 - 4Q, MC = 5 + 2Q. MR = MC: 80 - 4Q = 5 + 2Q; 75 = 6Q; Q = 12,5. P = 80 - 25 = 55. TC = 100 + 62,5 + 156,25 = 318,75. TR = 55 × 12,5 = 687,5. Π = 687,5 - 318,75 = 368,75. Herbereken: TC = 100 + 5(12,5) + (12,5)² = 100 + 62,5 + 156,25 = 318,75. Π = 687,5 - 318,75 ≈ 369. Antwoord lijkt niet kloppen; check optie 0."
+      "rationale": "MO = 100 − 2Q, MK = 20 + 2Q. Stel MO = MK: 100 − 2Q = 20 + 2Q → 4Q = 80 → Q = 20. P = 100 − 20 = 80. TO = 80 × 20 = 1.600. TK = 200 + 20(20) + 20² = 200 + 400 + 400 = 1.000. TW = TO − TK = 1.600 − 1.000 = 600."
     },
     {
       "category": "lange_termijn",
       "difficulty": 1,
       "q": "Wat gebeurt op lange termijn in monopolistische concurrentie?",
       "options": [
-        "Bedrijven winnen meer winst",
-        "Nieuwe bedrijven treden toe totdat P = GTC (nulwinst evenwicht)",
+        "Bedrijven behalen steeds meer winst",
+        "Nieuwe bedrijven treden toe totdat P = GTK (nulwinst evenwicht)",
         "Alle bedrijven fuseren tot monopolie",
         "Bedrijven verdwijnen volledig"
       ],
-      "answer": 0,
-      "rationale": "Op lange termijn: toetredingscorrectie. Nieuwe bedrijven treden toe omdat iemand winst maakt. Dit schuift vraaglijnen naar beneden totdat P = GTC."
+      "answer": 1,
+      "rationale": "Op lange termijn: toetredingscorrectie. Nieuwe bedrijven treden toe omdat iemand winst maakt. Dit schuift vraaglijnen naar beneden totdat P = GTK."
     },
     {
       "category": "lange_termijn",
       "difficulty": 2,
-      "q": "Waarom is lange termijn evenwicht in monopolistische concurrentie NIET productief efficiënt?",
+      "q": "Waarom is het lange-termijnevenwicht in monopolistische concurrentie NIET productief efficiënt?",
       "options": [
-        "Omdat P > MK geldt; bedrijven produceren minder dan sociaal optimaal en opereren niet op minimum GTK",
+        "Omdat bedrijven niet opereren op het minimum van GTK: er is sprake van overcapaciteit (schaalverlies)",
         "Omdat alle bedrijven in MC een volledige monopoliepositie hebben op de gehele markt",
         "Omdat de markt slechts één bedrijf toestaat door onoverkomelijke toetredingsbarrières",
-        "Omdat consumenten in MC altijd meer betalen dan het product waard is voor hen"
+        "Omdat consumenten in MC altijd meer betalen dan het product voor hen waard is"
       ],
       "answer": 0,
-      "rationale": "In lange termijn evenwicht: P = GTK maar P > MK. Dit betekent allocatieve inefficiëntie (te weinig output). Bovendien opereren bedrijven links van minimum GTK: schaalverlies (excess capacity)."
+      "rationale": "Productieve efficiëntie vereist productie op het minimum van GTK. In het lange-termijnevenwicht geldt wel P = GTK (nulwinst), maar op een hoeveelheid links van het GTK-minimum: er is overcapaciteit (schaalverlies). Naast deze productieve inefficiëntie is er ook allocatieve inefficiëntie omdat P > MK."
     },
     {
       "category": "lange_termijn",
       "difficulty": 2,
-      "q": "Lange termijn evenwicht: alle bedrijven hebben gelijk product en hetzelfde GTC-minimum van €40. Alle bedrijven zullen...?",
+      "q": "Lange termijn evenwicht: alle bedrijven hebben gelijk product en hetzelfde GTK-minimum van €40. Alle bedrijven zullen...?",
       "options": [
         "P = €50 vragen",
         "P = €40 stellen (nulwinst)",
         "P = €30 stellen",
         "Alle bedrijven fuseren"
       ],
-      "answer": 0,
-      "rationale": "In lange termijn evenwicht van monopolistische concurrentie: toetredingscorrectie stopt wanneer P = GTC (nulwinst). Hier dus P = €40."
+      "answer": 1,
+      "rationale": "In lange termijn evenwicht van monopolistische concurrentie: toetredingscorrectie stopt wanneer P = GTK (nulwinst). Hier dus P = €40."
     },
     {
       "category": "lange_termijn",
@@ -289,17 +289,17 @@ var QUIZ_DATA = {
       "q": "Waarom produceren bedrijven in lange termijn evenwicht monopolistische concurrentie MINDER dan het minimum van GTK?",
       "options": [
         "Omdat de productiekosten per eenheid stijgen naarmate het bedrijf langer actief is",
-        "Omdat toetreding de residuele vraag per bedrijf verkleint; P = GTK wordt bereikt links van het GTK-minimum (excess capacity)",
+        "Omdat toetreding de residuele vraag per bedrijf verkleint; P = GTK wordt bereikt links van het GTK-minimum (overcapaciteit)",
         "Omdat de totale consumentenvraag structureel daalt door veranderende voorkeuren",
         "Omdat overheidsregulering de productie beperkt tot onder het efficiënte niveau"
       ],
       "answer": 1,
-      "rationale": "Als meer bedrijven toetreden, verschuift de residuele vraaglijn naar beneden. In evenwicht: P = GTK, maar op een punt links van minimale GTK. Dit is schaalverlies (excess capacity)."
+      "rationale": "Als meer bedrijven toetreden, verschuift de residuele vraaglijn naar beneden. In evenwicht: P = GTK, maar op een punt links van minimale GTK. Dit is schaalverlies (overcapaciteit)."
     },
     {
       "category": "rekenen",
       "difficulty": 1,
-      "q": "Bedrijf: P = 100 - Q, MC = 30. Korte termijn optimale Q?",
+      "q": "Bedrijf: P = 100 − Q, MK = 30. Wat is de optimale hoeveelheid Q op korte termijn?",
       "options": [
         "Q = 35",
         "Q = 70",
@@ -307,33 +307,33 @@ var QUIZ_DATA = {
         "Q = 40"
       ],
       "answer": 0,
-      "rationale": "MR = 100 - 2Q = 30; Q = 35. P = 100 - 35 = 65."
+      "rationale": "MO = 100 - 2Q = 30; Q = 35. P = 100 - 35 = 65."
     },
     {
       "category": "rekenen",
       "difficulty": 1,
-      "q": "Bedrijf: inkomstenelasticiteit = 1, eigen prijselasticiteit = -1.5. Hoeveelheid bij Q = 50 en P = 20?",
+      "q": "De prijselasticiteit van de vraag naar het product van een MC-bedrijf is −1,5. De prijs stijgt met 10%. Met hoeveel procent verandert de gevraagde hoeveelheid?",
       "options": [
-        "Hoeveelheid is 50 (constant)",
-        "Hoeveelheid stijgt voortdurend",
-        "Hoeveelheid daalt door prijsverhoging",
-        "Elasticiteit bepaalt niet direct hoeveelheid"
+        "Daling met 15%",
+        "Daling met 10%",
+        "Stijging met 15%",
+        "Daling met 1,5%"
       ],
       "answer": 0,
-      "rationale": "Elasticiteit bepaalt reactie op veranderingen, niet absolute hoeveelheid. Gegeven P = 20, Q = 50."
+      "rationale": "%ΔQ = εv × %ΔP = −1,5 × 10% = −15%. De gevraagde hoeveelheid daalt dus met 15%."
     },
     {
       "category": "rekenen",
       "difficulty": 2,
-      "q": "Bedrijf in monopolistische concurrentie korte termijn: P = 90 - Q, TC = 50 + 20Q + Q². Winst?",
+      "q": "Bedrijf in monopolistische concurrentie op korte termijn: P = 100 − Q, TK = 100 + 20Q + Q². Wat is de maximale totale winst?",
       "options": [
-        "Π = 500",
-        "Π = 450",
-        "Π = 400",
-        "Π = 550"
+        "TW = 700",
+        "TW = 600",
+        "TW = 800",
+        "TW = 500"
       ],
       "answer": 0,
-      "rationale": "MR = 90 - 2Q, MC = 20 + 2Q. MR = MC: 90 - 2Q = 20 + 2Q; 70 = 4Q; Q = 17,5. P = 90 - 17,5 = 72,5. TC = 50 + 350 + 306,25 = 706,25. TR = 72,5 × 17,5 = 1268,75. Π = 1268,75 - 706,25 = 562,5. Check optie 0 voor correctheid."
+      "rationale": "MO = 100 − 2Q, MK = 20 + 2Q. MO = MK: 100 − 2Q = 20 + 2Q → 4Q = 80 → Q = 20. P = 100 − 20 = 80. TO = 80 × 20 = 1.600. TK = 100 + 20(20) + 20² = 100 + 400 + 400 = 900. TW = 1.600 − 900 = 700."
     },
     {
       "category": "rekenen",
@@ -351,15 +351,15 @@ var QUIZ_DATA = {
     {
       "category": "rekenen",
       "difficulty": 3,
-      "q": "Bedrijf: P = 100 - 2Q, GTC = 50 + 5/Q. Lange termijn evenwicht Q waar P = GTC?",
+      "q": "Bedrijf in monopolistische concurrentie in lange-termijnevenwicht: P = 40 − Q, GTK = 20 + 100/Q. Wat is de evenwichtshoeveelheid Q?",
       "options": [
-        "Q = 5",
         "Q = 10",
-        "Q = 8",
-        "Q = 12"
+        "Q = 5",
+        "Q = 20",
+        "Q = 8"
       ],
       "answer": 0,
-      "rationale": "P = 100 - 2Q en P = 50 + 5/Q. Dus 100 - 2Q = 50 + 5/Q; 50 - 2Q = 5/Q; (50 - 2Q)Q = 5; 50Q - 2Q² = 5; 2Q² - 50Q + 5 = 0. Q ≈ 25 or Q ≈ 0.1. Controleer Q = 10: P = 100 - 20 = 80, GTC = 50 + 0,5 = 50,5. Niet gelijk. Probeer Q = 5: P = 100 - 10 = 90, GTC = 50 + 1 = 51. Niet gelijk. Oplossing mogelijk Q ≈ 0.1 of andere waarde."
+      "rationale": "In lange-termijnevenwicht geldt P = GTK (nulwinst). 40 − Q = 20 + 100/Q → (20 − Q)·Q = 100 → Q² − 20Q + 100 = 0 → Q = 10 (dubbele wortel: de vraaglijn raakt GTK). Controle: P = 40 − 10 = 30; GTK = 20 + 100/10 = 30. ✓"
     },
     {
       "category": "vergelijking_marktvormen",
@@ -377,12 +377,12 @@ var QUIZ_DATA = {
     {
       "category": "vergelijking_marktvormen",
       "difficulty": 2,
-      "q": "Vergelijken monopolistische concurrentie en oligopolie: aantal bedrijven?",
+      "q": "Vergelijk monopolistische concurrentie en oligopolie: aantal bedrijven?",
       "options": [
         "MC: veel bedrijven. Oligopolie: weinig bedrijven",
         "MC: weinig bedrijven. Oligopolie: veel bedrijven",
-        "Beiden veel bedrijven",
-        "Beiden weinig bedrijven"
+        "Beide veel bedrijven",
+        "Beide weinig bedrijven"
       ],
       "answer": 0,
       "rationale": "Monopolistische concurrentie: veel bedrijven (vrije toe- uittreding). Oligopolie: weinig grote bedrijven (hoge barrières)."
@@ -392,13 +392,13 @@ var QUIZ_DATA = {
       "difficulty": 2,
       "q": "Korte termijn evenwicht: hoe ordenen MC en oligopolie naar winstmarges?",
       "options": [
-        "MC winsten > Oligopolie winsten",
-        "Oligopolie winsten > MC winsten",
+        "MC-winsten > oligopoliewinsten",
+        "Oligopoliewinsten > MC-winsten",
         "Gelijk: beide hebben dezelfde marge",
         "Niet te bepalen zonder kostendata"
       ],
-      "answer": 0,
-      "rationale": "Oligopolie heeft meer marktmacht dan MC. Daardoor kunnen oligopolisten betere winsten realiseren (minder concurrentie). MC-bedrijven winnen minder snel."
+      "answer": 1,
+      "rationale": "Oligopolie heeft meer marktmacht dan MC. Daardoor kunnen oligopolisten hogere winsten realiseren (minder concurrentie). MC-bedrijven behalen minder snel positieve winst."
     },
     {
       "category": "vergelijking_marktvormen",
@@ -410,8 +410,8 @@ var QUIZ_DATA = {
         "MC meest efficiënt",
         "Monopolie meest efficiënt"
       ],
-      "answer": 0,
-      "rationale": "Volkomen concurrentie: P = MC, efficiënt. Monopolistische concurrentie: P > MC maar wel nulwinst (allocatief inefficiënt). Monopolie: P >> MC, zeer inefficiënt."
+      "answer": 1,
+      "rationale": "Volkomen concurrentie: P = MK, efficiënt. Monopolistische concurrentie: P > MK maar wel nulwinst (allocatief inefficiënt). Monopolie: P >> MK, zeer inefficiënt."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -419,12 +419,12 @@ var QUIZ_DATA = {
       "q": "Waarom is monopolistische concurrentie 'monopolistisch'?",
       "options": [
         "Omdat slechts één bedrijf bestaat",
-        "Omdat elk bedrijf marktmacht over zijn eigen differentie product heeft (monopolist van zijn variant)",
+        "Omdat elk bedrijf marktmacht heeft over zijn eigen gedifferentieerde product (monopolist van zijn eigen variant)",
         "Omdat alle bedrijven dezelfde prijs stellen",
         "Omdat bedrijven fuseren"
       ],
-      "answer": 0,
-      "rationale": "'Monopolistisch' refereert aan de feit dat elk bedrijf zijn 'eigen' differentie product heeft; lokale monopolie-positie tegenover substituten."
+      "answer": 1,
+      "rationale": "'Monopolistisch' verwijst naar het feit dat elk bedrijf zijn 'eigen' gedifferentieerde product heeft; een lokale monopoliepositie ten opzichte van substituten."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -432,11 +432,11 @@ var QUIZ_DATA = {
       "q": "Waarom is monopolistische concurrentie 'concurrentie'?",
       "options": [
         "Omdat er één bedrijf is",
-        "Omdat veel bedrijven concurreren, lage barrières, lange termijn nulwinst (net als volkomen concurrentie)",
-        "Omdat bedrijven samenstelten",
+        "Omdat veel bedrijven concurreren, met lage barrières en nulwinst op lange termijn (net als bij volkomen concurrentie)",
+        "Omdat bedrijven samenspannen",
         "Omdat prijzen gelijk zijn"
       ],
-      "answer": 0,
+      "answer": 1,
       "rationale": "'Concurrentie' aspect: veel bedrijven, vrije toe-/uittreding, lange termijn nulwinst evenwicht (als volkomen concurrentie, maar verschillend pad)."
     },
     {
@@ -463,7 +463,7 @@ var QUIZ_DATA = {
         "Omdat de overheid productie beperkt tot onder het efficiënte schaalniveau"
       ],
       "answer": 0,
-      "rationale": "Toetredingscorrectie verschuift de vraaglijn omlaag. Nulwinst-evenwicht P = GTK wordt bereikt op een output links van het minimum van GTK (excess capacity, schaalverlies)."
+      "rationale": "Door toetredingscorrectie schuift de vraaglijn omlaag. Het nulwinst-evenwicht P = GTK wordt bereikt bij een hoeveelheid links van het GTK-minimum: er is sprake van overcapaciteit (schaalverlies)."
     },
     {
       "category": "lange_termijn",
@@ -476,7 +476,7 @@ var QUIZ_DATA = {
         "P = monopolieprijs (maximale winst zonder toetredingscorrectie)"
       ],
       "answer": 0,
-      "rationale": "Lange termijn: P = GTK (nulwinst). Dit hoeft niet op minimale GTK te zijn; er kan sprake zijn van schaalverlies (excess capacity)."
+      "rationale": "Lange termijn: P = GTK (nulwinst). Dit hoeft niet op minimale GTK te zijn; er kan sprake zijn van schaalverlies (overcapaciteit)."
     },
     {
       "category": "lange_termijn",
@@ -484,25 +484,25 @@ var QUIZ_DATA = {
       "q": "Als bedrijven in lange termijn evenwicht monopolistische concurrentie winst zouden maken, wat gebeurt er?",
       "options": [
         "Niets; ze houden winst",
-        "Nieuwe bedrijven treden toe, verschuift vraaglijn omlaag totdat P = GTC (nulwinst teruggekeerd)",
+        "Nieuwe bedrijven treden toe, waardoor de vraaglijn omlaag schuift totdat P = GTK (terug in nulwinst-evenwicht)",
         "Bestaande bedrijven verdwijnen",
-        "Regering interveneert"
+        "De overheid grijpt in"
       ],
-      "answer": 0,
-      "rationale": "Winst trekt toetreders. Meer concurrenten = marktaandeel erodes = vraagschuif omlaag = prijs daalt totdat P = GTC."
+      "answer": 1,
+      "rationale": "Positieve winst trekt toetreders aan. Meer concurrenten betekent dat het marktaandeel per bedrijf erodeert; de residuele vraaglijn schuift omlaag en de prijs daalt totdat P = GTK."
     },
     {
       "category": "lange_termijn",
       "difficulty": 3,
-      "q": "Twee scenario's: (A) MC markt met perfect homogeen product. (B) MC markt met totale differentie. Welke heeft langste weg naar evenwicht?",
+      "q": "Twee scenario's: (A) MC-markt met perfect homogeen product. (B) MC-markt met sterke productdifferentiatie. Welke heeft de langste weg naar het lange-termijnevenwicht?",
       "options": [
         "A: homogeen convergeert sneller",
-        "B: differentie kan voordeel langer handhaven (harder toetreders afschrikken)",
+        "B: differentiatie kan het winstvoordeel langer in stand houden (toetreders worden sterker afgeschrikt)",
         "Beide gelijk",
         "Kan niet bepaald worden"
       ],
-      "answer": 0,
-      "rationale": "Met sterke differentie kunnen bedrijven langer winst behouden voordat toetreders echt marktaandeel stelen. Homogeen = snel nulwinst."
+      "answer": 1,
+      "rationale": "Met sterke productdifferentiatie kunnen bedrijven hun winst langer vasthouden voordat toetreders echt marktaandeel afsnoepen. Bij een homogeen product is het nulwinst-evenwicht snel bereikt."
     },
     {
       "category": "productdifferentiatie",
@@ -520,33 +520,33 @@ var QUIZ_DATA = {
     {
       "category": "productdifferentiatie",
       "difficulty": 2,
-      "q": "Hoe investeren bedrijven in differentie?",
+      "q": "Hoe investeren bedrijven in productdifferentiatie?",
       "options": [
         "Via lagere prijzen alleen",
-        "Via R&D, marketing, design, service, merkopbouw",
+        "Via R&D, marketing, design, service en merkopbouw",
         "Via kartelafspraken",
         "Via subsidies"
       ],
-      "answer": 0,
-      "rationale": "Differentiatie vereist investeringen in product-quality, marketing, merknaam, design, klantservice."
+      "answer": 1,
+      "rationale": "Productdifferentiatie vereist investeringen in productkwaliteit, marketing, merknaam, ontwerp en klantservice."
     },
     {
       "category": "productdifferentiatie",
       "difficulty": 3,
-      "q": "Effect differentie op langetermijn evenwicht: waarom vormt differentie een 'zijstap' naar meer winst?",
+      "q": "Effect van productdifferentiatie op het lange-termijnevenwicht: waarom biedt differentiatie een tijdelijke omweg naar meer winst?",
       "options": [
-        "Omdat differentie kostenloos is",
-        "Omdat differentie verschuift residuele vraaglijn (minder gevoelig), waardoor prijs > GTC kan voor langere tijd voordat nulwinst bereikt",
-        "Omdat differentie monopolie creëert",
+        "Omdat productdifferentiatie kosteloos is",
+        "Omdat differentiatie de residuele vraaglijn verschuift en minder prijsgevoelig maakt, waardoor P > GTK langer kan worden volgehouden voordat nulwinst bereikt wordt",
+        "Omdat differentiatie een monopolie creëert",
         "Omdat klanten meer betalen zonder reden"
       ],
-      "answer": 0,
-      "rationale": "Sterke differentie maakt vraag minder prijselastisch. Dit vertraagt toetredingscorrectie; bedrijf kan langer P > GTC handhaven."
+      "answer": 1,
+      "rationale": "Sterke productdifferentiatie maakt de vraag minder prijselastisch. Dat vertraagt de toetredingscorrectie; het bedrijf kan daardoor langer P > GTK handhaven."
     },
     {
       "category": "rekenen",
       "difficulty": 1,
-      "q": "Twee bedrijven monopolistische concurrentie; marktQ = 200. Q per bedrijf = ?",
+      "q": "Twee identieke bedrijven delen de markt; totale Q = 200. Wat is Q per bedrijf?",
       "options": [
         "Q = 100",
         "Q = 50",
@@ -559,7 +559,7 @@ var QUIZ_DATA = {
     {
       "category": "rekenen",
       "difficulty": 2,
-      "q": "Bedrijf P = 120 - Q, MC = 40. Korte termijn Q en P?",
+      "q": "Bedrijf: P = 120 − Q, MK = 40. Wat zijn de optimale Q en P op korte termijn?",
       "options": [
         "Q = 40, P = 80",
         "Q = 80, P = 40",
@@ -567,33 +567,33 @@ var QUIZ_DATA = {
         "Q = 50, P = 70"
       ],
       "answer": 0,
-      "rationale": "MR = 120 - 2Q = 40; Q = 40. P = 120 - 40 = 80."
+      "rationale": "MO = 120 - 2Q = 40; Q = 40. P = 120 - 40 = 80."
     },
     {
       "category": "rekenen",
       "difficulty": 2,
-      "q": "Bedrijf korte termijn: P = 200 - 3Q, TC = 500 + 50Q + Q². Winst maximaal bij?",
+      "q": "Bedrijf op korte termijn: P = 200 − 2Q, TK = 500 + 50Q + Q². Bij welke hoeveelheid Q is de winst maximaal?",
       "options": [
+        "Q = 25",
         "Q = 50",
         "Q = 75",
-        "Q = 25",
         "Q = 100"
       ],
       "answer": 0,
-      "rationale": "MR = 200 - 6Q, MC = 50 + 2Q. MR = MC: 200 - 6Q = 50 + 2Q; 150 = 8Q; Q = 18,75 ≈ 19 not in options. Check Q=25: MR = 200-150 = 50, MC = 50+50 = 100. Not equal. Try Q = 50: MR = 200-300=-100, invalid. Issue with problem."
+      "rationale": "MO = 200 − 4Q, MK = 50 + 2Q. MO = MK: 200 − 4Q = 50 + 2Q → 6Q = 150 → Q = 25. Bij deze hoeveelheid is P = 200 − 2(25) = 150."
     },
     {
       "category": "rekenen",
       "difficulty": 3,
-      "q": "Bedrijf lange termijn evenwicht: P = 80, GTC = 80. Winstmarges = ?",
+      "q": "Bedrijf in lange-termijnevenwicht: P = 80, GTK = 80. Wat is de winst per eenheid?",
       "options": [
-        "Positief, winst verdient",
-        "Nul, nulwinst evenwicht (P = GTC)",
-        "Negatief, verlies",
+        "Positief, het bedrijf behaalt winst",
+        "Nul: nulwinst-evenwicht (P = GTK)",
+        "Negatief, er is verlies",
         "Onbepaald"
       ],
-      "answer": 0,
-      "rationale": "Lange termijn evenwicht: P = GTC = 80. Dus (P - GTC) × Q = 0. Nulwinst."
+      "answer": 1,
+      "rationale": "In het lange-termijnevenwicht geldt P = GTK = 80. Dus (P − GTK) × Q = 0: nulwinst."
     },
     {
       "category": "vergelijking_marktvormen",
@@ -632,7 +632,7 @@ var QUIZ_DATA = {
         "Hangt af van toetredingsbarrières: hoge barrières geven oligopolie juist meer CS"
       ],
       "answer": 0,
-      "rationale": "MC lange termijn: veel bedrijven, P = GTC (laag). Oligopolie lange termijn: weinig bedrijven, P > MC (hoog). Dus MC-consument beter af."
+      "rationale": "MC lange termijn: veel bedrijven, P = GTK (laag). Oligopolie lange termijn: weinig bedrijven, P > MK (hoog). Dus MC-consument beter af."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -652,39 +652,39 @@ var QUIZ_DATA = {
       "difficulty": 2,
       "q": "Waarom hebben bedrijven in MC meer prikkels om te concurreren dan in volkomen concurrentie?",
       "options": [
-        "Omdat alle bedrijven winstmaximaliseren gelijk",
-        "Omdat bedrijven winsten kunnen realiseren via marktmacht; prikkel om te differentiëren",
+        "Omdat alle bedrijven op dezelfde manier winst maximaliseren",
+        "Omdat bedrijven winst kunnen realiseren via marktmacht; er is dus een prikkel om te differentiëren",
         "Omdat volkomen concurrentie meer winstmogelijkheden biedt",
         "Omdat MC geen concurrentie kent"
       ],
-      "answer": 0,
-      "rationale": "In MC: winst voordeel door differentie motiveeert bedrijven; extra concurrentie-dimensie. In VC: alleen P-concurrentie mogelijk (prijs gegeven)."
+      "answer": 1,
+      "rationale": "In MC motiveert het winstvoordeel van productdifferentiatie bedrijven; er is een extra concurrentiedimensie naast prijs. In VC is alleen prijsconcurrentie mogelijk (prijs is gegeven)."
     },
     {
       "category": "lange_termijn",
       "difficulty": 2,
       "q": "Waarom is MC productief inefficiënt op lange termijn?",
       "options": [
-        "Omdat P = MC",
-        "Omdat bedrijven NIET op minimale GTC opereren; schaalverlies/excess capacity",
+        "Omdat P = MK",
+        "Omdat bedrijven NIET op de minimale GTK opereren; er is sprake van overcapaciteit (schaalverlies)",
         "Omdat monopolie ontstaat",
         "Omdat niemand winst verdient"
       ],
-      "answer": 0,
-      "rationale": "Toetredingscorrectie: vraaglijn schuift omlaag totdat P = GTC, maar niet noodzakelijk op minimum van GTC. Gevolg: excess capacity, niet optimaal schaaleffectgebruik."
+      "answer": 1,
+      "rationale": "Toetredingscorrectie: de vraaglijn schuift omlaag totdat P = GTK, maar niet noodzakelijk op het minimum van GTK. Gevolg: overcapaciteit (schaalverlies), niet-optimaal gebruik van schaalvoordelen."
     },
     {
       "category": "lange_termijn",
       "difficulty": 3,
-      "q": "Empirisch: bedrijven in MC investeren meer in R&D/differentie dan in VC. Waarom?",
+      "q": "Empirisch: bedrijven in MC investeren meer in R&D en productdifferentiatie dan bedrijven in VC. Waarom?",
       "options": [
-        "Omdat VC bedrijven lui zijn",
-        "Omdat MC-bedrijven meer te winnen hebben: differentie creëert marktmacht en prijs > MC (niet mogelijk in VC)",
+        "Omdat VC-bedrijven lui zijn",
+        "Omdat MC-bedrijven meer te winnen hebben: differentiatie creëert marktmacht en P > MK (niet mogelijk in VC)",
         "Omdat VC meer technologie heeft",
-        "Omdat MC bedrijven groter zijn"
+        "Omdat MC-bedrijven groter zijn"
       ],
-      "answer": 0,
-      "rationale": "Economische prikkel: MC-differentie = winstpotentieel. In VC: differentie helpt niet (prijs gegeven, homogeen product). Dus MC investeringen hoger."
+      "answer": 1,
+      "rationale": "Economische prikkel: productdifferentiatie in MC betekent winstpotentieel. In VC helpt differentiatie niet (prijs is gegeven, product is homogeen). Daarom investeren MC-bedrijven meer."
     },
     {
       "category": "monopolistische_concurrentie",
@@ -692,38 +692,38 @@ var QUIZ_DATA = {
       "q": "Verschil tussen MC en VC: wat geeft MC-bedrijven voordeel?",
       "options": [
         "Lagere kosten",
-        "Productdifferentiatie en merkaanzien",
+        "Productdifferentiatie en merkimago",
         "Meer werknemers",
-        "Groter market share"
+        "Groter marktaandeel"
       ],
-      "answer": 0,
-      "rationale": "MC-bedrijven hebben marktmacht via differentie die VC-bedrijven niet hebben. Dit stelt hen in staat prijzen te stellen."
+      "answer": 1,
+      "rationale": "MC-bedrijven hebben marktmacht via productdifferentiatie die VC-bedrijven niet hebben. Daardoor kunnen zij zelf hun prijs bepalen."
     },
     {
       "category": "productdifferentiatie",
       "difficulty": 1,
-      "q": "Quando biedt productdifferentiatie het MEESTE voordeel?",
+      "q": "Wanneer biedt productdifferentiatie het MEESTE voordeel?",
       "options": [
-        "Als consumentenvraag homogeen en prijsgevoelig is",
-        "Als consumentenvraag heterogeen is en voorkeur varieert",
-        "Als alle bedrijven dezelfde produceren",
-        "Als markt volledig concurrerend is"
+        "Als de consumentenvraag homogeen en prijsgevoelig is",
+        "Als de consumentenvraag heterogeen is en voorkeuren variëren",
+        "Als alle bedrijven hetzelfde produceren",
+        "Als de markt volkomen concurrerend is"
       ],
-      "answer": 0,
-      "rationale": "Differentie werkt het best als consumenten voorkeur hebben en niet alleen op prijs kijken (heterogene vraag)."
+      "answer": 1,
+      "rationale": "Productdifferentiatie werkt het best als consumenten uiteenlopende voorkeuren hebben en niet alleen op prijs letten (heterogene vraag)."
     },
     {
       "category": "korte_termijn",
       "difficulty": 1,
-      "q": "Korte termijn winst MC: waar ontstaat het voordeel voor bedrijf?",
+      "q": "Kortetermijnwinst in MC: waaruit ontstaat het voordeel voor het bedrijf?",
       "options": [
-        "Van schaalvoordelen",
-        "Van prijs boven MC door marktmacht via differentie",
-        "Van lage lonen",
-        "Van subsidies"
+        "Uit schaalvoordelen",
+        "Uit prijs boven MK door marktmacht via productdifferentiatie",
+        "Uit lage lonen",
+        "Uit subsidies"
       ],
-      "answer": 0,
-      "rationale": "MC korte termijn winst: marktmacht via differentie allows P > MC, dus operationele winst."
+      "answer": 1,
+      "rationale": "Kortetermijnwinst in MC: marktmacht via productdifferentiatie maakt P > MK mogelijk, en dus positieve operationele winst."
     },
     {
       "category": "lange_termijn",
@@ -731,12 +731,12 @@ var QUIZ_DATA = {
       "q": "Lange termijn nulwinst MC: betekent dit bedrijf 'in moeilijkheden'?",
       "options": [
         "Ja, bedrijf doet het slecht",
-        "Nee, bedrijf verdient normale winst (zero economic profit, normale return op capital)",
+        "Nee, het bedrijf behaalt normale winst (economische winst nul, normaal rendement op kapitaal)",
         "Ja, bedrijf heeft verlies",
         "Nee, bedrijf heeft bovengemiddelde winst"
       ],
-      "answer": 0,
-      "rationale": "Nulwinst (P = GTC) betekent normale return op investering, geen meer, geen minder. Gezond marktevenwicht."
+      "answer": 1,
+      "rationale": "Nulwinst (P = GTK) betekent een normaal rendement op de investering, niet meer en niet minder. Dit is een gezond marktevenwicht."
     },
     {
       "category": "rekenen",
@@ -754,59 +754,59 @@ var QUIZ_DATA = {
     {
       "category": "monopolistische_concurrentie",
       "difficulty": 2,
-      "q": "Waarom is vrije toetreding in MC essentieel voor lange termijn evenwicht?",
+      "q": "Waarom is vrije toetreding in MC essentieel voor het lange-termijnevenwicht?",
       "options": [
-        "Omdat het winsthalers aantrekt die druk opvoeren, toetredingscorrectie",
-        "Omdat vrije toetreding zorgt voor efficiëntie",
-        "Omdat toetreders prijzen ophogen",
-        "Omdat toetreding wettelijk moet"
+        "Omdat het nieuwe aanbieders aantrekt die de concurrentiedruk opvoeren; zo ontstaat de toetredingscorrectie",
+        "Omdat vrije toetreding automatisch voor efficiëntie zorgt",
+        "Omdat toetreders de prijzen juist verhogen",
+        "Omdat toetreding wettelijk verplicht is"
       ],
       "answer": 0,
-      "rationale": "Vrije toetreding: nieuwe bedrijven zien winst, treden toe, intensifieert concurrentie, duwt winsten naar nul."
+      "rationale": "Door vrije toetreding zien nieuwe bedrijven de winst, treden toe, intensiveren zij de concurrentie en wordt de winst gedrukt naar nul (P = GTK)."
     },
     {
       "category": "productdifferentiatie",
       "difficulty": 2,
-      "q": "Merkloyaliteit: hoe creëert dit voordeel?",
+      "q": "Merkloyaliteit: hoe levert dit het bedrijf een voordeel op?",
       "options": [
-        "Verhoogt kosten",
-        "Maakt klanten 'sticky': menos prijs-gevoelig, minder geneigd wissel",
-        "Verlaagt vraag",
-        "Creëert meer concurrentie"
+        "Het verhoogt de kosten",
+        "Het maakt klanten honkvast: minder prijsgevoelig en minder geneigd om te wisselen",
+        "Het verlaagt de vraag",
+        "Het creëert meer concurrentie"
       ],
-      "answer": 0,
-      "rationale": "Merkloyaliteit creëert 'switching costs' psychologisch: klanten blijven trouw zelfs bij hogere prijs."
+      "answer": 1,
+      "rationale": "Merkloyaliteit creëert psychologische overstapkosten: klanten blijven trouw aan het merk, zelfs bij een hogere prijs."
     },
     {
       "category": "korte_termijn",
       "difficulty": 2,
-      "q": "Korte termijn MC bedrijf waar opereren: links of rechts van minimum GTC?",
+      "q": "Een MC-bedrijf op korte termijn: opereert het links of rechts van het minimum van GTK?",
       "options": [
-        "Links (onderproductie, schaalverlies)",
-        "Rechts (overproductie, inefficiënt)",
-        "Exact op minimum GTC",
-        "Kan beide zijn afhankelijk situatie"
+        "Altijd links (onderproductie, schaalverlies)",
+        "Altijd rechts (overproductie, inefficiënt)",
+        "Exact op het minimum van GTK",
+        "Kan beide zijn, afhankelijk van de situatie"
       ],
-      "answer": 0,
-      "rationale": "MC korte termijn: bedrijf volgt MR = MC, kan links of rechts van minimum GTC zijn. Geen dwang minimum schaal."
+      "answer": 3,
+      "rationale": "MC op korte termijn: het bedrijf volgt MO = MK en kan links of rechts van het minimum van GTK liggen. Er is geen dwang om op de minimale efficiënte schaal te opereren."
     },
     {
       "category": "lange_termijn",
       "difficulty": 2,
-      "q": "Excess capacity MC lange termijn: wat verspilt dit?",
+      "q": "Overcapaciteit in MC op lange termijn: wat wordt daardoor verspild?",
       "options": [
-        "Geen verspilling, efficiënt",
-        "Potential output: bedrijven opereren links van minimum GTC, kunnen meer output tegen lagere kosten",
-        "Financiële middelen",
-        "Arbeidskracht enkel"
+        "Geen verspilling; het is efficiënt",
+        "Potentiële output: bedrijven opereren links van het minimum van GTK en zouden meer kunnen produceren tegen lagere kosten per eenheid",
+        "Uitsluitend financiële middelen",
+        "Uitsluitend arbeidskracht"
       ],
-      "answer": 0,
-      "rationale": "Excess capacity: bedrijven hebben capaciteit te produceren met lagere GTC (economies of scale), maar doen het niet."
+      "answer": 1,
+      "rationale": "Overcapaciteit: bedrijven zouden met een hogere productie lagere GTK kunnen realiseren (schaalvoordelen), maar doen dat niet omdat hun residuele vraag te klein is."
     },
     {
       "category": "rekenen",
       "difficulty": 3,
-      "q": "MC lange termijn: markt QD = 200 - P. Elk bedrijf Q = 5, identiek. Hoeveel bedrijven equilibrium?",
+      "q": "In lange-termijnevenwicht in monopolistische concurrentie geldt prijs P = €40. De marktvraag is Qv = 200 − P en elk (identiek) bedrijf produceert Q = 4. Hoeveel bedrijven zijn er in evenwicht?",
       "options": [
         "40 bedrijven",
         "50 bedrijven",
@@ -814,7 +814,7 @@ var QUIZ_DATA = {
         "100 bedrijven"
       ],
       "answer": 0,
-      "rationale": "Evenwicht: totale Q = 200 - P, bij P waar P = GTC (nulwinst). Als elk bedrijf Q = 5, dan aantal = Q_totaal / 5. Bij P = GTC bepaald door vraag-aanbod, aantal bedrijven = 40."
+      "rationale": "Bij P = 40 is de totale marktvraag Qv = 200 − 40 = 160. Aantal bedrijven = Q_totaal / Q_per_bedrijf = 160 / 4 = 40."
     }
   ]
 };
