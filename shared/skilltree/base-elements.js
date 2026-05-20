@@ -689,7 +689,7 @@
             context: 'Qv = ' + alpha + ' \u2212 ' + b + 'P en Qa = \u2212' + c + ' + ' + d + 'P.\nDe overheid heft \u20AC' + heffing + ' per stuk bij de producent.\nBereken het nieuwe evenwicht.',
             steps: [
                 mcS5,
-                { q: 'Wat is de nieuwe constante in de aanbodfunctie na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') = \u2212' + newC + ' + ' + d + 'P' },
+                { q: 'Wat is de nieuwe constante in de aanbodfunctie na de heffing?', a: -newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in bij Qa.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') = \u2212' + newC + ' + ' + d + 'P, dus de constante is \u2212' + newC },
                 { q: 'Bereken de nieuwe evenwichtsprijs.', a: newPs, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op naar P.', expl: alpha + ' \u2212 ' + b + 'P = \u2212' + newC + ' + ' + d + 'P \u2192 P* = ' + newPs },
                 { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: newQs, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + newPs + ' = ' + newQs }
             ]
@@ -1029,7 +1029,7 @@
                 orderE4,
                 { q: 'Bereken de oude evenwichtsprijs.', a: Ps, hint: 'Stel Qv = Qa en los op naar P.', expl: 'P* = (' + alpha + '+' + c + ') \u00F7 ' + (b + d) + ' = ' + Ps },
                 { q: 'Bereken de oude evenwichtshoeveelheid.', a: Qs, hint: 'Vul P* in bij Qv.', expl: 'Q* = ' + alpha + ' \u2212 ' + b + '\u00D7' + Ps + ' = ' + Qs },
-                { q: 'Wat is de nieuwe constante in Qa na de heffing?', a: newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') \u2192 constante = ' + newC },
+                { q: 'Wat is de nieuwe constante in Qa na de heffing?', a: -newC, hint: 'De producent ontvangt P \u2212 ' + heffing + '. Vul dat in.', expl: 'Qa = \u2212' + c + ' + ' + d + '(P \u2212 ' + heffing + ') \u2192 constante = \u2212' + newC },
                 { q: 'Bereken de nieuwe evenwichtsprijs.', a: Pn, hint: 'Stel de nieuwe Qa gelijk aan Qv en los op.', expl: 'P_nieuw = (' + alpha + '+' + newC + ') \u00F7 ' + (b + d) + ' = ' + Pn },
                 { q: 'Bereken de nieuwe evenwichtshoeveelheid.', a: Qn, hint: 'Vul de nieuwe P* in bij Qv.', expl: 'Q_nieuw = ' + alpha + ' \u2212 ' + b + '\u00D7' + Pn + ' = ' + Qn },
                 { q: 'Bereken het welvaartsverlies.', a: dwl, hint: 'Het welvaartsverlies is een driehoek. Wat zijn de basis en hoogte?', expl: 'DWL = \u00BD \u00D7 (' + Qs + ' \u2212 ' + round1(Qn) + ') \u00D7 ' + heffing + ' = ' + dwl }
